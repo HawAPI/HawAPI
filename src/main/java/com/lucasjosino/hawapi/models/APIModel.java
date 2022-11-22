@@ -1,50 +1,21 @@
 package com.lucasjosino.hawapi.models;
 
 public class APIModel {
+    public static final String name = "HawAPI";
 
-    private final String name;
-    private final String description;
-    private final String version;
-    private final String github;
-    private final String url;
-    private final String apiUrl;
-    private final String apiRouter;
+    public static final String description = "A free and open source API for Stranger Things.";
 
-    public APIModel(String name, String description, String version, String github, String url, String apiUrl, String apiRouter) {
-        this.name = name;
-        this.description = description;
-        this.version = version;
-        this.github = github;
-        this.url = url;
-        this.apiUrl = apiUrl;
-        this.apiRouter = apiRouter;
-    }
+    public static final String version = "v1";
 
-    public String getName() {
-        return name;
-    }
+    public static final String github = "https://github.com/LucJosin/HawAPI";
 
-    public String getDescription() {
-        return description;
-    }
+    public static final String url = "https://hawapi.theproject.id";
 
-    public String getVersion() {
-        return version;
-    }
+    public static final String apiUrl = "https://hawapi.theproject.id/api/v1";
 
-    public String getGithub() {
-        return github;
-    }
+    public static final String apiRouter = "/api/v1";
 
-    public String getUrl() {
-        return url;
-    }
+    public static final String license = "BSD 3-Clause \"New\" or \"Revised\" License";
 
-    public String getApiUrl() {
-        return apiUrl;
-    }
-
-    public String getApiRouter() {
-        return apiRouter;
-    }
+    public static final String licenseUrl = "https://github.com/LucJosin/HawAPI/blob/main/LICENSE";
 }
