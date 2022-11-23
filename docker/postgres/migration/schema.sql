@@ -1,5 +1,11 @@
+--
+-- Extensions
+--
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
+--
+-- Functions
+--
 CREATE OR REPLACE FUNCTION update_updated_at_field()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -8,6 +14,9 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
+--
+-- Socials
+--
 CREATE TABLE IF NOT EXISTS socials (
     id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     name VARCHAR(50) NOT NULL,
@@ -20,7 +29,10 @@ CREATE TABLE IF NOT EXISTS socials (
           ON DELETE CASCADE;
 )
 
--- Ref: ISO/IEC 5218
+--
+-- Characters
+-- Gender ref: ISO/IEC 5218
+--
 CREATE TABLE IF NOT EXISTS characters (
     id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     uuid UUID UNIQUE NOT NULL DEFAULT uuid_generate_v4(),
@@ -44,6 +56,9 @@ CREATE TRIGGER handle_updated_at_field BEFORE
     FOR EACH ROW
 EXECUTE PROCEDURE update_updated_at_field();
 
+--
+-- Actors
+--
 CREATE TABLE IF NOT EXISTS actors (
     id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     uuid UUID UNIQUE NOT NULL DEFAULT uuid_generate_v4(),
@@ -72,6 +87,9 @@ CREATE TRIGGER handle_updated_at_field BEFORE
     FOR EACH ROW
 EXECUTE PROCEDURE update_updated_at_field();
 
+--
+-- Episodes
+--
 CREATE TABLE IF NOT EXISTS episodes (
     id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     uuid UUID UNIQUE NOT NULL DEFAULT uuid_generate_v4(),
@@ -96,6 +114,9 @@ CREATE TRIGGER handle_updated_at_field BEFORE
     FOR EACH ROW
 EXECUTE PROCEDURE update_updated_at_field();
 
+--
+-- Seasons
+--
 CREATE TABLE IF NOT EXISTS seasons (
     id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     uuid UUID UNIQUE NOT NULL DEFAULT uuid_generate_v4(),
@@ -122,6 +143,9 @@ CREATE TRIGGER handle_updated_at_field BEFORE
     FOR EACH ROW
 EXECUTE PROCEDURE update_updated_at_field();
 
+--
+-- Places
+--
 CREATE TABLE IF NOT EXISTS places (
     id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     uuid UUID UNIQUE NOT NULL DEFAULT uuid_generate_v4(),
