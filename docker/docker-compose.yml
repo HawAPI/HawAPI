@@ -1,0 +1,14 @@
+version: "3.3"
+
+services:
+  postgres:
+    container_name: postgres
+    build:
+      context: .
+      dockerfile: postgres/Dockerfile
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: hawapi
+    ports:
+      - "5432:5432"

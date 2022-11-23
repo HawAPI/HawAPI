@@ -123,16 +123,6 @@ public class ActorModel extends BaseModel {
         this.seasons = seasons;
     }
 
-    @Override
-    public String[] getAwards() {
-        return awards;
-    }
-
-    @Override
-    public void setAwards(String[] awards) {
-        this.awards = awards;
-    }
-
     public String getCharacter() {
         return character;
     }

@@ -18,13 +18,7 @@ abstract public class BaseModel {
     private String href;
 
     @Column
-    private String[] awards;
-
-    @Column
     private String[] sources;
-
-    @Column
-    private String[] extras;
 
     @Column(name = "created_at")
     private String createdAt;
@@ -56,28 +50,12 @@ abstract public class BaseModel {
         this.href = href;
     }
 
-    public String[] getAwards() {
-        return awards;
-    }
-
-    public void setAwards(String[] awards) {
-        this.awards = awards;
-    }
-
     public String[] getSources() {
         return sources;
     }
 
     public void setSources(String[] sources) {
         this.sources = sources;
-    }
-
-    public String[] getExtras() {
-        return extras;
-    }
-
-    public void setExtras(String[] extras) {
-        this.extras = extras;
     }
 
     public String getCreatedAt() {
