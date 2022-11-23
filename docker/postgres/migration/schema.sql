@@ -21,9 +21,9 @@ CREATE TABLE IF NOT EXISTS socials (
     id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     name VARCHAR(50) NOT NULL,
     url TEXT NOT NULL,
-    actors_id INTEGER NOT NULL,
-    CONSTRAINT fk_actors
-          FOREIGN KEY(actors_id)
+    actor_id INTEGER NOT NULL,
+    CONSTRAINT fk_actor
+          FOREIGN KEY(actor_id)
           REFERENCES actors(id)
           ON UPDATE CASCADE
           ON DELETE CASCADE;
@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS actors (
 );
 
 CREATE TRIGGER handle_updated_at_field BEFORE
-    UPDATE ON characters
+    UPDATE ON actors
     FOR EACH ROW
 EXECUTE PROCEDURE update_updated_at_field();
 
@@ -126,7 +126,7 @@ CREATE TABLE IF NOT EXISTS seasons (
     duration_total INTEGER NOT NULL,
     tags VARCHAR ARRAY,
     season_num SMALLINT NOT NULL,
-    release_date TIMESTAMP,
+    release_date TIMESTAMP NOT NULL,
     next_season VARCHAR(255),
     prev_season VARCHAR(255),
     episodes VARCHAR ARRAY,
