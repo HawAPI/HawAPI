@@ -1,5 +1,6 @@
 # Docker config.
 DOCKER_PATH=./docker/docker-compose.yml
+DOCKER_NAME=postgres
 
 # Database
 DB_TYPE=postgres
@@ -18,25 +19,25 @@ dk-status: ## Check the docker container status.
 	@docker ps --filter "name=hawapi-postgres"
 
 dk-run: ## Build & Run the local docker.
-	@docker compose -f ${DOCKER_PATH} build ${DB_NAME}
-	@docker compose -f ${DOCKER_PATH} up  ${DB_NAME}
+	@docker compose -f ${DOCKER_PATH} build ${DOCKER_NAME}
+	@docker compose -f ${DOCKER_PATH} up  ${DOCKER_NAME}
 
 dk-start: ## Start the local docker.
-	@docker compose -f ${DOCKER_PATH} start ${DB_NAME}
+	@docker compose -f ${DOCKER_PATH} start ${DOCKER_NAME}
 	@sleep 2
 
 dk-stop: ## Stop the local docker.
-	@docker compose -f ${DOCKER_PATH} stop ${DB_NAME}
+	@docker compose -f ${DOCKER_PATH} stop ${DOCKER_NAME}
 
 dk-reset: ## Stop, Delete, Build and Start the local docker.
-	@docker compose -f ${DOCKER_PATH} stop ${DB_NAME}
+	@docker compose -f ${DOCKER_PATH} stop ${DOCKER_NAME}
 	@docker compose -f ${DOCKER_PATH} down --volumes
-	@docker compose -f ${DOCKER_PATH} rm ${DB_NAME}
-	@docker compose -f ${DOCKER_PATH} build ${DB_NAME}
-	@docker compose -f ${DOCKER_PATH} up ${DB_NAME}
+	@docker compose -f ${DOCKER_PATH} rm ${DOCKER_NAME}
+	@docker compose -f ${DOCKER_PATH} build ${DOCKER_NAME}
+	@docker compose -f ${DOCKER_PATH} up ${DOCKER_NAME}
 
 dk-prune: ## Delete all docker volumes.
-	@docker compose -f ${DOCKER_PATH} rm ${DB_NAME}
+	@docker compose -f ${DOCKER_PATH} rm ${DOCKER_NAME}
 	@cd ./docker
 	@docker volume prune
 	@cd ..

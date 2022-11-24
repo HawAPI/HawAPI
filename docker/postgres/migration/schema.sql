@@ -15,21 +15,6 @@ END;
 $$ language 'plpgsql';
 
 --
--- Socials
---
-CREATE TABLE IF NOT EXISTS socials (
-    id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    name VARCHAR(50) NOT NULL,
-    url TEXT NOT NULL,
-    actor_id INTEGER NOT NULL,
-    CONSTRAINT fk_actor
-          FOREIGN KEY(actor_id)
-          REFERENCES actors(id)
-          ON UPDATE CASCADE
-          ON DELETE CASCADE;
-)
-
---
 -- Characters
 -- Gender ref: ISO/IEC 5218
 --
@@ -42,7 +27,7 @@ CREATE TABLE IF NOT EXISTS characters (
     nicknames VARCHAR ARRAY,
     birth_date TIMESTAMP,
     death_date TIMESTAMP,
-    gender SMALLINT NOT NULL DEFAULT 0;
+    gender SMALLINT NOT NULL DEFAULT 0,
     thumbnail TEXT,
     actor VARCHAR(100) NOT NULL,
     images VARCHAR ARRAY,
@@ -68,12 +53,12 @@ CREATE TABLE IF NOT EXISTS actors (
     nicknames VARCHAR ARRAY,
     birth_date TIMESTAMP,
     death_date TIMESTAMP,
-    gender SMALLINT NOT NULL DEFAULT 0;
+    gender SMALLINT NOT NULL DEFAULT 0,
     nationality VARCHAR(50),
     episodes VARCHAR ARRAY,
     seasons VARCHAR ARRAY,
     awards VARCHAR ARRAY,
-    socials_id INTEGER FOREIGN KEY,
+    socials_id INTEGER,
     character VARCHAR(255) NOT NULL,
     thumbnail TEXT,
     images VARCHAR ARRAY,
@@ -88,6 +73,21 @@ CREATE TRIGGER handle_updated_at_field BEFORE
 EXECUTE PROCEDURE update_updated_at_field();
 
 --
+-- Socials
+--
+CREATE TABLE IF NOT EXISTS socials (
+    id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    name VARCHAR(50) NOT NULL,
+    url TEXT NOT NULL,
+    actor_id INTEGER NOT NULL,
+    CONSTRAINT fk_actor
+          FOREIGN KEY(actor_id)
+          REFERENCES actors(id)
+          ON UPDATE CASCADE
+          ON DELETE CASCADE
+);
+
+--
 -- Episodes
 --
 CREATE TABLE IF NOT EXISTS episodes (
@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS episodes (
     duration INTEGER NOT NULL,
     episode_num SMALLINT NOT NULL,
     next_episode VARCHAR(255),
-    prev_episode VARCHAR(255);
+    prev_episode VARCHAR(255),
     season VARCHAR(255) NOT NULL,
     trailers VARCHAR ARRAY,
     thumbnail TEXT,
