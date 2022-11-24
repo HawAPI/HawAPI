@@ -32,6 +32,20 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Docs -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>1.6.13</version>
+        </dependency>
+
+        <!-- Mapper -->
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+
         <!-- Database/Postgres -->
         <dependency>
             <groupId>org.postgresql</groupId>
