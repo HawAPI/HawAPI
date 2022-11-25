@@ -46,6 +46,13 @@
             <version>3.1.0</version>
         </dependency>
 
+        <!-- Hibernate -->
+        <dependency>
+            <groupId>com.vladmihalcea</groupId>
+            <artifactId>hibernate-types-52</artifactId>
+            <version>2.20.0</version>
+        </dependency>
+
         <!-- Database/Postgres -->
         <dependency>
             <groupId>org.postgresql</groupId>

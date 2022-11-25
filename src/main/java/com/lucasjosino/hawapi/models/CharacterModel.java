@@ -1,24 +1,30 @@
 package com.lucasjosino.hawapi.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lucasjosino.hawapi.models.base.BaseModel;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
 @Entity
 public class CharacterModel extends BaseModel {
+    @JsonProperty("first_name")
     @Column(name = "first_name")
     private String firstName;
 
+    @JsonProperty("last_name")
     @Column(name = "last_name")
     private String lastName;
 
     @Column
     private String[] nicknames;
 
+    @JsonProperty("birth_date")
     @Column(name = "birth_date")
     private String birthDate;
 
+    @JsonProperty("death_date")
     @Column(name = "death_date")
     private String deathDate;
 
@@ -31,7 +37,8 @@ public class CharacterModel extends BaseModel {
     @Column
     private String actor;
 
-    @Column
+    @Type(type = "string-array")
+    @Column(columnDefinition = "text[]")
     private String[] images;
 
     public String getFirstName() {

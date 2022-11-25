@@ -1,19 +1,21 @@
 package com.lucasjosino.hawapi.models;
 
 import com.lucasjosino.hawapi.models.base.BaseModel;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
 @Entity
 public class PlaceModel extends BaseModel {
-    @Column
+    @Column(nullable = false)
     private String name;
 
-    @Column
+    @Column(nullable = false)
     private String description;
 
-    @Column
+    @Type(type = "string-array")
+    @Column(columnDefinition = "text[]")
     private String[] images;
 
     @Column

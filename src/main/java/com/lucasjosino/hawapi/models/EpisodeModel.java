@@ -1,37 +1,44 @@
 package com.lucasjosino.hawapi.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lucasjosino.hawapi.models.base.BaseModel;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
 @Entity
 public class EpisodeModel extends BaseModel {
-    @Column
+    @Column(nullable = false)
     private String title;
 
-    @Column
+    @Column(nullable = false)
     private String description;
 
-    @Column
+    @Column(nullable = false)
     private int duration;
 
-    @Column
-    private int episode;
+    @JsonProperty("episode_num")
+    @Column(nullable = false, name = "episode_num")
+    private int episodeNum;
 
+    @JsonProperty("next_episode")
     @Column(name = "next_episode")
     private String nextEpisode;
 
+    @JsonProperty("prev_episode")
     @Column(name = "prev_episode")
     private String prevEpisode;
 
-    @Column
+    @Column(nullable = false)
     private String season;
 
-    @Column
+    @Type(type = "string-array")
+    @Column(columnDefinition = "text[]")
     private String[] trailers;
 
-    @Column
+    @Type(type = "string-array")
+    @Column(columnDefinition = "text[]")
     private String[] images;
 
     @Column
@@ -61,12 +68,12 @@ public class EpisodeModel extends BaseModel {
         this.duration = duration;
     }
 
-    public int getEpisode() {
-        return episode;
+    public int getEpisodeNum() {
+        return episodeNum;
     }
 
-    public void setEpisode(int episode) {
-        this.episode = episode;
+    public void setEpisodeNum(int episodeNum) {
+        this.episodeNum = episodeNum;
     }
 
     public String getNextEpisode() {

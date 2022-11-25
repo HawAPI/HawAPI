@@ -1,43 +1,54 @@
 package com.lucasjosino.hawapi.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lucasjosino.hawapi.models.base.BaseModel;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
 @Entity
 public class SeasonModel extends BaseModel {
-    @Column
+    @Column(nullable = false)
     private String title;
 
-    @Column
+    @Column(nullable = false)
     private String description;
 
-    @Column(name = "duration_total")
+    @JsonProperty("duration_total")
+    @Column(nullable = false, name = "duration_total")
     private int durationTotal;
 
-    @Column
+    @Type(type = "string-array")
+    @Column(columnDefinition = "varchar[]")
     private String[] tags;
 
-    @Column
-    private String season;
+    @JsonProperty("season_num")
+    @Column(nullable = false, name = "season_num")
+    private String seasonNum;
 
-    @Column(name = "release_date")
+    @JsonProperty("release_date")
+    @Column(nullable = false, name = "release_date")
     private String releaseDate;
 
+    @JsonProperty("next_season")
     @Column(name = "next_season")
     private String nextSeason;
 
+    @JsonProperty("prev_season")
     @Column(name = "prev_season")
     private String prevSeason;
 
-    @Column
+    @Type(type = "string-array")
+    @Column(columnDefinition = "varchar[]")
     private String[] episodes;
 
-    @Column
+    @Type(type = "string-array")
+    @Column(columnDefinition = "text[]")
     private String[] trailers;
 
-    @Column
+    @Type(type = "string-array")
+    @Column(columnDefinition = "text[]")
     private String[] images;
 
     @Column
@@ -75,12 +86,12 @@ public class SeasonModel extends BaseModel {
         this.tags = tags;
     }
 
-    public String getSeason() {
-        return season;
+    public String getSeasonNum() {
+        return seasonNum;
     }
 
-    public void setSeason(String season) {
-        this.season = season;
+    public void setSeasonNum(String season) {
+        this.seasonNum = season;
     }
 
     public String getReleaseDate() {

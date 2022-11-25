@@ -1,29 +1,35 @@
 package com.lucasjosino.hawapi.models.base;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.Type;
+
+import javax.persistence.*;
 import java.util.UUID;
 
 @MappedSuperclass
 abstract public class BaseModel {
     @Id
-    @Column
+    @Column(nullable = false, updatable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column
+    @Column(nullable = false, updatable = false)
     private UUID uuid;
 
-    @Column
+    @Column(nullable = false)
     private String href;
 
-    @Column
+    @Type(type = "string-array")
+    @Column(columnDefinition = "text[]")
     private String[] sources;
 
-    @Column(name = "created_at")
+    @JsonProperty("created_at")
+    @Column(name = "created_at", nullable = false, updatable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private String createdAt;
 
-    @Column(name = "updated_at")
+    @JsonProperty("updated_at")
+    @Column(name = "updated_at", nullable = false)
     private String updatedAt;
 
     public int getId() {

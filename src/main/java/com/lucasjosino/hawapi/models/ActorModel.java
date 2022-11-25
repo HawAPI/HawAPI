@@ -1,26 +1,32 @@
 package com.lucasjosino.hawapi.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lucasjosino.hawapi.models.base.BaseModel;
+import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "actors")
 public class ActorModel extends BaseModel {
-    @Column(name = "first_name")
+    @JsonProperty("first_name")
+    @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    @Column(name = "last_name")
+    @JsonProperty("last_name")
+    @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column
+    @Type(type = "string-array")
+    @Column(columnDefinition = "varchar[]")
     private String[] nicknames;
 
+    @JsonProperty("birth_date")
     @Column(name = "birth_date")
     private String birthDate;
 
+    @JsonProperty("death_date")
     @Column(name = "death_date")
     private String deathDate;
 
@@ -30,22 +36,31 @@ public class ActorModel extends BaseModel {
     @Column
     private String nationality;
 
-    @Column
+    @Type(type = "string-array")
+    @Column(columnDefinition = "varchar[]")
     private String[] episodes;
 
-    @Column
+    @Type(type = "string-array")
+    @Column(columnDefinition = "varchar[]")
     private String[] seasons;
 
-    @Column
+    @Type(type = "string-array")
+    @Column(columnDefinition = "varchar[]")
     private String[] awards;
 
-    @Column
+    @Column(nullable = false)
     private String character;
 
-    @Column
-    private String[] socials;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = ActorSocialModel.class)
+    @JoinColumn(name = "socials")
+    @JoinTable(name = "actors_socials",
+            joinColumns = @JoinColumn(name = "id"),
+            inverseJoinColumns = @JoinColumn(name = "actor_id", referencedColumnName = "actor_id")
+    )
+    private List<ActorSocialModel> socials;
 
-    @Column
+    @Type(type = "string-array")
+    @Column(columnDefinition = "text[]")
     private String[] images;
 
     @Column
@@ -131,11 +146,11 @@ public class ActorModel extends BaseModel {
         this.character = character;
     }
 
-    public String[] getSocials() {
+    public List<ActorSocialModel> getSocials() {
         return socials;
     }
 
-    public void setSocials(String[] socials) {
+    public void setSocials(List<ActorSocialModel> socials) {
         this.socials = socials;
     }
 
