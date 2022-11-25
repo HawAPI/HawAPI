@@ -30,8 +30,8 @@ CREATE TABLE IF NOT EXISTS characters (
     gender SMALLINT NOT NULL DEFAULT 0,
     thumbnail TEXT,
     actor VARCHAR(100) NOT NULL,
-    images VARCHAR ARRAY,
-    sources VARCHAR ARRAY,
+    images TEXT ARRAY,
+    sources TEXT ARRAY,
     created_at TIMESTAMP NOT NULL DEFAULT now(),
     updated_at TIMESTAMP NOT NULL DEFAULT now()
 );
@@ -58,11 +58,10 @@ CREATE TABLE IF NOT EXISTS actors (
     episodes VARCHAR ARRAY,
     seasons VARCHAR ARRAY,
     awards VARCHAR ARRAY,
-    socials_id INTEGER,
     character VARCHAR(255) NOT NULL,
     thumbnail TEXT,
-    images VARCHAR ARRAY,
-    sources VARCHAR ARRAY,
+    images TEXT ARRAY,
+    sources TEXT ARRAY,
     created_at TIMESTAMP NOT NULL DEFAULT now(),
     updated_at TIMESTAMP NOT NULL DEFAULT now()
 );
@@ -75,12 +74,12 @@ EXECUTE PROCEDURE update_updated_at_field();
 --
 -- Socials
 --
-CREATE TABLE IF NOT EXISTS socials (
+CREATE TABLE IF NOT EXISTS actors_socials (
     id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     name VARCHAR(50) NOT NULL,
     url TEXT NOT NULL,
     actor_id INTEGER NOT NULL,
-    CONSTRAINT fk_actor
+    CONSTRAINT pk_actor_id
           FOREIGN KEY(actor_id)
           REFERENCES actors(id)
           ON UPDATE CASCADE
@@ -101,10 +100,10 @@ CREATE TABLE IF NOT EXISTS episodes (
     next_episode VARCHAR(255),
     prev_episode VARCHAR(255),
     season VARCHAR(255) NOT NULL,
-    trailers VARCHAR ARRAY,
+    trailers TEXT ARRAY,
     thumbnail TEXT,
-    images VARCHAR ARRAY,
-    sources VARCHAR ARRAY,
+    images TEXT ARRAY,
+    sources TEXT ARRAY,
     created_at TIMESTAMP NOT NULL DEFAULT now(),
     updated_at TIMESTAMP NOT NULL DEFAULT now()
 );
@@ -132,8 +131,8 @@ CREATE TABLE IF NOT EXISTS seasons (
     episodes VARCHAR ARRAY,
     trailers VARCHAR ARRAY,
     thumbnail TEXT,
-    images VARCHAR ARRAY,
-    sources VARCHAR ARRAY,
+    images TEXT ARRAY,
+    sources TEXT ARRAY,
     created_at TIMESTAMP NOT NULL DEFAULT now(),
     updated_at TIMESTAMP NOT NULL DEFAULT now()
 );
@@ -153,8 +152,8 @@ CREATE TABLE IF NOT EXISTS places (
     name VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
     thumbnail TEXT,
-    images VARCHAR ARRAY,
-    sources VARCHAR ARRAY,
+    images TEXT ARRAY,
+    sources TEXT ARRAY,
     created_at TIMESTAMP NOT NULL DEFAULT now(),
     updated_at TIMESTAMP NOT NULL DEFAULT now()
 );
