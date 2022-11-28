@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 
 @Entity
 public class PlaceModel extends BaseModel {
+
     @Column(nullable = false)
     private String name;
 

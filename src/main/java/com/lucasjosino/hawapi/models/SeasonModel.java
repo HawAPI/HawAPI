@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 
 @Entity
 public class SeasonModel extends BaseModel {
+
     @Column(nullable = false)
     private String title;
 

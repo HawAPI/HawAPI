@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 
 @Entity
 public class EpisodeModel extends BaseModel {
+
     @Column(nullable = false)
     private String title;
 

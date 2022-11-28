@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 
 @Entity
 public class CharacterModel extends BaseModel {
+
     @JsonProperty("first_name")
     @Column(name = "first_name")
     private String firstName;
