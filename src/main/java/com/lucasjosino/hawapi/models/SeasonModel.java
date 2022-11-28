@@ -6,6 +6,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import java.time.LocalDateTime;
 
 @Entity
 public class SeasonModel extends BaseModel {
@@ -29,7 +30,7 @@ public class SeasonModel extends BaseModel {
 
     @JsonProperty("release_date")
     @Column(nullable = false, name = "release_date")
-    private String releaseDate;
+    private LocalDateTime releaseDate;
 
     @JsonProperty("next_season")
     @Column(name = "next_season")
@@ -94,11 +95,11 @@ public class SeasonModel extends BaseModel {
         this.seasonNum = season;
     }
 
-    public String getReleaseDate() {
+    public LocalDateTime getReleaseDate() {
         return releaseDate;
     }
 
-    public void setReleaseDate(String releaseDate) {
+    public void setReleaseDate(LocalDateTime releaseDate) {
         this.releaseDate = releaseDate;
     }
 

@@ -4,16 +4,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @MappedSuperclass
 abstract public class BaseModel {
     @Id
-    @Column(nullable = false, updatable = false)
+    @Column(updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false, updatable = false)
+    @Column(updatable = false)
     private UUID uuid;
 
     @Column(nullable = false)
@@ -24,13 +25,13 @@ abstract public class BaseModel {
     private String[] sources;
 
     @JsonProperty("created_at")
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at", updatable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private String createdAt;
+    private LocalDateTime createdAt;
 
     @JsonProperty("updated_at")
-    @Column(name = "updated_at", nullable = false)
-    private String updatedAt;
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     public int getId() {
         return id;
@@ -64,19 +65,19 @@ abstract public class BaseModel {
         this.sources = sources;
     }
 
-    public String getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String created_at) {
+    public void setCreatedAt(LocalDateTime created_at) {
         this.createdAt = created_at;
     }
 
-    public String getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(String updated_at) {
+    public void setUpdatedAt(LocalDateTime updated_at) {
         this.updatedAt = updated_at;
     }
 }
