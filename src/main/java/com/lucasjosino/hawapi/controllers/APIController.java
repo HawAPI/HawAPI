@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("${apiPrefix}/")
+@RequestMapping("${apiPath}/")
 public class APIController {
     @GetMapping
     public ResponseEntity<OpenAPIDtoModel> getAPIInfo() {
