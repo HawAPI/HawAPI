@@ -1,7 +1,9 @@
 package com.lucasjosino.hawapi.models.base;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -9,12 +11,14 @@ import java.util.UUID;
 
 @MappedSuperclass
 abstract public class BaseModel {
+
     @Id
     @Column(updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(updatable = false)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID uuid;
 
     @Column(nullable = false)
@@ -26,11 +30,12 @@ abstract public class BaseModel {
 
     @JsonProperty("created_at")
     @Column(name = "created_at", updatable = false)
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
     @JsonProperty("updated_at")
     @Column(name = "updated_at")
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
 
     public int getId() {

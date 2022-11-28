@@ -6,6 +6,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "actors_socials")
 public class ActorSocialModel implements Serializable {
+
     @Id
     @Column(nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)

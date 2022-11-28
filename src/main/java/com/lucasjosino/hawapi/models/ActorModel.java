@@ -11,6 +11,7 @@ import java.util.List;
 @Entity
 @Table(name = "actors")
 public class ActorModel extends BaseModel {
+
     @JsonProperty("first_name")
     @Column(name = "first_name", nullable = false)
     private String firstName;
@@ -32,7 +33,7 @@ public class ActorModel extends BaseModel {
     private LocalDateTime deathDate;
 
     @Column
-    private String gender;
+    private byte gender;
 
     @Column
     private String nationality;
@@ -55,8 +56,8 @@ public class ActorModel extends BaseModel {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = ActorSocialModel.class)
     @JoinColumn(name = "socials")
     @JoinTable(name = "actors_socials",
-            joinColumns = @JoinColumn(name = "id"),
-            inverseJoinColumns = @JoinColumn(name = "actor_id", referencedColumnName = "actor_id")
+            joinColumns = @JoinColumn(name = "actor_id"),
+            inverseJoinColumns = @JoinColumn(name = "id")
     )
     private List<ActorSocialModel> socials;
 
@@ -107,11 +108,11 @@ public class ActorModel extends BaseModel {
         this.deathDate = deathDate;
     }
 
-    public String getGender() {
+    public byte getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(byte gender) {
         this.gender = gender;
     }
 
