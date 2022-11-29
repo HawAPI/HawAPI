@@ -19,8 +19,8 @@ $$ language 'plpgsql';
 -- Gender ref: ISO/IEC 5218
 --
 CREATE TABLE IF NOT EXISTS characters (
-    id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    uuid UUID UNIQUE NOT NULL DEFAULT uuid_generate_v4(),
+    id INTEGER GENERATED ALWAYS AS IDENTITY,
+    uuid UUID PRIMARY KEY UNIQUE NOT NULL DEFAULT uuid_generate_v4(),
     href VARCHAR(100) NOT NULL,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
@@ -45,8 +45,8 @@ EXECUTE PROCEDURE update_updated_at_field();
 -- Actors
 --
 CREATE TABLE IF NOT EXISTS actors (
-    id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    uuid UUID UNIQUE NOT NULL DEFAULT uuid_generate_v4(),
+    id INTEGER GENERATED ALWAYS AS IDENTITY,
+    uuid UUID PRIMARY KEY UNIQUE NOT NULL DEFAULT uuid_generate_v4(),
     href VARCHAR(100) NOT NULL,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
@@ -78,10 +78,10 @@ CREATE TABLE IF NOT EXISTS actors_socials (
     id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     name VARCHAR(50) NOT NULL,
     url TEXT NOT NULL,
-    actor_id INTEGER NOT NULL,
-    CONSTRAINT pk_actor_id
-          FOREIGN KEY(actor_id)
-          REFERENCES actors(id)
+    actor_uuid UUID NOT NULL,
+    CONSTRAINT fk_actor_uuid
+          FOREIGN KEY(actor_uuid)
+          REFERENCES actors(uuid)
           ON UPDATE CASCADE
           ON DELETE CASCADE
 );
@@ -90,8 +90,8 @@ CREATE TABLE IF NOT EXISTS actors_socials (
 -- Episodes
 --
 CREATE TABLE IF NOT EXISTS episodes (
-    id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    uuid UUID UNIQUE NOT NULL DEFAULT uuid_generate_v4(),
+    id INTEGER GENERATED ALWAYS AS IDENTITY,
+    uuid UUID PRIMARY KEY UNIQUE NOT NULL DEFAULT uuid_generate_v4(),
     href VARCHAR(100) NOT NULL,
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
@@ -117,8 +117,8 @@ EXECUTE PROCEDURE update_updated_at_field();
 -- Seasons
 --
 CREATE TABLE IF NOT EXISTS seasons (
-    id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    uuid UUID UNIQUE NOT NULL DEFAULT uuid_generate_v4(),
+    id INTEGER GENERATED ALWAYS AS IDENTITY,
+    uuid UUID PRIMARY KEY UNIQUE NOT NULL DEFAULT uuid_generate_v4(),
     href VARCHAR(100) NOT NULL,
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
@@ -146,8 +146,8 @@ EXECUTE PROCEDURE update_updated_at_field();
 -- Places
 --
 CREATE TABLE IF NOT EXISTS places (
-    id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    uuid UUID UNIQUE NOT NULL DEFAULT uuid_generate_v4(),
+    id INTEGER GENERATED ALWAYS AS IDENTITY,
+    uuid UUID PRIMARY KEY UNIQUE NOT NULL DEFAULT uuid_generate_v4(),
     href VARCHAR(100) NOT NULL,
     name VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,

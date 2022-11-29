@@ -1,15 +1,21 @@
 package com.lucasjosino.hawapi.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.UUID;
 
 @Entity
 @Table(name = "actors_socials")
 public class ActorSocialModel implements Serializable {
 
     @Id
-    @Column(nullable = false)
+    @JsonIgnore
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @Column(nullable = false, insertable = false, updatable = false)
     private int id;
 
     @Column(nullable = false)
@@ -18,8 +24,9 @@ public class ActorSocialModel implements Serializable {
     @Column(nullable = false)
     private String url;
 
-    @Column(nullable = false)
-    private int actor_id;
+    @JsonProperty("actor_uuid")
+    @Column(name = "actor_uuid", nullable = false)
+    private UUID actorUuid;
 
     public int getId() {
         return id;
@@ -45,11 +52,11 @@ public class ActorSocialModel implements Serializable {
         this.url = url;
     }
 
-    public int getActor_id() {
-        return actor_id;
+    public UUID getActorUuid() {
+        return actorUuid;
     }
 
-    public void setActor_id(int actor_id) {
-        this.actor_id = actor_id;
+    public void setActorUuid(UUID actorUuid) {
+        this.actorUuid = actorUuid;
     }
 }

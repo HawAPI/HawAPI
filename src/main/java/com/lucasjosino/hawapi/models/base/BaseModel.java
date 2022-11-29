@@ -1,22 +1,27 @@
 package com.lucasjosino.hawapi.models.base;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @MappedSuperclass
-abstract public class BaseModel {
+abstract public class BaseModel implements Serializable {
 
-    @Id
-    @Column(updatable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
+    @Column(insertable = false, updatable = false)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private int id;
 
+    @Id
     @Column(updatable = false)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID uuid;

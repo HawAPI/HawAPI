@@ -27,17 +27,28 @@ public class ActorService {
     }
 
     @Transactional
-    public ActorModel findById(Integer id) {
-        Optional<ActorModel> res = actorRepository.findById(id);
+    public ActorModel findById(UUID uuid) {
+        Optional<ActorModel> res = actorRepository.findById(uuid);
 
         if (res.isPresent()) return res.get();
 
-        throw new NotFoundException("Not Found! UUID: " + id);
+        throw new NotFoundException("Not Found! UUID: " + uuid);
     }
 
     @Transactional
     public ActorModel save(ActorModel actor) {
-        actor.setUuid(UUID.randomUUID());
+        UUID actorUuid = UUID.randomUUID();
+        actor.setUuid(actorUuid);
+
+        if (actor.getSocials() != null && !actor.getSocials().isEmpty()) {
+            actor.getSocials().forEach(ac -> ac.setActorUuid(actorUuid));
+        }
+
         return actorRepository.save(actor);
+    }
+
+    @Transactional
+    public void deleteById(UUID uuid) {
+        actorRepository.deleteById(uuid);
     }
 }
