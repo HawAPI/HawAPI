@@ -18,7 +18,6 @@ abstract public class BaseModel implements Serializable {
 
     @JsonIgnore
     @Column(insertable = false, updatable = false)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private int id;
 
     @Id
