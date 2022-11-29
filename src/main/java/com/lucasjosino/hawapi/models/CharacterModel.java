@@ -6,9 +6,11 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "characters")
 public class CharacterModel extends BaseModel {
 
     @JsonProperty("first_name")
@@ -19,7 +21,8 @@ public class CharacterModel extends BaseModel {
     @Column(name = "last_name")
     private String lastName;
 
-    @Column
+    @Type(type = "string-array")
+    @Column(columnDefinition = "varchar[]")
     private String[] nicknames;
 
     @JsonProperty("birth_date")
@@ -31,7 +34,7 @@ public class CharacterModel extends BaseModel {
     private LocalDateTime deathDate;
 
     @Column
-    private String gender;
+    private byte gender;
 
     @Column
     private String thumbnail;
@@ -83,11 +86,11 @@ public class CharacterModel extends BaseModel {
         this.deathDate = deathDate;
     }
 
-    public String getGender() {
+    public byte getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(byte gender) {
         this.gender = gender;
     }
 
