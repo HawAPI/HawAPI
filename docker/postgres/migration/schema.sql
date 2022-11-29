@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS actors_socials (
     name VARCHAR(50) NOT NULL,
     url TEXT NOT NULL,
     actor_uuid UUID NOT NULL,
-    CONSTRAINT pk_actor_uuid
+    CONSTRAINT fk_actor_uuid
           FOREIGN KEY(actor_uuid)
           REFERENCES actors(uuid)
           ON UPDATE CASCADE

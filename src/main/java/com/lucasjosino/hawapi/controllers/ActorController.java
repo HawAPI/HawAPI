@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("${apiPath}/${apiVersion}/actors")
@@ -25,13 +26,19 @@ public class ActorController {
         return ResponseEntity.ok(actorService.findAll());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ActorModel> findById(@PathVariable Integer id) {
-        return ResponseEntity.ok(actorService.findById(id));
+    @GetMapping("/{uuid}")
+    public ResponseEntity<ActorModel> findById(@PathVariable UUID uuid) {
+        return ResponseEntity.ok(actorService.findById(uuid));
     }
 
     @PostMapping
     public ResponseEntity<ActorModel> save(@RequestBody ActorModel actor) {
         return ResponseEntity.status(HttpStatus.CREATED).body(actorService.save(actor));
+    }
+
+    @DeleteMapping("/{uuid}")
+    public ResponseEntity<Void> delete(@PathVariable UUID uuid) {
+        actorService.deleteById(uuid);
+        return ResponseEntity.noContent().build();
     }
 }

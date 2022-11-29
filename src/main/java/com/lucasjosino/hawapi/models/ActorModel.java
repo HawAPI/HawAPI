@@ -53,12 +53,8 @@ public class ActorModel extends BaseModel {
     @Column(nullable = false)
     private String character;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = ActorSocialModel.class)
-    @JoinColumn(name = "socials")
-    @JoinTable(name = "actors_socials",
-            joinColumns = @JoinColumn(name = "actor_id"),
-            inverseJoinColumns = @JoinColumn(name = "id")
-    )
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "actor_uuid", referencedColumnName = "uuid", insertable = false, updatable = false)
     private List<ActorSocialModel> socials;
 
     @Type(type = "string-array")
