@@ -1,9 +1,15 @@
 package com.lucasjosino.hawapi.models.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.lucasjosino.hawapi.configs.APIConfig;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 
-public class OpenAPIDtoModel {
+@Component
+@PropertySource("classpath:api.properties")
+@ConfigurationProperties(prefix = "hawapi")
+public class OpenAPIConfig {
+
     private String title;
 
     private String description;
@@ -33,19 +39,7 @@ public class OpenAPIDtoModel {
     @JsonProperty("license_url")
     private String licenseUrl;
 
-    public OpenAPIDtoModel() {
-        this.title = APIConfig.title;
-        this.description = APIConfig.description;
-        this.version = APIConfig.version;
-        this.url = APIConfig.url;
-        this.docs = APIConfig.docs;
-        this.github = APIConfig.github;
-        this.githubUrl = APIConfig.githubUrl;
-        this.apiUrl = APIConfig.apiUrl;
-        this.apiVersion = APIConfig.apiVersion;
-        this.apiBaseUrl = APIConfig.apiBaseUrl;
-        this.license = APIConfig.license;
-        this.licenseUrl = APIConfig.licenseUrl;
+    public OpenAPIConfig() {
     }
 
 
