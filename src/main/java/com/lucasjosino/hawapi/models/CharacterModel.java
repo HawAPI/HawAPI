@@ -7,7 +7,7 @@ import org.hibernate.annotations.Type;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "characters")
@@ -27,11 +27,11 @@ public class CharacterModel extends BaseModel {
 
     @JsonProperty("birth_date")
     @Column(name = "birth_date")
-    private LocalDateTime birthDate;
+    private LocalDate birthDate;
 
     @JsonProperty("death_date")
     @Column(name = "death_date")
-    private LocalDateTime deathDate;
+    private LocalDate deathDate;
 
     @Column
     private byte gender;
@@ -70,19 +70,19 @@ public class CharacterModel extends BaseModel {
         this.nicknames = nicknames;
     }
 
-    public LocalDateTime getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(LocalDateTime birthDate) {
+    public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
 
-    public LocalDateTime getDeathDate() {
+    public LocalDate getDeathDate() {
         return deathDate;
     }
 
-    public void setDeathDate(LocalDateTime deathDate) {
+    public void setDeathDate(LocalDate deathDate) {
         this.deathDate = deathDate;
     }
 

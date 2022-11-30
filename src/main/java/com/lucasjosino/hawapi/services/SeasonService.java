@@ -1,12 +1,12 @@
 package com.lucasjosino.hawapi.services;
 
 import com.lucasjosino.hawapi.configs.OpenAPIConfig;
+import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.models.SeasonModel;
 import com.lucasjosino.hawapi.repositories.SeasonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.webjars.NotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +36,7 @@ public class SeasonService {
 
         if (res.isPresent()) return res.get();
 
-        throw new NotFoundException("Not Found! UUID: " + uuid);
+        throw new ItemNotFoundException(SeasonModel.class);
     }
 
     @Transactional

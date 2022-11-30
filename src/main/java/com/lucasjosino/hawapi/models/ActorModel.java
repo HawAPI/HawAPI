@@ -5,7 +5,7 @@ import com.lucasjosino.hawapi.models.base.BaseModel;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -26,11 +26,11 @@ public class ActorModel extends BaseModel {
 
     @JsonProperty("birth_date")
     @Column(name = "birth_date")
-    private LocalDateTime birthDate;
+    private LocalDate birthDate;
 
     @JsonProperty("death_date")
     @Column(name = "death_date")
-    private LocalDateTime deathDate;
+    private LocalDate deathDate;
 
     @Column
     private byte gender;
@@ -88,19 +88,19 @@ public class ActorModel extends BaseModel {
         this.nicknames = nicknames;
     }
 
-    public LocalDateTime getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(LocalDateTime birthDate) {
+    public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
 
-    public LocalDateTime getDeathDate() {
+    public LocalDate getDeathDate() {
         return deathDate;
     }
 
-    public void setDeathDate(LocalDateTime deathDate) {
+    public void setDeathDate(LocalDate deathDate) {
         this.deathDate = deathDate;
     }
 
