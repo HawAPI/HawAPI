@@ -1,5 +1,6 @@
 package com.lucasjosino.hawapi.services;
 
+import com.lucasjosino.hawapi.configs.OpenAPIConfig;
 import com.lucasjosino.hawapi.models.CharacterModel;
 import com.lucasjosino.hawapi.repositories.CharacterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +17,12 @@ public class CharacterService {
 
     private final CharacterRepository characterRepository;
 
+    private final String basePath;
+
     @Autowired
-    public CharacterService(CharacterRepository characterRepository) {
+    public CharacterService(CharacterRepository characterRepository, OpenAPIConfig config) {
         this.characterRepository = characterRepository;
+        this.basePath = config.getApiBaseUrl() + "/characters";
     }
 
     @Transactional
@@ -39,6 +43,7 @@ public class CharacterService {
     public CharacterModel save(CharacterModel character) {
         UUID characterUUID = UUID.randomUUID();
         character.setUuid(characterUUID);
+        character.setHref(basePath + characterUUID);
         return characterRepository.save(character);
     }
 

@@ -1,5 +1,6 @@
 package com.lucasjosino.hawapi.services;
 
+import com.lucasjosino.hawapi.configs.OpenAPIConfig;
 import com.lucasjosino.hawapi.models.ActorModel;
 import com.lucasjosino.hawapi.repositories.ActorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +17,12 @@ public class ActorService {
 
     private final ActorRepository actorRepository;
 
+    private final String basePath;
+
     @Autowired
-    public ActorService(ActorRepository actorRepository) {
+    public ActorService(ActorRepository actorRepository, OpenAPIConfig config) {
         this.actorRepository = actorRepository;
+        this.basePath = config.getApiBaseUrl() + "/actors";
     }
 
     @Transactional
@@ -37,11 +41,12 @@ public class ActorService {
 
     @Transactional
     public ActorModel save(ActorModel actor) {
-        UUID actorUuid = UUID.randomUUID();
-        actor.setUuid(actorUuid);
+        UUID actorUUID = UUID.randomUUID();
+        actor.setUuid(actorUUID);
+        actor.setHref(basePath + actorUUID);
 
         if (actor.getSocials() != null && !actor.getSocials().isEmpty()) {
-            actor.getSocials().forEach(ac -> ac.setActorUuid(actorUuid));
+            actor.getSocials().forEach(actorSocial -> actorSocial.setActorUuid(actorUUID));
         }
 
         return actorRepository.save(actor);
