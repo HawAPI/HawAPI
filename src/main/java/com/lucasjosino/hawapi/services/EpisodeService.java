@@ -43,7 +43,7 @@ public class EpisodeService {
     public EpisodeModel save(EpisodeModel episode) {
         UUID episodeUUID = UUID.randomUUID();
         episode.setUuid(episodeUUID);
-        episode.setHref(basePath + episodeUUID);
+        episode.setHref(basePath + "/" + episodeUUID);
         return episodeRepository.save(episode);
     }
 

@@ -43,7 +43,7 @@ public class ActorService {
     public ActorModel save(ActorModel actor) {
         UUID actorUUID = UUID.randomUUID();
         actor.setUuid(actorUUID);
-        actor.setHref(basePath + actorUUID);
+        actor.setHref(basePath + "/" + actorUUID);
 
         if (actor.getSocials() != null && !actor.getSocials().isEmpty()) {
             actor.getSocials().forEach(actorSocial -> actorSocial.setActorUuid(actorUUID));

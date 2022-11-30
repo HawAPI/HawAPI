@@ -22,7 +22,7 @@ public class PlaceService {
     @Autowired
     public PlaceService(PlaceRepository placeRepository, OpenAPIConfig config) {
         this.placeRepository = placeRepository;
-        this.basePath = config.getApiBaseUrl() + "/seasons";
+        this.basePath = config.getApiBaseUrl() + "/places";
     }
 
     @Transactional
@@ -43,7 +43,7 @@ public class PlaceService {
     public PlaceModel save(PlaceModel episode) {
         UUID seasonUUID = UUID.randomUUID();
         episode.setUuid(seasonUUID);
-        episode.setHref(basePath + seasonUUID);
+        episode.setHref(basePath + "/" + seasonUUID);
         return placeRepository.save(episode);
     }
 

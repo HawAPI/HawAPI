@@ -43,7 +43,7 @@ public class CharacterService {
     public CharacterModel save(CharacterModel character) {
         UUID characterUUID = UUID.randomUUID();
         character.setUuid(characterUUID);
-        character.setHref(basePath + characterUUID);
+        character.setHref(basePath + "/" + characterUUID);
         return characterRepository.save(character);
     }
 
