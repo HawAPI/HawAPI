@@ -5,8 +5,10 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "places")
 public class PlaceModel extends BaseModel {
 
     @Column(nullable = false)

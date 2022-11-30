@@ -6,9 +6,11 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "seasons")
 public class SeasonModel extends BaseModel {
 
     @Column(nullable = false)
@@ -27,7 +29,7 @@ public class SeasonModel extends BaseModel {
 
     @JsonProperty("season_num")
     @Column(nullable = false, name = "season_num")
-    private String seasonNum;
+    private byte seasonNum;
 
     @JsonProperty("release_date")
     @Column(nullable = false, name = "release_date")
@@ -88,11 +90,11 @@ public class SeasonModel extends BaseModel {
         this.tags = tags;
     }
 
-    public String getSeasonNum() {
+    public byte getSeasonNum() {
         return seasonNum;
     }
 
-    public void setSeasonNum(String season) {
+    public void setSeasonNum(byte season) {
         this.seasonNum = season;
     }
 
