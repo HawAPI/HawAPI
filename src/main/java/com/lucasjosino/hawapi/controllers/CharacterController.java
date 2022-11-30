@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("{apiPath}/{apiVersion}/characters")
+@RequestMapping("${hawapi.apiBaseUrl}/characters")
 public class CharacterController {
 
     private final CharacterService characterService;

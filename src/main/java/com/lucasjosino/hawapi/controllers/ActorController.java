@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("${apiPath}/${apiVersion}/actors")
+@RequestMapping("${hawapi.apiBaseUrl}/actors")
 public class ActorController {
 
     private final ActorService actorService;
