@@ -1,4 +1,4 @@
-package com.lucasjosino.hawapi.models.dto;
+package com.lucasjosino.hawapi.configs;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -31,6 +31,9 @@ public class OpenAPIConfig {
     @JsonProperty("api_version")
     private String apiVersion;
 
+    @JsonProperty("api_path")
+    private String apiPath;
+
     @JsonProperty("api_base_url")
     private String apiBaseUrl;
 
@@ -41,7 +44,6 @@ public class OpenAPIConfig {
 
     public OpenAPIConfig() {
     }
-
 
     public String getTitle() {
         return title;
@@ -113,6 +115,14 @@ public class OpenAPIConfig {
 
     public void setApiVersion(String apiVersion) {
         this.apiVersion = apiVersion;
+    }
+
+    public String getApiPath() {
+        return apiPath;
+    }
+
+    public void setApiPath(String apiPath) {
+        this.apiPath = apiPath;
     }
 
     public String getApiBaseUrl() {

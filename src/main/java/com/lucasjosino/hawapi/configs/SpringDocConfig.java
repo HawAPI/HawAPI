@@ -1,6 +1,5 @@
 package com.lucasjosino.hawapi.configs;
 
-import com.lucasjosino.hawapi.models.dto.OpenAPIConfig;
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
