@@ -40,11 +40,11 @@ public class SeasonService {
     }
 
     @Transactional
-    public SeasonModel save(SeasonModel episode) {
+    public SeasonModel save(SeasonModel season) {
         UUID seasonUUID = UUID.randomUUID();
-        episode.setUuid(seasonUUID);
-        episode.setHref(basePath + "/" + seasonUUID);
-        return seasonRepository.save(episode);
+        season.setUuid(seasonUUID);
+        season.setHref(basePath + "/" + seasonUUID);
+        return seasonRepository.save(season);
     }
 
     @Transactional
