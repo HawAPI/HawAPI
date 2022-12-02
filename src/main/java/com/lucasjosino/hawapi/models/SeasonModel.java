@@ -25,7 +25,11 @@ public class SeasonModel extends BaseModel {
 
     @Type(type = "string-array")
     @Column(columnDefinition = "varchar[]")
-    private String[] tags;
+    private String[] genres;
+
+    @Type(type = "string-array")
+    @Column(columnDefinition = "varchar[]")
+    private String[] season;
 
     @JsonProperty("season_num")
     @Column(nullable = false, name = "season_num")
@@ -48,8 +52,15 @@ public class SeasonModel extends BaseModel {
     private String[] episodes;
 
     @Type(type = "string-array")
+    @Column(columnDefinition = "varchar[]")
+    private String[] soundtracks;
+
+    @Type(type = "string-array")
     @Column(columnDefinition = "text[]")
     private String[] trailers;
+
+    @Column
+    private int budget;
 
     @Type(type = "string-array")
     @Column(columnDefinition = "text[]")
@@ -82,20 +93,28 @@ public class SeasonModel extends BaseModel {
         this.durationTotal = durationTotal;
     }
 
-    public String[] getTags() {
-        return tags;
+    public String[] getGenres() {
+        return genres;
     }
 
-    public void setTags(String[] tags) {
-        this.tags = tags;
+    public void setGenres(String[] genres) {
+        this.genres = genres;
+    }
+
+    public String[] getSeason() {
+        return season;
+    }
+
+    public void setSeason(String[] season) {
+        this.season = season;
     }
 
     public byte getSeasonNum() {
         return seasonNum;
     }
 
-    public void setSeasonNum(byte season) {
-        this.seasonNum = season;
+    public void setSeasonNum(byte seasonNum) {
+        this.seasonNum = seasonNum;
     }
 
     public LocalDate getReleaseDate() {
@@ -110,16 +129,16 @@ public class SeasonModel extends BaseModel {
         return nextSeason;
     }
 
-    public void setNextEpisode(String nextEpisode) {
-        this.nextSeason = nextEpisode;
+    public void setNextSeason(String nextSeason) {
+        this.nextSeason = nextSeason;
     }
 
     public String getPrevSeason() {
         return prevSeason;
     }
 
-    public void setPrevEpisode(String prevEpisode) {
-        this.prevSeason = prevEpisode;
+    public void setPrevSeason(String prevSeason) {
+        this.prevSeason = prevSeason;
     }
 
     public String[] getEpisodes() {
@@ -130,12 +149,28 @@ public class SeasonModel extends BaseModel {
         this.episodes = episodes;
     }
 
+    public String[] getSoundtracks() {
+        return soundtracks;
+    }
+
+    public void setSoundtracks(String[] soundtracks) {
+        this.soundtracks = soundtracks;
+    }
+
     public String[] getTrailers() {
         return trailers;
     }
 
     public void setTrailers(String[] trailers) {
         this.trailers = trailers;
+    }
+
+    public int getBudget() {
+        return budget;
+    }
+
+    public void setBudget(int budget) {
+        this.budget = budget;
     }
 
     public String[] getImages() {

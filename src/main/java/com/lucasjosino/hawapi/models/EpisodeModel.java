@@ -38,10 +38,6 @@ public class EpisodeModel extends BaseModel {
 
     @Type(type = "string-array")
     @Column(columnDefinition = "text[]")
-    private String[] trailers;
-
-    @Type(type = "string-array")
-    @Column(columnDefinition = "text[]")
     private String[] images;
 
     @Column
@@ -101,14 +97,6 @@ public class EpisodeModel extends BaseModel {
 
     public void setSeason(String season) {
         this.season = season;
-    }
-
-    public String[] getTrailers() {
-        return trailers;
-    }
-
-    public void setTrailers(String[] trailers) {
-        this.trailers = trailers;
     }
 
     public String[] getImages() {

@@ -40,10 +40,6 @@ public class ActorModel extends BaseModel {
 
     @Type(type = "string-array")
     @Column(columnDefinition = "varchar[]")
-    private String[] episodes;
-
-    @Type(type = "string-array")
-    @Column(columnDefinition = "varchar[]")
     private String[] seasons;
 
     @Type(type = "string-array")
@@ -120,20 +116,20 @@ public class ActorModel extends BaseModel {
         this.nationality = nationality;
     }
 
-    public String[] getEpisodes() {
-        return episodes;
-    }
-
-    public void setEpisodes(String[] episodes) {
-        this.episodes = episodes;
-    }
-
     public String[] getSeasons() {
         return seasons;
     }
 
     public void setSeasons(String[] seasons) {
         this.seasons = seasons;
+    }
+
+    public String[] getAwards() {
+        return awards;
+    }
+
+    public void setAwards(String[] awards) {
+        this.awards = awards;
     }
 
     public String getCharacter() {

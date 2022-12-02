@@ -20,7 +20,10 @@ public class ActorSocialModel implements Serializable {
     private int id;
 
     @Column(nullable = false)
-    private String name;
+    private String social;
+
+    @Column(nullable = false)
+    private String handle;
 
     @Column(nullable = false)
     private String url;
@@ -37,12 +40,20 @@ public class ActorSocialModel implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getSocial() {
+        return social;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSocial(String social) {
+        this.social = social;
+    }
+
+    public String getHandle() {
+        return handle;
+    }
+
+    public void setHandle(String handle) {
+        this.handle = handle;
     }
 
     public String getUrl() {
