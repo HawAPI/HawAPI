@@ -1,5 +1,6 @@
 package com.lucasjosino.hawapi.controllers;
 
+import com.lucasjosino.hawapi.interfaces.MappingInterface;
 import com.lucasjosino.hawapi.models.LocationModel;
 import com.lucasjosino.hawapi.services.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("${hawapi.apiBaseUrl}/places")
-public class LocationController {
+public class LocationController implements MappingInterface<LocationModel> {
 
     private final LocationService locationService;
 

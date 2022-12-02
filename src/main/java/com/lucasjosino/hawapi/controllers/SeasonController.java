@@ -1,5 +1,6 @@
 package com.lucasjosino.hawapi.controllers;
 
+import com.lucasjosino.hawapi.interfaces.MappingInterface;
 import com.lucasjosino.hawapi.models.SeasonModel;
 import com.lucasjosino.hawapi.services.SeasonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("${hawapi.apiBaseUrl}/seasons")
-public class SeasonController {
+public class SeasonController implements MappingInterface<SeasonModel> {
 
     private final SeasonService seasonService;
 

@@ -1,5 +1,6 @@
 package com.lucasjosino.hawapi.controllers;
 
+import com.lucasjosino.hawapi.interfaces.MappingInterface;
 import com.lucasjosino.hawapi.models.ActorModel;
 import com.lucasjosino.hawapi.services.ActorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("${hawapi.apiBaseUrl}/actors")
-public class ActorController {
+public class ActorController implements MappingInterface<ActorModel> {
 
     private final ActorService actorService;
 
@@ -27,7 +28,7 @@ public class ActorController {
     }
 
     @GetMapping("/{uuid}")
-    public ResponseEntity<ActorModel> findById(@PathVariable UUID uuid) {
+    public ResponseEntity<ActorModel> findByUUID(@PathVariable UUID uuid) {
         return ResponseEntity.ok(actorService.findById(uuid));
     }
 

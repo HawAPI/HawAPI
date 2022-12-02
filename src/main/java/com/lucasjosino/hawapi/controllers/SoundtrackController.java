@@ -1,5 +1,6 @@
 package com.lucasjosino.hawapi.controllers;
 
+import com.lucasjosino.hawapi.interfaces.MappingInterface;
 import com.lucasjosino.hawapi.models.SoundtrackModel;
 import com.lucasjosino.hawapi.services.SoundtrackService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("${hawapi.apiBaseUrl}/soundtracks")
-public class SoundtrackController {
+public class SoundtrackController implements MappingInterface<SoundtrackModel> {
 
     private final SoundtrackService soundtrackService;
 

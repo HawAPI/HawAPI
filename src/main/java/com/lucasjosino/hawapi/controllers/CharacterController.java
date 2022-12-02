@@ -1,5 +1,6 @@
 package com.lucasjosino.hawapi.controllers;
 
+import com.lucasjosino.hawapi.interfaces.MappingInterface;
 import com.lucasjosino.hawapi.models.CharacterModel;
 import com.lucasjosino.hawapi.services.CharacterService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("${hawapi.apiBaseUrl}/characters")
-public class CharacterController {
+public class CharacterController implements MappingInterface<CharacterModel> {
 
     private final CharacterService characterService;
 

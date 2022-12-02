@@ -1,5 +1,6 @@
 package com.lucasjosino.hawapi.controllers;
 
+import com.lucasjosino.hawapi.interfaces.MappingInterface;
 import com.lucasjosino.hawapi.models.EpisodeModel;
 import com.lucasjosino.hawapi.services.EpisodeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("${hawapi.apiBaseUrl}/episodes")
-public class EpisodeController {
+public class EpisodeController implements MappingInterface<EpisodeModel> {
 
     private final EpisodeService episodeService;
 
