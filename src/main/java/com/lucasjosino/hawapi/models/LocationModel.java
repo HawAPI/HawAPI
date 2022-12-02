@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "locations")
-public class LocationsModel extends BaseModel {
+public class LocationModel extends BaseModel {
 
     @Column(nullable = false)
     private String name;
