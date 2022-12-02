@@ -55,7 +55,6 @@ CREATE TABLE IF NOT EXISTS actors (
     death_date TIMESTAMP,
     gender SMALLINT NOT NULL DEFAULT 0,
     nationality VARCHAR(50),
-    episodes VARCHAR ARRAY,
     seasons VARCHAR ARRAY,
     awards VARCHAR ARRAY,
     character VARCHAR(255) NOT NULL,
@@ -76,7 +75,8 @@ EXECUTE PROCEDURE update_updated_at_field();
 --
 CREATE TABLE IF NOT EXISTS actors_socials (
     id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    name VARCHAR(50) NOT NULL,
+    social VARCHAR(50) NOT NULL,
+    handle VARCHAR(50) NOT NULL,
     url TEXT NOT NULL,
     actor_uuid UUID NOT NULL,
     CONSTRAINT fk_actor_uuid
@@ -100,7 +100,6 @@ CREATE TABLE IF NOT EXISTS episodes (
     next_episode VARCHAR(255),
     prev_episode VARCHAR(255),
     season VARCHAR(255) NOT NULL,
-    trailers TEXT ARRAY,
     thumbnail TEXT,
     images TEXT ARRAY,
     sources TEXT ARRAY,
@@ -123,13 +122,15 @@ CREATE TABLE IF NOT EXISTS seasons (
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
     duration_total INTEGER NOT NULL,
-    tags VARCHAR ARRAY,
+    genres VARCHAR(50) ARRAY,
     season_num SMALLINT NOT NULL,
     release_date TIMESTAMP NOT NULL,
     next_season VARCHAR(255),
     prev_season VARCHAR(255),
     episodes VARCHAR ARRAY,
+    soundtracks VARCHAR(255) ARRAY,
     trailers VARCHAR ARRAY,
+    budget INTEGER,
     thumbnail TEXT,
     images TEXT ARRAY,
     sources TEXT ARRAY,
@@ -143,9 +144,9 @@ CREATE TRIGGER handle_updated_at_field BEFORE
 EXECUTE PROCEDURE update_updated_at_field();
 
 --
--- Places
+-- Locations
 --
-CREATE TABLE IF NOT EXISTS places (
+CREATE TABLE IF NOT EXISTS locations (
     id INTEGER GENERATED ALWAYS AS IDENTITY,
     uuid UUID PRIMARY KEY UNIQUE NOT NULL DEFAULT uuid_generate_v4(),
     href VARCHAR(100) NOT NULL,
@@ -159,6 +160,57 @@ CREATE TABLE IF NOT EXISTS places (
 );
 
 CREATE TRIGGER handle_updated_at_field BEFORE
-    UPDATE ON places
+    UPDATE ON locations
     FOR EACH ROW
 EXECUTE PROCEDURE update_updated_at_field();
+
+--
+-- Soundtracks
+--
+CREATE TABLE IF NOT EXISTS soundtracks (
+    id INTEGER GENERATED ALWAYS AS IDENTITY,
+    uuid UUID PRIMARY KEY UNIQUE NOT NULL DEFAULT uuid_generate_v4(),
+    href VARCHAR(100) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    duration INTEGER NOT NULL,
+    artist VARCHAR(255) NOT NULL,
+    album VARCHAR (255),
+    release_date TIMESTAMP NOT NULL,
+    urls TEXT ARRAY NOT NULL DEFAULT '{}',
+    thumbnail TEXT,
+    sources TEXT ARRAY,
+    created_at TIMESTAMP NOT NULL DEFAULT now(),
+    updated_at TIMESTAMP NOT NULL DEFAULT now()
+);
+
+CREATE TRIGGER handle_updated_at_field BEFORE
+    UPDATE ON soundtracks
+    FOR EACH ROW
+EXECUTE PROCEDURE update_updated_at_field();
+
+--
+-- Games
+--
+CREATE TABLE IF NOT EXISTS games (
+    id INTEGER GENERATED ALWAYS AS IDENTITY,
+    uuid UUID PRIMARY KEY UNIQUE NOT NULL DEFAULT uuid_generate_v4(),
+    href VARCHAR(100) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    platforms VARCHAR(50) ARRAY,
+    genres VARCHAR(50) ARRAY,
+    publishers VARCHAR(50) ARRAY,
+    developers VARCHAR(50) ARRAY,
+    release_date TIMESTAMP NOT NULL,
+    url TEXT NOT NULL,
+    trailer TEXT NOT NULL,
+    thumbnail TEXT,
+    sources TEXT ARRAY,
+    created_at TIMESTAMP NOT NULL DEFAULT now(),
+    updated_at TIMESTAMP NOT NULL DEFAULT now()
+);
+
+CREATE TRIGGER handle_updated_at_field BEFORE
+    UPDATE ON games
+    FOR EACH ROW
+EXECUTE PROCEDURE update_updated_at_field();
+

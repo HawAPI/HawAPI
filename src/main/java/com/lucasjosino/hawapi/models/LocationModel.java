@@ -8,8 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "places")
-public class PlaceModel extends BaseModel {
+@Table(name = "locations")
+public class LocationModel extends BaseModel {
 
     @Column(nullable = false)
     private String name;

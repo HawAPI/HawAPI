@@ -2,8 +2,8 @@ package com.lucasjosino.hawapi.services;
 
 import com.lucasjosino.hawapi.configs.OpenAPIConfig;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
-import com.lucasjosino.hawapi.models.PlaceModel;
-import com.lucasjosino.hawapi.repositories.PlaceRepository;
+import com.lucasjosino.hawapi.models.LocationModel;
+import com.lucasjosino.hawapi.repositories.LocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,42 +13,42 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class PlaceService {
+public class LocationService {
 
-    private final PlaceRepository placeRepository;
+    private final LocationRepository locationRepository;
 
     private final String basePath;
 
     @Autowired
-    public PlaceService(PlaceRepository placeRepository, OpenAPIConfig config) {
-        this.placeRepository = placeRepository;
+    public LocationService(LocationRepository locationRepository, OpenAPIConfig config) {
+        this.locationRepository = locationRepository;
         this.basePath = config.getApiBaseUrl() + "/places";
     }
 
     @Transactional
-    public List<PlaceModel> findAll() {
-        return placeRepository.findAll();
+    public List<LocationModel> findAll() {
+        return locationRepository.findAll();
     }
 
     @Transactional
-    public PlaceModel findByUUID(UUID uuid) {
-        Optional<PlaceModel> res = placeRepository.findById(uuid);
+    public LocationModel findByUUID(UUID uuid) {
+        Optional<LocationModel> res = locationRepository.findById(uuid);
 
         if (res.isPresent()) return res.get();
 
-        throw new ItemNotFoundException(PlaceModel.class);
+        throw new ItemNotFoundException(LocationModel.class);
     }
 
     @Transactional
-    public PlaceModel save(PlaceModel episode) {
+    public LocationModel save(LocationModel episode) {
         UUID seasonUUID = UUID.randomUUID();
         episode.setUuid(seasonUUID);
         episode.setHref(basePath + "/" + seasonUUID);
-        return placeRepository.save(episode);
+        return locationRepository.save(episode);
     }
 
     @Transactional
     public void delete(UUID uuid) {
-        placeRepository.deleteById(uuid);
+        locationRepository.deleteById(uuid);
     }
 }
