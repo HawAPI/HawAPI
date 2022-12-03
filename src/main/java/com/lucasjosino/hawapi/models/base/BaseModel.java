@@ -21,24 +21,25 @@ abstract public class BaseModel implements Serializable {
     private int id;
 
     @Id
-    @Column(updatable = false)
+    @Column(insertable = false, updatable = false)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID uuid;
 
-    @Column(nullable = false, updatable = false)
+    @Column(updatable = false, insertable = false)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String href;
 
     @Type(type = "string-array")
     @Column(columnDefinition = "text[]")
     private String[] sources;
 
-    @JsonProperty("created_at")
-    @Column(name = "created_at", updatable = false)
+    @JsonProperty(value = "created_at", access = JsonProperty.Access.READ_ONLY)
+    @Column(name = "created_at", updatable = false, insertable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @JsonProperty("updated_at")
-    @Column(name = "updated_at")
+    @JsonProperty(value = "updated_at", access = JsonProperty.Access.READ_ONLY)
+    @Column(name = "updated_at", updatable = false, insertable = false)
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
