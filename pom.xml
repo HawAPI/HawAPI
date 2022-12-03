@@ -10,12 +10,18 @@
     </parent>
     <groupId>com.lucasjosino</groupId>
     <artifactId>hawapi</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>hawapi</name>
-    <description>A free and open source API for Stranger Things.</description>
+    <version>1.0.0</version>
+    <name>HawAPI</name>
+    <description>A Free and Open Source API for Stranger Things.</description>
     <properties>
         <java.version>1.8</java.version>
     </properties>
+    <licenses>
+        <license>
+            <name>BSD 3-Clause "New" or "Revised" License</name>
+            <url>https://github.com/LucJosin/HawAPI/blob/main/LICENSE</url>
+        </license>
+    </licenses>
     <dependencies>
         <!-- Spring Boot -->
         <dependency>
@@ -62,6 +68,13 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <filtering>true</filtering>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

@@ -22,8 +22,8 @@ public class OpenAPIConfig {
 
     private String github;
 
-    @JsonProperty("github_url")
-    private String githubUrl;
+    @JsonProperty("github_home")
+    private String githubHome;
 
     @JsonProperty("api_url")
     private String apiUrl;
@@ -93,12 +93,12 @@ public class OpenAPIConfig {
         this.github = github;
     }
 
-    public String getGithubUrl() {
-        return githubUrl;
+    public String getGithubHome() {
+        return githubHome;
     }
 
-    public void setGithubUrl(String githubUrl) {
-        this.githubUrl = githubUrl;
+    public void setGithubHome(String githubHome) {
+        this.githubHome = githubHome;
     }
 
     public String getApiUrl() {
