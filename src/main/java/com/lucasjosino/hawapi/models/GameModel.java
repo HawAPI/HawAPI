@@ -31,7 +31,7 @@ public class GameModel extends BaseModel {
     @Column(columnDefinition = "varchar[]")
     private String[] developers;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "release_date")
     private LocalDate releaseDate;
 
     @Column(nullable = false)
