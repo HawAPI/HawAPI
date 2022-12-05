@@ -1,9 +1,13 @@
 package com.lucasjosino.hawapi.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.github.fge.jsonpatch.JsonPatchException;
 import com.lucasjosino.hawapi.configs.OpenAPIConfig;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.models.CharacterModel;
 import com.lucasjosino.hawapi.repositories.CharacterRepository;
+import com.lucasjosino.hawapi.services.utils.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,11 +21,18 @@ public class CharacterService {
 
     private final CharacterRepository characterRepository;
 
+    private final ServiceUtils utils;
+
     private final String basePath;
 
     @Autowired
-    public CharacterService(CharacterRepository characterRepository, OpenAPIConfig config) {
+    public CharacterService(
+            CharacterRepository characterRepository,
+            ServiceUtils utils,
+            OpenAPIConfig config
+    ) {
         this.characterRepository = characterRepository;
+        this.utils = utils;
         this.basePath = config.getApiBaseUrl() + "/characters";
     }
 
@@ -45,6 +56,16 @@ public class CharacterService {
         character.setUuid(characterUUID);
         character.setHref(basePath + "/" + characterUUID);
         return characterRepository.save(character);
+    }
+
+    @Transactional
+    public void patch(UUID uuid, JsonNode patch) throws JsonPatchException, JsonProcessingException {
+        CharacterModel character = characterRepository.findById(uuid).orElseThrow(ItemNotFoundException::new);
+
+        CharacterModel patchedCharacter = utils.mergePatch(character, patch, CharacterModel.class);
+
+        patchedCharacter.setUuid(uuid);
+        characterRepository.save(patchedCharacter);
     }
 
     @Transactional

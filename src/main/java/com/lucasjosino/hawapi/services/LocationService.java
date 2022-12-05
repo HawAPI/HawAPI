@@ -1,9 +1,13 @@
 package com.lucasjosino.hawapi.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.github.fge.jsonpatch.JsonPatchException;
 import com.lucasjosino.hawapi.configs.OpenAPIConfig;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.models.LocationModel;
 import com.lucasjosino.hawapi.repositories.LocationRepository;
+import com.lucasjosino.hawapi.services.utils.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,11 +21,14 @@ public class LocationService {
 
     private final LocationRepository locationRepository;
 
+    private final ServiceUtils utils;
+
     private final String basePath;
 
     @Autowired
-    public LocationService(LocationRepository locationRepository, OpenAPIConfig config) {
+    public LocationService(LocationRepository locationRepository, ServiceUtils utils, OpenAPIConfig config) {
         this.locationRepository = locationRepository;
+        this.utils = utils;
         this.basePath = config.getApiBaseUrl() + "/places";
     }
 
@@ -45,6 +52,16 @@ public class LocationService {
         episode.setUuid(seasonUUID);
         episode.setHref(basePath + "/" + seasonUUID);
         return locationRepository.save(episode);
+    }
+
+    @Transactional
+    public void patch(UUID uuid, JsonNode patch) throws JsonPatchException, JsonProcessingException {
+        LocationModel location = locationRepository.findById(uuid).orElseThrow(ItemNotFoundException::new);
+
+        LocationModel patchedLocation = utils.mergePatch(location, patch, LocationModel.class);
+
+        patchedLocation.setUuid(uuid);
+        locationRepository.save(patchedLocation);
     }
 
     @Transactional

@@ -25,7 +25,7 @@ abstract public class BaseModel implements Serializable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID uuid;
 
-    @Column(updatable = false, insertable = false)
+    @Column(updatable = false)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String href;
 

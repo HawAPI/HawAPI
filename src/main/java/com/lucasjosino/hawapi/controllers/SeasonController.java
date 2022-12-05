@@ -1,5 +1,7 @@
 package com.lucasjosino.hawapi.controllers;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.interfaces.MappingInterface;
 import com.lucasjosino.hawapi.models.SeasonModel;
 import com.lucasjosino.hawapi.services.SeasonService;
@@ -34,6 +36,18 @@ public class SeasonController implements MappingInterface<SeasonModel> {
     @PostMapping
     public ResponseEntity<SeasonModel> save(@RequestBody SeasonModel episode) {
         return ResponseEntity.ok(seasonService.save(episode));
+    }
+
+    @PatchMapping("/{uuid}")
+    public ResponseEntity<Void> patch(@PathVariable UUID uuid, @RequestBody JsonNode patch) {
+        try {
+            seasonService.patch(uuid, patch);
+        } catch (ItemNotFoundException notFound) {
+            throw notFound;
+        } catch (Exception ex) {
+            return ResponseEntity.internalServerError().build();
+        }
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{uuid}")
