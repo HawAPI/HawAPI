@@ -1,5 +1,7 @@
 package com.lucasjosino.hawapi.controllers;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.interfaces.MappingInterface;
 import com.lucasjosino.hawapi.models.LocationModel;
 import com.lucasjosino.hawapi.services.LocationService;
@@ -34,6 +36,18 @@ public class LocationController implements MappingInterface<LocationModel> {
     @PostMapping
     public ResponseEntity<LocationModel> save(@RequestBody LocationModel episode) {
         return ResponseEntity.ok(locationService.save(episode));
+    }
+
+    @PatchMapping("/{uuid}")
+    public ResponseEntity<Void> patch(@PathVariable UUID uuid, @RequestBody JsonNode patch) {
+        try {
+            locationService.patch(uuid, patch);
+        } catch (ItemNotFoundException notFound) {
+            throw notFound;
+        } catch (Exception ex) {
+            return ResponseEntity.internalServerError().build();
+        }
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{uuid}")

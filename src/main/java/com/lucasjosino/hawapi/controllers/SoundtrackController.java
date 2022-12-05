@@ -1,5 +1,7 @@
 package com.lucasjosino.hawapi.controllers;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.interfaces.MappingInterface;
 import com.lucasjosino.hawapi.models.SoundtrackModel;
 import com.lucasjosino.hawapi.services.SoundtrackService;
@@ -34,6 +36,18 @@ public class SoundtrackController implements MappingInterface<SoundtrackModel> {
     @PostMapping
     public ResponseEntity<SoundtrackModel> save(@RequestBody SoundtrackModel episode) {
         return ResponseEntity.ok(soundtrackService.save(episode));
+    }
+
+    @PatchMapping("/{uuid}")
+    public ResponseEntity<Void> patch(@PathVariable UUID uuid, @RequestBody JsonNode patch) {
+        try {
+            soundtrackService.patch(uuid, patch);
+        } catch (ItemNotFoundException notFound) {
+            throw notFound;
+        } catch (Exception ex) {
+            return ResponseEntity.internalServerError().build();
+        }
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{uuid}")
