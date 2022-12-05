@@ -2,13 +2,12 @@ package com.lucasjosino.hawapi.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatchException;
-import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import com.lucasjosino.hawapi.configs.OpenAPIConfig;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.models.ActorModel;
 import com.lucasjosino.hawapi.repositories.ActorRepository;
+import com.lucasjosino.hawapi.services.utils.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,14 +20,14 @@ public class ActorService {
 
     private final ActorRepository actorRepository;
 
-    private final ObjectMapper mapper;
+    private final ServiceUtils utils;
 
     private final String basePath;
 
     @Autowired
-    public ActorService(ActorRepository actorRepository, ObjectMapper mapper, OpenAPIConfig config) {
+    public ActorService(ActorRepository actorRepository, ServiceUtils utils, OpenAPIConfig config) {
         this.actorRepository = actorRepository;
-        this.mapper = mapper;
+        this.utils = utils;
         this.basePath = config.getApiBaseUrl() + "/actors";
     }
 
@@ -52,18 +51,14 @@ public class ActorService {
             actor.getSocials().forEach(actorSocial -> actorSocial.setActorUuid(actorUUID));
         }
 
-        System.out.println(actor.getHref());
-
         return actorRepository.save(actor);
     }
 
     @Transactional
-    public void patch(UUID uuid, JsonNode patch) throws JsonPatchException, JsonProcessingException {
+    public void patch(UUID uuid, JsonNode patch) throws JsonPatchException, JsonProcessingException, ItemNotFoundException {
         ActorModel actor = actorRepository.findById(uuid).orElseThrow(ItemNotFoundException::new);
 
-        JsonNode convertedActor = mapper.valueToTree(actor);
-        JsonNode mergedNode = JsonMergePatch.fromJson(patch).apply(convertedActor);
-        ActorModel patchedActor = mapper.treeToValue(mergedNode, ActorModel.class);
+        ActorModel patchedActor = utils.mergePatch(actor, patch, ActorModel.class);
 
         patchedActor.setUuid(uuid);
         actorRepository.save(patchedActor);

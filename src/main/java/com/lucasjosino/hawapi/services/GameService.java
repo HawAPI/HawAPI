@@ -1,9 +1,13 @@
 package com.lucasjosino.hawapi.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.github.fge.jsonpatch.JsonPatchException;
 import com.lucasjosino.hawapi.configs.OpenAPIConfig;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.models.GameModel;
 import com.lucasjosino.hawapi.repositories.GameRepository;
+import com.lucasjosino.hawapi.services.utils.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,11 +21,14 @@ public class GameService {
 
     private final GameRepository gameRepository;
 
+    private final ServiceUtils utils;
+
     private final String basePath;
 
     @Autowired
-    public GameService(GameRepository gameRepository, OpenAPIConfig config) {
+    public GameService(GameRepository gameRepository, ServiceUtils utils, OpenAPIConfig config) {
         this.gameRepository = gameRepository;
+        this.utils = utils;
         this.basePath = config.getApiBaseUrl() + "/games";
     }
 
@@ -45,6 +52,16 @@ public class GameService {
         game.setUuid(gameUUID);
         game.setHref(basePath + "/" + gameUUID);
         return gameRepository.save(game);
+    }
+
+    @Transactional
+    public void patch(UUID uuid, JsonNode patch) throws JsonPatchException, JsonProcessingException {
+        GameModel game = gameRepository.findById(uuid).orElseThrow(ItemNotFoundException::new);
+
+        GameModel patchedGame = utils.mergePatch(game, patch, GameModel.class);
+
+        patchedGame.setUuid(uuid);
+        gameRepository.save(patchedGame);
     }
 
     @Transactional

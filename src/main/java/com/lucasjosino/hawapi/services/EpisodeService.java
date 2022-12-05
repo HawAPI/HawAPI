@@ -1,9 +1,13 @@
 package com.lucasjosino.hawapi.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.github.fge.jsonpatch.JsonPatchException;
 import com.lucasjosino.hawapi.configs.OpenAPIConfig;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.models.EpisodeModel;
 import com.lucasjosino.hawapi.repositories.EpisodeRepository;
+import com.lucasjosino.hawapi.services.utils.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,11 +21,14 @@ public class EpisodeService {
 
     private final EpisodeRepository episodeRepository;
 
+    private final ServiceUtils utils;
+
     private final String basePath;
 
     @Autowired
-    public EpisodeService(EpisodeRepository episodeRepository, OpenAPIConfig config) {
+    public EpisodeService(EpisodeRepository episodeRepository, ServiceUtils utils, OpenAPIConfig config) {
         this.episodeRepository = episodeRepository;
+        this.utils = utils;
         this.basePath = config.getApiBaseUrl() + "/episodes";
     }
 
@@ -45,6 +52,16 @@ public class EpisodeService {
         episode.setUuid(episodeUUID);
         episode.setHref(basePath + "/" + episodeUUID);
         return episodeRepository.save(episode);
+    }
+
+    @Transactional
+    public void patch(UUID uuid, JsonNode patch) throws JsonPatchException, JsonProcessingException {
+        EpisodeModel episode = episodeRepository.findById(uuid).orElseThrow(ItemNotFoundException::new);
+
+        EpisodeModel patchedEpisode = utils.mergePatch(episode, patch, EpisodeModel.class);
+
+        patchedEpisode.setUuid(uuid);
+        episodeRepository.save(patchedEpisode);
     }
 
     @Transactional
