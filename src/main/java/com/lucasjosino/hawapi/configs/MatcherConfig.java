@@ -5,10 +5,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.ExampleMatcher;
 
 @Configuration
-public class ExampleMatcherConfig {
+public class MatcherConfig {
 
     @Bean
     public ExampleMatcher exampleMatcher() {
-        return ExampleMatcher.matching().withIgnoreNullValues();
+        return ExampleMatcher
+                .matching()
+                .withIgnoreNullValues()
+                .withIgnoreCase();
     }
 }
