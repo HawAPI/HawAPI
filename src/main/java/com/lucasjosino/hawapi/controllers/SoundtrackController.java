@@ -2,6 +2,7 @@ package com.lucasjosino.hawapi.controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
+import com.lucasjosino.hawapi.filters.SoundtrackFilter;
 import com.lucasjosino.hawapi.interfaces.MappingInterface;
 import com.lucasjosino.hawapi.models.SoundtrackModel;
 import com.lucasjosino.hawapi.services.SoundtrackService;
@@ -14,7 +15,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("${hawapi.apiBaseUrl}/soundtracks")
-public class SoundtrackController implements MappingInterface<SoundtrackModel> {
+public class SoundtrackController implements MappingInterface<SoundtrackModel, SoundtrackFilter> {
 
     private final SoundtrackService soundtrackService;
 
@@ -24,8 +25,8 @@ public class SoundtrackController implements MappingInterface<SoundtrackModel> {
     }
 
     @GetMapping
-    public ResponseEntity<List<SoundtrackModel>> findAll() {
-        return ResponseEntity.ok(soundtrackService.findAll());
+    public ResponseEntity<List<SoundtrackModel>> findAll(SoundtrackFilter filter) {
+        return ResponseEntity.ok(soundtrackService.findAll(filter));
     }
 
     @GetMapping("/{uuid}")

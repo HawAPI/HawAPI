@@ -2,6 +2,7 @@ package com.lucasjosino.hawapi.controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
+import com.lucasjosino.hawapi.filters.GameFilter;
 import com.lucasjosino.hawapi.interfaces.MappingInterface;
 import com.lucasjosino.hawapi.models.GameModel;
 import com.lucasjosino.hawapi.services.GameService;
@@ -14,7 +15,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("${hawapi.apiBaseUrl}/games")
-public class GameController implements MappingInterface<GameModel> {
+public class GameController implements MappingInterface<GameModel, GameFilter> {
 
     private final GameService gameService;
 
@@ -24,8 +25,8 @@ public class GameController implements MappingInterface<GameModel> {
     }
 
     @GetMapping
-    public ResponseEntity<List<GameModel>> findAll() {
-        return ResponseEntity.ok(gameService.findAll());
+    public ResponseEntity<List<GameModel>> findAll(GameFilter filter) {
+        return ResponseEntity.ok(gameService.findAll(filter));
     }
 
     @GetMapping("/{uuid}")

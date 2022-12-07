@@ -5,10 +5,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.lucasjosino.hawapi.configs.OpenAPIConfig;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
+import com.lucasjosino.hawapi.filters.EpisodeFilter;
 import com.lucasjosino.hawapi.models.EpisodeModel;
 import com.lucasjosino.hawapi.repositories.EpisodeRepository;
 import com.lucasjosino.hawapi.services.utils.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,8 +36,13 @@ public class EpisodeService {
     }
 
     @Transactional
-    public List<EpisodeModel> findAll() {
-        return episodeRepository.findAll();
+    public List<EpisodeModel> findAll(EpisodeFilter filter) {
+        Example<EpisodeModel> filteredModel = utils.filter(filter, EpisodeModel.class);
+        Sort sort = utils.buildSort(filter);
+
+        if (sort == null) return episodeRepository.findAll(filteredModel);
+
+        return episodeRepository.findAll(filteredModel, sort);
     }
 
     @Transactional

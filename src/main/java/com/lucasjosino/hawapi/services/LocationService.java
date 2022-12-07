@@ -5,10 +5,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.lucasjosino.hawapi.configs.OpenAPIConfig;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
+import com.lucasjosino.hawapi.filters.LocationFilter;
 import com.lucasjosino.hawapi.models.LocationModel;
 import com.lucasjosino.hawapi.repositories.LocationRepository;
 import com.lucasjosino.hawapi.services.utils.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,8 +36,13 @@ public class LocationService {
     }
 
     @Transactional
-    public List<LocationModel> findAll() {
-        return locationRepository.findAll();
+    public List<LocationModel> findAll(LocationFilter filter) {
+        Example<LocationModel> filteredModel = utils.filter(filter, LocationModel.class);
+        Sort sort = utils.buildSort(filter);
+
+        if (sort == null) return locationRepository.findAll(filteredModel);
+
+        return locationRepository.findAll(filteredModel, sort);
     }
 
     @Transactional

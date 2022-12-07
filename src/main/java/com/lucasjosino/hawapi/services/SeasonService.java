@@ -5,10 +5,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.lucasjosino.hawapi.configs.OpenAPIConfig;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
+import com.lucasjosino.hawapi.filters.SeasonFilter;
 import com.lucasjosino.hawapi.models.SeasonModel;
 import com.lucasjosino.hawapi.repositories.SeasonRepository;
 import com.lucasjosino.hawapi.services.utils.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,8 +36,13 @@ public class SeasonService {
     }
 
     @Transactional
-    public List<SeasonModel> findAll() {
-        return seasonRepository.findAll();
+    public List<SeasonModel> findAll(SeasonFilter filter) {
+        Example<SeasonModel> filteredModel = utils.filter(filter, SeasonModel.class);
+        Sort sort = utils.buildSort(filter);
+
+        if (sort == null) return seasonRepository.findAll(filteredModel);
+
+        return seasonRepository.findAll(filteredModel, sort);
     }
 
     @Transactional

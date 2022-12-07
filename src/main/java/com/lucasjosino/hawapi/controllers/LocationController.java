@@ -2,6 +2,7 @@ package com.lucasjosino.hawapi.controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
+import com.lucasjosino.hawapi.filters.LocationFilter;
 import com.lucasjosino.hawapi.interfaces.MappingInterface;
 import com.lucasjosino.hawapi.models.LocationModel;
 import com.lucasjosino.hawapi.services.LocationService;
@@ -14,7 +15,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("${hawapi.apiBaseUrl}/places")
-public class LocationController implements MappingInterface<LocationModel> {
+public class LocationController implements MappingInterface<LocationModel, LocationFilter> {
 
     private final LocationService locationService;
 
@@ -24,8 +25,8 @@ public class LocationController implements MappingInterface<LocationModel> {
     }
 
     @GetMapping
-    public ResponseEntity<List<LocationModel>> findAll() {
-        return ResponseEntity.ok(locationService.findAll());
+    public ResponseEntity<List<LocationModel>> findAll(LocationFilter filter) {
+        return ResponseEntity.ok(locationService.findAll(filter));
     }
 
     @GetMapping("/{uuid}")

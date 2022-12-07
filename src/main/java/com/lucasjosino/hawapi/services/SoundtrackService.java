@@ -5,10 +5,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.lucasjosino.hawapi.configs.OpenAPIConfig;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
+import com.lucasjosino.hawapi.filters.SoundtrackFilter;
 import com.lucasjosino.hawapi.models.SoundtrackModel;
 import com.lucasjosino.hawapi.repositories.SoundtrackRepository;
 import com.lucasjosino.hawapi.services.utils.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,8 +36,13 @@ public class SoundtrackService {
     }
 
     @Transactional
-    public List<SoundtrackModel> findAll() {
-        return soundtrackRepository.findAll();
+    public List<SoundtrackModel> findAll(SoundtrackFilter filter) {
+        Example<SoundtrackModel> filteredModel = utils.filter(filter, SoundtrackModel.class);
+        Sort sort = utils.buildSort(filter);
+
+        if (sort == null) return soundtrackRepository.findAll(filteredModel);
+
+        return soundtrackRepository.findAll(filteredModel, sort);
     }
 
     @Transactional

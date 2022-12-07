@@ -2,6 +2,7 @@ package com.lucasjosino.hawapi.controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
+import com.lucasjosino.hawapi.filters.ActorFilter;
 import com.lucasjosino.hawapi.interfaces.MappingInterface;
 import com.lucasjosino.hawapi.models.ActorModel;
 import com.lucasjosino.hawapi.services.ActorService;
@@ -15,7 +16,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("${hawapi.apiBaseUrl}/actors")
-public class ActorController implements MappingInterface<ActorModel> {
+public class ActorController implements MappingInterface<ActorModel, ActorFilter> {
 
     private final ActorService actorService;
 
@@ -25,8 +26,8 @@ public class ActorController implements MappingInterface<ActorModel> {
     }
 
     @GetMapping
-    public ResponseEntity<List<ActorModel>> findAll() {
-        return ResponseEntity.ok(actorService.findAll());
+    public ResponseEntity<List<ActorModel>> findAll(ActorFilter filter) {
+        return ResponseEntity.ok(actorService.findAll(filter));
     }
 
     @GetMapping("/{uuid}")

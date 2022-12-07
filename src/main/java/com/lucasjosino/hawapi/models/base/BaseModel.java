@@ -18,7 +18,7 @@ abstract public class BaseModel implements Serializable {
 
     @JsonIgnore
     @Column(insertable = false, updatable = false)
-    private int id;
+    private Integer id;
 
     @Id
     @Column(insertable = false, updatable = false)
@@ -43,11 +43,11 @@ abstract public class BaseModel implements Serializable {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
