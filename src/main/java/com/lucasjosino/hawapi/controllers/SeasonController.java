@@ -2,6 +2,7 @@ package com.lucasjosino.hawapi.controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
+import com.lucasjosino.hawapi.filters.SeasonFilter;
 import com.lucasjosino.hawapi.interfaces.MappingInterface;
 import com.lucasjosino.hawapi.models.SeasonModel;
 import com.lucasjosino.hawapi.services.SeasonService;
@@ -14,7 +15,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("${hawapi.apiBaseUrl}/seasons")
-public class SeasonController implements MappingInterface<SeasonModel> {
+public class SeasonController implements MappingInterface<SeasonModel, SeasonFilter> {
 
     private final SeasonService seasonService;
 
@@ -24,8 +25,8 @@ public class SeasonController implements MappingInterface<SeasonModel> {
     }
 
     @GetMapping
-    public ResponseEntity<List<SeasonModel>> findAll() {
-        return ResponseEntity.ok(seasonService.findAll());
+    public ResponseEntity<List<SeasonModel>> findAll(SeasonFilter filter) {
+        return ResponseEntity.ok(seasonService.findAll(filter));
     }
 
     @GetMapping("/{uuid}")
