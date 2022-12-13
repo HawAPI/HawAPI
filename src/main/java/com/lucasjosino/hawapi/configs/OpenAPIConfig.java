@@ -2,11 +2,9 @@ package com.lucasjosino.hawapi.configs;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 @Component
-@PropertySource("classpath:api.properties")
 @ConfigurationProperties(prefix = "hawapi")
 public class OpenAPIConfig {
 
