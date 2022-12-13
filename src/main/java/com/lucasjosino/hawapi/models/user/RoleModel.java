@@ -1,39 +1,39 @@
-package com.lucasjosino.hawapi.models.base;
+package com.lucasjosino.hawapi.models.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-import java.io.Serializable;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@MappedSuperclass
+@Entity
+@Table(name = "roles")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-abstract public class BaseModel implements Serializable {
+public class RoleModel {
 
     @JsonIgnore
     @Column(insertable = false, updatable = false)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer id;
 
     @Id
+    @JsonIgnore
     @Column(insertable = false, updatable = false)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID uuid;
 
-    @Column(updatable = false)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String href;
+    @Column(nullable = false)
+    private String name;
 
-    @Type(type = "string-array")
-    @Column(columnDefinition = "text[]")
-    private String[] sources;
+    @Column()
+    private String description;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false, insertable = false)
@@ -61,35 +61,35 @@ abstract public class BaseModel implements Serializable {
         this.uuid = uuid;
     }
 
-    public String getHref() {
-        return href;
+    public String getName() {
+        return name;
     }
 
-    public void setHref(String href) {
-        this.href = href;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String[] getSources() {
-        return sources;
+    public String getDescription() {
+        return description;
     }
 
-    public void setSources(String[] sources) {
-        this.sources = sources;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime created_at) {
-        this.createdAt = created_at;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDateTime updated_at) {
-        this.updatedAt = updated_at;
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }
