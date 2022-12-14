@@ -17,74 +17,74 @@ $$ language 'plpgsql';
 --
 -- JWT Roles
 --
-CREATE TABLE IF NOT EXISTS roles (
-    id              INTEGER GENERATED ALWAYS AS IDENTITY,
-    uuid UUID       PRIMARY KEY UNIQUE NOT NULL DEFAULT uuid_generate_v4(),
-    name            VARCHAR(50) NOT NULL,
-    description     VARCHAR(255),
-    created_at      TIMESTAMP NOT NULL DEFAULT now(),
-    updated_at      TIMESTAMP NOT NULL DEFAULT now()
-);
-
-CREATE TRIGGER handle_updated_at_field BEFORE
-    UPDATE ON roles
-    FOR EACH ROW
-EXECUTE PROCEDURE update_updated_at_field();
+--CREATE TABLE IF NOT EXISTS roles (
+--    id              INTEGER GENERATED ALWAYS AS IDENTITY,
+--    uuid UUID       PRIMARY KEY UNIQUE NOT NULL DEFAULT uuid_generate_v4(),
+--    name            VARCHAR(50) NOT NULL,
+--    description     VARCHAR(255),
+--    created_at      TIMESTAMP NOT NULL DEFAULT now(),
+--    updated_at      TIMESTAMP NOT NULL DEFAULT now()
+--);
+--
+--CREATE TRIGGER handle_updated_at_field BEFORE
+--    UPDATE ON roles
+--    FOR EACH ROW
+--EXECUTE PROCEDURE update_updated_at_field();
 
 --
 -- JWT Users
 --
-CREATE TABLE IF NOT EXISTS users (
-    id              INTEGER GENERATED ALWAYS AS IDENTITY,
-    uuid UUID       PRIMARY KEY UNIQUE NOT NULL DEFAULT uuid_generate_v4(),
-    nickname        VARCHAR(50) NOT NULL,
-    email           VARCHAR(50) NOT NULL,
-    password        VARCHAR(255) NOT NULL,
-    created_at      TIMESTAMP NOT NULL DEFAULT now(),
-    updated_at      TIMESTAMP NOT NULL DEFAULT now()
-);
-
-CREATE TRIGGER handle_updated_at_field BEFORE
-    UPDATE ON users
-    FOR EACH ROW
-EXECUTE PROCEDURE update_updated_at_field();
+--CREATE TABLE IF NOT EXISTS users (
+--    id              INTEGER GENERATED ALWAYS AS IDENTITY,
+--    uuid UUID       PRIMARY KEY UNIQUE NOT NULL DEFAULT uuid_generate_v4(),
+--    nickname        VARCHAR(50) NOT NULL,
+--    email           VARCHAR(50) NOT NULL,
+--    password        VARCHAR(255) NOT NULL,
+--    created_at      TIMESTAMP NOT NULL DEFAULT now(),
+--    updated_at      TIMESTAMP NOT NULL DEFAULT now()
+--);
+--
+--CREATE TRIGGER handle_updated_at_field BEFORE
+--    UPDATE ON users
+--    FOR EACH ROW
+--EXECUTE PROCEDURE update_updated_at_field();
 
 --
 -- JWT Users roles
 --
-CREATE TABLE IF NOT EXISTS users_roles (
-    role_uuid UUID  NOT NULL REFERENCES roles(uuid),
-    user_uuid UUID NOT NULL,
-    CONSTRAINT fk_user_uuid
-          FOREIGN KEY(user_uuid)
-          REFERENCES users(uuid)
-          ON DELETE CASCADE
-);
+--CREATE TABLE IF NOT EXISTS users_roles (
+--    role_uuid UUID  NOT NULL REFERENCES roles(uuid),
+--    user_uuid UUID NOT NULL,
+--    CONSTRAINT fk_user_uuid
+--          FOREIGN KEY(user_uuid)
+--          REFERENCES users(uuid)
+--          ON DELETE CASCADE
+--);
 
 --
 -- Projects
 --
-CREATE TABLE IF NOT EXISTS projects (
-    id              INTEGER GENERATED ALWAYS AS IDENTITY,
-    uuid UUID       PRIMARY KEY UNIQUE NOT NULL DEFAULT uuid_generate_v4(),
-    name            VARCHAR(50) NOT NULL,
-    description     VARCHAR(255) NOT NULL,
-    url TEXT        NOT NULL,
-    git_url         TEXT NOT NULL,
-    tags            VARCHAR(25) ARRAY,
-    user_uuid       UUID NOT NULL,
-    created_at      TIMESTAMP NOT NULL DEFAULT now(),
-    updated_at      TIMESTAMP NOT NULL DEFAULT now(),
-    CONSTRAINT fk_user_uuid
-          FOREIGN KEY(user_uuid)
-          REFERENCES users(uuid)
-          ON DELETE CASCADE
-);
+--CREATE TABLE IF NOT EXISTS projects (
+--    id              INTEGER GENERATED ALWAYS AS IDENTITY,
+--    uuid UUID       PRIMARY KEY UNIQUE NOT NULL DEFAULT uuid_generate_v4(),
+--    name            VARCHAR(50) NOT NULL,
+--    description     VARCHAR(255) NOT NULL,
+--    url TEXT        NOT NULL,
+--    git_url         TEXT NOT NULL,
+--    tags            VARCHAR(25) ARRAY,
+--    user_uuid       UUID NOT NULL,
+--    created_at      TIMESTAMP NOT NULL DEFAULT now(),
+--    updated_at      TIMESTAMP NOT NULL DEFAULT now(),
+--    CONSTRAINT fk_user_uuid
+--          FOREIGN KEY(user_uuid)
+--          REFERENCES users(uuid)
+--          ON DELETE CASCADE
+--);
 
-CREATE TRIGGER handle_updated_at_field BEFORE
-    UPDATE ON projects
-    FOR EACH ROW
-EXECUTE PROCEDURE update_updated_at_field();
+--CREATE TRIGGER handle_updated_at_field BEFORE
+--    UPDATE ON projects
+--    FOR EACH ROW
+--EXECUTE PROCEDURE update_updated_at_field();
 
 --
 -- Characters
