@@ -3,10 +3,10 @@ package com.lucasjosino.hawapi.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jsonpatch.JsonPatchException;
-import com.lucasjosino.hawapi.configs.OpenAPIConfig;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.filters.ActorFilter;
 import com.lucasjosino.hawapi.models.ActorModel;
+import com.lucasjosino.hawapi.properties.OpenAPIProperty;
 import com.lucasjosino.hawapi.repositories.ActorRepository;
 import com.lucasjosino.hawapi.services.utils.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class ActorService {
     private final String basePath;
 
     @Autowired
-    public ActorService(ActorRepository actorRepository, ServiceUtils utils, OpenAPIConfig config) {
+    public ActorService(ActorRepository actorRepository, ServiceUtils utils, OpenAPIProperty config) {
         this.actorRepository = actorRepository;
         this.utils = utils;
         this.basePath = config.getApiBaseUrl() + "/actors";

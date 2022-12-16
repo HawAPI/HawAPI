@@ -3,10 +3,10 @@ package com.lucasjosino.hawapi.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jsonpatch.JsonPatchException;
-import com.lucasjosino.hawapi.configs.OpenAPIConfig;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.filters.EpisodeFilter;
 import com.lucasjosino.hawapi.models.EpisodeModel;
+import com.lucasjosino.hawapi.properties.OpenAPIProperty;
 import com.lucasjosino.hawapi.repositories.EpisodeRepository;
 import com.lucasjosino.hawapi.services.utils.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class EpisodeService {
     private final String basePath;
 
     @Autowired
-    public EpisodeService(EpisodeRepository episodeRepository, ServiceUtils utils, OpenAPIConfig config) {
+    public EpisodeService(EpisodeRepository episodeRepository, ServiceUtils utils, OpenAPIProperty config) {
         this.episodeRepository = episodeRepository;
         this.utils = utils;
         this.basePath = config.getApiBaseUrl() + "/episodes";

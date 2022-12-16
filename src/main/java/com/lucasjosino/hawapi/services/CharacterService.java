@@ -3,10 +3,10 @@ package com.lucasjosino.hawapi.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jsonpatch.JsonPatchException;
-import com.lucasjosino.hawapi.configs.OpenAPIConfig;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.filters.CharacterFilter;
 import com.lucasjosino.hawapi.models.CharacterModel;
+import com.lucasjosino.hawapi.properties.OpenAPIProperty;
 import com.lucasjosino.hawapi.repositories.CharacterRepository;
 import com.lucasjosino.hawapi.services.utils.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class CharacterService {
     public CharacterService(
             CharacterRepository characterRepository,
             ServiceUtils utils,
-            OpenAPIConfig config
+            OpenAPIProperty config
     ) {
         this.characterRepository = characterRepository;
         this.utils = utils;
