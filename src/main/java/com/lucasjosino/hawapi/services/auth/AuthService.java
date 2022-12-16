@@ -9,10 +9,13 @@ import com.lucasjosino.hawapi.models.user.UserAuthenticationModel;
 import com.lucasjosino.hawapi.models.user.UserModel;
 import com.lucasjosino.hawapi.repositories.auth.AuthRepository;
 import com.lucasjosino.hawapi.utils.JwtUtils;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.UUID;
 
 @Service
@@ -24,11 +27,7 @@ public class AuthService {
 
     private final JwtUtils jwtUtils;
 
-    public AuthService(
-            AuthRepository authRepository,
-            PasswordEncoder passwordEncoder,
-            JwtUtils jwtUtils
-    ) {
+    public AuthService(AuthRepository authRepository, PasswordEncoder passwordEncoder, JwtUtils jwtUtils) {
         this.authRepository = authRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtils = jwtUtils;
@@ -70,14 +69,7 @@ public class AuthService {
 
     @Transactional
     public UserModel authenticate(UserAuthenticationModel userAuth) {
-        UserModel user = authRepository.findByNicknameAndEmail(userAuth.getNickname(), userAuth.getEmail())
-                .orElseThrow(() ->
-                        new UserNotFoundException("User not found!")
-                );
-
-        if (!passwordEncoder.matches(userAuth.getPassword(), user.getPassword())) {
-            throw new UserUnauthorizedException();
-        }
+        UserModel user = validateUser(userAuth);
 
         String token = jwtUtils.generateToken(user);
 
@@ -89,5 +81,46 @@ public class AuthService {
             setCreatedAt(user.getCreatedAt());
             setUpdatedAt(user.getUpdatedAt());
         }};
+    }
+
+    @Transactional
+    public void delete(UserAuthenticationModel userAuth) {
+        UserModel dbUser = validateUser(userAuth);
+
+        try {
+            validatePassword(userAuth.getPassword(), dbUser.getPassword());
+        } catch (UserUnauthorizedException userUnauthorized) {
+            if (!hasAdminAuthorization()) {
+                throw userUnauthorized;
+            }
+        }
+
+        assert dbUser != null;
+        authRepository.deleteById(dbUser.getUuid());
+    }
+
+    private UserModel validateUser(UserAuthenticationModel userAuth) {
+        return authRepository.findByNicknameAndEmail(userAuth.getNickname(), userAuth.getEmail())
+                .orElseThrow(() ->
+                        new UserNotFoundException("User not found!")
+                );
+    }
+
+    private void validatePassword(String userAuth, String dbUser) {
+        if (!passwordEncoder.matches(userAuth, dbUser)) {
+            throw new UserUnauthorizedException();
+        }
+    }
+
+    private boolean hasAdminAuthorization() {
+        Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getAuthorities();
+
+        for (GrantedAuthority authority : authorities) {
+            if (authority.getAuthority().equals(JwtUtils.ROLE_PREFIX + RoleType.ADMIN)) return true;
+        }
+
+        return false;
     }
 }

@@ -31,7 +31,7 @@ public class SecurityConfig {
                         // Errors
                         .antMatchers(HttpMethod.GET, "/error").permitAll()
                         // Auth
-                        .antMatchers(HttpMethod.POST, "/api/auth/register", "/api/auth/authenticate").permitAll()
+                        .antMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
                         // API
                         .antMatchers(HttpMethod.GET, "/api/**").permitAll()
                         .antMatchers(HttpMethod.PATCH, "/api/**").hasAnyRole("MOD", "ADMIN")

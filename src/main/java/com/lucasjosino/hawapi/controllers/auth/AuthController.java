@@ -29,13 +29,9 @@ public class AuthController {
         return ResponseEntity.ok(authService.authenticate(userAuth));
     }
 
-    @PostMapping("/update")
-    public ResponseEntity<UserModel> update(@RequestBody UserModel user) {
-        return ResponseEntity.ok(user);
-    }
-
     @PostMapping("/delete")
-    public ResponseEntity<UserModel> delete(@RequestBody UserModel user) {
-        return ResponseEntity.ok(user);
+    public ResponseEntity<Void> delete(@RequestBody UserAuthenticationModel userAuth) {
+        authService.delete(userAuth);
+        return ResponseEntity.noContent().build();
     }
 }
