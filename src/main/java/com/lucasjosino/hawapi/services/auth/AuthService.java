@@ -5,7 +5,6 @@ import com.lucasjosino.hawapi.exceptions.auth.RoleBadRequestException;
 import com.lucasjosino.hawapi.exceptions.auth.UserConflictException;
 import com.lucasjosino.hawapi.exceptions.auth.UserNotFoundException;
 import com.lucasjosino.hawapi.exceptions.auth.UserUnauthorizedException;
-import com.lucasjosino.hawapi.models.user.ProjectModel;
 import com.lucasjosino.hawapi.models.user.UserAuthenticationModel;
 import com.lucasjosino.hawapi.models.user.UserModel;
 import com.lucasjosino.hawapi.repositories.auth.AuthRepository;
@@ -57,14 +56,6 @@ public class AuthService {
 
         // Encode password.
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        if (user.getProjects() != null && !user.getProjects().isEmpty()) {
-            for (ProjectModel project : user.getProjects()) {
-                project.setUserUuid(userUuid);
-                project.setUuid(UUID.randomUUID());
-                project.setGitUrl("UUID.randomUUID()");
-            }
-        }
 
         authRepository.save(user);
 

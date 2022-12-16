@@ -6,9 +6,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -39,10 +41,6 @@ public class UserModel {
 
     @Column(nullable = false)
     private String role;
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "user_uuid", referencedColumnName = "uuid", insertable = false, updatable = false)
-    private List<ProjectModel> projects;
 
     @JsonIgnore
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -108,14 +106,6 @@ public class UserModel {
 
     public void setRole(String role) {
         this.role = role;
-    }
-
-    public List<ProjectModel> getProjects() {
-        return projects;
-    }
-
-    public void setProjects(List<ProjectModel> projects) {
-        this.projects = projects;
     }
 
     public String getToken() {
