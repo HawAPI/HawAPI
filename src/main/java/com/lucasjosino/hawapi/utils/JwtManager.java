@@ -35,7 +35,7 @@ public class JwtManager {
                 .issuer(apiProperty.getTitle())
                 .issuedAt(now)
                 .audience(new ArrayList<String>() {{
-                    add(apiProperty.getUrl());
+                    add(apiProperty.getApiUrl());
                 }})
                 .claim("nickname", user.getNickname())
                 .claim("email", user.getEmail())
