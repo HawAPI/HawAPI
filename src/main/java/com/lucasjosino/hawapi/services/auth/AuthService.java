@@ -43,8 +43,24 @@ public class AuthService {
             throw new UserConflictException("Email '" + user.getEmail() + "' already registered!");
         }
 
-        if (!RoleType.isValid(user.getRole())) {
-            throw new RoleBadRequestException("Role '" + user.getRole() + "' is not valid!");
+        if (user.getRole() != null) {
+            if (!RoleType.isValid(user.getRole())) {
+                throw new RoleBadRequestException("Role '" + user.getRole() + "' is not valid!");
+            }
+
+            // Block any account with 'ADMIN' role.
+            if (user.getRole().equals(RoleType.ADMIN.name())) {
+                throw new UserUnauthorizedException("Couldn't create user with ADMIN role");
+            }
+
+            // Only 'ADMIN' can create users with 'MOD' role.
+            if (user.getRole().equals(RoleType.MOD.name())) {
+                if (!hasAdminAuthorization()) {
+                    throw new UserUnauthorizedException("Only user with ADMIN role can create MOD users");
+                }
+            }
+        } else {
+            user.setRole(RoleType.DEV.name());
         }
 
         // Create and set user uuid.
@@ -53,7 +69,6 @@ public class AuthService {
 
         String token = jwtManager.generateToken(user);
 
-        // Encode password.
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         authRepository.save(user);
@@ -112,6 +127,7 @@ public class AuthService {
         }
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private boolean hasAdminAuthorization() {
         Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext()
                 .getAuthentication()

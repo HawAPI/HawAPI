@@ -2,8 +2,10 @@ package com.lucasjosino.hawapi.configs.security;
 
 import com.lucasjosino.hawapi.jwt.JwtAudienceValidator;
 import com.lucasjosino.hawapi.jwt.JwtManager;
+import com.lucasjosino.hawapi.jwt.JwtUserValidator;
 import com.lucasjosino.hawapi.properties.OpenAPIProperty;
 import com.lucasjosino.hawapi.properties.RsaKeysProperty;
+import com.lucasjosino.hawapi.repositories.auth.AuthRepository;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -24,11 +26,14 @@ import java.util.List;
 @Configuration
 public class JwtConfig {
 
+    private final AuthRepository authRepository;
+
     private final OpenAPIProperty apiProperty;
 
     private final RsaKeysProperty rsaKeysProperty;
 
-    public JwtConfig(OpenAPIProperty apiProperty, RsaKeysProperty rsaKeysProperty) {
+    public JwtConfig(AuthRepository authRepository, OpenAPIProperty apiProperty, RsaKeysProperty rsaKeysProperty) {
+        this.authRepository = authRepository;
         this.apiProperty = apiProperty;
         this.rsaKeysProperty = rsaKeysProperty;
     }
@@ -67,7 +72,8 @@ public class JwtConfig {
                 Arrays.asList(
                         new JwtTimestampValidator(),
                         new JwtIssuerValidator(apiProperty.getTitle()),
-                        new JwtAudienceValidator(apiProperty.getApiUrl())
+                        new JwtAudienceValidator(apiProperty.getApiUrl()),
+                        new JwtUserValidator(authRepository)
                 );
         return new DelegatingOAuth2TokenValidator<>(validators);
     }

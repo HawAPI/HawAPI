@@ -12,6 +12,8 @@ public interface AuthRepository extends JpaRepository<UserModel, UUID> {
 
     Optional<UserModel> findByNicknameAndEmail(String nickname, String email);
 
+    boolean existsByNicknameAndEmail(String nickname, String email);
+
     boolean existsByNickname(String nickname);
 
     boolean existsByEmail(String email);
