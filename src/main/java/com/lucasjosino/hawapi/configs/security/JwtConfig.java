@@ -1,7 +1,7 @@
 package com.lucasjosino.hawapi.configs.security;
 
 import com.lucasjosino.hawapi.properties.RsaKeysProperty;
-import com.lucasjosino.hawapi.utils.JwtUtils;
+import com.lucasjosino.hawapi.utils.JwtManager;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -49,8 +49,8 @@ public class JwtConfig {
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         final JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        grantedAuthoritiesConverter.setAuthoritiesClaimName(JwtUtils.JWT_ROLE_NAME);
-        grantedAuthoritiesConverter.setAuthorityPrefix(JwtUtils.ROLE_PREFIX);
+        grantedAuthoritiesConverter.setAuthoritiesClaimName(JwtManager.JWT_ROLE_NAME);
+        grantedAuthoritiesConverter.setAuthorityPrefix(JwtManager.ROLE_PREFIX);
 
         final JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);

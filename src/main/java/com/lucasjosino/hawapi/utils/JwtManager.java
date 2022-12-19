@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 @Component
-public class JwtUtils {
+public class JwtManager {
 
     public static final String JWT_ROLE_NAME = "role";
 
@@ -22,7 +22,7 @@ public class JwtUtils {
 
     private final OpenAPIProperty apiProperty;
 
-    public JwtUtils(JwtEncoder jwtEncoder, OpenAPIProperty apiProperty) {
+    public JwtManager(JwtEncoder jwtEncoder, OpenAPIProperty apiProperty) {
         this.jwtEncoder = jwtEncoder;
         this.apiProperty = apiProperty;
     }

@@ -8,7 +8,7 @@ import com.lucasjosino.hawapi.exceptions.auth.UserUnauthorizedException;
 import com.lucasjosino.hawapi.models.user.UserAuthenticationModel;
 import com.lucasjosino.hawapi.models.user.UserModel;
 import com.lucasjosino.hawapi.repositories.auth.AuthRepository;
-import com.lucasjosino.hawapi.utils.JwtUtils;
+import com.lucasjosino.hawapi.utils.JwtManager;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,12 +25,12 @@ public class AuthService {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final JwtUtils jwtUtils;
+    private final JwtManager jwtManager;
 
-    public AuthService(AuthRepository authRepository, PasswordEncoder passwordEncoder, JwtUtils jwtUtils) {
+    public AuthService(AuthRepository authRepository, PasswordEncoder passwordEncoder, JwtManager jwtManager) {
         this.authRepository = authRepository;
         this.passwordEncoder = passwordEncoder;
-        this.jwtUtils = jwtUtils;
+        this.jwtManager = jwtManager;
     }
 
     @Transactional
@@ -51,7 +51,7 @@ public class AuthService {
         UUID userUuid = UUID.randomUUID();
         user.setUuid(userUuid);
 
-        String token = jwtUtils.generateToken(user);
+        String token = jwtManager.generateToken(user);
 
         // Encode password.
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -71,7 +71,7 @@ public class AuthService {
     public UserModel authenticate(UserAuthenticationModel userAuth) {
         UserModel user = validateUser(userAuth);
 
-        String token = jwtUtils.generateToken(user);
+        String token = jwtManager.generateToken(user);
 
         return new UserModel() {{
             setNickname(user.getNickname());
@@ -118,7 +118,7 @@ public class AuthService {
                 .getAuthorities();
 
         for (GrantedAuthority authority : authorities) {
-            if (authority.getAuthority().equals(JwtUtils.ROLE_PREFIX + RoleType.ADMIN)) return true;
+            if (authority.getAuthority().equals(JwtManager.ROLE_PREFIX + RoleType.ADMIN)) return true;
         }
 
         return false;
