@@ -1,9 +1,9 @@
 package com.lucasjosino.hawapi.configs.security;
 
+import com.lucasjosino.hawapi.jwt.JwtAudienceValidator;
+import com.lucasjosino.hawapi.jwt.JwtManager;
 import com.lucasjosino.hawapi.properties.OpenAPIProperty;
 import com.lucasjosino.hawapi.properties.RsaKeysProperty;
-import com.lucasjosino.hawapi.security.jwt.JwtAudienceValidator;
-import com.lucasjosino.hawapi.utils.JwtManager;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;

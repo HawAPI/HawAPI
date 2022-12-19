@@ -1,4 +1,4 @@
-package com.lucasjosino.hawapi.security.jwt;
+package com.lucasjosino.hawapi.jwt;
 
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2TokenValidatorResult;

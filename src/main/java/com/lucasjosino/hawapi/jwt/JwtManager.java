@@ -1,4 +1,4 @@
-package com.lucasjosino.hawapi.utils;
+package com.lucasjosino.hawapi.jwt;
 
 import com.lucasjosino.hawapi.models.user.UserModel;
 import com.lucasjosino.hawapi.properties.OpenAPIProperty;
