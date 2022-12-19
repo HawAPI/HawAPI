@@ -1,4 +1,4 @@
-package com.lucasjosino.hawapi.configs;
+package com.lucasjosino.hawapi.properties;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ConfigurationProperties(prefix = "hawapi")
-public class OpenAPIConfig {
+public class OpenAPIProperty {
 
     private String title;
 
@@ -40,7 +40,7 @@ public class OpenAPIConfig {
     @JsonProperty("license_url")
     private String licenseUrl;
 
-    public OpenAPIConfig() {
+    public OpenAPIProperty() {
     }
 
     public String getTitle() {

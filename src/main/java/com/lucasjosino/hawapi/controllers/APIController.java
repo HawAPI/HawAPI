@@ -1,6 +1,6 @@
 package com.lucasjosino.hawapi.controllers;
 
-import com.lucasjosino.hawapi.configs.OpenAPIConfig;
+import com.lucasjosino.hawapi.properties.OpenAPIProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,19 +18,19 @@ public class APIController {
 
     private final List<String> endpoints;
 
-    private final OpenAPIConfig apiConfig;
+    private final OpenAPIProperty apiConfig;
 
     private final RequestMappingHandlerMapping mappingHandler;
 
     @Autowired
-    public APIController(List<String> endpoints, OpenAPIConfig apiConfig, RequestMappingHandlerMapping mappingHandler) {
+    public APIController(List<String> endpoints, OpenAPIProperty apiConfig, RequestMappingHandlerMapping mappingHandler) {
         this.endpoints = endpoints;
         this.apiConfig = apiConfig;
         this.mappingHandler = mappingHandler;
     }
 
     @GetMapping
-    public ResponseEntity<OpenAPIConfig> getAPIInfo() {
+    public ResponseEntity<OpenAPIProperty> getAPIInfo() {
         return ResponseEntity.ok(apiConfig);
     }
 

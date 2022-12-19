@@ -3,10 +3,10 @@ package com.lucasjosino.hawapi.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jsonpatch.JsonPatchException;
-import com.lucasjosino.hawapi.configs.OpenAPIConfig;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.filters.LocationFilter;
 import com.lucasjosino.hawapi.models.LocationModel;
+import com.lucasjosino.hawapi.properties.OpenAPIProperty;
 import com.lucasjosino.hawapi.repositories.LocationRepository;
 import com.lucasjosino.hawapi.services.utils.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class LocationService {
     private final String basePath;
 
     @Autowired
-    public LocationService(LocationRepository locationRepository, ServiceUtils utils, OpenAPIConfig config) {
+    public LocationService(LocationRepository locationRepository, ServiceUtils utils, OpenAPIProperty config) {
         this.locationRepository = locationRepository;
         this.utils = utils;
         this.basePath = config.getApiBaseUrl() + "/places";

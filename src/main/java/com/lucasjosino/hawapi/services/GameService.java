@@ -3,10 +3,10 @@ package com.lucasjosino.hawapi.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jsonpatch.JsonPatchException;
-import com.lucasjosino.hawapi.configs.OpenAPIConfig;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.filters.GameFilter;
 import com.lucasjosino.hawapi.models.GameModel;
+import com.lucasjosino.hawapi.properties.OpenAPIProperty;
 import com.lucasjosino.hawapi.repositories.GameRepository;
 import com.lucasjosino.hawapi.services.utils.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class GameService {
     private final String basePath;
 
     @Autowired
-    public GameService(GameRepository gameRepository, ServiceUtils utils, OpenAPIConfig config) {
+    public GameService(GameRepository gameRepository, ServiceUtils utils, OpenAPIProperty config) {
         this.gameRepository = gameRepository;
         this.utils = utils;
         this.basePath = config.getApiBaseUrl() + "/games";

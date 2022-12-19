@@ -1,5 +1,6 @@
 package com.lucasjosino.hawapi.configs;
 
+import com.lucasjosino.hawapi.properties.OpenAPIProperty;
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -11,10 +12,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SpringDocConfig {
 
-    private final OpenAPIConfig api;
+    private final OpenAPIProperty api;
 
     @Autowired
-    public SpringDocConfig(OpenAPIConfig api) {
+    public SpringDocConfig(OpenAPIProperty api) {
         this.api = api;
     }
 

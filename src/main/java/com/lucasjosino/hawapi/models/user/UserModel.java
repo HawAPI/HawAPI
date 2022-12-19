@@ -6,11 +6,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -38,20 +39,16 @@ public class UserModel {
     @Column(nullable = false)
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_uuid"),
-            inverseJoinColumns = @JoinColumn(name = "role_uuid")
-    )
-    private Set<RoleModel> roles;
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "user_uuid", referencedColumnName = "uuid", insertable = false, updatable = false)
-    private List<ProjectModel> projects;
+    @Column(nullable = false)
+    private String role;
 
     @JsonIgnore
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private transient String token;
+
+    @JsonIgnore
+    @JsonProperty(value = "token_type", access = JsonProperty.Access.READ_ONLY)
+    private transient String tokenType;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false, insertable = false)
@@ -103,20 +100,12 @@ public class UserModel {
         this.password = password;
     }
 
-    public Set<RoleModel> getRoles() {
-        return roles;
+    public String getRole() {
+        return role;
     }
 
-    public void setRoles(Set<RoleModel> roles) {
-        this.roles = roles;
-    }
-
-    public List<ProjectModel> getProjects() {
-        return projects;
-    }
-
-    public void setProjects(List<ProjectModel> projects) {
-        this.projects = projects;
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public String getToken() {
@@ -125,6 +114,16 @@ public class UserModel {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    // TokenType is a transient method so, force jackson to use the JsonProperty value.
+    @JsonProperty(value = "token_type")
+    public String getTokenType() {
+        return tokenType;
+    }
+
+    public void setTokenType(String tokenType) {
+        this.tokenType = tokenType;
     }
 
     public LocalDateTime getCreatedAt() {

@@ -3,10 +3,10 @@ package com.lucasjosino.hawapi.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jsonpatch.JsonPatchException;
-import com.lucasjosino.hawapi.configs.OpenAPIConfig;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.filters.SoundtrackFilter;
 import com.lucasjosino.hawapi.models.SoundtrackModel;
+import com.lucasjosino.hawapi.properties.OpenAPIProperty;
 import com.lucasjosino.hawapi.repositories.SoundtrackRepository;
 import com.lucasjosino.hawapi.services.utils.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class SoundtrackService {
     private final String basePath;
 
     @Autowired
-    public SoundtrackService(SoundtrackRepository soundtrackRepository, ServiceUtils utils, OpenAPIConfig config) {
+    public SoundtrackService(SoundtrackRepository soundtrackRepository, ServiceUtils utils, OpenAPIProperty config) {
         this.soundtrackRepository = soundtrackRepository;
         this.utils = utils;
         this.basePath = config.getApiBaseUrl() + "/soundtracks";
