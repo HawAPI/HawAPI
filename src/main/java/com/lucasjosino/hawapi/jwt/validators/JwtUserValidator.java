@@ -1,4 +1,4 @@
-package com.lucasjosino.hawapi.jwt;
+package com.lucasjosino.hawapi.jwt.validators;
 
 import com.lucasjosino.hawapi.repositories.auth.AuthRepository;
 import org.springframework.beans.factory.annotation.Autowired;

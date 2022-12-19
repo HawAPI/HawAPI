@@ -1,8 +1,8 @@
 package com.lucasjosino.hawapi.configs.security;
 
-import com.lucasjosino.hawapi.jwt.JwtAudienceValidator;
 import com.lucasjosino.hawapi.jwt.JwtManager;
-import com.lucasjosino.hawapi.jwt.JwtUserValidator;
+import com.lucasjosino.hawapi.jwt.validators.JwtAudienceValidator;
+import com.lucasjosino.hawapi.jwt.validators.JwtUserValidator;
 import com.lucasjosino.hawapi.properties.OpenAPIProperty;
 import com.lucasjosino.hawapi.properties.RsaKeysProperty;
 import com.lucasjosino.hawapi.repositories.auth.AuthRepository;
