@@ -1,8 +1,10 @@
 package com.lucasjosino.hawapi.controllers.auth;
 
+import com.lucasjosino.hawapi.exceptions.auth.UserUnauthorizedException;
 import com.lucasjosino.hawapi.models.user.UserAuthenticationModel;
 import com.lucasjosino.hawapi.models.user.UserModel;
 import com.lucasjosino.hawapi.services.auth.AuthService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,13 +17,18 @@ public class AuthController {
 
     private final AuthService authService;
 
+    @Value("${com.lucasjosino.hawapi.registration.enable}")
+    private boolean registrationIsEnable;
+
     public AuthController(AuthService authService) {
         this.authService = authService;
     }
 
     @PostMapping("/register")
     public ResponseEntity<UserModel> register(@RequestBody UserModel user) {
-        return ResponseEntity.ok(authService.register(user));
+        if (registrationIsEnable) return ResponseEntity.ok(authService.register(user));
+
+        throw new UserUnauthorizedException("Registration is not available at the moment");
     }
 
     @PostMapping("/authenticate")
