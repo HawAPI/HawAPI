@@ -11,6 +11,17 @@
         <statistics-enabled>true</statistics-enabled>
     </map>
 
+    <cp-subsystem>
+        <!--
+            "By default, CP Subsystem runs in unsafe mode, which means it is disabled.
+            To enable the CP Subsystem, you must first configure a non-zero value for
+            the cp-member-count option:"
+
+            Ref: https://docs.hazelcast.com/hazelcast/5.2/cp-subsystem/configuration
+         -->
+        <cp-member-count>3</cp-member-count>
+    </cp-subsystem>
+
     <cache name="requestRateLimit"/>
 
 </hazelcast>
