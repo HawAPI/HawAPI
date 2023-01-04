@@ -1,4 +1,4 @@
-package com.lucasjosino.hawapi.configs;
+package com.lucasjosino.hawapi.configs.initializer;
 
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -15,7 +15,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
  */
 @Testcontainers
 @ActiveProfiles("test")
-abstract public class PostgreSQLContainerConfig {
+abstract public class PostgreSQLContainerInitializer {
 
     private static final String DB_NAME_AND_VERSION = "postgres:15.1";
 
