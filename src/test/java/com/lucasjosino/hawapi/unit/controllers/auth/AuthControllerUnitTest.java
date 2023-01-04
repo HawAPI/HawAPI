@@ -1,2 +1,7 @@
-package com.lucasjosino.hawapi.unit.controllers.auth;public class AuthControllerUnitTest {
+package com.lucasjosino.hawapi.unit.controllers.auth;
+
+import com.lucasjosino.hawapi.configs.UnitTestConfig;
+
+@UnitTestConfig
+public class AuthControllerUnitTest {
 }
