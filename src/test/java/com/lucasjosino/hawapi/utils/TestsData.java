@@ -13,6 +13,7 @@ public final class TestsData {
 
     public static List<ActorModel> getActors() {
         List<ActorModel> actors = new ArrayList<>();
+
         ActorModel actor1 = new ActorModel();
         actor1.setUuid(UUID.fromString("cf70f1e5-dadc-4dc9-9082-2b94aef34600"));
         actor1.setHref("/api/v1/actors/cf70f1e5-dadc-4dc9-9082-2b94aef34600");
@@ -25,7 +26,7 @@ public final class TestsData {
         ActorModel actor2 = new ActorModel();
         actor2.setUuid(UUID.fromString("e6d7e898-7fb3-4224-8127-86376be9c000"));
         actor2.setHref("/api/v1/actors/e6d7e898-7fb3-4224-8127-86376be9c000");
-        actor2.setFirstName("Maria");
+        actor2.setFirstName("Ana");
         actor2.setLastName("Doe");
         actor2.setGender((byte) 2);
         actor2.setCharacter("/api/v1/characters/2");
@@ -47,5 +48,9 @@ public final class TestsData {
 
     public static RequestPostProcessor getAdminAuth() {
         return user("admin").roles("ADMIN");
+    }
+
+    public static RequestPostProcessor getDevAuth() {
+        return user("dev").roles("DEV");
     }
 }
