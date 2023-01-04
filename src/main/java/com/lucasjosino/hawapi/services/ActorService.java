@@ -74,6 +74,8 @@ public class ActorService {
 
     @Transactional
     public void deleteById(UUID uuid) {
+        if (!actorRepository.existsById(uuid)) throw new ItemNotFoundException();
+
         actorRepository.deleteById(uuid);
     }
 }
