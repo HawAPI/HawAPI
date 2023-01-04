@@ -6,6 +6,7 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.MountableFile;
 
 /**
  * PostgreSQL configuration for {@link Testcontainers}.
@@ -19,11 +20,13 @@ abstract public class PostgreSQLContainerInitializer {
 
     private static final String DB_NAME_AND_VERSION = "postgres:15.1";
 
-    private static final String DK_LOCATION = "schema.sql";
+    private static final String DB_ENTRY_POINT = "/docker-entrypoint-initdb.d/init.sql";
+
+    private static final String SCHEMA_LOCATION = "schema.sql";
 
     @Container
     private static final PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(DB_NAME_AND_VERSION)
-            .withInitScript(DK_LOCATION)
+            .withCopyFileToContainer(MountableFile.forClasspathResource(SCHEMA_LOCATION), DB_ENTRY_POINT)
             .withExposedPorts(5432);
 
     @DynamicPropertySource
