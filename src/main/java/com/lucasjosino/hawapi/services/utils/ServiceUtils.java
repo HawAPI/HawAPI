@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
+import com.google.common.base.CaseFormat;
 import com.lucasjosino.hawapi.filters.base.BaseFilter;
 import com.lucasjosino.hawapi.models.base.BaseModel;
 import org.modelmapper.ModelMapper;
@@ -51,6 +52,9 @@ public class ServiceUtils {
         if (filter.getSort() == null || filter.getSort().isEmpty()) {
             filter.setSort("ASC");
         }
+
+        // Workaround for https://github.com/spring-projects/spring-data-rest/issues/1638
+        filter.setOrder(CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, filter.getOrder()));
 
         Sort.Direction sort = Sort.Direction.fromString(filter.getSort());
         return Sort.by(sort, filter.getOrder());
