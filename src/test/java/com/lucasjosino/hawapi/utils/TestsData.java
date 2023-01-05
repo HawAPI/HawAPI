@@ -1,6 +1,7 @@
 package com.lucasjosino.hawapi.utils;
 
 import com.lucasjosino.hawapi.models.ActorModel;
+import com.lucasjosino.hawapi.models.user.UserModel;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 import java.util.ArrayList;
@@ -44,6 +45,16 @@ public final class TestsData {
         actor.setGender((byte) 1);
         actor.setCharacter("/api/v1/characters/3");
         return actor;
+    }
+
+    public static UserModel getNewUser() {
+        UserModel user = new UserModel();
+        user.setUuid(UUID.randomUUID());
+        user.setNickname("loremipsum");
+        user.setEmail("lorem@loremipsum.com");
+        user.setPassword("MYSUPERSECREATPASSWORD");
+        user.setRole("DEV");
+        return user;
     }
 
     public static RequestPostProcessor getAdminAuth() {
