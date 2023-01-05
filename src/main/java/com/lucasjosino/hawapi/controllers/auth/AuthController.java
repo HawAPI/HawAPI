@@ -5,6 +5,7 @@ import com.lucasjosino.hawapi.models.user.UserAuthenticationModel;
 import com.lucasjosino.hawapi.models.user.UserModel;
 import com.lucasjosino.hawapi.services.auth.AuthService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,7 +27,9 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<UserModel> register(@RequestBody UserModel user) {
-        if (registrationIsEnable) return ResponseEntity.ok(authService.register(user));
+        if (registrationIsEnable) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(user));
+        }
 
         throw new UserUnauthorizedException("Registration is not available at the moment");
     }

@@ -84,17 +84,25 @@ public class AuthService {
 
     @Transactional
     public UserModel authenticate(UserAuthenticationModel userAuth) {
-        UserModel user = validateUser(userAuth);
+        UserModel dbUser = validateUser(userAuth);
 
-        String token = jwtManager.generateToken(user);
+        try {
+            validatePassword(userAuth.getPassword(), dbUser.getPassword());
+        } catch (UserUnauthorizedException userUnauthorized) {
+            if (!hasAdminAuthorization()) {
+                throw userUnauthorized;
+            }
+        }
+
+        String token = jwtManager.generateToken(dbUser);
 
         return new UserModel() {{
-            setNickname(user.getNickname());
-            setEmail(user.getEmail());
-            setRole(user.getRole());
+            setNickname(dbUser.getNickname());
+            setEmail(dbUser.getEmail());
+            setRole(dbUser.getRole());
             setToken(token);
-            setCreatedAt(user.getCreatedAt());
-            setUpdatedAt(user.getUpdatedAt());
+            setCreatedAt(dbUser.getCreatedAt());
+            setUpdatedAt(dbUser.getUpdatedAt());
         }};
     }
 
@@ -122,9 +130,11 @@ public class AuthService {
     }
 
     private void validatePassword(String userAuth, String dbUser) {
-        if (!passwordEncoder.matches(userAuth, dbUser)) {
-            throw new UserUnauthorizedException();
+        if (userAuth != null && !userAuth.isEmpty() && dbUser != null && !dbUser.isEmpty()) {
+            if (passwordEncoder.matches(userAuth, dbUser)) return;
         }
+
+        throw new UserUnauthorizedException();
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
