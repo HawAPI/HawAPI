@@ -26,17 +26,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-// shouldCreateActor
-// shouldReturnActorByUUID
-// shouldReturnNotFoundActor
-// shouldReturnListOfActors
-// shouldReturnEmptyListOfActors
-// shouldReturnListOfActorsWithFilter
-// shouldUpdateActor
-// shouldReturnNotFoundUpdateActor
-// shouldDeleteActor
-// shouldReturnNotFoundDeleteActor
-
 @UnitTestConfig
 public class ActorControllerUnitTest {
 
@@ -75,12 +64,7 @@ public class ActorControllerUnitTest {
         ActorModel newActor = getNewActor();
         when(actorService.findById(any(UUID.class))).thenThrow(ItemNotFoundException.class);
 
-        Exception exception = assertThrows(
-                ItemNotFoundException.class,
-                () -> actorController.findByUUID(newActor.getUuid())
-        );
-
-        assertEquals(ItemNotFoundException.class, exception.getClass());
+        assertThrows(ItemNotFoundException.class, () -> actorController.findByUUID(newActor.getUuid()));
         verify(actorService, times(1)).findById(any(UUID.class));
     }
 
@@ -143,12 +127,9 @@ public class ActorControllerUnitTest {
                 .when(actorService).patch(any(UUID.class), any(JsonNode.class));
 
         ActorModel model = getActors().get(0);
-        Exception exception = assertThrows(
-                ItemNotFoundException.class,
-                () -> actorController.patch(model.getUuid(), mapper.valueToTree(model))
-        );
+        JsonNode node = mapper.valueToTree(model);
 
-        assertEquals(ItemNotFoundException.class, exception.getClass());
+        assertThrows(ItemNotFoundException.class, () -> actorController.patch(model.getUuid(), node));
         verify(actorService, times(1)).patch(any(UUID.class), any(JsonNode.class));
     }
 
@@ -170,12 +151,8 @@ public class ActorControllerUnitTest {
                 .when(actorService).deleteById(any(UUID.class));
 
         ActorModel model = getActors().get(0);
-        Exception exception = assertThrows(
-                ItemNotFoundException.class,
-                () -> actorController.delete(model.getUuid())
-        );
 
-        assertEquals(ItemNotFoundException.class, exception.getClass());
+        assertThrows(ItemNotFoundException.class, () -> actorController.delete(model.getUuid()));
         verify(actorService, times(1)).deleteById(any(UUID.class));
     }
 }

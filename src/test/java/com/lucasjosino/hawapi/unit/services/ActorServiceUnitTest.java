@@ -1,6 +1,7 @@
 package com.lucasjosino.hawapi.unit.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.lucasjosino.hawapi.configs.UnitTestConfig;
@@ -21,7 +22,6 @@ import java.util.*;
 
 import static com.lucasjosino.hawapi.utils.TestsData.getActors;
 import static com.lucasjosino.hawapi.utils.TestsData.getNewActor;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -49,12 +49,12 @@ public class ActorServiceUnitTest {
 
         ActorModel res = actorService.save(newActor);
 
-        assertThat(res).hasFieldOrPropertyWithValue("uuid", newActor.getUuid());
-        assertThat(res).hasFieldOrPropertyWithValue("href", newActor.getHref());
-        assertThat(res).hasFieldOrPropertyWithValue("first_name", newActor.getFirstName());
-        assertThat(res).hasFieldOrPropertyWithValue("last_name", newActor.getLastName());
-        assertThat(res).hasFieldOrPropertyWithValue("gender", newActor.getGender());
-        assertThat(res).hasFieldOrPropertyWithValue("character", newActor.getCharacter());
+        assertEquals(newActor.getUuid(), res.getUuid());
+        assertEquals(newActor.getHref(), res.getHref());
+        assertEquals(newActor.getFirstName(), res.getFirstName());
+        assertEquals(newActor.getLastName(), res.getLastName());
+        assertEquals(newActor.getGender(), res.getGender());
+        assertEquals(newActor.getCharacter(), res.getCharacter());
         verify(actorRepository, times(1)).save(any(ActorModel.class));
     }
 
@@ -74,12 +74,7 @@ public class ActorServiceUnitTest {
         ActorModel newActor = getNewActor();
         when(actorRepository.findById(any(UUID.class))).thenThrow(ItemNotFoundException.class);
 
-        Exception exception = assertThrows(
-                ItemNotFoundException.class,
-                () -> actorService.findById(newActor.getUuid())
-        );
-
-        assertEquals(ItemNotFoundException.class, exception.getClass());
+        assertThrows(ItemNotFoundException.class, () -> actorService.findById(newActor.getUuid()));
         verify(actorRepository, times(1)).findById(any(UUID.class));
     }
 
@@ -139,12 +134,9 @@ public class ActorServiceUnitTest {
                 .when(actorRepository).findById(any(UUID.class));
 
         ActorModel model = getActors().get(0);
-        Exception exception = assertThrows(
-                ItemNotFoundException.class,
-                () -> actorService.patch(model.getUuid(), mapper.valueToTree(model))
-        );
+        JsonNode node = mapper.valueToTree(model);
 
-        assertEquals(ItemNotFoundException.class, exception.getClass());
+        assertThrows(ItemNotFoundException.class, () -> actorService.patch(model.getUuid(), node));
         verify(actorRepository, times(1)).findById(any(UUID.class));
     }
 
@@ -167,12 +159,8 @@ public class ActorServiceUnitTest {
                 .when(actorRepository).deleteById(any(UUID.class));
 
         ActorModel model = getActors().get(0);
-        Exception exception = assertThrows(
-                ItemNotFoundException.class,
-                () -> actorService.deleteById(model.getUuid())
-        );
 
-        assertEquals(ItemNotFoundException.class, exception.getClass());
+        assertThrows(ItemNotFoundException.class, () -> actorService.deleteById(model.getUuid()));
         verify(actorRepository, times(1)).existsById(any(UUID.class));
         verify(actorRepository, times(1)).deleteById(any(UUID.class));
     }
