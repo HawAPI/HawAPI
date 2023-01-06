@@ -1,6 +1,7 @@
 package com.lucasjosino.hawapi.utils;
 
 import com.lucasjosino.hawapi.models.ActorModel;
+import com.lucasjosino.hawapi.models.user.UserAuthenticationModel;
 import com.lucasjosino.hawapi.models.user.UserModel;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
@@ -55,6 +56,14 @@ public final class TestsData {
         user.setPassword("MYSUPERSECREATPASSWORD");
         user.setRole("DEV");
         return user;
+    }
+
+    public static UserAuthenticationModel getNewUserAuth() {
+        UserAuthenticationModel userAuth = new UserAuthenticationModel();
+        userAuth.setNickname(getNewUser().getNickname());
+        userAuth.setEmail(getNewUser().getEmail());
+        userAuth.setPassword(getNewUser().getPassword());
+        return userAuth;
     }
 
     public static RequestPostProcessor getAdminAuth() {
