@@ -44,4 +44,12 @@ public class AuthController {
         authService.delete(userAuth);
         return ResponseEntity.noContent().build();
     }
+
+    public boolean isRegistrationIsEnable() {
+        return registrationIsEnable;
+    }
+
+    public void setRegistrationIsEnable(boolean registrationIsEnable) {
+        this.registrationIsEnable = registrationIsEnable;
+    }
 }
