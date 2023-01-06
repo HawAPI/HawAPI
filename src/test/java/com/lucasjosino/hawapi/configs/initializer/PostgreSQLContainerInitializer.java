@@ -14,7 +14,6 @@ import org.testcontainers.utility.MountableFile;
  * @see Testcontainers
  * @see ActiveProfiles
  */
-@Testcontainers
 @ActiveProfiles("test")
 abstract public class PostgreSQLContainerInitializer {
 
@@ -27,7 +26,12 @@ abstract public class PostgreSQLContainerInitializer {
     @Container
     private static final PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(DB_NAME_AND_VERSION)
             .withCopyFileToContainer(MountableFile.forClasspathResource(SCHEMA_LOCATION), DB_ENTRY_POINT)
-            .withExposedPorts(5432);
+            .withExposedPorts(5432)
+            .withReuse(true);
+
+    static {
+        postgreSQLContainer.start();
+    }
 
     @DynamicPropertySource
     public static void databaseProps(DynamicPropertyRegistry registry) {
