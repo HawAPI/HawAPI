@@ -17,10 +17,15 @@ import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
+import static com.lucasjosino.hawapi.utils.ModelAssertions.assertActorEquals;
 import static com.lucasjosino.hawapi.utils.TestsData.getActors;
 import static com.lucasjosino.hawapi.utils.TestsData.getNewActor;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -43,7 +48,7 @@ public class ActorControllerUnitTest {
         ResponseEntity<ActorModel> res = actorController.save(newActor);
 
         assertEquals(HttpStatus.CREATED, res.getStatusCode());
-        assertEquals(newActor, res.getBody());
+        assertActorEquals(newActor, res);
         verify(actorService, times(1)).save(any(ActorModel.class));
     }
 
@@ -55,7 +60,7 @@ public class ActorControllerUnitTest {
         ResponseEntity<ActorModel> res = actorController.findByUUID(newActor.getUuid());
 
         assertEquals(HttpStatus.OK, res.getStatusCode());
-        assertEquals(newActor, res.getBody());
+        assertActorEquals(newActor, res);
         verify(actorService, times(1)).findById(any(UUID.class));
     }
 
@@ -76,7 +81,8 @@ public class ActorControllerUnitTest {
         ResponseEntity<List<ActorModel>> res = actorController.findAll(null);
 
         assertEquals(HttpStatus.OK, res.getStatusCode());
-        assertEquals(2, Objects.requireNonNull(res.getBody()).size());
+        assertThat(res.getBody()).isNotNull();
+        assertEquals(2, res.getBody().size());
         verify(actorService, times(1)).findAll(null);
     }
 
@@ -101,7 +107,8 @@ public class ActorControllerUnitTest {
         ResponseEntity<List<ActorModel>> res = actorController.findAll(filter);
 
         assertEquals(HttpStatus.OK, res.getStatusCode());
-        assertEquals(1, Objects.requireNonNull(res.getBody()).size());
+        assertThat(res.getBody()).isNotNull();
+        assertEquals(1, res.getBody().size());
         verify(actorService, times(1)).findAll(any(ActorFilter.class));
     }
 

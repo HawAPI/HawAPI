@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static com.lucasjosino.hawapi.utils.ModelAssertions.assertActorEquals;
 import static com.lucasjosino.hawapi.utils.TestsData.getActors;
 import static com.lucasjosino.hawapi.utils.TestsData.getNewActor;
 import static org.junit.jupiter.api.Assertions.*;
@@ -35,12 +36,7 @@ public class ActorRepositoryUnitTest extends PostgreSQLContainerInitializer {
 
         ActorModel res = actorRepository.save(newActor);
 
-        assertEquals(newActor.getUuid(), res.getUuid());
-        assertEquals(newActor.getHref(), res.getHref());
-        assertEquals(newActor.getFirstName(), res.getFirstName());
-        assertEquals(newActor.getLastName(), res.getLastName());
-        assertEquals(newActor.getGender(), res.getGender());
-        assertEquals(newActor.getCharacter(), res.getCharacter());
+        assertActorEquals(newActor, res);
     }
 
     @Test
@@ -51,12 +47,7 @@ public class ActorRepositoryUnitTest extends PostgreSQLContainerInitializer {
         Optional<ActorModel> res = actorRepository.findById(newActor.getUuid());
 
         assertTrue(res.isPresent());
-        assertEquals(newActor.getUuid(), res.get().getUuid());
-        assertEquals(newActor.getHref(), res.get().getHref());
-        assertEquals(newActor.getFirstName(), res.get().getFirstName());
-        assertEquals(newActor.getLastName(), res.get().getLastName());
-        assertEquals(newActor.getGender(), res.get().getGender());
-        assertEquals(newActor.getCharacter(), res.get().getCharacter());
+        assertActorEquals(newActor, res.get());
     }
 
     @Test
@@ -99,12 +90,7 @@ public class ActorRepositoryUnitTest extends PostgreSQLContainerInitializer {
         List<ActorModel> res = actorRepository.findAll(exFilter);
 
         assertEquals(1, res.size());
-        assertEquals(filteredActor.getUuid(), res.get(0).getUuid());
-        assertEquals(filteredActor.getHref(), res.get(0).getHref());
-        assertEquals(filteredActor.getFirstName(), res.get(0).getFirstName());
-        assertEquals(filteredActor.getLastName(), res.get(0).getLastName());
-        assertEquals(filteredActor.getGender(), res.get(0).getGender());
-        assertEquals(filteredActor.getCharacter(), res.get(0).getCharacter());
+        assertActorEquals(filteredActor, res.get(0));
     }
 
     @Test

@@ -20,6 +20,7 @@ import org.springframework.data.domain.Example;
 
 import java.util.*;
 
+import static com.lucasjosino.hawapi.utils.ModelAssertions.assertActorEquals;
 import static com.lucasjosino.hawapi.utils.TestsData.getActors;
 import static com.lucasjosino.hawapi.utils.TestsData.getNewActor;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -49,12 +50,7 @@ public class ActorServiceUnitTest {
 
         ActorModel res = actorService.save(newActor);
 
-        assertEquals(newActor.getUuid(), res.getUuid());
-        assertEquals(newActor.getHref(), res.getHref());
-        assertEquals(newActor.getFirstName(), res.getFirstName());
-        assertEquals(newActor.getLastName(), res.getLastName());
-        assertEquals(newActor.getGender(), res.getGender());
-        assertEquals(newActor.getCharacter(), res.getCharacter());
+        assertActorEquals(newActor, res);
         verify(actorRepository, times(1)).save(any(ActorModel.class));
     }
 
@@ -65,7 +61,7 @@ public class ActorServiceUnitTest {
 
         ActorModel res = actorService.findById(newActor.getUuid());
 
-        assertEquals(newActor, res);
+        assertActorEquals(newActor, res);
         verify(actorRepository, times(1)).findById(any(UUID.class));
     }
 

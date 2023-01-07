@@ -26,19 +26,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-// shouldRegisterUser
-// shouldReturnConflictRegisterUser
-// shouldReturnUnauthorizedRegisterUserWithAdminRole
-// shouldReturnBadRequestRegisterUserWithUnknownRole
-// shouldAuthenticateUser
-// shouldAuthenticateUserWithoutPasswordButUsingAdminRole
-// shouldReturnNotFoundAuthenticateUser
-// shouldReturnUnauthorizedAuthenticateUser
-// shouldDeleteUser
-// shouldReturnNotFoundDeleteUser
-// shouldReturnUnauthorizedDeleteUser
-// shouldDeleteUserWithoutPasswordButUsingAdminRole
-
 @UnitTestConfig
 public class AuthControllerUnitTest {
 
@@ -48,6 +35,12 @@ public class AuthControllerUnitTest {
     @InjectMocks
     private AuthController authController;
 
+    /**
+     * For now, Auth registration will be false by default. Enable <strong>ONLY</strong> for tests.
+     * <br>
+     * <br>
+     * See: <strong>/test/java/resources/application-test.properties</strong>
+     */
     @BeforeEach
     public void setup() {
         authController.setRegistrationIsEnable(true);
