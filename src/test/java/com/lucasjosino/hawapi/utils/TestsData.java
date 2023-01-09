@@ -2,6 +2,7 @@ package com.lucasjosino.hawapi.utils;
 
 import com.lucasjosino.hawapi.models.ActorModel;
 import com.lucasjosino.hawapi.models.CharacterModel;
+import com.lucasjosino.hawapi.models.EpisodeModel;
 import com.lucasjosino.hawapi.models.user.UserAuthenticationModel;
 import com.lucasjosino.hawapi.models.user.UserModel;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
@@ -55,31 +56,31 @@ public final class TestsData {
         return actor;
     }
 
+    // Characters
+
     public static CharacterModel getSingleCharacter() {
         return getCharacters().get(0);
     }
-
-    // Characters
 
     public static List<CharacterModel> getCharacters() {
         List<CharacterModel> characters = new ArrayList<>();
 
         CharacterModel character1 = new CharacterModel();
         character1.setUuid(UUID.fromString("cf70f1e5-dadc-4dc9-9082-2b94aef34600"));
-        character1.setHref("/api/v1/actors/cf70f1e5-dadc-4dc9-9082-2b94aef34600");
+        character1.setHref("/api/v1/characters/cf70f1e5-dadc-4dc9-9082-2b94aef34600");
         character1.setFirstName("John");
         character1.setLastName("Doe");
         character1.setGender((byte) 1);
-        character1.setActor("/api/v1/characters/1");
+        character1.setActor("/api/v1/actors/1");
         characters.add(character1);
 
         CharacterModel character2 = new CharacterModel();
         character2.setUuid(UUID.fromString("e6d7e898-7fb3-4224-8127-86376be9c000"));
-        character2.setHref("/api/v1/actors/e6d7e898-7fb3-4224-8127-86376be9c000");
+        character2.setHref("/api/v1/characters/e6d7e898-7fb3-4224-8127-86376be9c000");
         character2.setFirstName("Ana");
         character2.setLastName("Doe");
         character2.setGender((byte) 2);
-        character2.setActor("/api/v1/characters/2");
+        character2.setActor("/api/v1/actors/2");
         characters.add(character2);
 
         return characters;
@@ -88,12 +89,56 @@ public final class TestsData {
     public static CharacterModel getNewCharacter() {
         CharacterModel character = new CharacterModel();
         character.setUuid(UUID.randomUUID());
-        character.setHref("/api/v1/actors/" + character.getUuid());
+        character.setHref("/api/v1/characters/" + character.getUuid());
         character.setFirstName("John");
         character.setLastName("Mock");
         character.setGender((byte) 1);
-        character.setActor("/api/v1/characters/3");
+        character.setActor("/api/v1/actors/3");
         return character;
+    }
+
+    // Episodes
+
+    public static EpisodeModel getSingleEpisode() {
+        return getEpisodes().get(0);
+    }
+
+    public static List<EpisodeModel> getEpisodes() {
+        List<EpisodeModel> episodes = new ArrayList<>();
+
+        EpisodeModel episode1 = new EpisodeModel();
+        episode1.setUuid(UUID.fromString("cf70f1e5-dadc-4dc9-9082-2b94aef34600"));
+        episode1.setHref("/api/v1/actors/cf70f1e5-dadc-4dc9-9082-2b94aef34600");
+        episode1.setTitle("Lorem");
+        episode1.setDescription("Ipsum");
+        episode1.setDuration(2400000);
+        episode1.setEpisodeNum((byte) 1);
+        episode1.setSeason("/api/v1/seasons/1");
+        episodes.add(episode1);
+
+        EpisodeModel episode2 = new EpisodeModel();
+        episode2.setUuid(UUID.fromString("e6d7e898-7fb3-4224-8127-86376be9c000"));
+        episode2.setHref("/api/v1/actors/e6d7e898-7fb3-4224-8127-86376be9c000");
+        episode2.setTitle("Ipsum");
+        episode2.setDescription("Lorem");
+        episode2.setDuration(2580000);
+        episode2.setEpisodeNum((byte) 2);
+        episode2.setSeason("/api/v1/seasons/2");
+        episodes.add(episode2);
+
+        return episodes;
+    }
+
+    public static EpisodeModel getNewEpisode() {
+        EpisodeModel episode = new EpisodeModel();
+        episode.setUuid(UUID.randomUUID());
+        episode.setHref("/api/v1/actors/" + episode.getUuid());
+        episode.setTitle("Lorem Ipsum");
+        episode.setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+        episode.setDuration(2580000);
+        episode.setEpisodeNum((byte) 3);
+        episode.setSeason("/api/v1/seasons/3");
+        return episode;
     }
 
     // Users/Auth

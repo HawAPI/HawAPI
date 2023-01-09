@@ -3,8 +3,8 @@ package com.lucasjosino.hawapi.integration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lucasjosino.hawapi.configs.IntegrationTestConfig;
 import com.lucasjosino.hawapi.configs.initializer.DatabaseContainerInitializer;
-import com.lucasjosino.hawapi.models.CharacterModel;
-import com.lucasjosino.hawapi.repositories.CharacterRepository;
+import com.lucasjosino.hawapi.models.EpisodeModel;
+import com.lucasjosino.hawapi.repositories.EpisodeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +23,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @IntegrationTestConfig
-public class CharacterControllerIntTest extends DatabaseContainerInitializer {
+public class EpisodeControllerIntTest extends DatabaseContainerInitializer {
 
-    private static final CharacterModel character = getSingleCharacter();
+    private static final EpisodeModel episode = getSingleEpisode();
 
     @Autowired
-    private CharacterRepository characterRepository;
+    private EpisodeRepository episodeRepository;
 
     @Autowired
     private MockMvc mockMvc;
@@ -38,214 +38,215 @@ public class CharacterControllerIntTest extends DatabaseContainerInitializer {
 
     @BeforeEach
     public void clearDatabase() {
-        characterRepository.deleteAll();
+        episodeRepository.deleteAll();
     }
 
     @Test
-    public void shouldCreateCharacter() throws Exception {
-        CharacterModel characterToBeSaved = getNewCharacter();
+    public void shouldCreateEpisode() throws Exception {
+        EpisodeModel episodeToBeSaved = getNewEpisode();
 
-        mockMvc.perform(post("/api/v1/characters")
+        mockMvc.perform(post("/api/v1/episodes")
                         .with(getAdminAuth())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(characterToBeSaved))
+                        .content(mapper.writeValueAsString(episodeToBeSaved))
                 )
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.first_name").value(characterToBeSaved.getFirstName()))
-                .andExpect(jsonPath("$.last_name").value(characterToBeSaved.getLastName()))
-                .andExpect(jsonPath("$.gender").value(characterToBeSaved.getGender().toString()))
-                .andExpect(jsonPath("$.actor").value(characterToBeSaved.getActor()))
+                .andExpect(jsonPath("$.title").value(episodeToBeSaved.getTitle()))
+                .andExpect(jsonPath("$.description").value(episodeToBeSaved.getDescription()))
+                .andExpect(jsonPath("$.episode_num").value(String.valueOf(episodeToBeSaved.getEpisodeNum())))
+                .andExpect(jsonPath("$.season").value(episodeToBeSaved.getSeason()))
                 .andExpect(jsonPath("$.created_at").isNotEmpty())
                 .andExpect(jsonPath("$.updated_at").isNotEmpty());
     }
 
     @Test
-    public void shouldReturnUnauthorizedCreateCharacter() throws Exception {
-        CharacterModel characterToBeSaved = getNewCharacter();
+    public void shouldReturnUnauthorizedCreateEpisode() throws Exception {
+        EpisodeModel episodeToBeSaved = getNewEpisode();
 
-        mockMvc.perform(post("/api/v1/characters")
+        mockMvc.perform(post("/api/v1/episodes")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(characterToBeSaved))
+                        .content(mapper.writeValueAsString(episodeToBeSaved))
                 )
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    public void shouldReturnForbiddenCreateCharacter() throws Exception {
-        CharacterModel characterToBeSaved = getNewCharacter();
+    public void shouldReturnForbiddenCreateEpisode() throws Exception {
+        EpisodeModel episodeToBeSaved = getNewEpisode();
 
-        mockMvc.perform(post("/api/v1/characters")
+        mockMvc.perform(post("/api/v1/episodes")
                         .with(getDevAuth())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(characterToBeSaved))
+                        .content(mapper.writeValueAsString(episodeToBeSaved))
                 )
                 .andDo(print())
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    public void shouldReturnCharacterByUUID() throws Exception {
-        characterRepository.saveAll(getCharacters());
+    public void shouldReturnEpisodeByUUID() throws Exception {
+        episodeRepository.saveAll(getEpisodes());
 
-        mockMvc.perform(get("/api/v1/characters/" + character.getUuid()))
+        mockMvc.perform(get("/api/v1/episodes/" + episode.getUuid()))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.uuid").value(character.getUuid().toString()))
-                .andExpect(jsonPath("$.href").value(character.getHref()))
-                .andExpect(jsonPath("$.first_name").value(character.getFirstName()))
-                .andExpect(jsonPath("$.last_name").value(character.getLastName()))
-                .andExpect(jsonPath("$.gender").value(character.getGender().toString()))
-                .andExpect(jsonPath("$.actor").value(character.getActor()))
+                .andExpect(jsonPath("$.uuid").value(episode.getUuid().toString()))
+                .andExpect(jsonPath("$.href").value(episode.getHref()))
+                .andExpect(jsonPath("$.title").value(episode.getTitle()))
+                .andExpect(jsonPath("$.description").value(episode.getDescription()))
+                .andExpect(jsonPath("$.episode_num").value(String.valueOf(episode.getEpisodeNum())))
+                .andExpect(jsonPath("$.season").value(episode.getSeason()))
                 .andExpect(jsonPath("$.created_at").isNotEmpty())
                 .andExpect(jsonPath("$.updated_at").isNotEmpty());
     }
 
     @Test
-    public void shouldReturnNotFoundCharacter() throws Exception {
-        mockMvc.perform(get("/api/v1/characters/" + character.getUuid()))
+    public void shouldReturnNotFoundEpisode() throws Exception {
+        mockMvc.perform(get("/api/v1/episodes/" + episode.getUuid()))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    public void shouldReturnListOfCharacters() throws Exception {
-        characterRepository.saveAll(getCharacters());
+    public void shouldReturnListOfEpisodes() throws Exception {
+        episodeRepository.saveAll(getEpisodes());
 
-        mockMvc.perform(get("/api/v1/characters"))
+        mockMvc.perform(get("/api/v1/episodes"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)));
     }
 
     @Test
-    public void shouldReturnEmptyListOfCharacters() throws Exception {
-        mockMvc.perform(get("/api/v1/characters"))
+    public void shouldReturnEmptyListOfEpisodes() throws Exception {
+        mockMvc.perform(get("/api/v1/episodes"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isEmpty());
     }
 
     @Test
-    public void shouldReturnListOfCharactersWithFilter() throws Exception {
-        CharacterModel character = getCharacters().get(1);
+    public void shouldReturnListOfEpisodesWithFilter() throws Exception {
+        EpisodeModel episode = getEpisodes().get(1);
 
-        characterRepository.saveAll(getCharacters());
+        episodeRepository.saveAll(getEpisodes());
 
-        mockMvc.perform(get("/api/v1/characters")
-                        .param("gender", "2")
+        // FIXME: EpisodeFilter will only read if field is camelcase (episodeNum).
+        mockMvc.perform(get("/api/v1/episodes")
+                        .param("episode_num", "2")
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].uuid").value(character.getUuid().toString()))
-                .andExpect(jsonPath("$[0].href").value(character.getHref()))
-                .andExpect(jsonPath("$[0].first_name").value(character.getFirstName()))
-                .andExpect(jsonPath("$[0].last_name").value(character.getLastName()))
-                .andExpect(jsonPath("$[0].gender").value(character.getGender().toString()))
-                .andExpect(jsonPath("$[0].actor").value(character.getActor()))
+                .andExpect(jsonPath("$[0].uuid").value(episode.getUuid().toString()))
+                .andExpect(jsonPath("$[0].href").value(episode.getHref()))
+                .andExpect(jsonPath("$[0].title").value(episode.getTitle()))
+                .andExpect(jsonPath("$[0].description").value(episode.getDescription()))
+                .andExpect(jsonPath("$[0].episode_num").value(String.valueOf(episode.getEpisodeNum())))
+                .andExpect(jsonPath("$[0].season").value(episode.getSeason()))
                 .andExpect(jsonPath("$[0].created_at").isNotEmpty())
                 .andExpect(jsonPath("$[0].updated_at").isNotEmpty());
     }
 
     @Test
-    public void shouldReturnListOfCharactersWithSortFilter() throws Exception {
-        List<CharacterModel> reversedCharacters = new ArrayList<>(getCharacters());
-        Collections.reverse(reversedCharacters);
+    public void shouldReturnListOfEpisodesWithSortFilter() throws Exception {
+        List<EpisodeModel> reversedEpisodes = new ArrayList<>(getEpisodes());
+        Collections.reverse(reversedEpisodes);
 
-        characterRepository.saveAll(getCharacters());
+        episodeRepository.saveAll(getEpisodes());
 
-        mockMvc.perform(get("/api/v1/characters")
+        mockMvc.perform(get("/api/v1/episodes")
                         .param("sort", "DESC")
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].uuid").value(reversedCharacters.get(1).getUuid().toString()))
-                .andExpect(jsonPath("$[1].uuid").value(reversedCharacters.get(0).getUuid().toString()));
+                .andExpect(jsonPath("$[0].uuid").value(reversedEpisodes.get(1).getUuid().toString()))
+                .andExpect(jsonPath("$[1].uuid").value(reversedEpisodes.get(0).getUuid().toString()));
     }
 
     @Test
-    public void shouldReturnListOfCharactersWithOrderFilter() throws Exception {
-        characterRepository.saveAll(getCharacters());
+    public void shouldReturnListOfEpisodesWithOrderFilter() throws Exception {
+        episodeRepository.saveAll(getEpisodes());
 
-        mockMvc.perform(get("/api/v1/characters")
-                        .param("order", "first_name")
+        mockMvc.perform(get("/api/v1/episodes")
+                        .param("order", "title")
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].uuid").value(getCharacters().get(1).getUuid().toString()))
-                .andExpect(jsonPath("$[1].uuid").value(getCharacters().get(0).getUuid().toString()));
+                .andExpect(jsonPath("$[0].uuid").value(getEpisodes().get(1).getUuid().toString()))
+                .andExpect(jsonPath("$[1].uuid").value(getEpisodes().get(0).getUuid().toString()));
     }
 
     @Test
-    public void shouldUpdateCharacter() throws Exception {
-        CharacterModel characterToBeUpdated = new CharacterModel();
-        characterToBeUpdated.setLastName("Moa");
+    public void shouldUpdateEpisode() throws Exception {
+        EpisodeModel episodeToBeUpdated = new EpisodeModel();
+        episodeToBeUpdated.setTitle("Moa");
 
-        characterRepository.saveAll(getCharacters());
+        episodeRepository.saveAll(getEpisodes());
 
-        mockMvc.perform(patch("/api/v1/characters/" + character.getUuid())
+        mockMvc.perform(patch("/api/v1/episodes/" + episode.getUuid())
                         .with(getAdminAuth())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(characterToBeUpdated))
+                        .content(mapper.writeValueAsString(episodeToBeUpdated))
                 )
                 .andDo(print())
                 .andExpect(status().isNoContent());
     }
 
     @Test
-    public void shouldReturnNotFoundUpdateCharacter() throws Exception {
-        CharacterModel characterToBeUpdated = new CharacterModel();
-        characterToBeUpdated.setLastName("Moa");
+    public void shouldReturnNotFoundUpdateEpisode() throws Exception {
+        EpisodeModel episodeToBeUpdated = new EpisodeModel();
+        episodeToBeUpdated.setTitle("Moa");
 
-        mockMvc.perform(patch("/api/v1/characters/" + character.getUuid())
+        mockMvc.perform(patch("/api/v1/episodes/" + episode.getUuid())
                         .with(getAdminAuth())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(characterToBeUpdated))
+                        .content(mapper.writeValueAsString(episodeToBeUpdated))
                 )
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    public void shouldReturnUnauthorizedUpdateCharacter() throws Exception {
-        CharacterModel characterToBeUpdated = new CharacterModel();
-        characterToBeUpdated.setLastName("Moa");
+    public void shouldReturnUnauthorizedUpdateEpisode() throws Exception {
+        EpisodeModel episodeToBeUpdated = new EpisodeModel();
+        episodeToBeUpdated.setTitle("Moa");
 
-        characterRepository.saveAll(getCharacters());
+        episodeRepository.saveAll(getEpisodes());
 
-        mockMvc.perform(patch("/api/v1/characters/" + character.getUuid())
+        mockMvc.perform(patch("/api/v1/episodes/" + episode.getUuid())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(characterToBeUpdated))
+                        .content(mapper.writeValueAsString(episodeToBeUpdated))
                 )
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    public void shouldReturnForbiddenUpdateCharacter() throws Exception {
-        CharacterModel characterToBeUpdated = new CharacterModel();
-        characterToBeUpdated.setLastName("Moa");
+    public void shouldReturnForbiddenUpdateEpisode() throws Exception {
+        EpisodeModel episodeToBeUpdated = new EpisodeModel();
+        episodeToBeUpdated.setTitle("Moa");
 
-        characterRepository.saveAll(getCharacters());
+        episodeRepository.saveAll(getEpisodes());
 
-        mockMvc.perform(patch("/api/v1/characters/" + character.getUuid())
+        mockMvc.perform(patch("/api/v1/episodes/" + episode.getUuid())
                         .with(getDevAuth())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(characterToBeUpdated))
+                        .content(mapper.writeValueAsString(episodeToBeUpdated))
                 )
                 .andDo(print())
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    public void shouldDeleteCharacter() throws Exception {
-        characterRepository.saveAll(getCharacters());
+    public void shouldDeleteEpisode() throws Exception {
+        episodeRepository.saveAll(getEpisodes());
 
-        mockMvc.perform(delete("/api/v1/characters/" + character.getUuid())
+        mockMvc.perform(delete("/api/v1/episodes/" + episode.getUuid())
                         .with(getAdminAuth())
                 )
                 .andDo(print())
@@ -253,8 +254,8 @@ public class CharacterControllerIntTest extends DatabaseContainerInitializer {
     }
 
     @Test
-    public void shouldReturnNotFoundDeleteCharacter() throws Exception {
-        mockMvc.perform(delete("/api/v1/characters/" + character.getUuid())
+    public void shouldReturnNotFoundDeleteEpisode() throws Exception {
+        mockMvc.perform(delete("/api/v1/episodes/" + episode.getUuid())
                         .with(getAdminAuth())
                 )
                 .andDo(print())
@@ -262,15 +263,15 @@ public class CharacterControllerIntTest extends DatabaseContainerInitializer {
     }
 
     @Test
-    public void shouldReturnUnauthorizedDeleteCharacter() throws Exception {
-        mockMvc.perform(delete("/api/v1/characters/" + character.getUuid()))
+    public void shouldReturnUnauthorizedDeleteEpisode() throws Exception {
+        mockMvc.perform(delete("/api/v1/episodes/" + episode.getUuid()))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    public void shouldReturnForbiddenDeleteCharacter() throws Exception {
-        mockMvc.perform(delete("/api/v1/characters/" + character.getUuid())
+    public void shouldReturnForbiddenDeleteEpisode() throws Exception {
+        mockMvc.perform(delete("/api/v1/episodes/" + episode.getUuid())
                         .with(getDevAuth())
                 )
                 .andDo(print())

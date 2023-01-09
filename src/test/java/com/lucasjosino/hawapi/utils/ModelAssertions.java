@@ -2,6 +2,7 @@ package com.lucasjosino.hawapi.utils;
 
 import com.lucasjosino.hawapi.models.ActorModel;
 import com.lucasjosino.hawapi.models.CharacterModel;
+import com.lucasjosino.hawapi.models.EpisodeModel;
 import com.lucasjosino.hawapi.models.user.UserModel;
 import org.springframework.http.ResponseEntity;
 
@@ -52,6 +53,27 @@ public class ModelAssertions {
         assertEquals(expected.getLastName(), result.getBody().getLastName());
         assertEquals(expected.getGender(), result.getBody().getGender());
         assertEquals(expected.getActor(), result.getBody().getActor());
+    }
+
+    // Episodes
+
+    public static void assertEpisodeEquals(EpisodeModel expected, EpisodeModel result) {
+        assertEquals(expected.getUuid(), result.getUuid());
+        assertEquals(expected.getHref(), result.getHref());
+        assertEquals(expected.getTitle(), result.getTitle());
+        assertEquals(expected.getDescription(), result.getDescription());
+        assertEquals(expected.getDuration(), result.getDuration());
+        assertEquals(expected.getSeason(), result.getSeason());
+    }
+
+    public static void assertEpisodeEquals(EpisodeModel expected, ResponseEntity<EpisodeModel> result) {
+        assertThat(result.getBody()).isNotNull();
+        assertEquals(expected.getUuid(), result.getBody().getUuid());
+        assertEquals(expected.getHref(), result.getBody().getHref());
+        assertEquals(expected.getTitle(), result.getBody().getTitle());
+        assertEquals(expected.getDescription(), result.getBody().getDescription());
+        assertEquals(expected.getDuration(), result.getBody().getDuration());
+        assertEquals(expected.getSeason(), result.getBody().getSeason());
     }
 
     // User/Auth
