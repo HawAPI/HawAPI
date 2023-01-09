@@ -7,6 +7,7 @@ import com.lucasjosino.hawapi.interfaces.MappingInterface;
 import com.lucasjosino.hawapi.models.SoundtrackModel;
 import com.lucasjosino.hawapi.services.SoundtrackService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,7 +37,7 @@ public class SoundtrackController implements MappingInterface<SoundtrackModel, S
 
     @PostMapping
     public ResponseEntity<SoundtrackModel> save(@RequestBody SoundtrackModel episode) {
-        return ResponseEntity.ok(soundtrackService.save(episode));
+        return ResponseEntity.status(HttpStatus.CREATED).body(soundtrackService.save(episode));
     }
 
     @PatchMapping("/{uuid}")

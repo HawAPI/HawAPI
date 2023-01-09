@@ -7,6 +7,7 @@ import com.lucasjosino.hawapi.interfaces.MappingInterface;
 import com.lucasjosino.hawapi.models.LocationModel;
 import com.lucasjosino.hawapi.services.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,7 +37,7 @@ public class LocationController implements MappingInterface<LocationModel, Locat
 
     @PostMapping
     public ResponseEntity<LocationModel> save(@RequestBody LocationModel episode) {
-        return ResponseEntity.ok(locationService.save(episode));
+        return ResponseEntity.status(HttpStatus.CREATED).body(locationService.save(episode));
     }
 
     @PatchMapping("/{uuid}")

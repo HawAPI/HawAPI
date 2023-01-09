@@ -7,6 +7,7 @@ import com.lucasjosino.hawapi.interfaces.MappingInterface;
 import com.lucasjosino.hawapi.models.GameModel;
 import com.lucasjosino.hawapi.services.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,7 +37,7 @@ public class GameController implements MappingInterface<GameModel, GameFilter> {
 
     @PostMapping
     public ResponseEntity<GameModel> save(@RequestBody GameModel episode) {
-        return ResponseEntity.ok(gameService.save(episode));
+        return ResponseEntity.status(HttpStatus.CREATED).body(gameService.save(episode));
     }
 
     @PatchMapping("/{uuid}")
