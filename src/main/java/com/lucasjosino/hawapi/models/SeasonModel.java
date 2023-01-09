@@ -33,7 +33,7 @@ public class SeasonModel extends BaseModel {
 
     @JsonProperty("season_num")
     @Column(nullable = false, name = "season_num")
-    private byte seasonNum;
+    private Byte seasonNum;
 
     @JsonProperty("release_date")
     @Column(nullable = false, name = "release_date")
@@ -109,11 +109,11 @@ public class SeasonModel extends BaseModel {
         this.season = season;
     }
 
-    public byte getSeasonNum() {
+    public Byte getSeasonNum() {
         return seasonNum;
     }
 
-    public void setSeasonNum(byte seasonNum) {
+    public void setSeasonNum(Byte seasonNum) {
         this.seasonNum = seasonNum;
     }
 

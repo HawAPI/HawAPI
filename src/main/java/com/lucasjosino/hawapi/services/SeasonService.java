@@ -74,6 +74,8 @@ public class SeasonService {
 
     @Transactional
     public void delete(UUID uuid) {
+        if (!seasonRepository.existsById(uuid)) throw new ItemNotFoundException();
+
         seasonRepository.deleteById(uuid);
     }
 }

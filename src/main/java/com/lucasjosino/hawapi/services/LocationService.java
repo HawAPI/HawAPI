@@ -74,6 +74,8 @@ public class LocationService {
 
     @Transactional
     public void delete(UUID uuid) {
+        if (!locationRepository.existsById(uuid)) throw new ItemNotFoundException();
+
         locationRepository.deleteById(uuid);
     }
 }

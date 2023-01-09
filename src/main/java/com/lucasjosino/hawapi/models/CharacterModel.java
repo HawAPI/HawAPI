@@ -34,7 +34,7 @@ public class CharacterModel extends BaseModel {
     private LocalDate deathDate;
 
     @Column
-    private byte gender;
+    private Byte gender;
 
     @Column
     private String thumbnail;
@@ -86,11 +86,11 @@ public class CharacterModel extends BaseModel {
         this.deathDate = deathDate;
     }
 
-    public byte getGender() {
+    public Byte getGender() {
         return gender;
     }
 
-    public void setGender(byte gender) {
+    public void setGender(Byte gender) {
         this.gender = gender;
     }
 

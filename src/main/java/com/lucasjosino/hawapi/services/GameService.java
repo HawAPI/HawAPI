@@ -74,6 +74,8 @@ public class GameService {
 
     @Transactional
     public void delete(UUID uuid) {
+        if (!gameRepository.existsById(uuid)) throw new ItemNotFoundException();
+
         gameRepository.deleteById(uuid);
     }
 }
