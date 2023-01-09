@@ -2,7 +2,7 @@ package com.lucasjosino.hawapi.integration.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lucasjosino.hawapi.configs.IntegrationTestConfig;
-import com.lucasjosino.hawapi.configs.initializer.PostgreSQLContainerInitializer;
+import com.lucasjosino.hawapi.configs.initializer.DatabaseContainerInitializer;
 import com.lucasjosino.hawapi.models.user.UserModel;
 import com.lucasjosino.hawapi.repositories.auth.AuthRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @IntegrationTestConfig
-public class AuthControllerIntTest extends PostgreSQLContainerInitializer {
+public class AuthControllerIntTest extends DatabaseContainerInitializer {
 
     @Autowired
     private AuthRepository authRepository;

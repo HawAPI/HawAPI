@@ -10,7 +10,6 @@ import java.lang.annotation.*;
  * Annotation that can be applied to an integration test class.
  *
  * @see AutoConfigureMockMvc
- * @see ActiveProfiles
  * @see SpringBootTest
  */
 @Inherited

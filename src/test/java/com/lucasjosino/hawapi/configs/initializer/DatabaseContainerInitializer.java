@@ -9,13 +9,10 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.MountableFile;
 
 /**
- * PostgreSQL configuration for {@link Testcontainers}.
- *
- * @see Testcontainers
- * @see ActiveProfiles
+ * Database configuration for tests using {@link Testcontainers}.
  */
 @ActiveProfiles("test")
-abstract public class PostgreSQLContainerInitializer {
+abstract public class DatabaseContainerInitializer {
 
     private static final String DB_NAME_AND_VERSION = "postgres:15.1";
 
@@ -24,6 +21,7 @@ abstract public class PostgreSQLContainerInitializer {
     private static final String SCHEMA_LOCATION = "schema.sql";
 
     @Container
+    @SuppressWarnings("resource")
     private static final PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(DB_NAME_AND_VERSION)
             .withCopyFileToContainer(MountableFile.forClasspathResource(SCHEMA_LOCATION), DB_ENTRY_POINT)
             .withExposedPorts(5432)

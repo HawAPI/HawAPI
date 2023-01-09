@@ -2,7 +2,7 @@ package com.lucasjosino.hawapi.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lucasjosino.hawapi.configs.IntegrationTestConfig;
-import com.lucasjosino.hawapi.configs.initializer.PostgreSQLContainerInitializer;
+import com.lucasjosino.hawapi.configs.initializer.DatabaseContainerInitializer;
 import com.lucasjosino.hawapi.models.ActorModel;
 import com.lucasjosino.hawapi.repositories.ActorRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @IntegrationTestConfig
-public class ActorControllerIntTest extends PostgreSQLContainerInitializer {
+public class ActorControllerIntTest extends DatabaseContainerInitializer {
 
     @Autowired
     private ActorRepository actorRepository;

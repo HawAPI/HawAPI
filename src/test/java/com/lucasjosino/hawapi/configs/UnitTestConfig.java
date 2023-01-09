@@ -8,9 +8,6 @@ import java.lang.annotation.*;
 
 /**
  * Annotation that can be applied to a unit test class.
- *
- * @see ActiveProfiles
- * @see ExtendWith
  */
 @Inherited
 @ActiveProfiles("test")

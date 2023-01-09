@@ -1,7 +1,7 @@
 package com.lucasjosino.hawapi.unit.repositories;
 
 import com.lucasjosino.hawapi.configs.RepositoryUnitTestConfig;
-import com.lucasjosino.hawapi.configs.initializer.PostgreSQLContainerInitializer;
+import com.lucasjosino.hawapi.configs.initializer.DatabaseContainerInitializer;
 import com.lucasjosino.hawapi.filters.ActorFilter;
 import com.lucasjosino.hawapi.models.ActorModel;
 import com.lucasjosino.hawapi.repositories.ActorRepository;
@@ -21,7 +21,7 @@ import static com.lucasjosino.hawapi.utils.TestsData.getNewActor;
 import static org.junit.jupiter.api.Assertions.*;
 
 @RepositoryUnitTestConfig
-public class ActorRepositoryUnitTest extends PostgreSQLContainerInitializer {
+public class ActorRepositoryUnitTest extends DatabaseContainerInitializer {
 
     @Autowired
     private EntityManager entityManager;
