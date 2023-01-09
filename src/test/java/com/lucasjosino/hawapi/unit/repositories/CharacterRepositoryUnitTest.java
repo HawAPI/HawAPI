@@ -2,9 +2,9 @@ package com.lucasjosino.hawapi.unit.repositories;
 
 import com.lucasjosino.hawapi.configs.RepositoryUnitTestConfig;
 import com.lucasjosino.hawapi.configs.initializer.DatabaseContainerInitializer;
-import com.lucasjosino.hawapi.filters.ActorFilter;
-import com.lucasjosino.hawapi.models.ActorModel;
-import com.lucasjosino.hawapi.repositories.ActorRepository;
+import com.lucasjosino.hawapi.filters.CharacterFilter;
+import com.lucasjosino.hawapi.models.CharacterModel;
+import com.lucasjosino.hawapi.repositories.CharacterRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
@@ -16,101 +16,101 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static com.lucasjosino.hawapi.utils.ModelAssertions.assertActorEquals;
+import static com.lucasjosino.hawapi.utils.ModelAssertions.assertCharacterEquals;
 import static com.lucasjosino.hawapi.utils.TestsData.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @RepositoryUnitTestConfig
-public class ActorRepositoryUnitTest extends DatabaseContainerInitializer {
+public class CharacterRepositoryUnitTest extends DatabaseContainerInitializer {
 
-    private static final ActorModel actor = getSingleActor();
+    private static final CharacterModel character = getSingleCharacter();
 
     @Autowired
     private EntityManager entityManager;
 
     @Autowired
-    private ActorRepository actorRepository;
+    private CharacterRepository characterRepository;
 
     @BeforeEach
     public void setUp() {
-        getActors().forEach(entityManager::persist);
+        getCharacters().forEach(entityManager::persist);
     }
 
     @Test
-    public void shouldCreateActor() {
-        ActorModel newActor = getNewActor();
-        entityManager.persist(newActor);
+    public void shouldCreateCharacter() {
+        CharacterModel newCharacter = getNewCharacter();
+        entityManager.persist(newCharacter);
 
-        ActorModel res = actorRepository.save(newActor);
+        CharacterModel res = characterRepository.save(newCharacter);
 
-        assertActorEquals(newActor, res);
+        assertCharacterEquals(newCharacter, res);
     }
 
     @Test
-    public void shouldReturnActorByUUID() {
-        Optional<ActorModel> res = actorRepository.findById(actor.getUuid());
+    public void shouldReturnCharacterByUUID() {
+        Optional<CharacterModel> res = characterRepository.findById(character.getUuid());
 
         assertTrue(res.isPresent());
-        assertActorEquals(actor, res.get());
+        assertCharacterEquals(character, res.get());
     }
 
     @Test
-    public void shouldReturnNotFoundActor() {
+    public void shouldReturnNotFoundCharacter() {
         entityManager.clear();
         entityManager.flush();
 
-        Optional<ActorModel> res = actorRepository.findById(actor.getUuid());
+        Optional<CharacterModel> res = characterRepository.findById(character.getUuid());
 
         assertFalse(res.isPresent());
     }
 
     @Test
-    public void shouldReturnListOfActors() {
-        List<ActorModel> res = actorRepository.findAll();
+    public void shouldReturnListOfCharacters() {
+        List<CharacterModel> res = characterRepository.findAll();
 
         assertEquals(2, res.size());
     }
 
     @Test
-    public void shouldReturnEmptyListOfActors() {
+    public void shouldReturnEmptyListOfCharacters() {
         entityManager.clear();
         entityManager.flush();
 
-        List<ActorModel> res = actorRepository.findAll();
+        List<CharacterModel> res = characterRepository.findAll();
 
         assertEquals(Collections.EMPTY_LIST, res);
     }
 
     @Test
-    public void shouldReturnListOfActorsWithFilter() {
+    public void shouldReturnListOfCharactersWithFilter() {
         ModelMapper mapper = new ModelMapper();
 
-        ActorFilter filter = new ActorFilter();
+        CharacterFilter filter = new CharacterFilter();
         filter.setFirstName("John");
 
-        ActorModel convertedModel = mapper.map(filter, ActorModel.class);
-        Example<ActorModel> exFilter = Example.of(convertedModel);
-        List<ActorModel> res = actorRepository.findAll(exFilter);
+        CharacterModel convertedModel = mapper.map(filter, CharacterModel.class);
+        Example<CharacterModel> exFilter = Example.of(convertedModel);
+        List<CharacterModel> res = characterRepository.findAll(exFilter);
 
         assertEquals(1, res.size());
-        assertActorEquals(actor, res.get(0));
+        assertCharacterEquals(character, res.get(0));
     }
 
     @Test
-    public void shouldUpdateActor() {
-        actor.setFirstName("Mario");
-        ActorModel updatedActor = actorRepository.save(actor);
+    public void shouldUpdateCharacter() {
+        character.setFirstName("Mario");
+        CharacterModel updatedCharacter = characterRepository.save(character);
 
-        assertEquals(actor.getUuid(), updatedActor.getUuid());
-        assertEquals(actor.getFirstName(), updatedActor.getFirstName());
+        assertEquals(character.getUuid(), updatedCharacter.getUuid());
+        assertEquals(character.getFirstName(), updatedCharacter.getFirstName());
     }
 
     @Test
-    public void shouldDeleteActor() {
-        actorRepository.deleteById(actor.getUuid());
+    public void shouldDeleteCharacter() {
+        characterRepository.deleteById(character.getUuid());
 
-        Optional<ActorModel> opActor = actorRepository.findById(actor.getUuid());
+        Optional<CharacterModel> opCharacter = characterRepository.findById(character.getUuid());
 
-        assertFalse(opActor.isPresent());
+        assertFalse(opCharacter.isPresent());
     }
 }

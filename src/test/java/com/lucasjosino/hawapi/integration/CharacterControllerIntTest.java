@@ -1,4 +1,4 @@
-package com.lucasjosino.hawapi.integration.auth;
+package com.lucasjosino.hawapi.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lucasjosino.hawapi.configs.IntegrationTestConfig;
@@ -54,8 +54,8 @@ public class CharacterControllerIntTest extends DatabaseContainerInitializer {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.first_name").value(characterToBeSaved.getFirstName()))
                 .andExpect(jsonPath("$.last_name").value(characterToBeSaved.getLastName()))
-                .andExpect(jsonPath("$.gender").value(characterToBeSaved.getGender()))
-                .andExpect(jsonPath("$.character").value(characterToBeSaved.getActor()))
+                .andExpect(jsonPath("$.gender").value(characterToBeSaved.getGender().toString()))
+                .andExpect(jsonPath("$.actor").value(characterToBeSaved.getActor()))
                 .andExpect(jsonPath("$.created_at").isNotEmpty())
                 .andExpect(jsonPath("$.updated_at").isNotEmpty());
     }
@@ -96,8 +96,8 @@ public class CharacterControllerIntTest extends DatabaseContainerInitializer {
                 .andExpect(jsonPath("$.href").value(character.getHref()))
                 .andExpect(jsonPath("$.first_name").value(character.getFirstName()))
                 .andExpect(jsonPath("$.last_name").value(character.getLastName()))
-                .andExpect(jsonPath("$.gender").value(character.getGender()))
-                .andExpect(jsonPath("$.character").value(character.getActor()))
+                .andExpect(jsonPath("$.gender").value(character.getGender().toString()))
+                .andExpect(jsonPath("$.actor").value(character.getActor()))
                 .andExpect(jsonPath("$.created_at").isNotEmpty())
                 .andExpect(jsonPath("$.updated_at").isNotEmpty());
     }
@@ -143,8 +143,8 @@ public class CharacterControllerIntTest extends DatabaseContainerInitializer {
                 .andExpect(jsonPath("$[0].href").value(character.getHref()))
                 .andExpect(jsonPath("$[0].first_name").value(character.getFirstName()))
                 .andExpect(jsonPath("$[0].last_name").value(character.getLastName()))
-                .andExpect(jsonPath("$[0].gender").value(character.getGender()))
-                .andExpect(jsonPath("$[0].character").value(character.getActor()))
+                .andExpect(jsonPath("$[0].gender").value(character.getGender().toString()))
+                .andExpect(jsonPath("$[0].actor").value(character.getActor()))
                 .andExpect(jsonPath("$[0].created_at").isNotEmpty())
                 .andExpect(jsonPath("$[0].updated_at").isNotEmpty());
     }

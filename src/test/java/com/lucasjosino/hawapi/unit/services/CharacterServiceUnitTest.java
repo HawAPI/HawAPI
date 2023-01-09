@@ -6,11 +6,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.lucasjosino.hawapi.configs.UnitTestConfig;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
-import com.lucasjosino.hawapi.filters.ActorFilter;
-import com.lucasjosino.hawapi.models.ActorModel;
+import com.lucasjosino.hawapi.filters.CharacterFilter;
+import com.lucasjosino.hawapi.models.CharacterModel;
 import com.lucasjosino.hawapi.properties.OpenAPIProperty;
-import com.lucasjosino.hawapi.repositories.ActorRepository;
-import com.lucasjosino.hawapi.services.ActorService;
+import com.lucasjosino.hawapi.repositories.CharacterRepository;
+import com.lucasjosino.hawapi.services.CharacterService;
 import com.lucasjosino.hawapi.services.utils.ServiceUtils;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -20,7 +20,7 @@ import org.springframework.data.domain.Example;
 
 import java.util.*;
 
-import static com.lucasjosino.hawapi.utils.ModelAssertions.assertActorEquals;
+import static com.lucasjosino.hawapi.utils.ModelAssertions.assertCharacterEquals;
 import static com.lucasjosino.hawapi.utils.TestsData.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -28,9 +28,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @UnitTestConfig
-public class ActorServiceUnitTest {
+public class CharacterServiceUnitTest {
 
-    private static final ActorModel actor = getSingleActor();
+    private static final CharacterModel character = getSingleCharacter();
 
     @Mock
     private ServiceUtils utils;
@@ -39,120 +39,120 @@ public class ActorServiceUnitTest {
     private OpenAPIProperty config;
 
     @Mock
-    private ActorRepository actorRepository;
+    private CharacterRepository characterRepository;
 
     @InjectMocks
-    private ActorService actorService;
+    private CharacterService characterService;
 
     @Test
-    public void shouldCreateActor() {
-        ActorModel newActor = getNewActor();
-        when(actorRepository.save(any(ActorModel.class))).thenReturn(newActor);
+    public void shouldCreateCharacter() {
+        CharacterModel newCharacter = getNewCharacter();
+        when(characterRepository.save(any(CharacterModel.class))).thenReturn(newCharacter);
 
-        ActorModel res = actorService.save(newActor);
+        CharacterModel res = characterService.save(newCharacter);
 
-        assertActorEquals(newActor, res);
-        verify(actorRepository, times(1)).save(any(ActorModel.class));
+        assertCharacterEquals(newCharacter, res);
+        verify(characterRepository, times(1)).save(any(CharacterModel.class));
     }
 
     @Test
-    public void shouldReturnActorByUUID() {
-        ActorModel newActor = getNewActor();
-        when(actorRepository.findById(any(UUID.class))).thenReturn(Optional.of(newActor));
+    public void shouldReturnCharacterByUUID() {
+        CharacterModel newCharacter = getNewCharacter();
+        when(characterRepository.findById(any(UUID.class))).thenReturn(Optional.of(newCharacter));
 
-        ActorModel res = actorService.findById(newActor.getUuid());
+        CharacterModel res = characterService.findByUUID(newCharacter.getUuid());
 
-        assertActorEquals(newActor, res);
-        verify(actorRepository, times(1)).findById(any(UUID.class));
+        assertCharacterEquals(newCharacter, res);
+        verify(characterRepository, times(1)).findById(any(UUID.class));
     }
 
     @Test
-    public void shouldReturnNotFoundActor() {
-        ActorModel newActor = getNewActor();
-        when(actorRepository.findById(any(UUID.class))).thenThrow(ItemNotFoundException.class);
+    public void shouldReturnNotFoundCharacter() {
+        CharacterModel newCharacter = getNewCharacter();
+        when(characterRepository.findById(any(UUID.class))).thenThrow(ItemNotFoundException.class);
 
-        assertThrows(ItemNotFoundException.class, () -> actorService.findById(newActor.getUuid()));
-        verify(actorRepository, times(1)).findById(any(UUID.class));
+        assertThrows(ItemNotFoundException.class, () -> characterService.findByUUID(newCharacter.getUuid()));
+        verify(characterRepository, times(1)).findById(any(UUID.class));
     }
 
 
     @Test
-    public void shouldReturnListOfActors() {
-        when(actorRepository.findAll(Mockito.<Example<ActorModel>>any())).thenReturn(getActors());
+    public void shouldReturnListOfCharacters() {
+        when(characterRepository.findAll(Mockito.<Example<CharacterModel>>any())).thenReturn(getCharacters());
 
-        List<ActorModel> res = actorService.findAll(null);
+        List<CharacterModel> res = characterService.findAll(null);
 
         assertEquals(2, res.size());
-        verify(actorRepository, times(1)).findAll(Mockito.<Example<ActorModel>>any());
+        verify(characterRepository, times(1)).findAll(Mockito.<Example<CharacterModel>>any());
     }
 
     @Test
-    public void shouldReturnEmptyListOfActors() {
-        when(actorRepository.findAll(Mockito.<Example<ActorModel>>any())).thenReturn(new ArrayList<>());
+    public void shouldReturnEmptyListOfCharacters() {
+        when(characterRepository.findAll(Mockito.<Example<CharacterModel>>any())).thenReturn(new ArrayList<>());
 
-        List<ActorModel> res = actorService.findAll(null);
+        List<CharacterModel> res = characterService.findAll(null);
 
         assertEquals(Collections.EMPTY_LIST, res);
-        verify(actorRepository, times(1)).findAll(Mockito.<Example<ActorModel>>any());
+        verify(characterRepository, times(1)).findAll(Mockito.<Example<CharacterModel>>any());
     }
 
     @Test
-    public void shouldReturnListOfActorsWithFilter() {
-        List<ActorModel> filteredActorList = new ArrayList<>(Collections.singletonList(actor));
-        when(actorRepository.findAll(Mockito.<Example<ActorModel>>any())).thenReturn(filteredActorList);
+    public void shouldReturnListOfCharactersWithFilter() {
+        List<CharacterModel> filteredCharacterList = new ArrayList<>(Collections.singletonList(character));
+        when(characterRepository.findAll(Mockito.<Example<CharacterModel>>any())).thenReturn(filteredCharacterList);
 
-        ActorFilter filter = Mockito.mock(ActorFilter.class);
-        List<ActorModel> res = actorService.findAll(filter);
+        CharacterFilter filter = Mockito.mock(CharacterFilter.class);
+        List<CharacterModel> res = characterService.findAll(filter);
 
         assertEquals(1, res.size());
-        verify(actorRepository, times(1)).findAll(Mockito.<Example<ActorModel>>any());
+        verify(characterRepository, times(1)).findAll(Mockito.<Example<CharacterModel>>any());
     }
 
     @Test
-    public void shouldUpdateActor() throws JsonPatchException, JsonProcessingException {
+    public void shouldUpdateCharacter() throws JsonPatchException, JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
 
-        when(actorRepository.findById(any(UUID.class))).thenReturn(Optional.ofNullable(getActors().get(0)));
-        when(utils.mergePatch(any(), any(), any())).thenReturn(getActors().get(0));
-        when(actorRepository.save(any(ActorModel.class))).thenReturn(getActors().get(0));
+        when(characterRepository.findById(any(UUID.class))).thenReturn(Optional.ofNullable(getCharacters().get(0)));
+        when(utils.mergePatch(any(), any(), any())).thenReturn(getCharacters().get(0));
+        when(characterRepository.save(any(CharacterModel.class))).thenReturn(getCharacters().get(0));
 
-        actorService.patch(actor.getUuid(), mapper.valueToTree(actor));
+        characterService.patch(character.getUuid(), mapper.valueToTree(character));
 
-        verify(actorRepository, times(1)).save(any(ActorModel.class));
+        verify(characterRepository, times(1)).save(any(CharacterModel.class));
     }
 
     @Test
-    public void shouldReturnNotFoundUpdateActor() {
+    public void shouldReturnNotFoundUpdateCharacter() {
         ObjectMapper mapper = new ObjectMapper();
 
         doThrow(ItemNotFoundException.class)
-                .when(actorRepository).findById(any(UUID.class));
+                .when(characterRepository).findById(any(UUID.class));
 
-        JsonNode node = mapper.valueToTree(actor);
+        JsonNode node = mapper.valueToTree(character);
 
-        assertThrows(ItemNotFoundException.class, () -> actorService.patch(actor.getUuid(), node));
-        verify(actorRepository, times(1)).findById(any(UUID.class));
+        assertThrows(ItemNotFoundException.class, () -> characterService.patch(character.getUuid(), node));
+        verify(characterRepository, times(1)).findById(any(UUID.class));
     }
 
     @Test
-    public void shouldDeleteActor() {
-        when(actorRepository.existsById(any(UUID.class))).thenReturn(true);
-        doNothing().when(actorRepository).deleteById(any(UUID.class));
+    public void shouldDeleteCharacter() {
+        when(characterRepository.existsById(any(UUID.class))).thenReturn(true);
+        doNothing().when(characterRepository).deleteById(any(UUID.class));
 
-        actorService.deleteById(actor.getUuid());
+        characterService.delete(character.getUuid());
 
-        verify(actorRepository, times(1)).existsById(any(UUID.class));
-        verify(actorRepository, times(1)).deleteById(any(UUID.class));
+        verify(characterRepository, times(1)).existsById(any(UUID.class));
+        verify(characterRepository, times(1)).deleteById(any(UUID.class));
     }
 
     @Test
-    public void shouldReturnNotFoundDeleteActor() {
-        when(actorRepository.existsById(any(UUID.class))).thenReturn(true);
+    public void shouldReturnNotFoundDeleteCharacter() {
+        when(characterRepository.existsById(any(UUID.class))).thenReturn(true);
         doThrow(ItemNotFoundException.class)
-                .when(actorRepository).deleteById(any(UUID.class));
+                .when(characterRepository).deleteById(any(UUID.class));
 
-        assertThrows(ItemNotFoundException.class, () -> actorService.deleteById(actor.getUuid()));
-        verify(actorRepository, times(1)).existsById(any(UUID.class));
-        verify(actorRepository, times(1)).deleteById(any(UUID.class));
+        assertThrows(ItemNotFoundException.class, () -> characterService.delete(character.getUuid()));
+        verify(characterRepository, times(1)).existsById(any(UUID.class));
+        verify(characterRepository, times(1)).deleteById(any(UUID.class));
     }
 }
