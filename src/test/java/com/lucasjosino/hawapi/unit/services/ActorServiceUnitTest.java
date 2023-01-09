@@ -21,8 +21,7 @@ import org.springframework.data.domain.Example;
 import java.util.*;
 
 import static com.lucasjosino.hawapi.utils.ModelAssertions.assertActorEquals;
-import static com.lucasjosino.hawapi.utils.TestsData.getActors;
-import static com.lucasjosino.hawapi.utils.TestsData.getNewActor;
+import static com.lucasjosino.hawapi.utils.TestsData.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -30,6 +29,8 @@ import static org.mockito.Mockito.*;
 
 @UnitTestConfig
 public class ActorServiceUnitTest {
+
+    private static final ActorModel actor = getSingleActor();
 
     @Mock
     private ServiceUtils utils;
@@ -97,8 +98,7 @@ public class ActorServiceUnitTest {
 
     @Test
     public void shouldReturnListOfActorsWithFilter() {
-        List<ActorModel> filteredActorList = new ArrayList<>();
-        filteredActorList.add(getActors().get(0));
+        List<ActorModel> filteredActorList = new ArrayList<>(Collections.singletonList(actor));
         when(actorRepository.findAll(Mockito.<Example<ActorModel>>any())).thenReturn(filteredActorList);
 
         ActorFilter filter = Mockito.mock(ActorFilter.class);
@@ -116,8 +116,7 @@ public class ActorServiceUnitTest {
         when(utils.mergePatch(any(), any(), any())).thenReturn(getActors().get(0));
         when(actorRepository.save(any(ActorModel.class))).thenReturn(getActors().get(0));
 
-        ActorModel model = getActors().get(0);
-        actorService.patch(model.getUuid(), mapper.valueToTree(model));
+        actorService.patch(actor.getUuid(), mapper.valueToTree(actor));
 
         verify(actorRepository, times(1)).save(any(ActorModel.class));
     }
@@ -129,10 +128,9 @@ public class ActorServiceUnitTest {
         doThrow(ItemNotFoundException.class)
                 .when(actorRepository).findById(any(UUID.class));
 
-        ActorModel model = getActors().get(0);
-        JsonNode node = mapper.valueToTree(model);
+        JsonNode node = mapper.valueToTree(actor);
 
-        assertThrows(ItemNotFoundException.class, () -> actorService.patch(model.getUuid(), node));
+        assertThrows(ItemNotFoundException.class, () -> actorService.patch(actor.getUuid(), node));
         verify(actorRepository, times(1)).findById(any(UUID.class));
     }
 
@@ -141,8 +139,7 @@ public class ActorServiceUnitTest {
         when(actorRepository.existsById(any(UUID.class))).thenReturn(true);
         doNothing().when(actorRepository).deleteById(any(UUID.class));
 
-        ActorModel model = getActors().get(0);
-        actorService.deleteById(model.getUuid());
+        actorService.deleteById(actor.getUuid());
 
         verify(actorRepository, times(1)).existsById(any(UUID.class));
         verify(actorRepository, times(1)).deleteById(any(UUID.class));
@@ -154,9 +151,7 @@ public class ActorServiceUnitTest {
         doThrow(ItemNotFoundException.class)
                 .when(actorRepository).deleteById(any(UUID.class));
 
-        ActorModel model = getActors().get(0);
-
-        assertThrows(ItemNotFoundException.class, () -> actorService.deleteById(model.getUuid()));
+        assertThrows(ItemNotFoundException.class, () -> actorService.deleteById(actor.getUuid()));
         verify(actorRepository, times(1)).existsById(any(UUID.class));
         verify(actorRepository, times(1)).deleteById(any(UUID.class));
     }

@@ -5,6 +5,7 @@ import com.lucasjosino.hawapi.configs.initializer.DatabaseContainerInitializer;
 import com.lucasjosino.hawapi.filters.ActorFilter;
 import com.lucasjosino.hawapi.models.ActorModel;
 import com.lucasjosino.hawapi.repositories.ActorRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,18 +17,24 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.lucasjosino.hawapi.utils.ModelAssertions.assertActorEquals;
-import static com.lucasjosino.hawapi.utils.TestsData.getActors;
-import static com.lucasjosino.hawapi.utils.TestsData.getNewActor;
+import static com.lucasjosino.hawapi.utils.TestsData.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @RepositoryUnitTestConfig
 public class ActorRepositoryUnitTest extends DatabaseContainerInitializer {
+
+    private static final ActorModel actor = getSingleActor();
 
     @Autowired
     private EntityManager entityManager;
 
     @Autowired
     private ActorRepository actorRepository;
+
+    @BeforeEach
+    public void setUp() {
+        getActors().forEach(entityManager::persist);
+    }
 
     @Test
     public void shouldCreateActor() {
@@ -41,28 +48,24 @@ public class ActorRepositoryUnitTest extends DatabaseContainerInitializer {
 
     @Test
     public void shouldReturnActorByUUID() {
-        ActorModel newActor = getNewActor();
-        entityManager.persist(newActor);
-
-        Optional<ActorModel> res = actorRepository.findById(newActor.getUuid());
+        Optional<ActorModel> res = actorRepository.findById(actor.getUuid());
 
         assertTrue(res.isPresent());
-        assertActorEquals(newActor, res.get());
+        assertActorEquals(actor, res.get());
     }
 
     @Test
     public void shouldReturnNotFoundActor() {
-        ActorModel newActor = getNewActor();
+        entityManager.clear();
+        entityManager.flush();
 
-        Optional<ActorModel> res = actorRepository.findById(newActor.getUuid());
+        Optional<ActorModel> res = actorRepository.findById(actor.getUuid());
 
         assertFalse(res.isPresent());
     }
 
     @Test
     public void shouldReturnListOfActors() {
-        getActors().forEach(entityManager::persist);
-
         List<ActorModel> res = actorRepository.findAll();
 
         assertEquals(2, res.size());
@@ -70,6 +73,9 @@ public class ActorRepositoryUnitTest extends DatabaseContainerInitializer {
 
     @Test
     public void shouldReturnEmptyListOfActors() {
+        entityManager.clear();
+        entityManager.flush();
+
         List<ActorModel> res = actorRepository.findAll();
 
         assertEquals(Collections.EMPTY_LIST, res);
@@ -79,9 +85,6 @@ public class ActorRepositoryUnitTest extends DatabaseContainerInitializer {
     public void shouldReturnListOfActorsWithFilter() {
         ModelMapper mapper = new ModelMapper();
 
-        ActorModel filteredActor = getActors().get(0);
-        getActors().forEach(entityManager::persist);
-
         ActorFilter filter = new ActorFilter();
         filter.setFirstName("John");
 
@@ -90,14 +93,11 @@ public class ActorRepositoryUnitTest extends DatabaseContainerInitializer {
         List<ActorModel> res = actorRepository.findAll(exFilter);
 
         assertEquals(1, res.size());
-        assertActorEquals(filteredActor, res.get(0));
+        assertActorEquals(actor, res.get(0));
     }
 
     @Test
     public void shouldUpdateActor() {
-        ActorModel actor = getNewActor();
-        entityManager.persist(actor);
-
         actor.setFirstName("Mario");
         ActorModel updatedActor = actorRepository.save(actor);
 
@@ -107,9 +107,6 @@ public class ActorRepositoryUnitTest extends DatabaseContainerInitializer {
 
     @Test
     public void shouldDeleteActor() {
-        ActorModel actor = getNewActor();
-        entityManager.persist(actor);
-
         actorRepository.deleteById(actor.getUuid());
 
         Optional<ActorModel> opActor = actorRepository.findById(actor.getUuid());

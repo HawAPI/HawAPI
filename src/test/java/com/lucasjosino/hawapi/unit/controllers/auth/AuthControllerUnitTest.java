@@ -17,8 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 
-import java.util.Objects;
-
+import static com.lucasjosino.hawapi.utils.ModelAssertions.assertAuthEquals;
 import static com.lucasjosino.hawapi.utils.TestsData.getNewUser;
 import static com.lucasjosino.hawapi.utils.TestsData.getNewUserAuth;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -29,6 +28,10 @@ import static org.mockito.Mockito.*;
 @UnitTestConfig
 public class AuthControllerUnitTest {
 
+    private static final UserModel newUser = getNewUser();
+
+    private static final UserAuthenticationModel newUserAuth = getNewUserAuth();
+
     @Mock
     private AuthService authService;
 
@@ -36,7 +39,7 @@ public class AuthControllerUnitTest {
     private AuthController authController;
 
     /**
-     * For now, Auth registration will be false by default. Enable <strong>ONLY</strong> for tests.
+     * Auth registration will be false by default. So, we enable for tests.
      * <br>
      * <br>
      * See: <strong>/test/java/resources/application-test.properties</strong>
@@ -48,7 +51,6 @@ public class AuthControllerUnitTest {
 
     @Test
     public void shouldRegisterUser() {
-        UserModel newUser = getNewUser();
         when(authService.register(any(UserModel.class))).thenReturn(newUser);
 
         ResponseEntity<UserModel> res = authController.register(newUser);
@@ -60,7 +62,6 @@ public class AuthControllerUnitTest {
 
     @Test
     public void shouldReturnConflictRegisterUser() {
-        UserModel newUser = getNewUser();
         doThrow(UserConflictException.class).when(authService).register(any(UserModel.class));
 
         Exception exception = assertThrows(UserConflictException.class, () -> authController.register(newUser));
@@ -69,7 +70,6 @@ public class AuthControllerUnitTest {
 
     @Test
     public void shouldReturnUnauthorizedRegisterUserWithAdminRole() {
-        UserModel newUser = getNewUser();
         newUser.setRole("ADMIN");
         doThrow(UserUnauthorizedException.class).when(authService).register(any(UserModel.class));
 
@@ -79,7 +79,6 @@ public class AuthControllerUnitTest {
 
     @Test
     public void shouldReturnBadRequestRegisterUserWithUnknownRole() {
-        UserModel newUser = getNewUser();
         newUser.setRole("UNKNOWN");
         doThrow(RoleBadRequestException.class).when(authService).register(any(UserModel.class));
 
@@ -89,69 +88,52 @@ public class AuthControllerUnitTest {
 
     @Test
     public void shouldAuthenticateUser() {
-        UserModel user = getNewUser();
-        UserAuthenticationModel userAuth = getNewUserAuth();
+        when(authService.authenticate(any(UserAuthenticationModel.class))).thenReturn(newUser);
 
-        when(authService.authenticate(any(UserAuthenticationModel.class))).thenReturn(user);
-
-        ResponseEntity<UserModel> res = authController.authenticate(userAuth);
+        ResponseEntity<UserModel> res = authController.authenticate(newUserAuth);
 
         assertEquals(HttpStatus.OK, res.getStatusCode());
-        assertEquals(user.getNickname(), Objects.requireNonNull(res.getBody()).getNickname());
-        assertEquals(user.getEmail(), Objects.requireNonNull(res.getBody()).getEmail());
-        assertEquals(user.getRole(), Objects.requireNonNull(res.getBody()).getRole());
+        assertAuthEquals(newUser, res);
         verify(authService, times(1)).authenticate(any(UserAuthenticationModel.class));
     }
 
     @Test
     @WithMockUser(username = "admin", roles = "ADMIN")
     public void shouldAuthenticateUserWithoutPasswordButUsingAdminRole() {
-        UserModel user = getNewUser();
-        UserAuthenticationModel userAuth = getNewUserAuth();
-        userAuth.setPassword(null);
+        newUserAuth.setPassword(null);
 
-        when(authService.authenticate(any(UserAuthenticationModel.class))).thenReturn(user);
+        when(authService.authenticate(any(UserAuthenticationModel.class))).thenReturn(newUser);
 
-        ResponseEntity<UserModel> res = authController.authenticate(userAuth);
+        ResponseEntity<UserModel> res = authController.authenticate(newUserAuth);
 
         assertEquals(HttpStatus.OK, res.getStatusCode());
-        assertEquals(user.getNickname(), Objects.requireNonNull(res.getBody()).getNickname());
-        assertEquals(user.getEmail(), Objects.requireNonNull(res.getBody()).getEmail());
-        assertEquals(user.getRole(), Objects.requireNonNull(res.getBody()).getRole());
+        assertAuthEquals(newUser, res);
         verify(authService, times(1)).authenticate(any(UserAuthenticationModel.class));
     }
 
     @Test
     public void shouldReturnNotFoundAuthenticateUser() {
-        UserModel user = getNewUser();
-        UserAuthenticationModel userAuth = getNewUserAuth();
-
         doThrow(UserNotFoundException.class).when(authService).authenticate(any(UserAuthenticationModel.class));
 
-        assertThrows(UserNotFoundException.class, () -> authController.authenticate(userAuth));
+        assertThrows(UserNotFoundException.class, () -> authController.authenticate(newUserAuth));
         verify(authService, times(1)).authenticate(any(UserAuthenticationModel.class));
     }
 
     @Test
     public void shouldReturnUnauthorizedAuthenticateUser() {
-        UserModel user = getNewUser();
-        UserAuthenticationModel userAuth = getNewUserAuth();
-        userAuth.setPassword(null);
+        newUserAuth.setPassword(null);
 
         doThrow(UserUnauthorizedException.class).when(authService).authenticate(any(UserAuthenticationModel.class));
 
-        assertThrows(UserUnauthorizedException.class, () -> authController.authenticate(userAuth));
+        assertThrows(UserUnauthorizedException.class, () -> authController.authenticate(newUserAuth));
         verify(authService, times(1)).authenticate(any(UserAuthenticationModel.class));
     }
 
     @Test
     public void shouldDeleteUser() {
-        UserModel user = getNewUser();
-        UserAuthenticationModel userAuth = getNewUserAuth();
-
         doNothing().when(authService).delete(any(UserAuthenticationModel.class));
 
-        ResponseEntity<Void> res = authController.delete(userAuth);
+        ResponseEntity<Void> res = authController.delete(newUserAuth);
 
         assertEquals(HttpStatus.NO_CONTENT, res.getStatusCode());
         verify(authService, times(1)).delete(any(UserAuthenticationModel.class));
@@ -159,37 +141,30 @@ public class AuthControllerUnitTest {
 
     @Test
     public void shouldReturnNotFoundDeleteUser() {
-        UserModel user = getNewUser();
-        UserAuthenticationModel userAuth = getNewUserAuth();
-
         doThrow(UserNotFoundException.class).when(authService).delete(any(UserAuthenticationModel.class));
 
-        Exception exception = assertThrows(UserNotFoundException.class, () -> authController.delete(userAuth));
+        Exception exception = assertThrows(UserNotFoundException.class, () -> authController.delete(newUserAuth));
         verify(authService, times(1)).delete(any(UserAuthenticationModel.class));
     }
 
     @Test
     public void shouldReturnUnauthorizedDeleteUser() {
-        UserModel user = getNewUser();
-        UserAuthenticationModel userAuth = getNewUserAuth();
-        userAuth.setPassword(null);
+        newUserAuth.setPassword(null);
 
         doThrow(UserUnauthorizedException.class).when(authService).delete(any(UserAuthenticationModel.class));
 
-        Exception exception = assertThrows(UserUnauthorizedException.class, () -> authController.delete(userAuth));
+        Exception exception = assertThrows(UserUnauthorizedException.class, () -> authController.delete(newUserAuth));
         verify(authService, times(1)).delete(any(UserAuthenticationModel.class));
     }
 
     @Test
     @WithMockUser(username = "admin", roles = "ADMIN")
     public void shouldDeleteUserWithoutPasswordButUsingAdminRole() {
-        UserModel user = getNewUser();
-        UserAuthenticationModel userAuth = getNewUserAuth();
-        userAuth.setPassword(null);
+        newUserAuth.setPassword(null);
 
         doNothing().when(authService).delete(any(UserAuthenticationModel.class));
 
-        ResponseEntity<Void> res = authController.delete(userAuth);
+        ResponseEntity<Void> res = authController.delete(newUserAuth);
 
         assertEquals(HttpStatus.NO_CONTENT, res.getStatusCode());
         verify(authService, times(1)).delete(any(UserAuthenticationModel.class));

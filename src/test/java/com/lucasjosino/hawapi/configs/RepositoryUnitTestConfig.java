@@ -2,6 +2,7 @@ package com.lucasjosino.hawapi.configs;
 
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.annotation.*;
 
@@ -14,6 +15,7 @@ import java.lang.annotation.*;
  */
 @Inherited
 @DataJpaTest
+@Transactional
 @UnitTestConfig
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

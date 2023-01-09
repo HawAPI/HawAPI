@@ -13,6 +13,10 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 
 public final class TestsData {
 
+    public static ActorModel getSingleActor() {
+        return getActors().get(0);
+    }
+
     public static List<ActorModel> getActors() {
         List<ActorModel> actors = new ArrayList<>();
 

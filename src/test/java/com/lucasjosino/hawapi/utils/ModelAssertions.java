@@ -1,12 +1,21 @@
 package com.lucasjosino.hawapi.utils;
 
 import com.lucasjosino.hawapi.models.ActorModel;
+import com.lucasjosino.hawapi.models.user.UserModel;
 import org.springframework.http.ResponseEntity;
+
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ModelAssertions {
+
+    public static void assertAuthEquals(UserModel expected, ResponseEntity<UserModel> result) {
+        assertEquals(expected.getNickname(), Objects.requireNonNull(result.getBody()).getNickname());
+        assertEquals(expected.getEmail(), Objects.requireNonNull(result.getBody()).getEmail());
+        assertEquals(expected.getRole(), Objects.requireNonNull(result.getBody()).getRole());
+    }
 
     public static void assertActorEquals(ActorModel expected, ActorModel result) {
         assertEquals(expected.getUuid(), result.getUuid());

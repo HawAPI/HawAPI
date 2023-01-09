@@ -25,6 +25,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @IntegrationTestConfig
 public class ActorControllerIntTest extends DatabaseContainerInitializer {
 
+    private static final ActorModel actor = getSingleActor();
+
     @Autowired
     private ActorRepository actorRepository;
 
@@ -85,8 +87,6 @@ public class ActorControllerIntTest extends DatabaseContainerInitializer {
 
     @Test
     public void shouldReturnActorByUUID() throws Exception {
-        ActorModel actor = getActors().get(0);
-
         actorRepository.saveAll(getActors());
 
         mockMvc.perform(get("/api/v1/actors/" + actor.getUuid()))
@@ -104,8 +104,6 @@ public class ActorControllerIntTest extends DatabaseContainerInitializer {
 
     @Test
     public void shouldReturnNotFoundActor() throws Exception {
-        ActorModel actor = getActors().get(0);
-
         mockMvc.perform(get("/api/v1/actors/" + actor.getUuid()))
                 .andDo(print())
                 .andExpect(status().isNotFound());
@@ -184,13 +182,12 @@ public class ActorControllerIntTest extends DatabaseContainerInitializer {
 
     @Test
     public void shouldUpdateActor() throws Exception {
-        ActorModel originalActor = getActors().get(0);
         ActorModel actorToBeUpdated = new ActorModel();
         actorToBeUpdated.setLastName("Moa");
 
         actorRepository.saveAll(getActors());
 
-        mockMvc.perform(patch("/api/v1/actors/" + originalActor.getUuid())
+        mockMvc.perform(patch("/api/v1/actors/" + actor.getUuid())
                         .with(getAdminAuth())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(actorToBeUpdated))
@@ -201,11 +198,10 @@ public class ActorControllerIntTest extends DatabaseContainerInitializer {
 
     @Test
     public void shouldReturnNotFoundUpdateActor() throws Exception {
-        ActorModel originalActor = getActors().get(0);
         ActorModel actorToBeUpdated = new ActorModel();
         actorToBeUpdated.setLastName("Moa");
 
-        mockMvc.perform(patch("/api/v1/actors/" + originalActor.getUuid())
+        mockMvc.perform(patch("/api/v1/actors/" + actor.getUuid())
                         .with(getAdminAuth())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(actorToBeUpdated))
@@ -216,13 +212,12 @@ public class ActorControllerIntTest extends DatabaseContainerInitializer {
 
     @Test
     public void shouldReturnUnauthorizedUpdateActor() throws Exception {
-        ActorModel originalActor = getActors().get(0);
         ActorModel actorToBeUpdated = new ActorModel();
         actorToBeUpdated.setLastName("Moa");
 
         actorRepository.saveAll(getActors());
 
-        mockMvc.perform(patch("/api/v1/actors/" + originalActor.getUuid())
+        mockMvc.perform(patch("/api/v1/actors/" + actor.getUuid())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(actorToBeUpdated))
                 )
@@ -232,13 +227,12 @@ public class ActorControllerIntTest extends DatabaseContainerInitializer {
 
     @Test
     public void shouldReturnForbiddenUpdateActor() throws Exception {
-        ActorModel originalActor = getActors().get(0);
         ActorModel actorToBeUpdated = new ActorModel();
         actorToBeUpdated.setLastName("Moa");
 
         actorRepository.saveAll(getActors());
 
-        mockMvc.perform(patch("/api/v1/actors/" + originalActor.getUuid())
+        mockMvc.perform(patch("/api/v1/actors/" + actor.getUuid())
                         .with(getDevAuth())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(actorToBeUpdated))
@@ -249,11 +243,9 @@ public class ActorControllerIntTest extends DatabaseContainerInitializer {
 
     @Test
     public void shouldDeleteActor() throws Exception {
-        ActorModel actorToBeDeleted = getActors().get(0);
-
         actorRepository.saveAll(getActors());
 
-        mockMvc.perform(delete("/api/v1/actors/" + actorToBeDeleted.getUuid())
+        mockMvc.perform(delete("/api/v1/actors/" + actor.getUuid())
                         .with(getAdminAuth())
                 )
                 .andDo(print())
@@ -262,9 +254,7 @@ public class ActorControllerIntTest extends DatabaseContainerInitializer {
 
     @Test
     public void shouldReturnNotFoundDeleteActor() throws Exception {
-        ActorModel actorToBeDeleted = getActors().get(0);
-
-        mockMvc.perform(delete("/api/v1/actors/" + actorToBeDeleted.getUuid())
+        mockMvc.perform(delete("/api/v1/actors/" + actor.getUuid())
                         .with(getAdminAuth())
                 )
                 .andDo(print())
@@ -273,18 +263,14 @@ public class ActorControllerIntTest extends DatabaseContainerInitializer {
 
     @Test
     public void shouldReturnUnauthorizedDeleteActor() throws Exception {
-        ActorModel actorToBeDeleted = getActors().get(0);
-
-        mockMvc.perform(delete("/api/v1/actors/" + actorToBeDeleted.getUuid()))
+        mockMvc.perform(delete("/api/v1/actors/" + actor.getUuid()))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     public void shouldReturnForbiddenDeleteActor() throws Exception {
-        ActorModel actorToBeDeleted = getActors().get(0);
-
-        mockMvc.perform(delete("/api/v1/actors/" + actorToBeDeleted.getUuid())
+        mockMvc.perform(delete("/api/v1/actors/" + actor.getUuid())
                         .with(getDevAuth())
                 )
                 .andDo(print())
