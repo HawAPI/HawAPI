@@ -5,6 +5,7 @@ import com.lucasjosino.hawapi.configs.initializer.DatabaseContainerInitializer;
 import com.lucasjosino.hawapi.filters.CharacterFilter;
 import com.lucasjosino.hawapi.models.CharacterModel;
 import com.lucasjosino.hawapi.repositories.CharacterRepository;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
@@ -33,7 +34,15 @@ public class CharacterRepositoryUnitTest extends DatabaseContainerInitializer {
 
     @BeforeEach
     public void setUp() {
+        entityManager.clear();
+        entityManager.flush();
+        characterRepository.deleteAll();
         getCharacters().forEach(entityManager::persist);
+    }
+
+    @AfterAll
+    public void cleanUp() {
+        characterRepository.deleteAll();
     }
 
     @Test

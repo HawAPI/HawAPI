@@ -5,6 +5,7 @@ import com.lucasjosino.hawapi.configs.IntegrationTestConfig;
 import com.lucasjosino.hawapi.configs.initializer.DatabaseContainerInitializer;
 import com.lucasjosino.hawapi.models.EpisodeModel;
 import com.lucasjosino.hawapi.repositories.EpisodeRepository;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,11 @@ public class EpisodeControllerIntTest extends DatabaseContainerInitializer {
 
     @BeforeEach
     public void clearDatabase() {
+        episodeRepository.deleteAll();
+    }
+
+    @AfterAll
+    public void cleanUp() {
         episodeRepository.deleteAll();
     }
 

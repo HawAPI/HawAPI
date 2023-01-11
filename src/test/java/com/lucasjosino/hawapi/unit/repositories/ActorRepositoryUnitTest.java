@@ -5,6 +5,7 @@ import com.lucasjosino.hawapi.configs.initializer.DatabaseContainerInitializer;
 import com.lucasjosino.hawapi.filters.ActorFilter;
 import com.lucasjosino.hawapi.models.ActorModel;
 import com.lucasjosino.hawapi.repositories.ActorRepository;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
@@ -33,7 +34,15 @@ public class ActorRepositoryUnitTest extends DatabaseContainerInitializer {
 
     @BeforeEach
     public void setUp() {
+        entityManager.clear();
+        entityManager.flush();
+        actorRepository.deleteAll();
         getActors().forEach(entityManager::persist);
+    }
+
+    @AfterAll
+    public void cleanUp() {
+        actorRepository.deleteAll();
     }
 
     @Test

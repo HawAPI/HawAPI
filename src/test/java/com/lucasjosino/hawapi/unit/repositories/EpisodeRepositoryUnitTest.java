@@ -5,6 +5,7 @@ import com.lucasjosino.hawapi.configs.initializer.DatabaseContainerInitializer;
 import com.lucasjosino.hawapi.filters.EpisodeFilter;
 import com.lucasjosino.hawapi.models.EpisodeModel;
 import com.lucasjosino.hawapi.repositories.EpisodeRepository;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
@@ -33,7 +34,15 @@ public class EpisodeRepositoryUnitTest extends DatabaseContainerInitializer {
 
     @BeforeEach
     public void setUp() {
+        entityManager.clear();
+        entityManager.flush();
+        episodeRepository.deleteAll();
         getEpisodes().forEach(entityManager::persist);
+    }
+
+    @AfterAll
+    public void cleanUp() {
+        episodeRepository.deleteAll();
     }
 
     @Test
@@ -84,7 +93,7 @@ public class EpisodeRepositoryUnitTest extends DatabaseContainerInitializer {
     @Test
     public void shouldReturnListOfEpisodesWithFilter() {
         ModelMapper mapper = new ModelMapper();
-        
+
         episode.setTitle("Lorem");
 
         EpisodeFilter filter = new EpisodeFilter();

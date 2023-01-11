@@ -5,6 +5,7 @@ import com.lucasjosino.hawapi.configs.IntegrationTestConfig;
 import com.lucasjosino.hawapi.configs.initializer.DatabaseContainerInitializer;
 import com.lucasjosino.hawapi.models.user.UserModel;
 import com.lucasjosino.hawapi.repositories.auth.AuthRepository;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,11 @@ public class AuthControllerIntTest extends DatabaseContainerInitializer {
 
     @BeforeEach
     public void clearDatabase() {
+        authRepository.deleteAll();
+    }
+
+    @AfterAll
+    public void cleanUp() {
         authRepository.deleteAll();
     }
 
