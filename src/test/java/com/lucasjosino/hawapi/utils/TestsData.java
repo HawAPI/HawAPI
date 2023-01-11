@@ -3,10 +3,12 @@ package com.lucasjosino.hawapi.utils;
 import com.lucasjosino.hawapi.models.ActorModel;
 import com.lucasjosino.hawapi.models.CharacterModel;
 import com.lucasjosino.hawapi.models.EpisodeModel;
+import com.lucasjosino.hawapi.models.GameModel;
 import com.lucasjosino.hawapi.models.user.UserAuthenticationModel;
 import com.lucasjosino.hawapi.models.user.UserModel;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -139,6 +141,47 @@ public final class TestsData {
         episode.setEpisodeNum((byte) 3);
         episode.setSeason("/api/v1/seasons/3");
         return episode;
+    }
+
+    // Games
+
+    public static GameModel getSingleGame() {
+        return getGames().get(0);
+    }
+
+    public static List<GameModel> getGames() {
+        List<GameModel> games = new ArrayList<>();
+
+        GameModel game1 = new GameModel();
+        game1.setUuid(UUID.fromString("cf70f1e5-dadc-4dc9-9082-2b94aef34600"));
+        game1.setHref("/api/v1/actors/cf70f1e5-dadc-4dc9-9082-2b94aef34600");
+        game1.setName("Lorem");
+        game1.setReleaseDate(LocalDate.now());
+        game1.setUrl("https://strangerthingsgames.com/2");
+        game1.setTrailer("https://youtube.com/1");
+        games.add(game1);
+
+        GameModel game2 = new GameModel();
+        game2.setUuid(UUID.fromString("e6d7e898-7fb3-4224-8127-86376be9c000"));
+        game2.setHref("/api/v1/actors/e6d7e898-7fb3-4224-8127-86376be9c000");
+        game2.setName("Ipsum");
+        game2.setReleaseDate(LocalDate.now());
+        game2.setUrl("https://strangerthingsgames.com/2");
+        game2.setTrailer("https://youtube.com/1");
+        games.add(game2);
+
+        return games;
+    }
+
+    public static GameModel getNewGame() {
+        GameModel game = new GameModel();
+        game.setUuid(UUID.randomUUID());
+        game.setHref("/api/v1/actors/" + game.getUuid());
+        game.setName("Lorem Ipsum");
+        game.setReleaseDate(LocalDate.now());
+        game.setUrl("https://strangerthingsgames.com/2");
+        game.setTrailer("https://youtube.com/1");
+        return game;
     }
 
     // Users/Auth

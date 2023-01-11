@@ -3,6 +3,7 @@ package com.lucasjosino.hawapi.utils;
 import com.lucasjosino.hawapi.models.ActorModel;
 import com.lucasjosino.hawapi.models.CharacterModel;
 import com.lucasjosino.hawapi.models.EpisodeModel;
+import com.lucasjosino.hawapi.models.GameModel;
 import com.lucasjosino.hawapi.models.user.UserModel;
 import org.springframework.http.ResponseEntity;
 
@@ -74,6 +75,27 @@ public class ModelAssertions {
         assertEquals(expected.getDescription(), result.getBody().getDescription());
         assertEquals(expected.getDuration(), result.getBody().getDuration());
         assertEquals(expected.getSeason(), result.getBody().getSeason());
+    }
+
+    // Games
+
+    public static void assertGameEquals(GameModel expected, GameModel result) {
+        assertEquals(expected.getUuid(), result.getUuid());
+        assertEquals(expected.getHref(), result.getHref());
+        assertEquals(expected.getName(), result.getName());
+        assertEquals(expected.getReleaseDate().toString(), result.getReleaseDate().toString());
+        assertEquals(expected.getUrl(), result.getUrl());
+        assertEquals(expected.getTrailer(), result.getTrailer());
+    }
+
+    public static void assertGameEquals(GameModel expected, ResponseEntity<GameModel> result) {
+        assertThat(result.getBody()).isNotNull();
+        assertEquals(expected.getUuid(), result.getBody().getUuid());
+        assertEquals(expected.getHref(), result.getBody().getHref());
+        assertEquals(expected.getName(), result.getBody().getName());
+        assertEquals(expected.getReleaseDate().toString(), result.getBody().getReleaseDate().toString());
+        assertEquals(expected.getUrl(), result.getBody().getUrl());
+        assertEquals(expected.getTrailer(), result.getBody().getTrailer());
     }
 
     // User/Auth
