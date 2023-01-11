@@ -2,7 +2,6 @@ package com.lucasjosino.hawapi.unit.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.lucasjosino.hawapi.configs.UnitTestConfig;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
@@ -22,6 +21,7 @@ import java.util.*;
 
 import static com.lucasjosino.hawapi.utils.ModelAssertions.assertActorEquals;
 import static com.lucasjosino.hawapi.utils.TestsData.*;
+import static com.lucasjosino.hawapi.utils.TestsUtils.mapper;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -110,25 +110,21 @@ public class ActorServiceUnitTest {
 
     @Test
     public void shouldUpdateActor() throws JsonPatchException, JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-
         when(actorRepository.findById(any(UUID.class))).thenReturn(Optional.ofNullable(getActors().get(0)));
         when(utils.mergePatch(any(), any(), any())).thenReturn(getActors().get(0));
         when(actorRepository.save(any(ActorModel.class))).thenReturn(getActors().get(0));
 
-        actorService.patch(actor.getUuid(), mapper.valueToTree(actor));
+        actorService.patch(actor.getUuid(), mapper().valueToTree(actor));
 
         verify(actorRepository, times(1)).save(any(ActorModel.class));
     }
 
     @Test
     public void shouldReturnNotFoundUpdateActor() {
-        ObjectMapper mapper = new ObjectMapper();
-
         doThrow(ItemNotFoundException.class)
                 .when(actorRepository).findById(any(UUID.class));
 
-        JsonNode node = mapper.valueToTree(actor);
+        JsonNode node = mapper().valueToTree(actor);
 
         assertThrows(ItemNotFoundException.class, () -> actorService.patch(actor.getUuid(), node));
         verify(actorRepository, times(1)).findById(any(UUID.class));

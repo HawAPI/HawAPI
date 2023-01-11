@@ -2,7 +2,6 @@ package com.lucasjosino.hawapi.unit.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.lucasjosino.hawapi.configs.UnitTestConfig;
 import com.lucasjosino.hawapi.controllers.CharacterController;
@@ -24,6 +23,7 @@ import java.util.UUID;
 
 import static com.lucasjosino.hawapi.utils.ModelAssertions.assertCharacterEquals;
 import static com.lucasjosino.hawapi.utils.TestsData.*;
+import static com.lucasjosino.hawapi.utils.TestsUtils.mapper;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -114,12 +114,10 @@ public class CharacterControllerUnitTest {
 
     @Test
     public void shouldUpdateCharacter() throws JsonPatchException, JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-
         doNothing()
                 .when(characterService).patch(any(UUID.class), any(JsonNode.class));
 
-        ResponseEntity<Void> res = characterController.patch(character.getUuid(), mapper.valueToTree(character));
+        ResponseEntity<Void> res = characterController.patch(character.getUuid(), mapper().valueToTree(character));
 
         assertEquals(HttpStatus.NO_CONTENT, res.getStatusCode());
         verify(characterService, times(1)).patch(any(UUID.class), any(JsonNode.class));
@@ -127,12 +125,10 @@ public class CharacterControllerUnitTest {
 
     @Test
     public void shouldReturnNotFoundUpdateCharacter() throws JsonPatchException, JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-
         doThrow(ItemNotFoundException.class)
                 .when(characterService).patch(any(UUID.class), any(JsonNode.class));
 
-        JsonNode node = mapper.valueToTree(character);
+        JsonNode node = mapper().valueToTree(character);
 
         assertThrows(ItemNotFoundException.class, () -> characterController.patch(character.getUuid(), node));
         verify(characterService, times(1)).patch(any(UUID.class), any(JsonNode.class));

@@ -8,7 +8,6 @@ import com.lucasjosino.hawapi.repositories.ActorRepository;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 
@@ -19,6 +18,7 @@ import java.util.Optional;
 
 import static com.lucasjosino.hawapi.utils.ModelAssertions.assertActorEquals;
 import static com.lucasjosino.hawapi.utils.TestsData.*;
+import static com.lucasjosino.hawapi.utils.TestsUtils.modelMapper;
 import static org.junit.jupiter.api.Assertions.*;
 
 @RepositoryUnitTestConfig
@@ -92,12 +92,10 @@ public class ActorRepositoryUnitTest extends DatabaseContainerInitializer {
 
     @Test
     public void shouldReturnListOfActorsWithFilter() {
-        ModelMapper mapper = new ModelMapper();
-
         ActorFilter filter = new ActorFilter();
         filter.setFirstName("John");
 
-        ActorModel convertedModel = mapper.map(filter, ActorModel.class);
+        ActorModel convertedModel = modelMapper().map(filter, ActorModel.class);
         Example<ActorModel> exFilter = Example.of(convertedModel);
         List<ActorModel> res = actorRepository.findAll(exFilter);
 
@@ -112,6 +110,8 @@ public class ActorRepositoryUnitTest extends DatabaseContainerInitializer {
 
         assertEquals(actor.getUuid(), updatedActor.getUuid());
         assertEquals(actor.getFirstName(), updatedActor.getFirstName());
+
+        actor.setFirstName("John");
     }
 
     @Test

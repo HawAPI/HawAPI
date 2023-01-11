@@ -2,7 +2,6 @@ package com.lucasjosino.hawapi.unit.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.lucasjosino.hawapi.configs.UnitTestConfig;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
@@ -22,6 +21,7 @@ import java.util.*;
 
 import static com.lucasjosino.hawapi.utils.ModelAssertions.assertCharacterEquals;
 import static com.lucasjosino.hawapi.utils.TestsData.*;
+import static com.lucasjosino.hawapi.utils.TestsUtils.mapper;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -110,25 +110,21 @@ public class CharacterServiceUnitTest {
 
     @Test
     public void shouldUpdateCharacter() throws JsonPatchException, JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-
         when(characterRepository.findById(any(UUID.class))).thenReturn(Optional.ofNullable(getCharacters().get(0)));
         when(utils.mergePatch(any(), any(), any())).thenReturn(getCharacters().get(0));
         when(characterRepository.save(any(CharacterModel.class))).thenReturn(getCharacters().get(0));
 
-        characterService.patch(character.getUuid(), mapper.valueToTree(character));
+        characterService.patch(character.getUuid(), mapper().valueToTree(character));
 
         verify(characterRepository, times(1)).save(any(CharacterModel.class));
     }
 
     @Test
     public void shouldReturnNotFoundUpdateCharacter() {
-        ObjectMapper mapper = new ObjectMapper();
-
         doThrow(ItemNotFoundException.class)
                 .when(characterRepository).findById(any(UUID.class));
 
-        JsonNode node = mapper.valueToTree(character);
+        JsonNode node = mapper().valueToTree(character);
 
         assertThrows(ItemNotFoundException.class, () -> characterService.patch(character.getUuid(), node));
         verify(characterRepository, times(1)).findById(any(UUID.class));

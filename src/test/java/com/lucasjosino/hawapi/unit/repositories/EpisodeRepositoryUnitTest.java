@@ -8,7 +8,6 @@ import com.lucasjosino.hawapi.repositories.EpisodeRepository;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 
@@ -19,6 +18,7 @@ import java.util.Optional;
 
 import static com.lucasjosino.hawapi.utils.ModelAssertions.assertEpisodeEquals;
 import static com.lucasjosino.hawapi.utils.TestsData.*;
+import static com.lucasjosino.hawapi.utils.TestsUtils.modelMapper;
 import static org.junit.jupiter.api.Assertions.*;
 
 @RepositoryUnitTestConfig
@@ -92,14 +92,10 @@ public class EpisodeRepositoryUnitTest extends DatabaseContainerInitializer {
 
     @Test
     public void shouldReturnListOfEpisodesWithFilter() {
-        ModelMapper mapper = new ModelMapper();
-
-        episode.setTitle("Lorem");
-
         EpisodeFilter filter = new EpisodeFilter();
         filter.setTitle("Lorem");
 
-        EpisodeModel convertedModel = mapper.map(filter, EpisodeModel.class);
+        EpisodeModel convertedModel = modelMapper().map(filter, EpisodeModel.class);
         Example<EpisodeModel> exFilter = Example.of(convertedModel);
         List<EpisodeModel> res = episodeRepository.findAll(exFilter);
 
@@ -114,6 +110,8 @@ public class EpisodeRepositoryUnitTest extends DatabaseContainerInitializer {
 
         assertEquals(episode.getUuid(), updatedEpisode.getUuid());
         assertEquals(episode.getTitle(), updatedEpisode.getTitle());
+
+        episode.setTitle("Lorem");
     }
 
     @Test

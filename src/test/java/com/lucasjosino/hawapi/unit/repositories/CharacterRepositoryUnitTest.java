@@ -8,7 +8,6 @@ import com.lucasjosino.hawapi.repositories.CharacterRepository;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 
@@ -19,6 +18,7 @@ import java.util.Optional;
 
 import static com.lucasjosino.hawapi.utils.ModelAssertions.assertCharacterEquals;
 import static com.lucasjosino.hawapi.utils.TestsData.*;
+import static com.lucasjosino.hawapi.utils.TestsUtils.modelMapper;
 import static org.junit.jupiter.api.Assertions.*;
 
 @RepositoryUnitTestConfig
@@ -92,12 +92,10 @@ public class CharacterRepositoryUnitTest extends DatabaseContainerInitializer {
 
     @Test
     public void shouldReturnListOfCharactersWithFilter() {
-        ModelMapper mapper = new ModelMapper();
-
         CharacterFilter filter = new CharacterFilter();
         filter.setFirstName("John");
 
-        CharacterModel convertedModel = mapper.map(filter, CharacterModel.class);
+        CharacterModel convertedModel = modelMapper().map(filter, CharacterModel.class);
         Example<CharacterModel> exFilter = Example.of(convertedModel);
         List<CharacterModel> res = characterRepository.findAll(exFilter);
 
@@ -112,6 +110,8 @@ public class CharacterRepositoryUnitTest extends DatabaseContainerInitializer {
 
         assertEquals(character.getUuid(), updatedCharacter.getUuid());
         assertEquals(character.getFirstName(), updatedCharacter.getFirstName());
+
+        character.setFirstName("John");
     }
 
     @Test

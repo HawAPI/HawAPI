@@ -2,7 +2,6 @@ package com.lucasjosino.hawapi.unit.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.lucasjosino.hawapi.configs.UnitTestConfig;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
@@ -22,6 +21,7 @@ import java.util.*;
 
 import static com.lucasjosino.hawapi.utils.ModelAssertions.assertEpisodeEquals;
 import static com.lucasjosino.hawapi.utils.TestsData.*;
+import static com.lucasjosino.hawapi.utils.TestsUtils.mapper;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -110,25 +110,21 @@ public class EpisodeServiceUnitTest {
 
     @Test
     public void shouldUpdateEpisode() throws JsonPatchException, JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-
         when(episodeRepository.findById(any(UUID.class))).thenReturn(Optional.ofNullable(getEpisodes().get(0)));
         when(utils.mergePatch(any(), any(), any())).thenReturn(getEpisodes().get(0));
         when(episodeRepository.save(any(EpisodeModel.class))).thenReturn(getEpisodes().get(0));
 
-        episodeService.patch(episode.getUuid(), mapper.valueToTree(episode));
+        episodeService.patch(episode.getUuid(), mapper().valueToTree(episode));
 
         verify(episodeRepository, times(1)).save(any(EpisodeModel.class));
     }
 
     @Test
     public void shouldReturnNotFoundUpdateEpisode() {
-        ObjectMapper mapper = new ObjectMapper();
-
         doThrow(ItemNotFoundException.class)
                 .when(episodeRepository).findById(any(UUID.class));
 
-        JsonNode node = mapper.valueToTree(episode);
+        JsonNode node = mapper().valueToTree(episode);
 
         assertThrows(ItemNotFoundException.class, () -> episodeService.patch(episode.getUuid(), node));
         verify(episodeRepository, times(1)).findById(any(UUID.class));

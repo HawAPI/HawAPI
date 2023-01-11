@@ -2,7 +2,6 @@ package com.lucasjosino.hawapi.unit.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.lucasjosino.hawapi.configs.UnitTestConfig;
 import com.lucasjosino.hawapi.controllers.EpisodeController;
@@ -24,6 +23,7 @@ import java.util.UUID;
 
 import static com.lucasjosino.hawapi.utils.ModelAssertions.assertEpisodeEquals;
 import static com.lucasjosino.hawapi.utils.TestsData.*;
+import static com.lucasjosino.hawapi.utils.TestsUtils.mapper;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -114,12 +114,10 @@ public class EpisodeControllerUnitTest {
 
     @Test
     public void shouldUpdateEpisode() throws JsonPatchException, JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-
         doNothing()
                 .when(episodeService).patch(any(UUID.class), any(JsonNode.class));
 
-        ResponseEntity<Void> res = episodeController.patch(episode.getUuid(), mapper.valueToTree(episode));
+        ResponseEntity<Void> res = episodeController.patch(episode.getUuid(), mapper().valueToTree(episode));
 
         assertEquals(HttpStatus.NO_CONTENT, res.getStatusCode());
         verify(episodeService, times(1)).patch(any(UUID.class), any(JsonNode.class));
@@ -127,12 +125,10 @@ public class EpisodeControllerUnitTest {
 
     @Test
     public void shouldReturnNotFoundUpdateEpisode() throws JsonPatchException, JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-
         doThrow(ItemNotFoundException.class)
                 .when(episodeService).patch(any(UUID.class), any(JsonNode.class));
 
-        JsonNode node = mapper.valueToTree(episode);
+        JsonNode node = mapper().valueToTree(episode);
 
         assertThrows(ItemNotFoundException.class, () -> episodeController.patch(episode.getUuid(), node));
         verify(episodeService, times(1)).patch(any(UUID.class), any(JsonNode.class));

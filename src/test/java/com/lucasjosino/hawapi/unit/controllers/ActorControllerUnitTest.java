@@ -2,7 +2,6 @@ package com.lucasjosino.hawapi.unit.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.lucasjosino.hawapi.configs.UnitTestConfig;
 import com.lucasjosino.hawapi.controllers.ActorController;
@@ -24,6 +23,7 @@ import java.util.UUID;
 
 import static com.lucasjosino.hawapi.utils.ModelAssertions.assertActorEquals;
 import static com.lucasjosino.hawapi.utils.TestsData.*;
+import static com.lucasjosino.hawapi.utils.TestsUtils.mapper;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -114,12 +114,10 @@ public class ActorControllerUnitTest {
 
     @Test
     public void shouldUpdateActor() throws JsonPatchException, JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-
         doNothing()
                 .when(actorService).patch(any(UUID.class), any(JsonNode.class));
 
-        ResponseEntity<Void> res = actorController.patch(actor.getUuid(), mapper.valueToTree(actor));
+        ResponseEntity<Void> res = actorController.patch(actor.getUuid(), mapper().valueToTree(actor));
 
         assertEquals(HttpStatus.NO_CONTENT, res.getStatusCode());
         verify(actorService, times(1)).patch(any(UUID.class), any(JsonNode.class));
@@ -127,12 +125,10 @@ public class ActorControllerUnitTest {
 
     @Test
     public void shouldReturnNotFoundUpdateActor() throws JsonPatchException, JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-
         doThrow(ItemNotFoundException.class)
                 .when(actorService).patch(any(UUID.class), any(JsonNode.class));
 
-        JsonNode node = mapper.valueToTree(actor);
+        JsonNode node = mapper().valueToTree(actor);
 
         assertThrows(ItemNotFoundException.class, () -> actorController.patch(actor.getUuid(), node));
         verify(actorService, times(1)).patch(any(UUID.class), any(JsonNode.class));
