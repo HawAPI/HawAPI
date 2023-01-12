@@ -140,7 +140,7 @@ public class GameControllerIntTest extends DatabaseContainerInitializer {
         gameRepository.saveAll(getGames());
 
         mockMvc.perform(get("/api/v1/games")
-                        .param("name", "Lorem")
+                        .param("name", "Ipsum")
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
