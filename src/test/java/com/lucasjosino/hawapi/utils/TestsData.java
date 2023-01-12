@@ -216,6 +216,50 @@ public final class TestsData {
         return location;
     }
 
+    // Seasons
+
+    public static SeasonModel getSingleSeason() {
+        return getSeasons().get(0);
+    }
+
+    public static List<SeasonModel> getSeasons() {
+        List<SeasonModel> seasons = new ArrayList<>();
+
+        SeasonModel season1 = new SeasonModel();
+        season1.setUuid(UUID.fromString("cf70f1e5-dadc-4dc9-9082-2b94aef34600"));
+        season1.setHref("/api/v1/locations/cf70f1e5-dadc-4dc9-9082-2b94aef34600");
+        season1.setTitle("Lorem");
+        season1.setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+        season1.setDurationTotal(10000);
+        season1.setSeasonNum((byte) 1);
+        season1.setReleaseDate(LocalDate.now());
+        seasons.add(season1);
+
+        SeasonModel season2 = new SeasonModel();
+        season2.setUuid(UUID.fromString("e6d7e898-7fb3-4224-8127-86376be9c000"));
+        season2.setHref("/api/v1/locations/e6d7e898-7fb3-4224-8127-86376be9c000");
+        season2.setTitle("Ipsum");
+        season2.setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+        season2.setDurationTotal(20000);
+        season2.setSeasonNum((byte) 2);
+        season2.setReleaseDate(LocalDate.now());
+        seasons.add(season2);
+
+        return seasons;
+    }
+
+    public static SeasonModel getNewSeason() {
+        SeasonModel season = new SeasonModel();
+        season.setUuid(UUID.randomUUID());
+        season.setHref("/api/v1/locations/" + season.getUuid());
+        season.setTitle("Lorem Ipsum");
+        season.setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+        season.setDurationTotal(30000);
+        season.setSeasonNum((byte) 3);
+        season.setReleaseDate(LocalDate.now());
+        return season;
+    }
+
     // Users/Auth
 
     public static UserModel getNewUser() {
