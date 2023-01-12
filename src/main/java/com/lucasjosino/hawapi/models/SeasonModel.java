@@ -21,15 +21,15 @@ public class SeasonModel extends BaseModel {
 
     @JsonProperty("duration_total")
     @Column(nullable = false, name = "duration_total")
-    private int durationTotal;
+    private Integer durationTotal;
 
     @Type(type = "string-array")
     @Column(columnDefinition = "varchar[]")
     private String[] genres;
 
-    @Type(type = "string-array")
-    @Column(columnDefinition = "varchar[]")
-    private String[] season;
+//    @Type(type = "string-array")
+//    @Column(columnDefinition = "varchar[]")
+//    private String[] season;
 
     @JsonProperty("season_num")
     @Column(nullable = false, name = "season_num")
@@ -60,7 +60,7 @@ public class SeasonModel extends BaseModel {
     private String[] trailers;
 
     @Column
-    private int budget;
+    private Integer budget;
 
     @Type(type = "string-array")
     @Column(columnDefinition = "text[]")
@@ -85,11 +85,11 @@ public class SeasonModel extends BaseModel {
         this.description = description;
     }
 
-    public int getDurationTotal() {
+    public Integer getDurationTotal() {
         return durationTotal;
     }
 
-    public void setDurationTotal(int durationTotal) {
+    public void setDurationTotal(Integer durationTotal) {
         this.durationTotal = durationTotal;
     }
 
@@ -101,13 +101,13 @@ public class SeasonModel extends BaseModel {
         this.genres = genres;
     }
 
-    public String[] getSeason() {
-        return season;
-    }
-
-    public void setSeason(String[] season) {
-        this.season = season;
-    }
+//    public String[] getSeason() {
+//        return season;
+//    }
+//
+//    public void setSeason(String[] season) {
+//        this.season = season;
+//    }
 
     public Byte getSeasonNum() {
         return seasonNum;
@@ -165,11 +165,11 @@ public class SeasonModel extends BaseModel {
         this.trailers = trailers;
     }
 
-    public int getBudget() {
+    public Integer getBudget() {
         return budget;
     }
 
-    public void setBudget(int budget) {
+    public void setBudget(Integer budget) {
         this.budget = budget;
     }
 
