@@ -135,6 +135,27 @@ public class ModelAssertions {
         assertEquals(expected.getReleaseDate().toString(), result.getBody().getReleaseDate().toString());
     }
 
+    // Soundtracks
+
+    public static void assertSoundtrackEquals(SoundtrackModel expected, SoundtrackModel result) {
+        assertEquals(expected.getUuid(), result.getUuid());
+        assertEquals(expected.getHref(), result.getHref());
+        assertEquals(expected.getName(), result.getName());
+        assertEquals(expected.getAlbum(), result.getAlbum());
+        assertEquals(expected.getReleaseDate().toString(), result.getReleaseDate().toString());
+        assertEquals(expected.getUrls().length, result.getUrls().length);
+    }
+
+    public static void assertSoundtrackEquals(SoundtrackModel expected, ResponseEntity<SoundtrackModel> result) {
+        assertThat(result.getBody()).isNotNull();
+        assertEquals(expected.getUuid(), result.getBody().getUuid());
+        assertEquals(expected.getHref(), result.getBody().getHref());
+        assertEquals(expected.getName(), result.getBody().getName());
+        assertEquals(expected.getAlbum(), result.getBody().getAlbum());
+        assertEquals(expected.getReleaseDate().toString(), result.getBody().getReleaseDate().toString());
+        assertEquals(expected.getUrls().length, result.getBody().getUrls().length);
+    }
+
     // User/Auth
 
     public static void assertAuthEquals(UserModel expected, ResponseEntity<UserModel> result) {
