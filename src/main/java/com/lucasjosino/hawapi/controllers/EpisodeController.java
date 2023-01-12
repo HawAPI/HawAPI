@@ -7,6 +7,7 @@ import com.lucasjosino.hawapi.interfaces.MappingInterface;
 import com.lucasjosino.hawapi.models.EpisodeModel;
 import com.lucasjosino.hawapi.services.EpisodeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,7 +37,7 @@ public class EpisodeController implements MappingInterface<EpisodeModel, Episode
 
     @PostMapping
     public ResponseEntity<EpisodeModel> save(@RequestBody EpisodeModel episode) {
-        return ResponseEntity.ok(episodeService.save(episode));
+        return ResponseEntity.status(HttpStatus.CREATED).body(episodeService.save(episode));
     }
 
     @PatchMapping("/{uuid}")

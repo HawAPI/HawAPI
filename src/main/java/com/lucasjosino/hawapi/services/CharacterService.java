@@ -78,6 +78,8 @@ public class CharacterService {
 
     @Transactional
     public void delete(UUID uuid) {
+        if (!characterRepository.existsById(uuid)) throw new ItemNotFoundException();
+
         characterRepository.deleteById(uuid);
     }
 }

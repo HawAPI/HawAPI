@@ -74,6 +74,8 @@ public class SoundtrackService {
 
     @Transactional
     public void delete(UUID uuid) {
+        if (!soundtrackRepository.existsById(uuid)) throw new ItemNotFoundException();
+
         soundtrackRepository.deleteById(uuid);
     }
 }

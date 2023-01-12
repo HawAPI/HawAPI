@@ -2,6 +2,7 @@ version: "3.3"
 
 services:
   postgres:
+    image: postgres:15.1
     container_name: hawapi-postgres
     build:
       context: .

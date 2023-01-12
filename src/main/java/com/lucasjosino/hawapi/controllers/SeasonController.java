@@ -7,6 +7,7 @@ import com.lucasjosino.hawapi.interfaces.MappingInterface;
 import com.lucasjosino.hawapi.models.SeasonModel;
 import com.lucasjosino.hawapi.services.SeasonService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,7 +37,7 @@ public class SeasonController implements MappingInterface<SeasonModel, SeasonFil
 
     @PostMapping
     public ResponseEntity<SeasonModel> save(@RequestBody SeasonModel episode) {
-        return ResponseEntity.ok(seasonService.save(episode));
+        return ResponseEntity.status(HttpStatus.CREATED).body(seasonService.save(episode));
     }
 
     @PatchMapping("/{uuid}")

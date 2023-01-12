@@ -19,11 +19,11 @@ public class EpisodeModel extends BaseModel {
     private String description;
 
     @Column(nullable = false)
-    private int duration;
+    private Integer duration;
 
     @JsonProperty("episode_num")
     @Column(nullable = false, name = "episode_num")
-    private int episodeNum;
+    private Byte episodeNum;
 
     @JsonProperty("next_episode")
     @Column(name = "next_episode")
@@ -59,19 +59,19 @@ public class EpisodeModel extends BaseModel {
         this.description = description;
     }
 
-    public int getDuration() {
+    public Integer getDuration() {
         return duration;
     }
 
-    public void setDuration(int duration) {
+    public void setDuration(Integer duration) {
         this.duration = duration;
     }
 
-    public int getEpisodeNum() {
+    public Byte getEpisodeNum() {
         return episodeNum;
     }
 
-    public void setEpisodeNum(int episodeNum) {
+    public void setEpisodeNum(Byte episodeNum) {
         this.episodeNum = episodeNum;
     }
 

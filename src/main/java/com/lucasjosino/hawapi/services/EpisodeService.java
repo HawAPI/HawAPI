@@ -74,6 +74,8 @@ public class EpisodeService {
 
     @Transactional
     public void delete(UUID uuid) {
+        if (!episodeRepository.existsById(uuid)) throw new ItemNotFoundException();
+
         episodeRepository.deleteById(uuid);
     }
 }
