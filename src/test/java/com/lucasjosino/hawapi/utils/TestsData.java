@@ -1,9 +1,6 @@
 package com.lucasjosino.hawapi.utils;
 
-import com.lucasjosino.hawapi.models.ActorModel;
-import com.lucasjosino.hawapi.models.CharacterModel;
-import com.lucasjosino.hawapi.models.EpisodeModel;
-import com.lucasjosino.hawapi.models.GameModel;
+import com.lucasjosino.hawapi.models.*;
 import com.lucasjosino.hawapi.models.user.UserAuthenticationModel;
 import com.lucasjosino.hawapi.models.user.UserModel;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
@@ -110,7 +107,7 @@ public final class TestsData {
 
         EpisodeModel episode1 = new EpisodeModel();
         episode1.setUuid(UUID.fromString("cf70f1e5-dadc-4dc9-9082-2b94aef34600"));
-        episode1.setHref("/api/v1/actors/cf70f1e5-dadc-4dc9-9082-2b94aef34600");
+        episode1.setHref("/api/v1/episodes/cf70f1e5-dadc-4dc9-9082-2b94aef34600");
         episode1.setTitle("Lorem");
         episode1.setDescription("Ipsum");
         episode1.setDuration(2400000);
@@ -120,7 +117,7 @@ public final class TestsData {
 
         EpisodeModel episode2 = new EpisodeModel();
         episode2.setUuid(UUID.fromString("e6d7e898-7fb3-4224-8127-86376be9c000"));
-        episode2.setHref("/api/v1/actors/e6d7e898-7fb3-4224-8127-86376be9c000");
+        episode2.setHref("/api/v1/episodes/e6d7e898-7fb3-4224-8127-86376be9c000");
         episode2.setTitle("Ipsum");
         episode2.setDescription("Lorem");
         episode2.setDuration(2580000);
@@ -134,7 +131,7 @@ public final class TestsData {
     public static EpisodeModel getNewEpisode() {
         EpisodeModel episode = new EpisodeModel();
         episode.setUuid(UUID.randomUUID());
-        episode.setHref("/api/v1/actors/" + episode.getUuid());
+        episode.setHref("/api/v1/episodes/" + episode.getUuid());
         episode.setTitle("Lorem Ipsum");
         episode.setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
         episode.setDuration(2580000);
@@ -154,7 +151,7 @@ public final class TestsData {
 
         GameModel game1 = new GameModel();
         game1.setUuid(UUID.fromString("cf70f1e5-dadc-4dc9-9082-2b94aef34600"));
-        game1.setHref("/api/v1/actors/cf70f1e5-dadc-4dc9-9082-2b94aef34600");
+        game1.setHref("/api/v1/games/cf70f1e5-dadc-4dc9-9082-2b94aef34600");
         game1.setName("Lorem");
         game1.setReleaseDate(LocalDate.now());
         game1.setUrl("https://strangerthingsgames.com/2");
@@ -163,7 +160,7 @@ public final class TestsData {
 
         GameModel game2 = new GameModel();
         game2.setUuid(UUID.fromString("e6d7e898-7fb3-4224-8127-86376be9c000"));
-        game2.setHref("/api/v1/actors/e6d7e898-7fb3-4224-8127-86376be9c000");
+        game2.setHref("/api/v1/games/e6d7e898-7fb3-4224-8127-86376be9c000");
         game2.setName("Ipsum");
         game2.setReleaseDate(LocalDate.now());
         game2.setUrl("https://strangerthingsgames.com/2");
@@ -176,12 +173,47 @@ public final class TestsData {
     public static GameModel getNewGame() {
         GameModel game = new GameModel();
         game.setUuid(UUID.randomUUID());
-        game.setHref("/api/v1/actors/" + game.getUuid());
+        game.setHref("/api/v1/games/" + game.getUuid());
         game.setName("Lorem Ipsum");
         game.setReleaseDate(LocalDate.now());
         game.setUrl("https://strangerthingsgames.com/2");
         game.setTrailer("https://youtube.com/1");
         return game;
+    }
+
+    // Locations
+
+    public static LocationModel getSingleLocation() {
+        return getLocations().get(0);
+    }
+
+    public static List<LocationModel> getLocations() {
+        List<LocationModel> locations = new ArrayList<>();
+
+        LocationModel location1 = new LocationModel();
+        location1.setUuid(UUID.fromString("cf70f1e5-dadc-4dc9-9082-2b94aef34600"));
+        location1.setHref("/api/v1/locations/cf70f1e5-dadc-4dc9-9082-2b94aef34600");
+        location1.setName("Lorem");
+        location1.setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+        locations.add(location1);
+
+        LocationModel location2 = new LocationModel();
+        location2.setUuid(UUID.fromString("e6d7e898-7fb3-4224-8127-86376be9c000"));
+        location2.setHref("/api/v1/locations/e6d7e898-7fb3-4224-8127-86376be9c000");
+        location2.setName("Ipsum");
+        location2.setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+        locations.add(location2);
+
+        return locations;
+    }
+
+    public static LocationModel getNewLocation() {
+        LocationModel location = new LocationModel();
+        location.setUuid(UUID.randomUUID());
+        location.setHref("/api/v1/locations/" + location.getUuid());
+        location.setName("Lorem Ipsum");
+        location.setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+        return location;
     }
 
     // Users/Auth

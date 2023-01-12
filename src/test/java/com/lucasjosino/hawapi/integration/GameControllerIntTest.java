@@ -140,17 +140,17 @@ public class GameControllerIntTest extends DatabaseContainerInitializer {
         gameRepository.saveAll(getGames());
 
         mockMvc.perform(get("/api/v1/games")
-                        .param("gender", "2")
+                        .param("name", "Lorem")
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].uuid").value(game.getUuid().toString()))
                 .andExpect(jsonPath("$[0].href").value(game.getHref()))
-                .andExpect(jsonPath("$.name").value(game.getName()))
-                .andExpect(jsonPath("$.release_date").value(game.getReleaseDate()))
-                .andExpect(jsonPath("$.url").value(game.getUrl()))
-                .andExpect(jsonPath("$.trailer").value(game.getTrailer()))
+                .andExpect(jsonPath("$[0].name").value(game.getName()))
+                .andExpect(jsonPath("$[0].release_date").value(game.getReleaseDate()))
+                .andExpect(jsonPath("$[0].url").value(game.getUrl()))
+                .andExpect(jsonPath("$[0].trailer").value(game.getTrailer()))
                 .andExpect(jsonPath("$[0].created_at").isNotEmpty())
                 .andExpect(jsonPath("$[0].updated_at").isNotEmpty());
     }
