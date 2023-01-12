@@ -1,4 +1,3 @@
-HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
@@ -34,3 +33,7 @@ build/
 
 ### RSA Keys ###
 *.pem
+
+### Build (Website)
+.website-tmp/
+/src/main/resources/static/
