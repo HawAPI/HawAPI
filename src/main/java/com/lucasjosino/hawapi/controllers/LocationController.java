@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("${hawapi.apiBaseUrl}/places")
+@RequestMapping("${hawapi.apiBaseUrl}/locations")
 public class LocationController implements MappingInterface<LocationModel, LocationFilter> {
 
     private final LocationService locationService;
