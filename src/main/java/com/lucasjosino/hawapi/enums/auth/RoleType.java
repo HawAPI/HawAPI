@@ -1,8 +1,9 @@
 package com.lucasjosino.hawapi.enums.auth;
 
 public enum RoleType {
+    ANONYMOUS,
+    BASIC,
     DEV,
-    MOD,
     ADMIN;
 
     public static boolean isValid(String name) {
