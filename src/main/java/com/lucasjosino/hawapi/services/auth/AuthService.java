@@ -119,16 +119,14 @@ public class AuthService {
     }
 
     public String getRole() {
-        Optional<? extends GrantedAuthority> firstRole = SecurityContextHolder.getContext()
-                .getAuthentication().getAuthorities().stream().findFirst();
+        Optional<? extends GrantedAuthority> firstAuthority = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getAuthorities()
+                .stream()
+                .findFirst();
 
-        System.out.println("getRole");
-        if (firstRole.isPresent()) {
-            System.out.println("Role: " + firstRole.get());
-            return firstRole.get().getAuthority();
-        }
+        if (firstAuthority.isPresent()) return firstAuthority.get().getAuthority();
 
-        System.out.println("Role: Nop");
         return JwtManager.ROLE_PREFIX + RoleType.ANONYMOUS.name();
     }
 
