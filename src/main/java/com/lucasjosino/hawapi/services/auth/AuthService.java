@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -48,19 +49,14 @@ public class AuthService {
                 throw new RoleBadRequestException("Role '" + user.getRole() + "' is not valid!");
             }
 
-            // Block any account with 'ADMIN' role.
+            // Only 'ADMIN' can create users with 'ADMIN' role.
             if (user.getRole().equals(RoleType.ADMIN.name())) {
-                throw new UserUnauthorizedException("Couldn't create user with ADMIN role");
-            }
-
-            // Only 'ADMIN' can create users with 'MOD' role.
-            if (user.getRole().equals(RoleType.MOD.name())) {
                 if (!hasAdminAuthorization()) {
-                    throw new UserUnauthorizedException("Only user with ADMIN role can create MOD users");
+                    throw new UserUnauthorizedException("Only user with ADMIN role can create ADMIN users");
                 }
             }
         } else {
-            user.setRole(RoleType.DEV.name());
+            user.setRole(RoleType.BASIC.name());
         }
 
         // Create and set user uuid.
@@ -120,6 +116,20 @@ public class AuthService {
 
         assert dbUser != null;
         authRepository.deleteById(dbUser.getUuid());
+    }
+
+    public String getRole() {
+        Optional<? extends GrantedAuthority> firstRole = SecurityContextHolder.getContext()
+                .getAuthentication().getAuthorities().stream().findFirst();
+
+        System.out.println("getRole");
+        if (firstRole.isPresent()) {
+            System.out.println("Role: " + firstRole.get());
+            return firstRole.get().getAuthority();
+        }
+
+        System.out.println("Role: Nop");
+        return JwtManager.ROLE_PREFIX + RoleType.ANONYMOUS.name();
     }
 
     private UserModel validateUser(UserAuthenticationModel userAuth) {
