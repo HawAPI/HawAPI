@@ -1,10 +1,13 @@
 # Docker config.
 DOCKER_PATH=./docker/docker-compose.yml
 DOCKER_NAME=postgres
+DOCKER_CONTAINER_NAME=hawapi-postgres
+DOCKER_PORT=5432
 
 # Database
 DB_TYPE=postgres
 DB_NAME=hawapi
+DB_VERSION=15.1
 
 # Colors
 RED     := $(shell tput -Txterm setaf 1)
@@ -48,10 +51,13 @@ config: ## Show all configuration (Docker, database, etc...)
 	@echo ''
 	@echo 'Configuration:'
 	@echo '  ${CYAN}Docker:${RESET}'
+	@echo '    ${BLUE}Port: ${DOCKER_PORT} ${RESET}'
 	@echo '    ${BLUE}Path: ${DOCKER_PATH} ${RESET}'
+	@echo '    ${BLUE}Name (Container): ${DOCKER_CONTAINER_NAME} ${RESET}'
 	@echo '  ${CYAN}Database: ${RESET}'
-	@echo '    ${BLUE}Type: ${DB_TYPE} ${RESET}'
 	@echo '    ${BLUE}Name: ${DB_NAME} ${RESET}'
+	@echo '    ${BLUE}Type: ${DB_TYPE} ${RESET}'
+	@echo '    ${BLUE}Version: ${DB_VERSION} ${RESET}'
 	@echo ''
 
 # https://gist.github.com/thomaspoignant/5b72d579bd5f311904d973652180c705
