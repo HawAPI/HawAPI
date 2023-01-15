@@ -152,7 +152,7 @@ public class SeasonControllerIntTest extends DatabaseContainerInitializer {
                 .andExpect(jsonPath("$[0].href").value(season.getHref()))
                 .andExpect(jsonPath("$[0].title").value(season.getTitle()))
                 .andExpect(jsonPath("$[0].description").value(season.getDescription()))
-                .andExpect(jsonPath("$[0].duration_total").value(String.valueOf(season.getSeasonNum())))
+                .andExpect(jsonPath("$[0].duration_total").value(String.valueOf(season.getDurationTotal())))
                 .andExpect(jsonPath("$[0].season_num").value(String.valueOf(season.getSeasonNum())))
                 .andExpect(jsonPath("$[0].release_date").value(season.getReleaseDate().toString()))
                 .andExpect(jsonPath("$[0].created_at").isNotEmpty())

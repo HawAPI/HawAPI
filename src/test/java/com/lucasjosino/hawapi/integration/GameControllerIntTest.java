@@ -148,7 +148,7 @@ public class GameControllerIntTest extends DatabaseContainerInitializer {
                 .andExpect(jsonPath("$[0].uuid").value(game.getUuid().toString()))
                 .andExpect(jsonPath("$[0].href").value(game.getHref()))
                 .andExpect(jsonPath("$[0].name").value(game.getName()))
-                .andExpect(jsonPath("$[0].release_date").value(game.getReleaseDate()))
+                .andExpect(jsonPath("$[0].release_date").value(String.valueOf(game.getReleaseDate())))
                 .andExpect(jsonPath("$[0].url").value(game.getUrl()))
                 .andExpect(jsonPath("$[0].trailer").value(game.getTrailer()))
                 .andExpect(jsonPath("$[0].created_at").isNotEmpty())

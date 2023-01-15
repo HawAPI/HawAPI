@@ -27,10 +27,6 @@ public class SeasonModel extends BaseModel {
     @Column(columnDefinition = "varchar[]")
     private String[] genres;
 
-//    @Type(type = "string-array")
-//    @Column(columnDefinition = "varchar[]")
-//    private String[] season;
-
     @JsonProperty("season_num")
     @Column(nullable = false, name = "season_num")
     private Byte seasonNum;
@@ -100,14 +96,6 @@ public class SeasonModel extends BaseModel {
     public void setGenres(String[] genres) {
         this.genres = genres;
     }
-
-//    public String[] getSeason() {
-//        return season;
-//    }
-//
-//    public void setSeason(String[] season) {
-//        this.season = season;
-//    }
 
     public Byte getSeasonNum() {
         return seasonNum;
