@@ -10,30 +10,27 @@ The **HawAPI** is a Free and <a href="https://github.com/HawAPI/" target="_blank
 
 All this information is available through a RESTful API implemented with _Java (Spring Boot) + PostgreSQL_ and served via JSON and allows developers to create **desktop**, **web** and **mobile** applications using this data very easy.
 
-## Project links
-
-### Website
-
-- [Website](https://hawapi.theproject.id)
-- [Docs](https://hawapi.theproject.id/docs)
-- [SDK's](https://hawapi.theproject.id/docs/sdks)
-
-### Github
-
-- [Github](https://github.com/HawAPI)
-- [Website](https://github.com/HawAPI/website)
-- [Data](https://github.com/HawAPI/api-data)
-- [Docs](https://github.com/HawAPI/docs)
-- [SDK's](https://github.com/orgs/HawAPI/repositories?q=Sdk)
-  - [js-sdk](https://github.com/HawAPI/js-sdk)
-  - [java-sdk](https://github.com/HawAPI/java-sdk)
-
 ## Getting Started
 
 - [Project Structure](GETTING-STARTED.md#project-structure)
 - [Installation](GETTING-STARTED.md#installation)
 - [Docker](GETTING-STARTED.md#docker)
 
+#### Website
+
+- [Website](https://hawapi.theproject.id)
+- [Docs](https://hawapi.theproject.id/docs)
+- [SDK's](https://hawapi.theproject.id/docs/sdks)
+
+#### Github
+
+- [Github](https://github.com/HawAPI)
+- [Website](https://github.com/HawAPI/website)
+- [Data](https://github.com/HawAPI/api-data)
+- [Docs](https://github.com/HawAPI/docs)
+
 ## License
 
 HawAPI is licensed under the [MIT License](LICENSE).
+
+> Check out all project [licenses](https://hawapi.theproject.id/docs/about#licenses)
