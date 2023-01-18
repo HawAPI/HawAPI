@@ -69,6 +69,9 @@ Step by step of how to run the application.
 
 ### Clone the application
 
+> **Note** \
+> Alternatively, you could use something like [degit](https://github.com/Rich-Harris/degit)
+
 **1. SSH**
 
 ```
@@ -81,12 +84,9 @@ git clone git@github.com:HawAPI/HawAPI.git
 git clone https://github.com/HawAPI/HawAPI.git
 ```
 
-> **Note**
-> Alternatively, you could use something like [degit](https://github.com/Rich-Harris/degit)
-
 ### Init the database (PostgreSQL)
 
-> **Warning**
+> **Warning** \
 > Check out [Docker](#docker) section before.
 
 **1. Docker CLI**
@@ -137,7 +137,7 @@ docker compose -f ./docker/docker-compose.yml build postgres
 docker compose -f ./docker/docker-compose.yml up postgres
 ```
 
-> **Note**
+> **Note** \
 > The command `make dk-run` is easy to remember.
 
 ### Aliases
@@ -150,6 +150,3 @@ dk-stop: ## Stop the local docker.
 dk-reset: ## Stop, Delete, Build and Start the local docker.
 dk-prune: ## Delete all docker volumes.
 ```
-
-> **Note**
-> Use `make help` to see all commands.
