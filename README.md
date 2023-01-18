@@ -1,8 +1,10 @@
-<div align=center>
+<div align="center">
 
-<img src="https://user-images.githubusercontent.com/76869974/213055418-bedc1686-b6ea-4b84-835a-28764bfc07ee.png"/>
+<img src="https://user-images.githubusercontent.com/76869974/213164214-0d304263-3f40-44fb-827d-dcd21bb0f2ae.png"/>
 
-<img align="center" alt="Website" src="https://shields.io/badge/WEBSITE-HAWAPI.THEPROJECT.ID-%23290606?style=for-the-badge&labelColor=%23290606">
+<a href="https://hawapi.theproject.id">
+    <img align="center" alt="Website" src="https://shields.io/badge/WEBSITE-HAWAPI.THEPROJECT.ID-%23290606?style=for-the-badge&labelColor=%23290606">
+</a>
 
 </div>
 
@@ -15,7 +17,7 @@ All this information is available through a RESTful API implemented with _Java (
 ## Getting Started
 
 - [Project Structure](GETTING-STARTED.md#project-structure)
-- [Installation](GETTING-STARTED.md#installation)
+- [Setup](GETTING-STARTED.md#setup)
 - [Docker](GETTING-STARTED.md#docker)
 
 #### Links
@@ -56,4 +58,4 @@ We will behave ourselves if you behave yourselves. For more details see our
 
 HawAPI is licensed under the [MIT License](LICENSE).
 
-> Check out all project [licenses](https://hawapi.theproject.id/docs/about#licenses)
+> Check out all [licenses/dependencies](https://hawapi.theproject.id/docs/about#licenses)
