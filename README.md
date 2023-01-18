@@ -32,6 +32,13 @@ All this information is available through a RESTful API implemented with _Java (
 - [Data](https://github.com/HawAPI/api-data)
 - [Docs](https://github.com/HawAPI/docs)
 
+## Contributing
+
+You could help continuing its development by:
+
+- [Contribute](CONTRIBUTING.md) to the source code
+- Suggest new features and report issues
+
 ## Contact
 
 For any questions about the project, please reach out via:
@@ -39,6 +46,11 @@ For any questions about the project, please reach out via:
 - Email: [hawapi@lucasjosino.com](mailto:hawapi@lucasjosino.com)
 - Feedback: [HawAPI/feedback](https://github.com/orgs/HawAPI/discussions)
 - Twitter (Maintainer): [@LucJosin](https://twitter.com/LucJosin)
+
+## Code of conduct
+
+We will behave ourselves if you behave yourselves. For more details see our
+[Code of conduct](CODE_OF_CONDUCT.md).
 
 ## License
 
