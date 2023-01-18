@@ -1,8 +1,9 @@
 # Getting Started
 
 - [Project Structure](#project-structure)
-- [Setup](#setup)
 - [Docker](#docker)
+- [Setup](#setup)
+- [Tests](#tests)
 
 ## Project Structure
 
@@ -63,62 +64,6 @@
         └── resources
 ```
 
-## Setup
-
-Step by step of how to run the application.
-
-### Clone the application
-
-> **Note** \
-> Alternatively, you could use something like [degit](https://github.com/Rich-Harris/degit)
-
-**1. SSH**
-
-```
-git clone git@github.com:HawAPI/HawAPI.git
-```
-
-**2. HTTPS**
-
-```
-git clone https://github.com/HawAPI/HawAPI.git
-```
-
-### Init the database (PostgreSQL)
-
-> **Warning** \
-> Check out [Docker](#docker) section before.
-
-**1. Docker CLI**
-
-```
-docker compose -f ./docker/docker-compose.yml start postgres
-```
-
-**1. Makefile**
-
-```
-make dk-start
-```
-
-### Init the application
-
-```
-./mvnw spring-boot:run
-```
-
-### Test
-
-```
-curl localhost:8080/api/ping
-```
-
-The result should be:
-
-```
-Pong
-```
-
 ## Docker
 
 Setup PostgreSQL database with docker.
@@ -149,4 +94,102 @@ dk-start: ## Start the local docker.
 dk-stop: ## Stop the local docker.
 dk-reset: ## Stop, Delete, Build and Start the local docker.
 dk-prune: ## Delete all docker volumes.
+```
+
+## Setup
+
+Step by step of how to run the application.
+
+### Clone the application
+
+> **Note** \
+> Alternatively, you could use something like [degit](https://github.com/Rich-Harris/degit)
+
+1. SSH
+
+```
+git clone git@github.com:HawAPI/HawAPI.git
+```
+
+2. HTTPS
+
+```
+git clone https://github.com/HawAPI/HawAPI.git
+```
+
+### Init the database (PostgreSQL)
+
+> **Warning** \
+> The application will not run if the database is not active. \
+>
+> Check out the [#Docker](#docker) section before.
+
+1. Docker CLI
+
+```
+docker compose -f ./docker/docker-compose.yml start postgres
+```
+
+2. Makefile
+
+```
+make dk-start
+```
+
+### Init the application
+
+1. Maven
+
+```
+./mvnw spring-boot:run
+```
+
+2. Makefile
+
+```
+make run
+```
+
+### Make a request
+
+1. Maven
+
+```
+curl localhost:8080/api/ping
+```
+
+The result should be:
+
+```
+Pong
+```
+
+## Tests
+
+The application include both: Integration and Unit tests
+
+- Unit
+  - Controllers
+  - Services
+  - Repositories
+- Integration
+  - Controllers (Which will call services and repositories)
+
+> **Note** \
+> Both Unit (Repositories) and Integration tests will required docker to work (Testcontainers prerequisite).
+
+### Init the application tests
+
+To run both **Integration** and **Unit** tests
+
+1. Maven
+
+```
+./mvnw test
+```
+
+2. Makefile
+
+```
+make test
 ```

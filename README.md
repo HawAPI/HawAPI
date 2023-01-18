@@ -17,8 +17,9 @@ All this information is available through a RESTful API implemented with _Java (
 ## Getting Started
 
 - [Project Structure](GETTING-STARTED.md#project-structure)
-- [Setup](GETTING-STARTED.md#setup)
 - [Docker](GETTING-STARTED.md#docker)
+- [Setup](GETTING-STARTED.md#setup)
+- [Tests](GETTING-STARTED.md#tests)
 
 #### Links
 
