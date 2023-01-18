@@ -16,6 +16,23 @@ BLUE    := $(shell tput -Txterm setaf 4)
 CYAN    := $(shell tput -Txterm setaf 6)
 RESET   := $(shell tput -Txterm sgr0)
 
+## Application
+
+run: ## Run the spring application
+	@./mvnw clean spring-boot:run
+
+test: ## Run all tests of the spring application
+	@./mvnw clean test
+
+clean: ## Clear the spring application
+	@./mvnw clean
+
+compile: ## Compile the spring application
+	@./mvnw clean compile
+
+build: ## Build/Package the spring application
+	@./mvnw package
+
 ## Docker
 
 dk-status: ## Check the docker container status.
