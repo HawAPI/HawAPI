@@ -2,6 +2,8 @@
 
 <img src="https://user-images.githubusercontent.com/76869974/213055418-bedc1686-b6ea-4b84-835a-28764bfc07ee.png"/>
 
+<img align="center" alt="Website" src="https://shields.io/badge/WEBSITE-HAWAPI.THEPROJECT.ID-%23290606?style=for-the-badge&labelColor=%23290606">
+
 </div>
 
 ## Introduction
@@ -16,18 +18,27 @@ All this information is available through a RESTful API implemented with _Java (
 - [Installation](GETTING-STARTED.md#installation)
 - [Docker](GETTING-STARTED.md#docker)
 
-#### Website
+#### Links
 
 - [Website](https://hawapi.theproject.id)
 - [Docs](https://hawapi.theproject.id/docs)
 - [SDK's](https://hawapi.theproject.id/docs/sdks)
+- [About](https://hawapi.theproject.id/docs/about)
 
-#### Github
+#### Git
 
-- [Github](https://github.com/HawAPI)
+- [Home](https://github.com/HawAPI)
 - [Website](https://github.com/HawAPI/website)
 - [Data](https://github.com/HawAPI/api-data)
 - [Docs](https://github.com/HawAPI/docs)
+
+## Contact
+
+For any questions about the project, please reach out via:
+
+- Email: [hawapi@lucasjosino.com](mailto:hawapi@lucasjosino.com)
+- Feedback: [HawAPI/feedback](https://github.com/orgs/HawAPI/discussions)
+- Twitter (Maintainer): [@LucJosin](https://twitter.com/LucJosin)
 
 ## License
 
