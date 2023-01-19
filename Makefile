@@ -18,20 +18,23 @@ RESET   := $(shell tput -Txterm sgr0)
 
 ## Application
 
-run: ## Run the spring application
+run: clean ## Run the spring application
 	@./mvnw clean spring-boot:run
 
-test: ## Run all tests of the spring application
-	@./mvnw clean test
+test: clean ## Run ALL tests of the spring application
+	@./mvnw test
+
+compile: clean ## Compile the spring application
+	@./mvnw compile
+
+build: clean ## Build/Package the spring application
+	@./mvnw package
+
+verify: clean ## Verify the spring application
+	@./mvnw verify
 
 clean: ## Clear the spring application
 	@./mvnw clean
-
-compile: ## Compile the spring application
-	@./mvnw clean compile
-
-build: ## Build/Package the spring application
-	@./mvnw package
 
 ## Docker
 
