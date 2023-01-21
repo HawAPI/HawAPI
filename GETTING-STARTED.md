@@ -1,6 +1,7 @@
 # Getting Started
 
 - [Project Structure](#project-structure)
+- [Prerequisites](#prerequisites)
 - [Docker](#docker)
 - [Setup](#setup)
 - [Tests](#tests)
@@ -77,8 +78,6 @@
 ## Docker
 
 Setup PostgreSQL database with docker.
-
-> See all [Prerequisites](#prerequisites)
 
 ### Usage
 
