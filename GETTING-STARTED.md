@@ -64,16 +64,18 @@
         └── resources
 ```
 
+## Prerequisites
+
+- Git and Github account (If you want [Contributing](CONTRIBUTING.md))
+- Docker
+- Java 8 (1.8)
+- Npm/Yarn
+
 ## Docker
 
 Setup PostgreSQL database with docker.
 
-### Prerequisites
-
-- [Docker](https://www.docker.com/)
-  - Install on [Linux](https://docs.docker.com/desktop/install/linux-install/)
-  - Install on [Windows](https://docs.docker.com/desktop/install/windows-install/)
-  - Install on [Mac](https://docs.docker.com/desktop/install/mac-install/)
+> See all [Prerequisites](#prerequisites)
 
 ### Usage
 
@@ -100,10 +102,12 @@ dk-prune: ## Delete all docker volumes.
 
 Step by step of how to run the application.
 
+> See all [Prerequisites](#prerequisites)
+
 ### Clone the application
 
 > **Note** \
-> Alternatively, you could use something like [degit](https://github.com/Rich-Harris/degit)
+> Alternatively, you could [download all files (Zip)](https://github.com/HawAPI/HawAPI/archive/refs/heads/main.zip)
 
 1. SSH
 
