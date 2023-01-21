@@ -67,9 +67,12 @@
 ## Prerequisites
 
 - Git and Github account (If you want [Contributing](CONTRIBUTING.md))
+- Text editor or IDE (IntelliJ IDEA, VsCode, Netbeans, Eclipse)
 - Docker
 - Java 8 (1.8)
 - Npm/Yarn
+  - [Astro](https://astro.build/) for [website](https://github.com/HawAPI/website) generation
+  - [Retype](https://retype.com/) for [docs](https://github.com/HawAPI/website) generation
 
 ## Docker
 
@@ -125,7 +128,6 @@ git clone https://github.com/HawAPI/HawAPI.git
 
 > **Warning** \
 > The application will not run if the database is not active. \
->
 > Check out the [#Docker](#docker) section before.
 
 1. Docker CLI
