@@ -19,15 +19,22 @@ RESET   := $(shell tput -Txterm sgr0)
 ## Application
 
 run: clean ## Run the spring application
-	@./mvnw clean spring-boot:run
+	@./mvnw spring-boot:run -e -Dmaven.test.skip=true
 
 test: clean ## Run ALL tests of the spring application
 	@./mvnw test
 
+test-unit: test-setup ## Run ONLY unit tests of the spring application
+	@./mvnw -Dtest="*UnitTest" test
+
+test-int: test-setup ## Run ONLY integration tests of the spring application
+	@./mvnw -Dtest="*IntTest" test
+
 compile: clean ## Compile the spring application
 	@./mvnw compile
 
-build: clean ## Build/Package the spring application
+build: clean ## Build website and package the spring application
+	@./scripts/build-website.sh
 	@./mvnw package
 
 verify: clean ## Verify the spring application
@@ -35,6 +42,14 @@ verify: clean ## Verify the spring application
 
 clean: ## Clear the spring application
 	@./mvnw clean
+
+## Website
+
+build-website:
+	@./scripts/build-website.sh
+
+clean-website:
+	@./scripts/clean-website.sh
 
 ## Docker
 
@@ -66,6 +81,10 @@ dk-prune: ## Delete all docker volumes.
 	@cd ..
 
 ## Help
+
+test-setup: clean
+	@./mvnw process-test-resources || true
+	@cp --remove-destination ./docker/postgres/init/schema.sql ./target/test-classes/schema.sql
 
 config: ## Show all configuration (Docker, database, etc...)
 	@echo ''
