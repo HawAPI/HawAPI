@@ -34,7 +34,7 @@ compile: clean ## Compile the spring application
 	@./mvnw compile
 
 build: clean ## Build website and package the spring application
-	@./scripts/build-website.sh
+	@./scripts/build-website.sh --clean-before
 	@./mvnw package
 
 verify: clean ## Verify the spring application
@@ -46,7 +46,7 @@ clean: ## Clear the spring application
 ## Website
 
 build-website: ## Build the website
-	@./scripts/build-website.sh
+	@./scripts/build-website.sh --clean-before
 
 clean-website: ## Remove '.hawapi/' and 'resources/static/'
 	@./scripts/clean-website.sh -H -S
