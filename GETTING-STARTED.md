@@ -4,7 +4,10 @@
 - [Prerequisites](#prerequisites)
 - [Docker](#docker)
 - [Setup](#setup)
+    - [Website and Docs](#website-and-docs)
 - [Tests](#tests)
+    - [Unit Tests](#unit-tests)
+    - [Integration Tests](#integration-tests)
 
 ## Project Structure
 
@@ -16,6 +19,7 @@
 │   └── postgres
 │       ├── init
 │       └── migration
+├── scripts
 └── src
     ├── main
     │   ├── java
@@ -42,6 +46,7 @@
     │   │               ├── properties
     │   │               ├── repositories
     │   │               │   └── auth
+    │   │               ├── resolvers
     │   │               └── services
     │   │                   ├── auth
     │   │                   └── utils
@@ -67,13 +72,13 @@
 
 ## Prerequisites
 
-- Git and Github account (If you want [Contributing](CONTRIBUTING.md))
+- Git and GitHub account (If you want [Contributing](CONTRIBUTING.md))
 - Text editor or IDE (IntelliJ IDEA, VsCode, Netbeans, Eclipse)
 - Docker
 - Java 8 (1.8)
 - Npm/Yarn
-  - [Astro](https://astro.build/) for [website](https://github.com/HawAPI/website) generation
-  - [Retype](https://retype.com/) for [docs](https://github.com/HawAPI/website) generation
+    - [Astro](https://astro.build/) for [website](https://github.com/HawAPI/website) generation
+    - [Retype](https://retype.com/) for [docs](https://github.com/HawAPI/website) generation
 
 ## Docker
 
@@ -111,13 +116,13 @@ Step by step of how to run the application.
 > **Note** \
 > Alternatively, you could [download all files (Zip)](https://github.com/HawAPI/HawAPI/archive/refs/heads/main.zip)
 
-1. SSH
+- SSH
 
 ```
 git clone git@github.com:HawAPI/HawAPI.git
 ```
 
-2. HTTPS
+- HTTPS
 
 ```
 git clone https://github.com/HawAPI/HawAPI.git
@@ -129,27 +134,50 @@ git clone https://github.com/HawAPI/HawAPI.git
 > The application will not run if the database is not active. \
 > Check out the [#Docker](#docker) section before.
 
-1. Docker CLI
+- Docker CLI
 
 ```
 docker compose -f ./docker/docker-compose.yml start postgres
 ```
 
-2. Makefile
+- Makefile
 
 ```
 make dk-start
 ```
 
+### Website and docs
+
+> **Note** \
+> This is optional and only required to display the website and docs.
+
+- Command
+
+```
+./scripts/build-website.sh --clean-before
+```
+
+- Makefile
+
+```
+make build-website
+```
+
+> To see all options
+>
+>```
+>./scripts/build-website.sh --help
+>```
+
 ### Init the application
 
-1. Maven
+- Maven
 
 ```
 ./mvnw spring-boot:run
 ```
 
-2. Makefile
+- Makefile
 
 ```
 make run
@@ -157,7 +185,7 @@ make run
 
 ### Make a request
 
-1. Maven
+- Command
 
 ```
 curl localhost:8080/api/ping
@@ -174,27 +202,59 @@ Pong
 The application include both: Integration and Unit tests
 
 - Unit
-  - Controllers
-  - Services
-  - Repositories
+    - Controllers
+    - Services
+    - Repositories
 - Integration
-  - Controllers (Which will call services and repositories)
+    - Controllers (Which will call services and repositories)
 
 > **Note** \
-> Both Unit (Repositories) and Integration tests will required docker to work (Testcontainers prerequisite).
+> Both Unit (Repositories) and Integration tests will require docker to work (Testcontainers prerequisite).
 
-### Init the application tests
+### Init the tests
 
 To run both **Integration** and **Unit** tests
 
-1. Maven
+- Maven
 
 ```
 ./mvnw test
 ```
 
-2. Makefile
+- Makefile
 
 ```
 make test
+```
+
+### Unit tests
+
+To run **Unit** tests
+
+- Maven
+
+```
+./mvnw -Dtest="*UnitTest" test
+```
+
+- Makefile
+
+```
+make test-unit
+```
+
+### Integration tests
+
+To run **Integration** tests
+
+- Maven
+
+```
+./mvnw -Dtest="*IntTest" test
+```
+
+- Makefile
+
+```
+make test-int
 ```

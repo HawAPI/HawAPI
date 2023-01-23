@@ -34,6 +34,7 @@ build/
 ### RSA Keys ###
 *.pem
 
-### Build (Website)
-.website-tmp/
+### Project
+.hawapi/
+.downloads/
 /src/main/resources/static/

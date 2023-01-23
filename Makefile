@@ -19,15 +19,22 @@ RESET   := $(shell tput -Txterm sgr0)
 ## Application
 
 run: clean ## Run the spring application
-	@./mvnw clean spring-boot:run
+	@./mvnw spring-boot:run -e -Dmaven.test.skip=true
 
 test: clean ## Run ALL tests of the spring application
 	@./mvnw test
 
+test-unit: test-setup ## Run ONLY unit tests of the spring application
+	@./mvnw -Dtest="*UnitTest" test
+
+test-int: test-setup ## Run ONLY integration tests of the spring application
+	@./mvnw -Dtest="*IntTest" test
+
 compile: clean ## Compile the spring application
 	@./mvnw compile
 
-build: clean ## Build/Package the spring application
+build: clean ## Build website and package the spring application
+	@./scripts/build-website.sh --clean-before
 	@./mvnw package
 
 verify: clean ## Verify the spring application
@@ -35,6 +42,14 @@ verify: clean ## Verify the spring application
 
 clean: ## Clear the spring application
 	@./mvnw clean
+
+## Website
+
+build-website: ## Build the website
+	@./scripts/build-website.sh --clean-before
+
+clean-website: ## Remove '.hawapi/' and 'resources/static/'
+	@./scripts/clean-website.sh -H -S
 
 ## Docker
 
@@ -67,8 +82,12 @@ dk-prune: ## Delete all docker volumes.
 
 ## Help
 
+test-setup: clean ## Setup for tests
+	@./mvnw process-test-resources || true
+	@cp --remove-destination ./docker/postgres/init/schema.sql ./target/test-classes/schema.sql
+
 config: ## Show all configuration (Docker, database, etc...)
-	@echo ''
+	@echo
 	@echo 'Configuration:'
 	@echo '  ${CYAN}Docker:${RESET}'
 	@echo '    ${BLUE}Port: ${DOCKER_PORT} ${RESET}'
@@ -78,14 +97,14 @@ config: ## Show all configuration (Docker, database, etc...)
 	@echo '    ${BLUE}Name: ${DB_NAME} ${RESET}'
 	@echo '    ${BLUE}Type: ${DB_TYPE} ${RESET}'
 	@echo '    ${BLUE}Version: ${DB_VERSION} ${RESET}'
-	@echo ''
+	@echo
 
 # https://gist.github.com/thomaspoignant/5b72d579bd5f311904d973652180c705
 help: ## Show this help.
-	@echo ''
+	@echo
 	@echo 'Usage:'
 	@echo '  ${CYAN}make${RESET} ${GREEN}<target>${RESET}'
-	@echo ''
+	@echo
 	@echo 'Targets:'
 	@awk 'BEGIN {FS = ":.*?## "} { \
 		if (/^[a-zA-Z_-]+:.*?##.*$$/) {printf "    ${CYAN}%-20s${GREEN}%s${RESET}\n", $$1, $$2} \
