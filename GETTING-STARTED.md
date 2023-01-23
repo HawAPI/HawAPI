@@ -18,6 +18,7 @@
 │   └── postgres
 │       ├── init
 │       └── migration
+├── scripts
 └── src
     ├── main
     │   ├── java
@@ -44,6 +45,7 @@
     │   │               ├── properties
     │   │               ├── repositories
     │   │               │   └── auth
+    │   │               ├── resolvers
     │   │               └── services
     │   │                   ├── auth
     │   │                   └── utils
