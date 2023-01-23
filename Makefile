@@ -21,7 +21,7 @@ RESET   := $(shell tput -Txterm sgr0)
 run: clean ## Run the spring application
 	@./mvnw spring-boot:run -e -Dmaven.test.skip=true
 
-test: clean ## Run ALL tests of the spring application
+test: test-setup ## Run ALL tests of the spring application
 	@./mvnw test
 
 test-unit: test-setup ## Run ONLY unit tests of the spring application
@@ -33,9 +33,9 @@ test-int: test-setup ## Run ONLY integration tests of the spring application
 compile: clean ## Compile the spring application
 	@./mvnw compile
 
-build: clean ## Build website and package the spring application
+build: test ## Build website, test and package the spring application
 	@./scripts/build-website.sh --clean-before
-	@./mvnw package
+	@./mvnw package -Dmaven.test.skip=true
 
 verify: clean ## Verify the spring application
 	@./mvnw verify
