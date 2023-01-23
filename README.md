@@ -19,25 +19,30 @@ via JSON and allows developers to create **desktop**, **web** and **mobile** app
 ## Getting Started
 
 - [Project Structure](GETTING-STARTED.md#project-structure)
+- [Prerequisites](GETTING-STARTED.md#prerequisites)
 - [Docker](GETTING-STARTED.md#docker)
 - [Setup](GETTING-STARTED.md#setup)
+    - [Website and Docs](GETTING-STARTED.md#website-and-docs)
 - [Tests](GETTING-STARTED.md#tests)
     - [Unit Tests](GETTING-STARTED.md#unit-tests)
     - [Integration Tests](GETTING-STARTED.md#integration-tests)
+- Scripts
+    - [Makefile](./Makefile)
+    - [Shell](./scripts)
 
 #### Links
 
 - [Website](https://hawapi.theproject.id)
-- [Docs](https://hawapi.theproject.id/docs)
-- [SDK's](https://hawapi.theproject.id/docs/sdks)
-- [About](https://hawapi.theproject.id/docs/about)
+    - [Docs](https://hawapi.theproject.id/docs)
+    - [SDK's](https://hawapi.theproject.id/docs/sdks)
+    - [About](https://hawapi.theproject.id/docs/about)
 
 #### Git
 
 - [Home](https://github.com/HawAPI)
-- [Website](https://github.com/HawAPI/website)
-- [Data](https://github.com/HawAPI/api-data)
-- [Docs](https://github.com/HawAPI/docs)
+    - [Website](https://github.com/HawAPI/website)
+    - [Data](https://github.com/HawAPI/api-data)
+    - [Docs](https://github.com/HawAPI/docs)
 
 ## Contributing
 

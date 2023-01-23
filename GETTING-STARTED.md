@@ -4,6 +4,7 @@
 - [Prerequisites](#prerequisites)
 - [Docker](#docker)
 - [Setup](#setup)
+    - [Website and Docs](#website-and-docs)
 - [Tests](#tests)
     - [Unit Tests](#unit-tests)
     - [Integration Tests](#integration-tests)
@@ -145,6 +146,29 @@ docker compose -f ./docker/docker-compose.yml start postgres
 make dk-start
 ```
 
+### Website and docs
+
+> **Note** \
+> This is optional and only required to display the website and docs.
+
+- Command
+
+```
+./scripts/build-website.sh --clean-before
+```
+
+- Makefile
+
+```
+make build-website
+```
+
+> To see all options
+>
+>```
+>./scripts/build-website.sh --help
+>```
+
 ### Init the application
 
 - Maven
@@ -161,7 +185,7 @@ make run
 
 ### Make a request
 
-- Maven
+- Command
 
 ```
 curl localhost:8080/api/ping
