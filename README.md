@@ -1,9 +1,23 @@
 <div align="center">
 
-<img src="https://user-images.githubusercontent.com/76869974/213164214-0d304263-3f40-44fb-827d-dcd21bb0f2ae.png"/>
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/76869974/213164214-0d304263-3f40-44fb-827d-dcd21bb0f2ae.png"/>
+</p>
 
-<a href="https://hawapi.theproject.id">
+<p align="center">
+  <a href="https://hawapi.theproject.id">
     <img align="center" alt="Website" src="https://shields.io/badge/WEBSITE-HAWAPI.THEPROJECT.ID-%23290606?style=for-the-badge&labelColor=%23290606">
+  </a>
+</p>
+
+<a href="https://hawapi.theproject.id/docs/">
+  <img align="center" alt="Website" src="https://shields.io/badge/DOCS-%23290606?style=for-the-badge&labelColor=%23290606">
+</a>
+<a href="https://hawapi.theproject.id/docs/sdks/">
+  <img align="center" alt="Website" src="https://shields.io/badge/SDKS-%23290606?style=for-the-badge&labelColor=%23290606">
+</a>
+<a href="https://hawapi.theproject.id/docs/about/">
+  <img align="center" alt="Website" src="https://shields.io/badge/ABOUT-%23290606?style=for-the-badge&labelColor=%23290606">
 </a>
 
 </div>
@@ -38,9 +52,9 @@ via JSON and allows developers to create **desktop**, **web** and **mobile** app
 #### Links
 
 - [Website](https://hawapi.theproject.id)
-    - [Docs](https://hawapi.theproject.id/docs)
-    - [SDK's](https://hawapi.theproject.id/docs/sdks)
-    - [About](https://hawapi.theproject.id/docs/about)
+    - [Docs](https://hawapi.theproject.id/docs/)
+    - [SDK's](https://hawapi.theproject.id/docs/sdks/)
+    - [About](https://hawapi.theproject.id/docs/about/)
 
 #### Git
 
