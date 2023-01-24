@@ -43,9 +43,9 @@ verify: clean ## Verify the spring application
 clean: ## Clear the spring application
 	@./mvnw clean
 
-### Build
+## Build
 
-run-jar:
+run-jar: ## Run the compiled application (target/hawapi-*.jar)
 	@./scripts/run-jar.sh
 
 ## Website
@@ -94,14 +94,14 @@ test-setup: clean ## Setup for tests
 config: ## Show all configuration (Docker, database, etc...)
 	@echo
 	@echo 'Configuration:'
-	@echo '  ${CYAN}Docker:${RESET}'
-	@echo '    ${BLUE}Port: ${DOCKER_PORT} ${RESET}'
-	@echo '    ${BLUE}Path: ${DOCKER_PATH} ${RESET}'
-	@echo '    ${BLUE}Name (Container): ${DOCKER_CONTAINER_NAME} ${RESET}'
-	@echo '  ${CYAN}Database: ${RESET}'
-	@echo '    ${BLUE}Name: ${DB_NAME} ${RESET}'
-	@echo '    ${BLUE}Type: ${DB_TYPE} ${RESET}'
-	@echo '    ${BLUE}Version: ${DB_VERSION} ${RESET}'
+	@echo '  ${BLUE}Docker:${RESET}'
+	@echo '    ${CYAN}Port: ${GREEN}${DOCKER_PORT} ${RESET}'
+	@echo '    ${CYAN}Path: ${GREEN}${DOCKER_PATH} ${RESET}'
+	@echo '    ${CYAN}Name (Container): ${GREEN}${DOCKER_CONTAINER_NAME} ${RESET}'
+	@echo '  ${BLUE}Database: ${RESET}'
+	@echo '    ${CYAN}Name: ${GREEN}${DB_NAME} ${RESET}'
+	@echo '    ${CYAN}Type: ${GREEN}${DB_TYPE} ${RESET}'
+	@echo '    ${CYAN}Version: ${GREEN}${DB_VERSION} ${RESET}'
 	@echo
 
 # https://gist.github.com/thomaspoignant/5b72d579bd5f311904d973652180c705
