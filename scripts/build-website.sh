@@ -69,12 +69,12 @@ echo
 
 ## Check all requisites
 if ! type npm; then
-    echo "${cyan}[$0] ${green}<npm> command not found!"
+    echo "${cyan}[$0] ${red}<npm> command not found!"
     exit 1
 else
     if ! type yarn; then
         ## Yarn is required. Ask to install (GLOBALLY)
-        echo "${cyan}[$0] ${green}<Yarn> command not found!"
+        echo "${cyan}[$0] ${red}<Yarn> command not found!"
         echo "${cyan}[$0] ${green}Install yarn globally? (Y/n)"
         read -n1 -s -r yarn_response
         
@@ -90,7 +90,7 @@ fi
 
 if ! type retype; then
     ## Retype is required. Ask to install (LOCALLY)
-    echo "${cyan}[$0] ${green}<Retype> command not found!"
+    echo "${cyan}[$0] ${red}<Retype> command not found!"
     echo "${cyan}[$0] ${green}Install retype? (Y/n)"
     read -n1 -s -r retype_response
     

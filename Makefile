@@ -43,6 +43,11 @@ verify: clean ## Verify the spring application
 clean: ## Clear the spring application
 	@./mvnw clean
 
+### Build
+
+run-jar:
+	@./scripts/run-jar.sh
+
 ## Website
 
 build-website: ## Build the website
