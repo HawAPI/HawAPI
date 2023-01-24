@@ -192,14 +192,6 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${project.parent.version}</version>
             </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <outputDirectory>${project.basedir}/target/build</outputDirectory>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 

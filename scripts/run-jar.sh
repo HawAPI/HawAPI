@@ -9,6 +9,26 @@ cyan=$(tput setaf 6)
 skip_tests=false
 clean_before=true
 
+function ask_for_build {
+    echo "${cyan}[$0] ${green}Build spring application? (Y/n)"
+    read -n1 -s -r build_response
+
+    if ! echo "$build_response" | grep '^[Yy]\?$'; then
+        exit 1
+    fi
+
+    echo "${cyan}[$0] ${green}Building..."
+
+    if $skip_tests; then
+        ./scripts/build-website.sh --clean-before
+        ./mvnw package -Dmaven.test.skip=true
+    else
+        make build
+    fi
+
+    echo "${cyan}[$0] ${green}Done!"
+}
+
 # Check args
 
 for arg in "$@"
@@ -73,27 +93,17 @@ fi
 
 ## Check if the application is ready to run.
 if ! [ -d "target/" ]; then
-    echo "${cyan}[$0] ${green}Directory 'target/' not found!"
-    echo "${cyan}[$0] ${green}Build spring application? (Y/n)"
-    read -n1 -s -r build_response
+    echo "${cyan}[$0] ${yellow}Directory 'target/' not found!"
+    ask_for_build
+fi
 
-    if ! echo "$build_response" | grep '^[Yy]\?$'; then
-        exit 1
-    fi
-
-    echo "${cyan}[$0] ${green}Building..."
-
-    if $skip_tests; then
-        ./scripts/build-website.sh --clean-before
-        ./mvnw package -Dmaven.test.skip=true
-    else
-        make build
-    fi
-
-    echo "${cyan}[$0] ${green}Done!"
+# Check if the jar file exist.
+if [ 0 == "$(find target/ -name 'hawapi*.jar' | wc -l)" ] ; then
+    echo "${cyan}[$0] ${yellow}Jar file (target/hawapi*.jar) not found!"
+    ask_for_build
 fi
 
 # Run script.
 
 echo "${cyan}[$0] ${green}Running application (jar)...!"
-java -jar -Dspring.profiles.active=prod target/*.jar
+java -jar -Dspring.profiles.active=prod target/hawapi-*.jar
