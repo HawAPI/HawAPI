@@ -26,9 +26,9 @@ via JSON and allows developers to create **desktop**, **web** and **mobile** app
 - [Tests](GETTING-STARTED.md#tests)
     - [Unit Tests](GETTING-STARTED.md#unit-tests)
     - [Integration Tests](GETTING-STARTED.md#integration-tests)
-- Scripts
-    - [Makefile](./Makefile)
-    - [Shell](./scripts)
+- [Scripts](GETTING-STARTED.md#scripts)
+    - [Makefile](GETTING-STARTED.md#makefile)
+    - [Shell/Bash](GETTING-STARTED.md#shellbash)
 
 #### Links
 

@@ -8,6 +8,9 @@
 - [Tests](#tests)
     - [Unit Tests](#unit-tests)
     - [Integration Tests](#integration-tests)
+- [Scripts](#scripts)
+    - [Makefile](#makefile)
+    - [Shell/Bash](#shellbash)
 
 ## Project Structure
 
@@ -257,4 +260,93 @@ To run **Integration** tests
 
 ```
 make test-int
+```
+
+## Scripts
+
+A collection of command line scripts for executing common project commands
+
+### Makefile
+
+```
+make help
+```
+
+```
+Usage:
+  make <target>
+
+Targets:
+  Application
+    run                 Run the spring application
+    test                Run ALL tests of the spring application
+    test-unit           Run ONLY unit tests of the spring application
+    test-int            Run ONLY integration tests of the spring application
+    compile             Compile the spring application
+    build               Build website, test and package the spring application
+    verify              Verify the spring application
+    clean               Clear the spring application
+  Build
+    run-jar             Run the compiled application (target/hawapi-*.jar)
+  Website
+    build-website       Build the website
+    clean-website       Remove '.hawapi/' and 'resources/static/'
+  Docker
+    dk-status           Check the docker container status.
+    dk-run              Build & Run the local docker.
+    dk-start            Start the local docker.
+    dk-stop             Stop the local docker.
+    dk-reset            Stop, Delete, Build and Start the local docker.
+    dk-prune            Delete all docker volumes.
+  Help
+    test-setup          Setup for tests
+    config              Show all configuration (Docker, database, etc...)
+    help                Show this help.
+
+```
+
+### Shell/Bash
+
+#### Build Website
+
+```
+./scripts/build-website.sh --help
+```
+
+```
+Usage: ./scripts/build-website.sh [option...]
+
+   -B, --clean-before           Remove '.hawapi/' directory before building the website
+   -H, --clean-hawapi           Remove '.hawapi/' directory
+   -D, --clean-downloads        Remove '.downloads/' directory
+   -S, --clean-static           Remove 'resources/static/' directory
+   -A, --clean-all              Remove all directories related with website build
+```
+
+#### Clean Website
+
+```
+./scripts/clean-website.sh --help
+```
+
+```
+Usage: ./scripts/clean-website.sh [option...]
+
+   -H, --clean-hawapi           Remove '.hawapi/' directory
+   -D, --clean-downloads        Remove '.downloads/' directory
+   -S, --clean-static           Remove 'resources/static/' directory
+   -A, --clean-all              Remove all directories related with website build
+```
+
+#### Run Jar
+
+```
+./scripts/run-jar.sh --help
+```
+
+```
+Usage: ./scripts/run-jar.sh [option...]
+
+   -S, --skip-tests         Skip tests when building the application
+   -N, --no-clean           Don't remove 'target/' directory before building
 ```
