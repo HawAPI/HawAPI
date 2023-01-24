@@ -3,8 +3,13 @@
 - [Project Structure](#project-structure)
 - [Prerequisites](#prerequisites)
 - [Docker](#docker)
+    - [Usage](#usage)
+    - [Aliases](#aliases)
 - [Setup](#setup)
-    - [Website and Docs](#website-and-docs)
+    - [Clone](#clone)
+    - [Database](#database)
+    - [Website/Docs](#websitedocs)
+    - [Application](#application)
 - [Tests](#tests)
     - [Unit Tests](#unit-tests)
     - [Integration Tests](#integration-tests)
@@ -114,7 +119,7 @@ Step by step of how to run the application.
 
 > See all [Prerequisites](#prerequisites)
 
-### Clone the application
+### Clone
 
 > **Note** \
 > Alternatively, you could [download all files (Zip)](https://github.com/HawAPI/HawAPI/archive/refs/heads/main.zip)
@@ -131,7 +136,7 @@ git clone git@github.com:HawAPI/HawAPI.git
 git clone https://github.com/HawAPI/HawAPI.git
 ```
 
-### Init the database (PostgreSQL)
+### Database
 
 > **Warning** \
 > The application will not run if the database is not active. \
@@ -149,7 +154,7 @@ docker compose -f ./docker/docker-compose.yml start postgres
 make dk-start
 ```
 
-### Website and docs
+### Website/Docs
 
 > **Note** \
 > This is optional and only required to display the website and docs.
@@ -172,7 +177,7 @@ make build-website
 >./scripts/build-website.sh --help
 >```
 
-### Init the application
+### Application
 
 - Maven
 
