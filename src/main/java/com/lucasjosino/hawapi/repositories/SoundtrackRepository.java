@@ -1,11 +1,11 @@
 package com.lucasjosino.hawapi.repositories;
 
 import com.lucasjosino.hawapi.models.SoundtrackModel;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.lucasjosino.hawapi.repositories.base.BaseJpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
 @Repository
-public interface SoundtrackRepository extends JpaRepository<SoundtrackModel, UUID> {
+public interface SoundtrackRepository extends BaseJpaRepository<SoundtrackModel, UUID> {
 }
