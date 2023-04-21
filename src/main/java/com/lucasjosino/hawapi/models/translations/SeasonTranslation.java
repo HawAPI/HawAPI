@@ -34,7 +34,7 @@ public class SeasonTranslation extends BaseTranslation {
     private String[] trailers;
 
     @JsonIgnore
-    @OneToOne(optional = false)
+    @OneToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "season_uuid", nullable = false)
     private SeasonModel season;
 

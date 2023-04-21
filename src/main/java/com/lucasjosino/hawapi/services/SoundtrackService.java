@@ -1,81 +1,95 @@
 package com.lucasjosino.hawapi.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.github.fge.jsonpatch.JsonPatchException;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.filters.SoundtrackFilter;
 import com.lucasjosino.hawapi.models.SoundtrackModel;
+import com.lucasjosino.hawapi.models.dto.SoundtrackDTO;
 import com.lucasjosino.hawapi.properties.OpenAPIProperty;
 import com.lucasjosino.hawapi.repositories.SoundtrackRepository;
+import com.lucasjosino.hawapi.repositories.specification.SpecificationBuilder;
 import com.lucasjosino.hawapi.services.utils.ServiceUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
 public class SoundtrackService {
 
-    private final SoundtrackRepository soundtrackRepository;
+    private final String basePath;
 
     private final ServiceUtils utils;
 
-    private final String basePath;
+    private final ModelMapper modelMapper;
+
+    private final SoundtrackRepository repository;
+
+    private final SpecificationBuilder<SoundtrackModel> spec;
 
     @Autowired
-    public SoundtrackService(SoundtrackRepository soundtrackRepository, ServiceUtils utils, OpenAPIProperty config) {
-        this.soundtrackRepository = soundtrackRepository;
+    public SoundtrackService(SoundtrackRepository repository, ServiceUtils utils, OpenAPIProperty config, ModelMapper modelMapper) {
         this.utils = utils;
+        this.repository = repository;
+        this.modelMapper = modelMapper;
+        this.spec = new SpecificationBuilder<>();
         this.basePath = config.getApiBaseUrl() + "/soundtracks";
     }
 
     @Transactional
-    public List<SoundtrackModel> findAll(SoundtrackFilter filter) {
-        Example<SoundtrackModel> filteredModel = utils.filter(filter, SoundtrackModel.class);
-        Sort sort = utils.buildSort(filter);
-
-        if (sort == null) return soundtrackRepository.findAll(filteredModel);
-
-        return soundtrackRepository.findAll(filteredModel, sort);
+    public Page<UUID> findAllUUIDs(Pageable pageable) {
+        List<UUID> res = repository.findAllUUIDs(pageable);
+        long count = repository.count();
+        return PageableExecutionUtils.getPage(res, pageable, () -> count);
     }
 
     @Transactional
-    public SoundtrackModel findByUUID(UUID uuid) {
-        Optional<SoundtrackModel> res = soundtrackRepository.findById(uuid);
-
-        if (res.isPresent()) return res.get();
-
-        throw new ItemNotFoundException(SoundtrackModel.class);
+    public List<SoundtrackDTO> findAll(Map<String, String> filters, List<UUID> uuids) {
+        List<SoundtrackModel> res = repository.findAll(spec.with(filters, SoundtrackFilter.class, uuids));
+        return Arrays.asList(modelMapper.map(res, SoundtrackDTO[].class));
     }
 
     @Transactional
-    public SoundtrackModel save(SoundtrackModel soundtrack) {
-        UUID soundUUID = UUID.randomUUID();
-        soundtrack.setUuid(soundUUID);
-        soundtrack.setHref(basePath + "/" + soundUUID);
-        return soundtrackRepository.save(soundtrack);
+    public SoundtrackDTO findBy(UUID uuid) {
+        SoundtrackModel res = repository.findById(uuid).orElseThrow(ItemNotFoundException::new);
+        return modelMapper.map(res, SoundtrackDTO.class);
     }
 
     @Transactional
-    public void patch(UUID uuid, JsonNode patch) throws JsonPatchException, JsonProcessingException {
-        SoundtrackModel season = soundtrackRepository.findById(uuid).orElseThrow(ItemNotFoundException::new);
+    public SoundtrackDTO save(SoundtrackDTO dto) {
+        UUID uuid = UUID.randomUUID();
+        dto.setUuid(uuid);
+        dto.setHref(basePath + "/" + uuid);
 
-        SoundtrackModel patchedSoundtrack = utils.mergePatch(season, patch, SoundtrackModel.class);
+        SoundtrackModel dtoToModel = modelMapper.map(dto, SoundtrackModel.class);
+        SoundtrackModel res = repository.save(dtoToModel);
 
-        patchedSoundtrack.setUuid(uuid);
-        soundtrackRepository.save(patchedSoundtrack);
+        return modelMapper.map(res, SoundtrackDTO.class);
+    }
+
+    @Transactional
+    public void patch(UUID uuid, SoundtrackDTO patch) throws IOException {
+        SoundtrackModel dbRes = repository.findById(uuid).orElseThrow(ItemNotFoundException::new);
+
+        SoundtrackModel dtoToModel = modelMapper.map(dbRes, SoundtrackModel.class);
+        SoundtrackModel patchedModel = utils.merge(dtoToModel, patch);
+
+        patchedModel.setUuid(uuid);
+        repository.save(patchedModel);
     }
 
     @Transactional
     public void delete(UUID uuid) {
-        if (!soundtrackRepository.existsById(uuid)) throw new ItemNotFoundException();
+        if (!repository.existsById(uuid)) throw new ItemNotFoundException();
 
-        soundtrackRepository.deleteById(uuid);
+        repository.deleteById(uuid);
     }
 }

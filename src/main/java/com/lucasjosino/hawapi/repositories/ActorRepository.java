@@ -10,33 +10,29 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository
+@SuppressWarnings("NullableProblems")
 public interface ActorRepository extends BaseJpaRepository<ActorModel, UUID> {
 
     @Override
-    @EntityGraph(attributePaths = {"translation", "socials"})
+    @EntityGraph(attributePaths = {"socials"})
     List<ActorModel> findAll();
 
     @Override
-    @EntityGraph(attributePaths = {"translation", "socials"})
+    @EntityGraph(attributePaths = {"socials"})
     List<ActorModel> findAllById(Iterable<UUID> ys);
 
     @Override
-    @EntityGraph(attributePaths = {"translation", "socials"})
+    @EntityGraph(attributePaths = {"socials"})
     List<ActorModel> findAll(Specification<ActorModel> spec);
 
     @Override
-    @EntityGraph(attributePaths = {"translation", "socials"})
+    @EntityGraph(attributePaths = {"socials"})
     List<ActorModel> findAll(Specification<ActorModel> spec, Sort sort);
 
     @Override
-    @EntityGraph(attributePaths = {"translation", "socials"})
+    @EntityGraph(attributePaths = {"socials"})
     Page<ActorModel> findAll(Specification<ActorModel> spec, Pageable pageable);
-
-    @Override
-    @EntityGraph(attributePaths = {"translation", "socials"})
-    Optional<ActorModel> findByUuidAndTranslationLanguage(UUID uuid, String language);
 }

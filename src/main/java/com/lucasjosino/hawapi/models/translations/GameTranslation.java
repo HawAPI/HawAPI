@@ -28,7 +28,7 @@ public class GameTranslation extends BaseTranslation {
     private String trailer;
 
     @JsonIgnore
-    @OneToOne(optional = false)
+    @OneToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "game_uuid", nullable = false)
     private GameModel game;
 

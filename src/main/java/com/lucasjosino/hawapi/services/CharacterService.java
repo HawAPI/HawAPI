@@ -1,85 +1,100 @@
 package com.lucasjosino.hawapi.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.github.fge.jsonpatch.JsonPatchException;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.filters.CharacterFilter;
 import com.lucasjosino.hawapi.models.CharacterModel;
+import com.lucasjosino.hawapi.models.dto.CharacterDTO;
 import com.lucasjosino.hawapi.properties.OpenAPIProperty;
 import com.lucasjosino.hawapi.repositories.CharacterRepository;
+import com.lucasjosino.hawapi.repositories.specification.SpecificationBuilder;
 import com.lucasjosino.hawapi.services.utils.ServiceUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
 public class CharacterService {
 
-    private final CharacterRepository characterRepository;
+    private final String basePath;
 
     private final ServiceUtils utils;
 
-    private final String basePath;
+    private final ModelMapper modelMapper;
+
+    private final CharacterRepository repository;
+
+    private final SpecificationBuilder<CharacterModel> spec;
 
     @Autowired
     public CharacterService(
-            CharacterRepository characterRepository,
             ServiceUtils utils,
-            OpenAPIProperty config
+            OpenAPIProperty config,
+            ModelMapper modelMapper,
+            CharacterRepository repository
     ) {
-        this.characterRepository = characterRepository;
         this.utils = utils;
+        this.repository = repository;
+        this.modelMapper = modelMapper;
+        this.spec = new SpecificationBuilder<>();
         this.basePath = config.getApiBaseUrl() + "/characters";
     }
 
     @Transactional
-    public List<CharacterModel> findAll(CharacterFilter filter) {
-        Example<CharacterModel> filteredModel = utils.filter(filter, CharacterModel.class);
-        Sort sort = utils.buildSort(filter);
-
-        if (sort == null) return characterRepository.findAll(filteredModel);
-
-        return characterRepository.findAll(filteredModel, sort);
+    public Page<UUID> findAllUUIDs(Pageable pageable) {
+        List<UUID> res = repository.findAllUUIDs(pageable);
+        long count = repository.count();
+        return PageableExecutionUtils.getPage(res, pageable, () -> count);
     }
 
     @Transactional
-    public CharacterModel findByUUID(UUID uuid) {
-        Optional<CharacterModel> res = characterRepository.findById(uuid);
-
-        if (res.isPresent()) return res.get();
-
-        throw new ItemNotFoundException(CharacterModel.class);
+    public List<CharacterDTO> findAll(Map<String, String> filters, List<UUID> uuids) {
+        List<CharacterModel> res = repository.findAll(spec.with(filters, CharacterFilter.class, uuids));
+        return Arrays.asList(modelMapper.map(res, CharacterDTO[].class));
     }
 
     @Transactional
-    public CharacterModel save(CharacterModel character) {
-        UUID characterUUID = UUID.randomUUID();
-        character.setUuid(characterUUID);
-        character.setHref(basePath + "/" + characterUUID);
-        return characterRepository.save(character);
+    public CharacterDTO findBy(UUID uuid) {
+        CharacterModel res = repository.findById(uuid).orElseThrow(ItemNotFoundException::new);
+        return modelMapper.map(res, CharacterDTO.class);
     }
 
     @Transactional
-    public void patch(UUID uuid, JsonNode patch) throws JsonPatchException, JsonProcessingException {
-        CharacterModel character = characterRepository.findById(uuid).orElseThrow(ItemNotFoundException::new);
+    public CharacterDTO save(CharacterDTO dto) {
+        UUID uuid = UUID.randomUUID();
+        dto.setUuid(uuid);
+        dto.setHref(basePath + "/" + uuid);
 
-        CharacterModel patchedCharacter = utils.mergePatch(character, patch, CharacterModel.class);
+        CharacterModel dtoToModel = modelMapper.map(dto, CharacterModel.class);
+        CharacterModel res = repository.save(dtoToModel);
 
-        patchedCharacter.setUuid(uuid);
-        characterRepository.save(patchedCharacter);
+        return modelMapper.map(res, CharacterDTO.class);
+    }
+
+    @Transactional
+    public void patch(UUID uuid, CharacterDTO patch) throws IOException {
+        CharacterModel dbRes = repository.findById(uuid).orElseThrow(ItemNotFoundException::new);
+
+        CharacterModel dtoToModel = modelMapper.map(dbRes, CharacterModel.class);
+        CharacterModel patchedModel = utils.merge(dtoToModel, patch);
+
+        patchedModel.setUuid(uuid);
+        repository.save(patchedModel);
     }
 
     @Transactional
     public void delete(UUID uuid) {
-        if (!characterRepository.existsById(uuid)) throw new ItemNotFoundException();
+        if (!repository.existsById(uuid)) throw new ItemNotFoundException();
 
-        characterRepository.deleteById(uuid);
+        repository.deleteById(uuid);
     }
 }

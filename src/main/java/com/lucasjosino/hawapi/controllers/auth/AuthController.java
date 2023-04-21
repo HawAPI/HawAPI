@@ -1,6 +1,7 @@
 package com.lucasjosino.hawapi.controllers.auth;
 
 import com.lucasjosino.hawapi.exceptions.auth.UserUnauthorizedException;
+import com.lucasjosino.hawapi.models.dto.auth.UserDTO;
 import com.lucasjosino.hawapi.models.user.UserAuthenticationModel;
 import com.lucasjosino.hawapi.models.user.UserModel;
 import com.lucasjosino.hawapi.services.auth.AuthService;
@@ -26,7 +27,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserModel> register(@RequestBody UserModel user) {
+    public ResponseEntity<UserDTO> register(@RequestBody UserModel user) {
         if (registrationIsEnable) {
             return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(user));
         }
@@ -35,7 +36,7 @@ public class AuthController {
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<UserModel> authenticate(@RequestBody UserAuthenticationModel userAuth) {
+    public ResponseEntity<UserDTO> authenticate(@RequestBody UserAuthenticationModel userAuth) {
         return ResponseEntity.ok(authService.authenticate(userAuth));
     }
 

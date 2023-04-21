@@ -25,7 +25,7 @@ public class EpisodeTranslation extends BaseTranslation {
     private String description;
 
     @JsonIgnore
-    @OneToOne(optional = false)
+    @OneToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "episode_uuid", nullable = false)
     private EpisodeModel episode;
 

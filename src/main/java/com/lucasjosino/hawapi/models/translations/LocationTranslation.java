@@ -25,7 +25,7 @@ public class LocationTranslation extends BaseTranslation {
     private String description;
 
     @JsonIgnore
-    @OneToOne(optional = false)
+    @OneToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "location_uuid", nullable = false)
     private LocationModel location;
 

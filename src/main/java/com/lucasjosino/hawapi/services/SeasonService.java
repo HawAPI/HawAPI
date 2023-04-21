@@ -1,81 +1,156 @@
 package com.lucasjosino.hawapi.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.github.fge.jsonpatch.JsonPatchException;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
+import com.lucasjosino.hawapi.exceptions.SaveConflictException;
 import com.lucasjosino.hawapi.filters.SeasonFilter;
 import com.lucasjosino.hawapi.models.SeasonModel;
+import com.lucasjosino.hawapi.models.dto.SeasonDTO;
+import com.lucasjosino.hawapi.models.dto.translation.SeasonTranslationDTO;
+import com.lucasjosino.hawapi.models.translations.SeasonTranslation;
 import com.lucasjosino.hawapi.properties.OpenAPIProperty;
 import com.lucasjosino.hawapi.repositories.SeasonRepository;
+import com.lucasjosino.hawapi.repositories.specification.SpecificationBuilder;
+import com.lucasjosino.hawapi.repositories.translation.SeasonTranslationRepository;
 import com.lucasjosino.hawapi.services.utils.ServiceUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
 public class SeasonService {
 
-    private final SeasonRepository seasonRepository;
+    private final String basePath;
 
     private final ServiceUtils utils;
 
-    private final String basePath;
+    private final ModelMapper modelMapper;
+
+    private final SeasonRepository repository;
+
+    private final SpecificationBuilder<SeasonModel> spec;
+
+    private final SeasonTranslationRepository translationRepository;
 
     @Autowired
-    public SeasonService(SeasonRepository seasonRepository, ServiceUtils utils, OpenAPIProperty config) {
-        this.seasonRepository = seasonRepository;
+    public SeasonService(
+            SeasonRepository repository,
+            ServiceUtils utils,
+            OpenAPIProperty config,
+            ModelMapper modelMapper,
+            SeasonTranslationRepository translationRepository
+    ) {
         this.utils = utils;
+        this.repository = repository;
+        this.modelMapper = modelMapper;
+        this.spec = new SpecificationBuilder<>();
+        this.translationRepository = translationRepository;
         this.basePath = config.getApiBaseUrl() + "/seasons";
     }
 
     @Transactional
-    public List<SeasonModel> findAll(SeasonFilter filter) {
-        Example<SeasonModel> filteredModel = utils.filter(filter, SeasonModel.class);
-        Sort sort = utils.buildSort(filter);
-
-        if (sort == null) return seasonRepository.findAll(filteredModel);
-
-        return seasonRepository.findAll(filteredModel, sort);
+    public Page<UUID> findAllUUIDs(Pageable pageable) {
+        List<UUID> res = repository.findAllUUIDs(pageable);
+        long count = repository.count();
+        return PageableExecutionUtils.getPage(res, pageable, () -> count);
     }
 
     @Transactional
-    public SeasonModel findByUUID(UUID uuid) {
-        Optional<SeasonModel> res = seasonRepository.findById(uuid);
-
-        if (res.isPresent()) return res.get();
-
-        throw new ItemNotFoundException(SeasonModel.class);
+    public List<SeasonDTO> findAll(Map<String, String> filters, List<UUID> uuids) {
+        List<SeasonModel> res = repository.findAll(spec.with(filters, SeasonFilter.class, uuids));
+        return Arrays.asList(modelMapper.map(res, SeasonDTO[].class));
     }
 
     @Transactional
-    public SeasonModel save(SeasonModel season) {
-        UUID seasonUUID = UUID.randomUUID();
-        season.setUuid(seasonUUID);
-        season.setHref(basePath + "/" + seasonUUID);
-        return seasonRepository.save(season);
+    public List<SeasonTranslationDTO> findAllTranslations() {
+        List<SeasonTranslation> res = translationRepository.findAll();
+        return Arrays.asList(modelMapper.map(res, SeasonTranslationDTO[].class));
     }
 
     @Transactional
-    public void patch(UUID uuid, JsonNode patch) throws JsonPatchException, JsonProcessingException {
-        SeasonModel season = seasonRepository.findById(uuid).orElseThrow(ItemNotFoundException::new);
+    public SeasonDTO findBy(UUID uuid, String language) {
+        SeasonModel res = repository
+                .findByUuidAndTranslationLanguage(uuid, language)
+                .orElseThrow(ItemNotFoundException::new);
+        return modelMapper.map(res, SeasonDTO.class);
+    }
 
-        SeasonModel patchedLocation = utils.mergePatch(season, patch, SeasonModel.class);
+    @Transactional
+    public SeasonTranslationDTO findTranslationBy(UUID uuid, String language) {
+        SeasonTranslation res = translationRepository
+                .findBySeasonUuidAndLanguage(uuid, language)
+                .orElseThrow(ItemNotFoundException::new);
+        return modelMapper.map(res, SeasonTranslationDTO.class);
+    }
 
-        patchedLocation.setUuid(uuid);
-        seasonRepository.save(patchedLocation);
+    @Transactional
+    public SeasonDTO save(SeasonDTO dto) {
+        UUID uuid = UUID.randomUUID();
+        dto.setUuid(uuid);
+        dto.setHref(basePath + "/" + uuid);
+
+        SeasonModel dtoToModel = modelMapper.map(dto, SeasonModel.class);
+        SeasonModel res = repository.save(dtoToModel);
+
+        return modelMapper.map(res, SeasonDTO.class);
+    }
+
+    @Transactional
+    public SeasonTranslationDTO saveTranslation(UUID uuid, SeasonTranslation translation) {
+        if (translationRepository.existsBySeasonUuidAndLanguage(uuid, translation.getLanguage())) {
+            throw new SaveConflictException("Language '" + translation.getLanguage() + "' already exist!");
+        }
+
+        translation.setSeasonUuid(uuid);
+        SeasonTranslation res = translationRepository.save(translation);
+
+        return modelMapper.map(res, SeasonTranslationDTO.class);
+    }
+
+    @Transactional
+    public void patch(UUID uuid, SeasonDTO patch) throws IOException {
+        SeasonModel dbRes = repository.findById(uuid).orElseThrow(ItemNotFoundException::new);
+
+        SeasonModel dtoToModel = modelMapper.map(dbRes, SeasonModel.class);
+        SeasonModel patchedModel = utils.merge(dtoToModel, patch);
+
+        patchedModel.setUuid(uuid);
+        repository.save(patchedModel);
+    }
+
+    @Transactional
+    public void patchTranslation(UUID uuid, String language, SeasonTranslationDTO patch) throws IOException {
+        SeasonTranslation translation = translationRepository.findBySeasonUuidAndLanguage(uuid, language)
+                .orElseThrow(ItemNotFoundException::new);
+
+        SeasonTranslation patchedTranslation = utils.merge(translation, patch);
+        patchedTranslation.setSeasonUuid(uuid);
+
+        translationRepository.save(patchedTranslation);
     }
 
     @Transactional
     public void delete(UUID uuid) {
-        if (!seasonRepository.existsById(uuid)) throw new ItemNotFoundException();
+        if (!repository.existsById(uuid)) throw new ItemNotFoundException();
 
-        seasonRepository.deleteById(uuid);
+        repository.deleteById(uuid);
+    }
+
+    @Transactional
+    public void deleteTranslation(UUID uuid, String language) {
+        if (!translationRepository.existsBySeasonUuidAndLanguage(uuid, language)) {
+            throw new ItemNotFoundException();
+        }
+
+        translationRepository.deleteBySeasonUuidAndLanguage(uuid, language);
     }
 }
