@@ -7,18 +7,18 @@ import javax.validation.constraints.NotNull;
 @NotEmpty
 public class UserAuthenticationModel {
 
-    private String nickname;
+    private String username;
 
     private String email;
 
     private String password;
 
     public String getNickname() {
-        return nickname;
+        return username;
     }
 
     public void setNickname(String nickname) {
-        this.nickname = nickname;
+        this.username = nickname;
     }
 
     public String getEmail() {
