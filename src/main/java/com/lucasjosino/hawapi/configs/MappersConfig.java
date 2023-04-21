@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.modelmapper.convention.NameTokenizers;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,6 +33,7 @@ public class MappersConfig {
                 .setSkipNullEnabled(true)
                 .setPropertyCondition(Conditions.isNotNull())
                 .setDestinationNameTokenizer(NameTokenizers.UNDERSCORE)
+                .setMatchingStrategy(MatchingStrategies.LOOSE)
                 .setSourceNameTokenizer(NameTokenizers.UNDERSCORE);
         return modelMapper;
     }
