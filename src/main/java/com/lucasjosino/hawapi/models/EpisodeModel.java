@@ -12,12 +12,6 @@ import javax.persistence.*;
 public class EpisodeModel extends BaseModel {
 
     @Column(nullable = false)
-    private String title;
-
-    @Column(nullable = false)
-    private String description;
-
-    @Column(nullable = false)
     private Integer duration;
 
     @JsonProperty("episode_num")
@@ -44,22 +38,6 @@ public class EpisodeModel extends BaseModel {
 
     @OneToOne(mappedBy = "episode", cascade = CascadeType.ALL)
     private EpisodeTranslation translation;
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
     public Integer getDuration() {
         return duration;

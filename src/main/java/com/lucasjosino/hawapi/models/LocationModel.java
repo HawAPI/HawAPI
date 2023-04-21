@@ -11,10 +11,10 @@ import javax.persistence.*;
 public class LocationModel extends BaseModel {
 
     @Column(nullable = false)
-    private String name;
+    private transient String name;
 
     @Column(nullable = false)
-    private String description;
+    private transient String description;
 
     @Type(type = "string-array")
     @Column(columnDefinition = "text[]")

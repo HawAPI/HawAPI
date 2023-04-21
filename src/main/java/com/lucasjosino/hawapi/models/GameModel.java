@@ -12,7 +12,7 @@ import java.time.LocalDate;
 public class GameModel extends BaseModel {
 
     @Column(nullable = false)
-    private String name;
+    private transient String name;
 
     @Type(type = "string-array")
     @Column(columnDefinition = "varchar[]")
@@ -37,7 +37,7 @@ public class GameModel extends BaseModel {
     private String url;
 
     @Column(nullable = false)
-    private String trailer;
+    private transient String trailer;
 
     @Column
     private String thumbnail;

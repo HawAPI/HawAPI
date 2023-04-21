@@ -13,10 +13,10 @@ import java.time.LocalDate;
 public class SeasonModel extends BaseModel {
 
     @Column(nullable = false)
-    private String title;
+    private transient String title;
 
     @Column(nullable = false)
-    private String description;
+    private transient String description;
 
     @JsonProperty("duration_total")
     @Column(nullable = false, name = "duration_total")
@@ -24,7 +24,7 @@ public class SeasonModel extends BaseModel {
 
     @Type(type = "string-array")
     @Column(columnDefinition = "varchar[]")
-    private String[] genres;
+    private transient String[] genres;
 
     @JsonProperty("season_num")
     @Column(nullable = false, name = "season_num")
@@ -52,7 +52,7 @@ public class SeasonModel extends BaseModel {
 
     @Type(type = "string-array")
     @Column(columnDefinition = "text[]")
-    private String[] trailers;
+    private transient String[] trailers;
 
     @Column
     private Integer budget;

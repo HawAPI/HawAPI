@@ -13,12 +13,12 @@ public class UserAuthenticationModel {
 
     private String password;
 
-    public String getNickname() {
+    public String getUsername() {
         return username;
     }
 
-    public void setNickname(String nickname) {
-        this.username = nickname;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getEmail() {
