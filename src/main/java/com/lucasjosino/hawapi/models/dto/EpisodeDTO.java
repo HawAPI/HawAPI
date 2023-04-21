@@ -1,49 +1,28 @@
-package com.lucasjosino.hawapi.models;
+package com.lucasjosino.hawapi.models.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.lucasjosino.hawapi.models.base.BaseModel;
-import com.lucasjosino.hawapi.models.translations.EpisodeTranslation;
-import org.hibernate.annotations.Type;
+import com.lucasjosino.hawapi.models.base.BaseDTO;
 
-import javax.persistence.*;
+public class EpisodeDTO extends BaseDTO {
 
-@Entity
-@Table(name = "episodes")
-public class EpisodeModel extends BaseModel {
-
-    @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
     private String description;
 
-    @Column(nullable = false)
+    private String language;
+
     private Integer duration;
 
-    @JsonProperty("episode_num")
-    @Column(nullable = false, name = "episode_num")
     private Byte episodeNum;
 
-    @JsonProperty("next_episode")
-    @Column(name = "next_episode")
     private String nextEpisode;
 
-    @JsonProperty("prev_episode")
-    @Column(name = "prev_episode")
     private String prevEpisode;
 
-    @Column(nullable = false)
     private String season;
 
-    @Type(type = "string-array")
-    @Column(columnDefinition = "text[]")
     private String[] images;
 
-    @Column
     private String thumbnail;
-
-    @OneToOne(mappedBy = "episode", cascade = CascadeType.ALL)
-    private EpisodeTranslation translation;
 
     public String getTitle() {
         return title;
@@ -59,6 +38,14 @@ public class EpisodeModel extends BaseModel {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
     public Integer getDuration() {
@@ -115,13 +102,5 @@ public class EpisodeModel extends BaseModel {
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
-    }
-
-    public EpisodeTranslation getTranslation() {
-        return translation;
-    }
-
-    public void setTranslation(EpisodeTranslation translation) {
-        this.translation = translation;
     }
 }

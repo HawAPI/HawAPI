@@ -1,71 +1,38 @@
-package com.lucasjosino.hawapi.models;
+package com.lucasjosino.hawapi.models.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.lucasjosino.hawapi.models.base.BaseModel;
-import com.lucasjosino.hawapi.models.translations.SeasonTranslation;
-import org.hibernate.annotations.Type;
+import com.lucasjosino.hawapi.models.base.BaseDTO;
 
-import javax.persistence.*;
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "seasons")
-public class SeasonModel extends BaseModel {
+public class SeasonDTO extends BaseDTO {
 
-    @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
     private String description;
 
-    @JsonProperty("duration_total")
-    @Column(nullable = false, name = "duration_total")
     private Integer durationTotal;
 
-    @Type(type = "string-array")
-    @Column(columnDefinition = "varchar[]")
     private String[] genres;
 
-    @JsonProperty("season_num")
-    @Column(nullable = false, name = "season_num")
     private Byte seasonNum;
 
-    @JsonProperty("release_date")
-    @Column(nullable = false, name = "release_date")
     private LocalDate releaseDate;
 
-    @JsonProperty("next_season")
-    @Column(name = "next_season")
     private String nextSeason;
 
-    @JsonProperty("prev_season")
-    @Column(name = "prev_season")
     private String prevSeason;
 
-    @Type(type = "string-array")
-    @Column(columnDefinition = "varchar[]")
     private String[] episodes;
 
-    @Type(type = "string-array")
-    @Column(columnDefinition = "varchar[]")
     private String[] soundtracks;
 
-    @Type(type = "string-array")
-    @Column(columnDefinition = "text[]")
     private String[] trailers;
 
-    @Column
     private Integer budget;
 
-    @Type(type = "string-array")
-    @Column(columnDefinition = "text[]")
     private String[] images;
 
-    @Column
     private String thumbnail;
-
-    @OneToOne(mappedBy = "season", cascade = CascadeType.ALL)
-    private SeasonTranslation translation;
 
     public String getTitle() {
         return title;
@@ -177,13 +144,5 @@ public class SeasonModel extends BaseModel {
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
-    }
-
-    public SeasonTranslation getTranslation() {
-        return translation;
-    }
-
-    public void setTranslation(SeasonTranslation translation) {
-        this.translation = translation;
     }
 }

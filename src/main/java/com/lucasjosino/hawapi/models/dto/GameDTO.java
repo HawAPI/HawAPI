@@ -1,49 +1,30 @@
-package com.lucasjosino.hawapi.models;
+package com.lucasjosino.hawapi.models.dto;
 
-import com.lucasjosino.hawapi.models.base.BaseModel;
-import com.lucasjosino.hawapi.models.translations.GameTranslation;
-import org.hibernate.annotations.Type;
+import com.lucasjosino.hawapi.models.base.BaseDTO;
 
-import javax.persistence.*;
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "games")
-public class GameModel extends BaseModel {
+public class GameDTO extends BaseDTO {
 
-    @Column(nullable = false)
     private String name;
 
-    @Type(type = "string-array")
-    @Column(columnDefinition = "varchar[]")
+    private String description;
+
     private String[] platforms;
 
-    @Type(type = "string-array")
-    @Column(columnDefinition = "varchar[]")
     private String[] genres;
 
-    @Type(type = "string-array")
-    @Column(columnDefinition = "varchar[]")
     private String[] publishers;
 
-    @Type(type = "string-array")
-    @Column(columnDefinition = "varchar[]")
     private String[] developers;
 
-    @Column(nullable = false, name = "release_date")
     private LocalDate releaseDate;
 
-    @Column(nullable = false)
     private String url;
 
-    @Column(nullable = false)
     private String trailer;
 
-    @Column
     private String thumbnail;
-
-    @OneToOne(mappedBy = "game", cascade = CascadeType.ALL)
-    private GameTranslation translation;
 
     public String getName() {
         return name;
@@ -51,6 +32,14 @@ public class GameModel extends BaseModel {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String[] getPlatforms() {
@@ -115,13 +104,5 @@ public class GameModel extends BaseModel {
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
-    }
-
-    public GameTranslation getTranslation() {
-        return translation;
-    }
-
-    public void setTranslation(GameTranslation translation) {
-        this.translation = translation;
     }
 }

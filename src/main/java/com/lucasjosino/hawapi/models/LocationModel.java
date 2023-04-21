@@ -1,11 +1,10 @@
 package com.lucasjosino.hawapi.models;
 
 import com.lucasjosino.hawapi.models.base.BaseModel;
+import com.lucasjosino.hawapi.models.translations.LocationTranslation;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "locations")
@@ -23,6 +22,9 @@ public class LocationModel extends BaseModel {
 
     @Column
     private String thumbnail;
+
+    @OneToOne(mappedBy = "location", cascade = CascadeType.ALL)
+    private LocationTranslation translation;
 
     public String getName() {
         return name;
@@ -54,5 +56,13 @@ public class LocationModel extends BaseModel {
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    public LocationTranslation getTranslation() {
+        return translation;
+    }
+
+    public void setTranslation(LocationTranslation translation) {
+        this.translation = translation;
     }
 }
