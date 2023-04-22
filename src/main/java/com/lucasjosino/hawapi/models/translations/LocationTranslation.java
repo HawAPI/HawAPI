@@ -15,7 +15,7 @@ import java.util.UUID;
 public class LocationTranslation extends BaseTranslation {
 
     @JsonProperty("location_uuid")
-    @Column(name = "location_uuid", insertable = false, updatable = false)
+    @Column(name = "location_uuid")
     private UUID locationUuid;
 
     @Column
@@ -26,7 +26,7 @@ public class LocationTranslation extends BaseTranslation {
 
     @JsonIgnore
     @OneToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "location_uuid", nullable = false)
+    @JoinColumn(name = "location_uuid", insertable = false, updatable = false)
     private LocationModel location;
 
     public UUID getLocationUuid() {

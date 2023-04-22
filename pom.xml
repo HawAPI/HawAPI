@@ -167,22 +167,7 @@
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
-                <filtering>false</filtering>
-                <includes>
-                    <include>static/fonts/**</include>
-                    <include>static/docs/resources/fonts/**</include>
-                    <include>**/*.properties</include>
-                </includes>
-            </resource>
-
-            <resource>
-                <directory>src/main/resources</directory>
                 <filtering>true</filtering>
-                <excludes>
-                    <exclude>static/fonts/**</exclude>
-                    <exclude>static/docs/resources/fonts/**</exclude>
-                    <exclude>**/*.properties</exclude>
-                </excludes>
             </resource>
         </resources>
 

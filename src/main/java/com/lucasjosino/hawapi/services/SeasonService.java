@@ -99,6 +99,8 @@ public class SeasonService {
         dto.setHref(basePath + "/" + uuid);
 
         SeasonModel dtoToModel = modelMapper.map(dto, SeasonModel.class);
+        dtoToModel.getTranslation().setSeasonUuid(uuid);
+
         SeasonModel res = repository.save(dtoToModel);
 
         return modelMapper.map(res, SeasonDTO.class);

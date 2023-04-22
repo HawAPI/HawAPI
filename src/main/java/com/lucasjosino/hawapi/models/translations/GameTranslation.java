@@ -15,7 +15,7 @@ import java.util.UUID;
 public class GameTranslation extends BaseTranslation {
 
     @JsonProperty("game_uuid")
-    @Column(name = "game_uuid", insertable = false, updatable = false)
+    @Column(name = "game_uuid")
     private UUID gameUuid;
 
     @Column
@@ -29,7 +29,7 @@ public class GameTranslation extends BaseTranslation {
 
     @JsonIgnore
     @OneToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "game_uuid", nullable = false)
+    @JoinColumn(name = "game_uuid", insertable = false, updatable = false)
     private GameModel game;
 
     public UUID getGameUuid() {

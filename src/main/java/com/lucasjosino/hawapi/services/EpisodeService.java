@@ -99,6 +99,8 @@ public class EpisodeService {
         dto.setHref(basePath + "/" + uuid);
 
         EpisodeModel dtoToModel = modelMapper.map(dto, EpisodeModel.class);
+        dtoToModel.getTranslation().setEpisodeUuid(uuid);
+
         EpisodeModel res = repository.save(dtoToModel);
 
         return modelMapper.map(res, EpisodeDTO.class);

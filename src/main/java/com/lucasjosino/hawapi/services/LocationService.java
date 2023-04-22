@@ -99,6 +99,8 @@ public class LocationService {
         dto.setHref(basePath + "/" + uuid);
 
         LocationModel dtoToModel = modelMapper.map(dto, LocationModel.class);
+        dtoToModel.getTranslation().setLocationUuid(uuid);
+
         LocationModel res = repository.save(dtoToModel);
 
         return modelMapper.map(res, LocationDTO.class);

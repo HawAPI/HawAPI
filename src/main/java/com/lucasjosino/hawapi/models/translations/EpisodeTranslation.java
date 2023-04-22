@@ -15,7 +15,7 @@ import java.util.UUID;
 public class EpisodeTranslation extends BaseTranslation {
 
     @JsonProperty("episode_uuid")
-    @Column(name = "episode_uuid", insertable = false, updatable = false)
+    @Column(name = "episode_uuid")
     private UUID episodeUuid;
 
     @Column
@@ -26,7 +26,7 @@ public class EpisodeTranslation extends BaseTranslation {
 
     @JsonIgnore
     @OneToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "episode_uuid", nullable = false)
+    @JoinColumn(name = "episode_uuid", insertable = false, updatable = false)
     private EpisodeModel episode;
 
     public EpisodeModel getEpisode() {

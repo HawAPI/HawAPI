@@ -99,6 +99,8 @@ public class GameService {
         dto.setHref(basePath + "/" + uuid);
 
         GameModel dtoToModel = modelMapper.map(dto, GameModel.class);
+        dtoToModel.getTranslation().setGameUuid(uuid);
+
         GameModel res = repository.save(dtoToModel);
 
         return modelMapper.map(res, GameDTO.class);

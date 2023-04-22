@@ -16,7 +16,7 @@ import java.util.UUID;
 public class SeasonTranslation extends BaseTranslation {
 
     @JsonProperty("season_uuid")
-    @Column(name = "season_uuid", insertable = false, updatable = false)
+    @Column(name = "season_uuid")
     private UUID seasonUuid;
 
     @Column
@@ -35,7 +35,7 @@ public class SeasonTranslation extends BaseTranslation {
 
     @JsonIgnore
     @OneToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "season_uuid", nullable = false)
+    @JoinColumn(name = "season_uuid", insertable = false, updatable = false)
     private SeasonModel season;
 
     public UUID getSeasonUuid() {
