@@ -117,7 +117,7 @@ CREATE TABLE IF NOT EXISTS episodes (
 CREATE TABLE IF NOT EXISTS episodes_translations (
     id              INTEGER PRIMARY KEY UNIQUE GENERATED ALWAYS AS IDENTITY,
     episode_uuid    UUID NOT NULL,
-    language        VARCHAR(5) NOT NULL DEFAULT 'en-US',
+    language        VARCHAR(5) NOT NULL UNIQUE DEFAULT 'en-US',
     title           VARCHAR(255) NOT NULL,
     description     TEXT NOT NULL,
     CONSTRAINT fk_episode_uuid
@@ -152,7 +152,7 @@ CREATE TABLE IF NOT EXISTS seasons (
 CREATE TABLE IF NOT EXISTS seasons_translations (
     id              INTEGER PRIMARY KEY UNIQUE GENERATED ALWAYS AS IDENTITY,
     season_uuid     UUID NOT NULL,
-    language        VARCHAR(5) NOT NULL DEFAULT 'en-US',
+    language        VARCHAR(5) NOT NULL UNIQUE DEFAULT 'en-US',
     title           VARCHAR(255) NOT NULL,
     description     TEXT NOT NULL,
     genres          VARCHAR(50) ARRAY,
@@ -181,7 +181,7 @@ CREATE TABLE IF NOT EXISTS locations (
 CREATE TABLE IF NOT EXISTS locations_translations (
     id              INTEGER PRIMARY KEY UNIQUE GENERATED ALWAYS AS IDENTITY,
     location_uuid   UUID NOT NULL,
-    language        VARCHAR(5) NOT NULL DEFAULT 'en-US',
+    language        VARCHAR(5) NOT NULL UNIQUE DEFAULT 'en-US',
     name            VARCHAR(255) NOT NULL,
     description     TEXT NOT NULL,
     CONSTRAINT fk_location_uuid
@@ -230,7 +230,7 @@ CREATE TABLE IF NOT EXISTS games (
 CREATE TABLE IF NOT EXISTS games_translations (
     id              INTEGER PRIMARY KEY UNIQUE GENERATED ALWAYS AS IDENTITY,
     game_uuid       UUID NOT NULL,
-    language        VARCHAR(5) NOT NULL DEFAULT 'en-US',
+    language        VARCHAR(5) NOT NULL UNIQUE DEFAULT 'en-US',
     name            VARCHAR(255) NOT NULL,
     description     TEXT NOT NULL,
     trailer         TEXT NOT NULL,
