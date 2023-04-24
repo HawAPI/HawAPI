@@ -20,6 +20,10 @@ public class LocationModel extends BaseModel {
     @Column(columnDefinition = "text[]")
     private String[] images;
 
+    @Type(type = "string-array")
+    @Column(columnDefinition = "text[]")
+    private String[] languages;
+
     @Column
     private String thumbnail;
 
@@ -48,6 +52,14 @@ public class LocationModel extends BaseModel {
 
     public void setImages(String[] images) {
         this.images = images;
+    }
+
+    public String[] getLanguages() {
+        return languages;
+    }
+
+    public void setLanguages(String[] languages) {
+        this.languages = languages;
     }
 
     public String getThumbnail() {

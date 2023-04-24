@@ -39,6 +39,10 @@ public class GameModel extends BaseModel {
     @Column(nullable = false)
     private transient String trailer;
 
+    @Type(type = "string-array")
+    @Column(columnDefinition = "text[]")
+    private String[] languages;
+
     @Column
     private String thumbnail;
 
@@ -107,6 +111,14 @@ public class GameModel extends BaseModel {
 
     public void setTrailer(String trailer) {
         this.trailer = trailer;
+    }
+
+    public String[] getLanguages() {
+        return languages;
+    }
+
+    public void setLanguages(String[] languages) {
+        this.languages = languages;
     }
 
     public String getThumbnail() {
