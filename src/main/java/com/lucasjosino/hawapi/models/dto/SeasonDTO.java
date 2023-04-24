@@ -32,6 +32,8 @@ public class SeasonDTO extends BaseDTO {
 
     private String[] images;
 
+    private String[] languages;
+
     private String thumbnail;
 
     public String getTitle() {
@@ -136,6 +138,14 @@ public class SeasonDTO extends BaseDTO {
 
     public void setImages(String[] images) {
         this.images = images;
+    }
+
+    public String[] getLanguages() {
+        return languages;
+    }
+
+    public void setLanguages(String[] languages) {
+        this.languages = languages;
     }
 
     public String getThumbnail() {

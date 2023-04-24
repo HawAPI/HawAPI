@@ -10,6 +10,8 @@ public class LocationDTO extends BaseDTO {
 
     private String[] images;
 
+    private String[] languages;
+
     private String thumbnail;
 
     public String getName() {
@@ -34,6 +36,14 @@ public class LocationDTO extends BaseDTO {
 
     public void setImages(String[] images) {
         this.images = images;
+    }
+
+    public String[] getLanguages() {
+        return languages;
+    }
+
+    public void setLanguages(String[] languages) {
+        this.languages = languages;
     }
 
     public String getThumbnail() {

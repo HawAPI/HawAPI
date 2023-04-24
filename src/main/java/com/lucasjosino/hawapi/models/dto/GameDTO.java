@@ -22,6 +22,8 @@ public class GameDTO extends BaseDTO {
 
     private String url;
 
+    private String[] languages;
+
     private String trailer;
 
     private String thumbnail;
@@ -88,6 +90,14 @@ public class GameDTO extends BaseDTO {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String[] getLanguages() {
+        return languages;
+    }
+
+    public void setLanguages(String[] languages) {
+        this.languages = languages;
     }
 
     public String getTrailer() {
