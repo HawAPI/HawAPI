@@ -18,12 +18,12 @@ public class JwtUserValidator implements OAuth2TokenValidator<Jwt> {
 
     @Override
     public OAuth2TokenValidatorResult validate(Jwt token) {
-        String username = token.getClaim("nickname");
+        String username = token.getClaim("username");
         String email = token.getClaim("email");
 
         if (username == null || email == null) {
             return OAuth2TokenValidatorResult.failure(
-                    this.createOAuth2Error("Nickname or Email not found on token")
+                    this.createOAuth2Error("Username or Email not found on token")
             );
         }
 
