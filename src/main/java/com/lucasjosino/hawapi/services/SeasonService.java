@@ -1,5 +1,8 @@
 package com.lucasjosino.hawapi.services;
 
+import com.lucasjosino.hawapi.core.LanguageUtils;
+import com.lucasjosino.hawapi.core.StringUtils;
+import com.lucasjosino.hawapi.exceptions.BadRequestException;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.exceptions.SaveConflictException;
 import com.lucasjosino.hawapi.filters.SeasonFilter;
@@ -35,6 +38,8 @@ public class SeasonService {
 
     private final ModelMapper modelMapper;
 
+    private final LanguageUtils languageUtils;
+
     private final SeasonRepository repository;
 
     private final SpecificationBuilder<SeasonModel> spec;
@@ -47,11 +52,12 @@ public class SeasonService {
             ServiceUtils utils,
             OpenAPIProperty config,
             ModelMapper modelMapper,
-            SeasonTranslationRepository translationRepository
+            LanguageUtils languageUtils, SeasonTranslationRepository translationRepository
     ) {
         this.utils = utils;
         this.repository = repository;
         this.modelMapper = modelMapper;
+        this.languageUtils = languageUtils;
         this.spec = new SpecificationBuilder<>();
         this.translationRepository = translationRepository;
         this.basePath = config.getApiBaseUrl() + "/seasons";
@@ -71,8 +77,8 @@ public class SeasonService {
     }
 
     @Transactional
-    public List<SeasonTranslationDTO> findAllTranslations() {
-        List<SeasonTranslation> res = translationRepository.findAll();
+    public List<SeasonTranslationDTO> findAllTranslationsBy(UUID uuid) {
+        List<SeasonTranslation> res = translationRepository.findAllBySeasonUuid(uuid);
         return Arrays.asList(modelMapper.map(res, SeasonTranslationDTO[].class));
     }
 
@@ -97,6 +103,9 @@ public class SeasonService {
         UUID uuid = UUID.randomUUID();
         dto.setUuid(uuid);
         dto.setHref(basePath + "/" + uuid);
+        dto.setLanguages(new String[]{dto.getLanguage()});
+
+        validateDTO(uuid, dto.getLanguage());
 
         SeasonModel dtoToModel = modelMapper.map(dto, SeasonModel.class);
         dtoToModel.getTranslation().setSeasonUuid(uuid);
@@ -107,13 +116,13 @@ public class SeasonService {
     }
 
     @Transactional
-    public SeasonTranslationDTO saveTranslation(UUID uuid, SeasonTranslation translation) {
-        if (translationRepository.existsBySeasonUuidAndLanguage(uuid, translation.getLanguage())) {
-            throw new SaveConflictException("Language '" + translation.getLanguage() + "' already exist!");
-        }
+    public SeasonTranslationDTO saveTranslation(UUID uuid, SeasonTranslationDTO dto) {
+        validateDTO(uuid, dto.getLanguage());
 
-        translation.setSeasonUuid(uuid);
-        SeasonTranslation res = translationRepository.save(translation);
+        SeasonTranslation dtoToModel = modelMapper.map(dto, SeasonTranslation.class);
+        dtoToModel.setSeasonUuid(uuid);
+
+        SeasonTranslation res = translationRepository.save(dtoToModel);
 
         return modelMapper.map(res, SeasonTranslationDTO.class);
     }
@@ -154,5 +163,19 @@ public class SeasonService {
         }
 
         translationRepository.deleteBySeasonUuidAndLanguage(uuid, language);
+    }
+
+    private void validateDTO(UUID uuid, String language) {
+        if (StringUtils.isNullOrEmpty(language)) {
+            throw new BadRequestException("Column 'language' is required");
+        }
+
+        if (!languageUtils.isSupportedLanguage(language)) {
+            throw new BadRequestException("Language '" + language + "' is currently not supported!");
+        }
+
+        if (translationRepository.existsBySeasonUuidAndLanguage(uuid, language)) {
+            throw new SaveConflictException("Language '" + language + "' already exist!");
+        }
     }
 }

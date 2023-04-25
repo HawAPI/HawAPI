@@ -1,5 +1,8 @@
 package com.lucasjosino.hawapi.services;
 
+import com.lucasjosino.hawapi.core.LanguageUtils;
+import com.lucasjosino.hawapi.core.StringUtils;
+import com.lucasjosino.hawapi.exceptions.BadRequestException;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.exceptions.SaveConflictException;
 import com.lucasjosino.hawapi.filters.LocationFilter;
@@ -35,6 +38,8 @@ public class LocationService {
 
     private final ModelMapper modelMapper;
 
+    private final LanguageUtils languageUtils;
+
     private final LocationRepository repository;
 
     private final SpecificationBuilder<LocationModel> spec;
@@ -47,11 +52,12 @@ public class LocationService {
             ServiceUtils utils,
             OpenAPIProperty config,
             ModelMapper modelMapper,
-            LocationTranslationRepository translationRepository
+            LanguageUtils languageUtils, LocationTranslationRepository translationRepository
     ) {
         this.utils = utils;
         this.repository = repository;
         this.modelMapper = modelMapper;
+        this.languageUtils = languageUtils;
         this.spec = new SpecificationBuilder<>();
         this.translationRepository = translationRepository;
         this.basePath = config.getApiBaseUrl() + "/places";
@@ -71,8 +77,8 @@ public class LocationService {
     }
 
     @Transactional
-    public List<LocationTranslationDTO> findAllTranslations() {
-        List<LocationTranslation> res = translationRepository.findAll();
+    public List<LocationTranslationDTO> findAllTranslationsBy(UUID uuid) {
+        List<LocationTranslation> res = translationRepository.findAllByLocationUuid(uuid);
         return Arrays.asList(modelMapper.map(res, LocationTranslationDTO[].class));
     }
 
@@ -97,6 +103,9 @@ public class LocationService {
         UUID uuid = UUID.randomUUID();
         dto.setUuid(uuid);
         dto.setHref(basePath + "/" + uuid);
+        dto.setLanguages(new String[]{dto.getLanguage()});
+
+        validateDTO(uuid, dto.getLanguage());
 
         LocationModel dtoToModel = modelMapper.map(dto, LocationModel.class);
         dtoToModel.getTranslation().setLocationUuid(uuid);
@@ -107,13 +116,13 @@ public class LocationService {
     }
 
     @Transactional
-    public LocationTranslationDTO saveTranslation(UUID uuid, LocationTranslation translation) {
-        if (translationRepository.existsByLocationUuidAndLanguage(uuid, translation.getLanguage())) {
-            throw new SaveConflictException("Language '" + translation.getLanguage() + "' already exist!");
-        }
+    public LocationTranslationDTO saveTranslation(UUID uuid, LocationTranslationDTO dto) {
+        validateDTO(uuid, dto.getLanguage());
 
-        translation.setLocationUuid(uuid);
-        LocationTranslation res = translationRepository.save(translation);
+        LocationTranslation dtoToModel = modelMapper.map(dto, LocationTranslation.class);
+        dtoToModel.setLocationUuid(uuid);
+
+        LocationTranslation res = translationRepository.save(dtoToModel);
 
         return modelMapper.map(res, LocationTranslationDTO.class);
     }
@@ -154,5 +163,19 @@ public class LocationService {
         }
 
         translationRepository.deleteByLocationUuidAndLanguage(uuid, language);
+    }
+
+    private void validateDTO(UUID uuid, String language) {
+        if (StringUtils.isNullOrEmpty(language)) {
+            throw new BadRequestException("Column 'language' is required");
+        }
+
+        if (!languageUtils.isSupportedLanguage(language)) {
+            throw new BadRequestException("Language '" + language + "' is currently not supported!");
+        }
+
+        if (translationRepository.existsByLocationUuidAndLanguage(uuid, language)) {
+            throw new SaveConflictException("Language '" + language + "' already exist!");
+        }
     }
 }

@@ -1,5 +1,8 @@
 package com.lucasjosino.hawapi.services;
 
+import com.lucasjosino.hawapi.core.LanguageUtils;
+import com.lucasjosino.hawapi.core.StringUtils;
+import com.lucasjosino.hawapi.exceptions.BadRequestException;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.exceptions.SaveConflictException;
 import com.lucasjosino.hawapi.filters.EpisodeFilter;
@@ -35,6 +38,8 @@ public class EpisodeService {
 
     private final ModelMapper modelMapper;
 
+    private final LanguageUtils languageUtils;
+
     private final EpisodeRepository repository;
 
     private final SpecificationBuilder<EpisodeModel> spec;
@@ -47,11 +52,12 @@ public class EpisodeService {
             ServiceUtils utils,
             OpenAPIProperty config,
             ModelMapper modelMapper,
-            EpisodeTranslationRepository translationRepository
+            LanguageUtils languageUtils, EpisodeTranslationRepository translationRepository
     ) {
         this.utils = utils;
         this.repository = repository;
         this.modelMapper = modelMapper;
+        this.languageUtils = languageUtils;
         this.spec = new SpecificationBuilder<>();
         this.translationRepository = translationRepository;
         this.basePath = config.getApiBaseUrl() + "/episodes";
@@ -71,8 +77,8 @@ public class EpisodeService {
     }
 
     @Transactional
-    public List<EpisodeTranslationDTO> findAllTranslations() {
-        List<EpisodeTranslation> res = translationRepository.findAll();
+    public List<EpisodeTranslationDTO> findAllTranslationsBy(UUID uuid) {
+        List<EpisodeTranslation> res = translationRepository.findAllByEpisodeUuid(uuid);
         return Arrays.asList(modelMapper.map(res, EpisodeTranslationDTO[].class));
     }
 
@@ -97,6 +103,9 @@ public class EpisodeService {
         UUID uuid = UUID.randomUUID();
         dto.setUuid(uuid);
         dto.setHref(basePath + "/" + uuid);
+        dto.setLanguages(new String[]{dto.getLanguage()});
+
+        validateDTO(uuid, dto.getLanguage());
 
         EpisodeModel dtoToModel = modelMapper.map(dto, EpisodeModel.class);
         dtoToModel.getTranslation().setEpisodeUuid(uuid);
@@ -107,13 +116,13 @@ public class EpisodeService {
     }
 
     @Transactional
-    public EpisodeTranslationDTO saveTranslation(UUID uuid, EpisodeTranslation translation) {
-        if (translationRepository.existsByEpisodeUuidAndLanguage(uuid, translation.getLanguage())) {
-            throw new SaveConflictException("Language '" + translation.getLanguage() + "' already exist!");
-        }
+    public EpisodeTranslationDTO saveTranslation(UUID uuid, EpisodeTranslationDTO dto) {
+        validateDTO(uuid, dto.getLanguage());
 
-        translation.setEpisodeUuid(uuid);
-        EpisodeTranslation res = translationRepository.save(translation);
+        EpisodeTranslation dtoToModel = modelMapper.map(dto, EpisodeTranslation.class);
+        dtoToModel.setEpisodeUuid(uuid);
+
+        EpisodeTranslation res = translationRepository.save(dtoToModel);
 
         return modelMapper.map(res, EpisodeTranslationDTO.class);
     }
@@ -154,5 +163,19 @@ public class EpisodeService {
         }
 
         translationRepository.deleteByEpisodeUuidAndLanguage(uuid, language);
+    }
+
+    private void validateDTO(UUID uuid, String language) {
+        if (StringUtils.isNullOrEmpty(language)) {
+            throw new BadRequestException("Column 'language' is required");
+        }
+
+        if (!languageUtils.isSupportedLanguage(language)) {
+            throw new BadRequestException("Language '" + language + "' is currently not supported!");
+        }
+
+        if (translationRepository.existsByEpisodeUuidAndLanguage(uuid, language)) {
+            throw new SaveConflictException("Language '" + language + "' already exist!");
+        }
     }
 }

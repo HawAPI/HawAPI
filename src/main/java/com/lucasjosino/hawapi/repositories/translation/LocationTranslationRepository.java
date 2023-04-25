@@ -1,6 +1,5 @@
 package com.lucasjosino.hawapi.repositories.translation;
 
-import com.lucasjosino.hawapi.models.translations.EpisodeTranslation;
 import com.lucasjosino.hawapi.models.translations.LocationTranslation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -12,7 +11,7 @@ import java.util.UUID;
 @Repository
 public interface LocationTranslationRepository extends JpaRepository<LocationTranslation, Integer> {
 
-    List<EpisodeTranslation> findAllByLocationUuid(UUID uuid);
+    List<LocationTranslation> findAllByLocationUuid(UUID uuid);
 
     Optional<LocationTranslation> findByLocationUuidAndLanguage(UUID locationUuid, String language);
 

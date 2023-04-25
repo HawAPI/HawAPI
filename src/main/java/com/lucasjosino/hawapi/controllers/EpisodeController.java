@@ -6,7 +6,6 @@ import com.lucasjosino.hawapi.interfaces.MappingInterface;
 import com.lucasjosino.hawapi.interfaces.TranslationInterface;
 import com.lucasjosino.hawapi.models.dto.EpisodeDTO;
 import com.lucasjosino.hawapi.models.dto.translation.EpisodeTranslationDTO;
-import com.lucasjosino.hawapi.models.translations.EpisodeTranslation;
 import com.lucasjosino.hawapi.services.EpisodeService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +22,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("${hawapi.apiBaseUrl}/episodes")
-public class EpisodeController implements MappingInterface<EpisodeDTO>,
-        TranslationInterface<EpisodeTranslation, EpisodeTranslationDTO> {
+public class EpisodeController implements MappingInterface<EpisodeDTO>, TranslationInterface<EpisodeTranslationDTO> {
 
     private final EpisodeService service;
 
@@ -53,8 +51,8 @@ public class EpisodeController implements MappingInterface<EpisodeDTO>,
     }
 
     @GetMapping("/{uuid}/translations")
-    public ResponseEntity<List<EpisodeTranslationDTO>> findAllTranslations() {
-        return ResponseEntity.ok(service.findAllTranslations());
+    public ResponseEntity<List<EpisodeTranslationDTO>> findAllTranslationsBy(UUID uuid) {
+        return ResponseEntity.ok(service.findAllTranslationsBy(uuid));
     }
 
     @GetMapping("/{uuid}")
@@ -76,7 +74,7 @@ public class EpisodeController implements MappingInterface<EpisodeDTO>,
     }
 
     @PostMapping("/{uuid}/translations")
-    public ResponseEntity<EpisodeTranslationDTO> saveTranslation(UUID uuid, EpisodeTranslation dto) {
+    public ResponseEntity<EpisodeTranslationDTO> saveTranslation(UUID uuid, EpisodeTranslationDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.saveTranslation(uuid, dto));
     }
 

@@ -1,5 +1,8 @@
 package com.lucasjosino.hawapi.services;
 
+import com.lucasjosino.hawapi.core.LanguageUtils;
+import com.lucasjosino.hawapi.core.StringUtils;
+import com.lucasjosino.hawapi.exceptions.BadRequestException;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.exceptions.SaveConflictException;
 import com.lucasjosino.hawapi.filters.GameFilter;
@@ -35,6 +38,8 @@ public class GameService {
 
     private final ModelMapper modelMapper;
 
+    private final LanguageUtils languageUtils;
+
     private final GameRepository repository;
 
     private final SpecificationBuilder<GameModel> spec;
@@ -47,11 +52,12 @@ public class GameService {
             ServiceUtils utils,
             OpenAPIProperty config,
             ModelMapper modelMapper,
-            GameTranslationRepository translationRepository
+            LanguageUtils languageUtils, GameTranslationRepository translationRepository
     ) {
         this.utils = utils;
         this.repository = repository;
         this.modelMapper = modelMapper;
+        this.languageUtils = languageUtils;
         this.spec = new SpecificationBuilder<>();
         this.translationRepository = translationRepository;
         this.basePath = config.getApiBaseUrl() + "/games";
@@ -71,8 +77,8 @@ public class GameService {
     }
 
     @Transactional
-    public List<GameTranslationDTO> findAllTranslations() {
-        List<GameTranslation> res = translationRepository.findAll();
+    public List<GameTranslationDTO> findAllTranslationsBy(UUID uuid) {
+        List<GameTranslation> res = translationRepository.findAllByGameUuid(uuid);
         return Arrays.asList(modelMapper.map(res, GameTranslationDTO[].class));
     }
 
@@ -97,6 +103,9 @@ public class GameService {
         UUID uuid = UUID.randomUUID();
         dto.setUuid(uuid);
         dto.setHref(basePath + "/" + uuid);
+        dto.setLanguages(new String[]{dto.getLanguage()});
+
+        validateDTO(uuid, dto.getLanguage());
 
         GameModel dtoToModel = modelMapper.map(dto, GameModel.class);
         dtoToModel.getTranslation().setGameUuid(uuid);
@@ -107,13 +116,13 @@ public class GameService {
     }
 
     @Transactional
-    public GameTranslationDTO saveTranslation(UUID uuid, GameTranslation translation) {
-        if (translationRepository.existsByGameUuidAndLanguage(uuid, translation.getLanguage())) {
-            throw new SaveConflictException("Language '" + translation.getLanguage() + "' already exist!");
-        }
+    public GameTranslationDTO saveTranslation(UUID uuid, GameTranslationDTO dto) {
+        validateDTO(uuid, dto.getLanguage());
 
-        translation.setGameUuid(uuid);
-        GameTranslation res = translationRepository.save(translation);
+        GameTranslation dtoToModel = modelMapper.map(dto, GameTranslation.class);
+        dtoToModel.setGameUuid(uuid);
+
+        GameTranslation res = translationRepository.save(dtoToModel);
 
         return modelMapper.map(res, GameTranslationDTO.class);
     }
@@ -154,5 +163,19 @@ public class GameService {
         }
 
         translationRepository.deleteByGameUuidAndLanguage(uuid, language);
+    }
+
+    private void validateDTO(UUID uuid, String language) {
+        if (StringUtils.isNullOrEmpty(language)) {
+            throw new BadRequestException("Column 'language' is required");
+        }
+
+        if (!languageUtils.isSupportedLanguage(language)) {
+            throw new BadRequestException("Language '" + language + "' is currently not supported!");
+        }
+
+        if (translationRepository.existsByGameUuidAndLanguage(uuid, language)) {
+            throw new SaveConflictException("Language '" + language + "' already exist!");
+        }
     }
 }

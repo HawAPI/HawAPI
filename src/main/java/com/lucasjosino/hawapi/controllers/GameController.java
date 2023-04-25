@@ -3,7 +3,9 @@ package com.lucasjosino.hawapi.controllers;
 import com.lucasjosino.hawapi.controllers.utils.ResponseUtils;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.interfaces.MappingInterface;
+import com.lucasjosino.hawapi.interfaces.TranslationInterface;
 import com.lucasjosino.hawapi.models.dto.GameDTO;
+import com.lucasjosino.hawapi.models.dto.translation.GameTranslationDTO;
 import com.lucasjosino.hawapi.services.GameService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +22,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("${hawapi.apiBaseUrl}/games")
-public class GameController implements MappingInterface<GameDTO> {
+public class GameController implements MappingInterface<GameDTO>, TranslationInterface<GameTranslationDTO> {
 
     private final GameService service;
 
@@ -48,6 +50,11 @@ public class GameController implements MappingInterface<GameDTO> {
         return ResponseEntity.ok().headers(headers).body(res);
     }
 
+    @GetMapping("/{uuid}/translations")
+    public ResponseEntity<List<GameTranslationDTO>> findAllTranslationsBy(UUID uuid) {
+        return ResponseEntity.ok(service.findAllTranslationsBy(uuid));
+    }
+
     @GetMapping("/{uuid}")
     public ResponseEntity<GameDTO> findBy(UUID uuid, String language) {
         language = StringUtils.defaultIfEmpty(language, responseUtils.getDefaultLanguage());
@@ -56,9 +63,19 @@ public class GameController implements MappingInterface<GameDTO> {
         return ResponseEntity.ok().headers(headers).body(service.findBy(uuid, language));
     }
 
+    @GetMapping("/{uuid}/translations/{language}")
+    public ResponseEntity<GameTranslationDTO> findTranslationBy(UUID uuid, String language) {
+        return ResponseEntity.ok(service.findTranslationBy(uuid, language));
+    }
+
     @PostMapping
     public ResponseEntity<GameDTO> save(GameDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(dto));
+    }
+
+    @PostMapping("/{uuid}/translations")
+    public ResponseEntity<GameTranslationDTO> saveTranslation(UUID uuid, GameTranslationDTO dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.saveTranslation(uuid, dto));
     }
 
     @PatchMapping("/{uuid}")
@@ -73,9 +90,31 @@ public class GameController implements MappingInterface<GameDTO> {
         return ResponseEntity.noContent().build();
     }
 
+    @PatchMapping("/{uuid}/translations/{language}")
+    public ResponseEntity<GameTranslationDTO> patchTranslation(
+            UUID uuid,
+            String language,
+            GameTranslationDTO dto
+    ) {
+        try {
+            service.patchTranslation(uuid, language, dto);
+        } catch (ItemNotFoundException notFound) {
+            throw notFound;
+        } catch (Exception ex) {
+            return ResponseEntity.internalServerError().build();
+        }
+        return ResponseEntity.noContent().build();
+    }
+
     @DeleteMapping("/{uuid}")
     public ResponseEntity<Void> delete(UUID uuid) {
         service.delete(uuid);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{uuid}/translations/{language}")
+    public ResponseEntity<Void> deleteTranslation(UUID uuid, String language) {
+        service.deleteTranslation(uuid, language);
         return ResponseEntity.noContent().build();
     }
 }

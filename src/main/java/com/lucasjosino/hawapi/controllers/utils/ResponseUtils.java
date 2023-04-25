@@ -1,7 +1,8 @@
 package com.lucasjosino.hawapi.controllers.utils;
 
+import com.lucasjosino.hawapi.core.LanguageUtils;
 import com.lucasjosino.hawapi.models.base.BaseModel;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -12,8 +13,12 @@ import java.util.UUID;
 @Component
 public class ResponseUtils {
 
-    @Value("${com.lucasjosino.hawapi.default.language}")
-    private String defaultLanguage;
+    private final LanguageUtils languageUtils;
+
+    @Autowired
+    public ResponseUtils(LanguageUtils languageUtils) {
+        this.languageUtils = languageUtils;
+    }
 
     public <T extends BaseModel> HttpHeaders getHeaders(
             String language,
@@ -21,7 +26,7 @@ public class ResponseUtils {
             Pageable pageable,
             int count
     ) {
-        String languageOrDefault = language != null ? language : defaultLanguage;
+        String languageOrDefault = language != null ? language : languageUtils.getDefaultLanguage();
         return new HttpHeaders() {{
             add("X-Pagination-Page", String.valueOf(pageable.getPageNumber() + 1));
             add("X-Pagination-Page-Size", String.valueOf(pageable.getPageSize()));
@@ -38,6 +43,6 @@ public class ResponseUtils {
     }
 
     public String getDefaultLanguage() {
-        return defaultLanguage;
+        return languageUtils.getDefaultLanguage();
     }
 }
