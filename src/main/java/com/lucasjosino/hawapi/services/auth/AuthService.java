@@ -50,11 +50,13 @@ public class AuthService {
                 throw new RoleBadRequestException("Role '" + user.getRole() + "' is not valid!");
             }
 
-            // Only 'ADMIN' can create users with 'ADMIN' role.
-            if (user.getRole().equals(RoleType.ADMIN.name())) {
-                if (!hasAdminAuthorization()) {
-                    throw new UserUnauthorizedException("Only user with ADMIN role can create ADMIN users");
-                }
+            boolean isDevOrAdmin = user.getRole().equalsIgnoreCase(RoleType.DEV.name()) ||
+                    user.getRole().equalsIgnoreCase(RoleType.ADMIN.name());
+
+            if (isDevOrAdmin && !hasAdminAuthorization()) {
+                throw new UserUnauthorizedException(
+                        "Only user with ADMIN role can create users with role:'" + user.getRole() + "'"
+                );
             }
         } else {
             user.setRole(RoleType.BASIC.name());
@@ -67,6 +69,7 @@ public class AuthService {
         String token = jwtManager.generateToken(user);
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole(user.getRole().toUpperCase());
 
         authRepository.save(user);
 
