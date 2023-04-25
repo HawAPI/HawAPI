@@ -1,18 +1,24 @@
 package com.lucasjosino.hawapi.filters;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lucasjosino.hawapi.filters.base.BaseFilter;
 
-import java.util.List;
+import java.time.LocalDate;
 
 public class SeasonFilter extends BaseFilter {
 
     private String title;
 
-    @JsonProperty("season_num")
+    private String description;
+
+    private Integer durationTotal;
+
     private Byte seasonNum;
 
-    private List<String> genres;
+    private LocalDate releaseDate;
+
+    private Integer budget;
+
+    private String[] genres;
 
     public String getTitle() {
         return title;
@@ -20,6 +26,22 @@ public class SeasonFilter extends BaseFilter {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Integer getDurationTotal() {
+        return durationTotal;
+    }
+
+    public void setDurationTotal(Integer durationTotal) {
+        this.durationTotal = durationTotal;
     }
 
     public Byte getSeasonNum() {
@@ -30,11 +52,27 @@ public class SeasonFilter extends BaseFilter {
         this.seasonNum = seasonNum;
     }
 
-    public List<String> getGenres() {
+    public LocalDate getReleaseDate() {
+        return releaseDate;
+    }
+
+    public void setReleaseDate(LocalDate releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
+    public Integer getBudget() {
+        return budget;
+    }
+
+    public void setBudget(Integer budget) {
+        this.budget = budget;
+    }
+
+    public String[] getGenres() {
         return genres;
     }
 
-    public void setGenres(List<String> genres) {
+    public void setGenres(String[] genres) {
         this.genres = genres;
     }
 }

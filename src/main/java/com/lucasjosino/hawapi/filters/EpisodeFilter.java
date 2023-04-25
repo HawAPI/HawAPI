@@ -7,6 +7,8 @@ public class EpisodeFilter extends BaseFilter {
 
     private String title;
 
+    private String description;
+
     private Integer duration;
 
     @JsonProperty("episode_num")
@@ -18,6 +20,14 @@ public class EpisodeFilter extends BaseFilter {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Integer getDuration() {
