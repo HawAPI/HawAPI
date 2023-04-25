@@ -2,21 +2,14 @@ package com.lucasjosino.hawapi.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lucasjosino.hawapi.models.base.BaseModel;
+import com.lucasjosino.hawapi.models.translations.EpisodeTranslation;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "episodes")
 public class EpisodeModel extends BaseModel {
-
-    @Column(nullable = false)
-    private String title;
-
-    @Column(nullable = false)
-    private String description;
 
     @Column(nullable = false)
     private Integer duration;
@@ -40,24 +33,15 @@ public class EpisodeModel extends BaseModel {
     @Column(columnDefinition = "text[]")
     private String[] images;
 
+    @Type(type = "string-array")
+    @Column(columnDefinition = "text[]")
+    private String[] languages;
+
     @Column
     private String thumbnail;
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    @OneToOne(mappedBy = "episode", cascade = CascadeType.ALL)
+    private EpisodeTranslation translation;
 
     public Integer getDuration() {
         return duration;
@@ -107,11 +91,27 @@ public class EpisodeModel extends BaseModel {
         this.images = images;
     }
 
+    public String[] getLanguages() {
+        return languages;
+    }
+
+    public void setLanguages(String[] languages) {
+        this.languages = languages;
+    }
+
     public String getThumbnail() {
         return thumbnail;
     }
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    public EpisodeTranslation getTranslation() {
+        return translation;
+    }
+
+    public void setTranslation(EpisodeTranslation translation) {
+        this.translation = translation;
     }
 }

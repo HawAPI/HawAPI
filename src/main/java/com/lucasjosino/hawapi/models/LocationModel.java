@@ -1,44 +1,28 @@
 package com.lucasjosino.hawapi.models;
 
 import com.lucasjosino.hawapi.models.base.BaseModel;
+import com.lucasjosino.hawapi.models.translations.LocationTranslation;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "locations")
 public class LocationModel extends BaseModel {
 
-    @Column(nullable = false)
-    private String name;
-
-    @Column(nullable = false)
-    private String description;
-
     @Type(type = "string-array")
     @Column(columnDefinition = "text[]")
     private String[] images;
 
+    @Type(type = "string-array")
+    @Column(columnDefinition = "text[]")
+    private String[] languages;
+
     @Column
     private String thumbnail;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    @OneToOne(mappedBy = "location", cascade = CascadeType.ALL)
+    private LocationTranslation translation;
 
     public String[] getImages() {
         return images;
@@ -48,11 +32,27 @@ public class LocationModel extends BaseModel {
         this.images = images;
     }
 
+    public String[] getLanguages() {
+        return languages;
+    }
+
+    public void setLanguages(String[] languages) {
+        this.languages = languages;
+    }
+
     public String getThumbnail() {
         return thumbnail;
     }
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    public LocationTranslation getTranslation() {
+        return translation;
+    }
+
+    public void setTranslation(LocationTranslation translation) {
+        this.translation = translation;
     }
 }

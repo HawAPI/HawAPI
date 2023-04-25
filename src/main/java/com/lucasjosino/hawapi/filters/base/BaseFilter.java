@@ -2,23 +2,13 @@ package com.lucasjosino.hawapi.filters.base;
 
 abstract public class BaseFilter {
 
-    private String sort;
+    private String language;
 
-    private String order;
-
-    public String getSort() {
-        return sort;
+    public String getLanguage() {
+        return language;
     }
 
-    public void setSort(String sort) {
-        this.sort = sort;
-    }
-
-    public String getOrder() {
-        return order;
-    }
-
-    public void setOrder(String order) {
-        this.order = order;
+    public void setLanguage(String language) {
+        this.language = language;
     }
 }

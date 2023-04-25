@@ -3,6 +3,8 @@ package com.lucasjosino.hawapi.filters;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lucasjosino.hawapi.filters.base.BaseFilter;
 
+import java.time.LocalDate;
+
 public class ActorFilter extends BaseFilter {
 
     @JsonProperty("first_name")
@@ -14,6 +16,14 @@ public class ActorFilter extends BaseFilter {
     private Byte gender;
 
     private String nationality;
+
+    @JsonProperty("birth_date")
+    private LocalDate birthDate;
+
+    @JsonProperty("death_date")
+    private LocalDate deathDate;
+
+    private String[] nicknames;
 
     public String getFirstName() {
         return firstName;
@@ -45,5 +55,29 @@ public class ActorFilter extends BaseFilter {
 
     public void setNationality(String nationality) {
         this.nationality = nationality;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public LocalDate getDeathDate() {
+        return deathDate;
+    }
+
+    public void setDeathDate(LocalDate deathDate) {
+        this.deathDate = deathDate;
+    }
+
+    public String[] getNicknames() {
+        return nicknames;
+    }
+
+    public void setNicknames(String[] nicknames) {
+        this.nicknames = nicknames;
     }
 }

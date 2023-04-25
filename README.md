@@ -32,22 +32,23 @@ via JSON and allows developers to create **desktop**, **web** and **mobile** app
 
 ## Getting Started
 
-- [Project Structure](GETTING-STARTED.md#project-structure)
-- [Prerequisites](GETTING-STARTED.md#prerequisites)
-- [Docker](GETTING-STARTED.md#docker)
-    - [Usage](GETTING-STARTED.md#usage)
-    - [Aliases](GETTING-STARTED.md#aliases)
-- [Setup](GETTING-STARTED.md#setup)
-    - [Clone](GETTING-STARTED.md#clone)
-    - [Database](GETTING-STARTED.md#database)
-    - [Website/Docs](GETTING-STARTED.md#websitedocs)
-    - [Application](GETTING-STARTED.md#application)
-- [Tests](GETTING-STARTED.md#tests)
-    - [Unit Tests](GETTING-STARTED.md#unit-tests)
-    - [Integration Tests](GETTING-STARTED.md#integration-tests)
-- [Scripts](GETTING-STARTED.md#scripts)
-    - [Makefile](GETTING-STARTED.md#makefile)
-    - [Shell/Bash](GETTING-STARTED.md#shellbash)
+- [I18N Support](#internationalization-support)
+- [Project Structure](GETTING_STARTED.md#project-structure)
+- [Prerequisites](GETTING_STARTED.md#prerequisites)
+- [Docker](GETTING_STARTED.md#docker)
+    - [Usage](GETTING_STARTED.md#usage)
+    - [Aliases](GETTING_STARTED.md#aliases)
+- [Setup](GETTING_STARTED.md#setup)
+    - [Clone](GETTING_STARTED.md#clone)
+    - [Database](GETTING_STARTED.md#database)
+    - [Website/Docs](GETTING_STARTED.md#websitedocs)
+    - [Application](GETTING_STARTED.md#application)
+- [Tests](GETTING_STARTED.md#tests)
+    - [Unit Tests](GETTING_STARTED.md#unit-tests)
+    - [Integration Tests](GETTING_STARTED.md#integration-tests)
+- [Scripts](GETTING_STARTED.md#scripts)
+    - [Makefile](GETTING_STARTED.md#makefile)
+    - [Shell/Bash](GETTING_STARTED.md#shellbash)
 
 #### Links
 
@@ -62,6 +63,18 @@ via JSON and allows developers to create **desktop**, **web** and **mobile** app
     - [Website](https://github.com/HawAPI/website)
     - [Data](https://github.com/HawAPI/api-data)
     - [Docs](https://github.com/HawAPI/docs)
+
+## Internationalization Support
+
+| Scope       | en-US |
+|:------------|:-----:|
+| Actors      |  Yes  |
+| Characters  |  Yes  |
+| Episodes    |  Yes  |
+| Games       |  Yes  |
+| Locations   |  Yes  |
+| Seasons     |  Yes  |
+| Soundtracks |  Yes  |
 
 ## Contributing
 

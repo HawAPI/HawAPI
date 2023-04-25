@@ -6,6 +6,7 @@ import com.lucasjosino.hawapi.exceptions.auth.UserConflictException;
 import com.lucasjosino.hawapi.exceptions.auth.UserNotFoundException;
 import com.lucasjosino.hawapi.exceptions.auth.UserUnauthorizedException;
 import com.lucasjosino.hawapi.jwt.JwtManager;
+import com.lucasjosino.hawapi.models.dto.auth.UserDTO;
 import com.lucasjosino.hawapi.models.user.UserAuthenticationModel;
 import com.lucasjosino.hawapi.models.user.UserModel;
 import com.lucasjosino.hawapi.repositories.auth.AuthRepository;
@@ -35,9 +36,9 @@ public class AuthService {
     }
 
     @Transactional
-    public UserModel register(UserModel user) {
-        if (authRepository.existsByNickname(user.getNickname())) {
-            throw new UserConflictException("Nickname '" + user.getNickname() + "' already registered!");
+    public UserDTO register(UserModel user) {
+        if (authRepository.existsByUsername(user.getUsername())) {
+            throw new UserConflictException("Username '" + user.getUsername() + "' already registered!");
         }
 
         if (authRepository.existsByEmail(user.getEmail())) {
@@ -70,8 +71,8 @@ public class AuthService {
         authRepository.save(user);
 
         // Return a new user with basic information + token.
-        return new UserModel() {{
-            setNickname(user.getNickname());
+        return new UserDTO() {{
+            setUsername(user.getUsername());
             setRole(user.getRole());
             setToken(token);
             setTokenType("Bearer");
@@ -79,7 +80,7 @@ public class AuthService {
     }
 
     @Transactional
-    public UserModel authenticate(UserAuthenticationModel userAuth) {
+    public UserDTO authenticate(UserAuthenticationModel userAuth) {
         UserModel dbUser = validateUser(userAuth);
 
         try {
@@ -92,8 +93,8 @@ public class AuthService {
 
         String token = jwtManager.generateToken(dbUser);
 
-        return new UserModel() {{
-            setNickname(dbUser.getNickname());
+        return new UserDTO() {{
+            setUsername(dbUser.getUsername());
             setEmail(dbUser.getEmail());
             setRole(dbUser.getRole());
             setToken(token);
@@ -131,7 +132,7 @@ public class AuthService {
     }
 
     private UserModel validateUser(UserAuthenticationModel userAuth) {
-        return authRepository.findByNicknameAndEmail(userAuth.getNickname(), userAuth.getEmail())
+        return authRepository.findByUsernameAndEmail(userAuth.getUsername(), userAuth.getEmail())
                 .orElseThrow(() ->
                         new UserNotFoundException("User not found!")
                 );

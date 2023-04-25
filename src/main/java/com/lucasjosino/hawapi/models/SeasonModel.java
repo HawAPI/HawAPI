@@ -2,30 +2,19 @@ package com.lucasjosino.hawapi.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lucasjosino.hawapi.models.base.BaseModel;
+import com.lucasjosino.hawapi.models.translations.SeasonTranslation;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "seasons")
 public class SeasonModel extends BaseModel {
 
-    @Column(nullable = false)
-    private String title;
-
-    @Column(nullable = false)
-    private String description;
-
     @JsonProperty("duration_total")
     @Column(nullable = false, name = "duration_total")
     private Integer durationTotal;
-
-    @Type(type = "string-array")
-    @Column(columnDefinition = "varchar[]")
-    private String[] genres;
 
     @JsonProperty("season_num")
     @Column(nullable = false, name = "season_num")
@@ -51,10 +40,6 @@ public class SeasonModel extends BaseModel {
     @Column(columnDefinition = "varchar[]")
     private String[] soundtracks;
 
-    @Type(type = "string-array")
-    @Column(columnDefinition = "text[]")
-    private String[] trailers;
-
     @Column
     private Integer budget;
 
@@ -62,24 +47,15 @@ public class SeasonModel extends BaseModel {
     @Column(columnDefinition = "text[]")
     private String[] images;
 
+    @Type(type = "string-array")
+    @Column(columnDefinition = "text[]")
+    private String[] languages;
+
     @Column
     private String thumbnail;
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    @OneToOne(mappedBy = "season", cascade = CascadeType.ALL)
+    private SeasonTranslation translation;
 
     public Integer getDurationTotal() {
         return durationTotal;
@@ -87,14 +63,6 @@ public class SeasonModel extends BaseModel {
 
     public void setDurationTotal(Integer durationTotal) {
         this.durationTotal = durationTotal;
-    }
-
-    public String[] getGenres() {
-        return genres;
-    }
-
-    public void setGenres(String[] genres) {
-        this.genres = genres;
     }
 
     public Byte getSeasonNum() {
@@ -145,14 +113,6 @@ public class SeasonModel extends BaseModel {
         this.soundtracks = soundtracks;
     }
 
-    public String[] getTrailers() {
-        return trailers;
-    }
-
-    public void setTrailers(String[] trailers) {
-        this.trailers = trailers;
-    }
-
     public Integer getBudget() {
         return budget;
     }
@@ -169,11 +129,27 @@ public class SeasonModel extends BaseModel {
         this.images = images;
     }
 
+    public String[] getLanguages() {
+        return languages;
+    }
+
+    public void setLanguages(String[] languages) {
+        this.languages = languages;
+    }
+
     public String getThumbnail() {
         return thumbnail;
     }
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    public SeasonTranslation getTranslation() {
+        return translation;
+    }
+
+    public void setTranslation(SeasonTranslation translation) {
+        this.translation = translation;
     }
 }

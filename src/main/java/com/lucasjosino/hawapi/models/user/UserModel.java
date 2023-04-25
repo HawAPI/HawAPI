@@ -11,7 +11,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
-import java.util.Locale;
 import java.util.UUID;
 
 @Entity
@@ -31,7 +30,13 @@ public class UserModel {
     private UUID uuid;
 
     @Column(nullable = false)
-    private String nickname;
+    private String firstName;
+
+    @Column(nullable = false)
+    private String lastName;
+
+    @Column(nullable = false)
+    private String username;
 
     @Column(nullable = false)
     private String email;
@@ -76,12 +81,28 @@ public class UserModel {
         this.uuid = uuid;
     }
 
-    public String getNickname() {
-        return nickname;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname.toLowerCase(Locale.ROOT);
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getEmail() {
@@ -89,7 +110,7 @@ public class UserModel {
     }
 
     public void setEmail(String email) {
-        this.email = email.toLowerCase(Locale.ROOT);
+        this.email = email;
     }
 
     public String getPassword() {
@@ -116,8 +137,6 @@ public class UserModel {
         this.token = token;
     }
 
-    // TokenType is a transient method so, force jackson to use the JsonProperty value.
-    @JsonProperty(value = "token_type")
     public String getTokenType() {
         return tokenType;
     }

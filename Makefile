@@ -1,3 +1,6 @@
+# Makefile
+.DEFAULT_GOAL := help
+
 # Docker config.
 DOCKER_PATH=./docker/docker-compose.yml
 DOCKER_NAME=postgres

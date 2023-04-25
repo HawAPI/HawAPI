@@ -8,7 +8,7 @@ public enum RoleType {
 
     public static boolean isValid(String name) {
         for (RoleType role : values()) {
-            if (role.name().equals(name)) return true;
+            if (role.name().equalsIgnoreCase(name)) return true;
         }
         return false;
     }

@@ -50,8 +50,8 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOrigin("*");
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
+        config.addAllowedMethod("GET, POST, PATCH, DELETE");
+        config.addExposedHeader("X-Pagination-Count, X-Pagination-Page, X-Pagination-PageTotal, X-Pagination-Size");
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }

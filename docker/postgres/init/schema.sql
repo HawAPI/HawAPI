@@ -1,12 +1,9 @@
 --
--- Extensions
---
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
---
 -- Functions
 --
-CREATE OR REPLACE FUNCTION update_updated_at_field()
+
+-- Trigger to update column 'updated_at' every time some column is updated.
+CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
 BEGIN
     NEW.updated_at = now();
@@ -14,13 +11,27 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
+-- Trigger to update column 'updated_at' every time some column from 'translations' table is updated.
+CREATE OR REPLACE FUNCTION handle_child_update()
+RETURNS TRIGGER AS $$
+    BEGIN
+      EXECUTE 'UPDATE ' || TG_ARGV[0]::text || ' SET updated_at = now() WHERE uuid = $1.' || TG_ARGV[1]::text
+      	USING NEW;
+      RETURN NEW;
+    END;
+$$ LANGUAGE plpgsql;
+
 --
+-- Tables
+--
+
 -- Users
---
 CREATE TABLE IF NOT EXISTS users (
     id              INTEGER GENERATED ALWAYS AS IDENTITY,
-    uuid UUID       PRIMARY KEY UNIQUE NOT NULL DEFAULT uuid_generate_v4(),
-    nickname        VARCHAR(50) NOT NULL,
+    uuid UUID       PRIMARY KEY UNIQUE NOT NULL,
+    first_name      VARCHAR(30) NOT NULL,
+    last_name       VARCHAR(30) NOT NULL,
+    username        VARCHAR(30) NOT NULL,
     email           VARCHAR(50) NOT NULL,
     password        VARCHAR(255) NOT NULL,
     role            VARCHAR(50) NOT NULL,
@@ -28,18 +39,11 @@ CREATE TABLE IF NOT EXISTS users (
     updated_at      TIMESTAMP NOT NULL DEFAULT now()
 );
 
-CREATE TRIGGER handle_updated_at_field BEFORE
-    UPDATE ON users
-    FOR EACH ROW
-EXECUTE PROCEDURE update_updated_at_field();
-
---
 -- Characters
 -- Gender ref: ISO/IEC 5218
---
 CREATE TABLE IF NOT EXISTS characters (
     id              INTEGER GENERATED ALWAYS AS IDENTITY,
-    uuid            UUID PRIMARY KEY UNIQUE NOT NULL DEFAULT uuid_generate_v4(),
+    uuid            UUID PRIMARY KEY UNIQUE NOT NULL,
     href            VARCHAR(100) NOT NULL,
     first_name      VARCHAR(50) NOT NULL,
     last_name       VARCHAR(50) NOT NULL,
@@ -55,25 +59,18 @@ CREATE TABLE IF NOT EXISTS characters (
     updated_at      TIMESTAMP NOT NULL DEFAULT now()
 );
 
-CREATE TRIGGER handle_updated_at_field BEFORE
-    UPDATE ON characters
-    FOR EACH ROW
-EXECUTE PROCEDURE update_updated_at_field();
-
---
 -- Actors
---
 CREATE TABLE IF NOT EXISTS actors (
     id              INTEGER GENERATED ALWAYS AS IDENTITY,
-    uuid            UUID PRIMARY KEY UNIQUE NOT NULL DEFAULT uuid_generate_v4(),
+    uuid            UUID PRIMARY KEY UNIQUE NOT NULL,
     href            VARCHAR(100) NOT NULL,
     first_name      VARCHAR(50) NOT NULL,
     last_name       VARCHAR(50) NOT NULL,
     nicknames       VARCHAR ARRAY,
+    nationality     VARCHAR(50),
     birth_date      TIMESTAMP,
     death_date      TIMESTAMP,
     gender          SMALLINT NOT NULL DEFAULT 0,
-    nationality     VARCHAR(50),
     seasons         VARCHAR ARRAY,
     awards          VARCHAR ARRAY,
     character       VARCHAR(255) NOT NULL,
@@ -84,14 +81,7 @@ CREATE TABLE IF NOT EXISTS actors (
     updated_at      TIMESTAMP NOT NULL DEFAULT now()
 );
 
-CREATE TRIGGER handle_updated_at_field BEFORE
-    UPDATE ON actors
-    FOR EACH ROW
-EXECUTE PROCEDURE update_updated_at_field();
-
---
 -- Socials
---
 CREATE TABLE IF NOT EXISTS actors_socials (
     id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     social VARCHAR(50) NOT NULL,
@@ -105,15 +95,12 @@ CREATE TABLE IF NOT EXISTS actors_socials (
           ON DELETE CASCADE
 );
 
---
 -- Episodes
---
 CREATE TABLE IF NOT EXISTS episodes (
     id              INTEGER GENERATED ALWAYS AS IDENTITY,
-    uuid            UUID PRIMARY KEY UNIQUE NOT NULL DEFAULT uuid_generate_v4(),
+    uuid            UUID PRIMARY KEY UNIQUE NOT NULL,
     href            VARCHAR(100) NOT NULL,
-    title           VARCHAR(255) NOT NULL,
-    description     TEXT NOT NULL,
+    languages       VARCHAR(5) ARRAY NOT NULL,
     duration        INTEGER NOT NULL,
     episode_num     SMALLINT NOT NULL,
     next_episode    VARCHAR(255),
@@ -126,29 +113,33 @@ CREATE TABLE IF NOT EXISTS episodes (
     updated_at      TIMESTAMP NOT NULL DEFAULT now()
 );
 
-CREATE TRIGGER handle_updated_at_field BEFORE
-    UPDATE ON episodes
-    FOR EACH ROW
-EXECUTE PROCEDURE update_updated_at_field();
-
---
--- Seasons
---
-CREATE TABLE IF NOT EXISTS seasons (
-    id              INTEGER GENERATED ALWAYS AS IDENTITY,
-    uuid            UUID PRIMARY KEY UNIQUE NOT NULL DEFAULT uuid_generate_v4(),
-    href            VARCHAR(100) NOT NULL,
+-- Episodes translations
+CREATE TABLE IF NOT EXISTS episodes_translations (
+    id              INTEGER PRIMARY KEY UNIQUE GENERATED ALWAYS AS IDENTITY,
+    episode_uuid    UUID NOT NULL,
+    language        VARCHAR(5) NOT NULL UNIQUE DEFAULT 'en-US',
     title           VARCHAR(255) NOT NULL,
     description     TEXT NOT NULL,
+    CONSTRAINT fk_episode_uuid
+          FOREIGN KEY(episode_uuid)
+          REFERENCES episodes(uuid)
+          ON UPDATE CASCADE
+          ON DELETE CASCADE
+);
+
+-- Seasons
+CREATE TABLE IF NOT EXISTS seasons (
+    id              INTEGER GENERATED ALWAYS AS IDENTITY,
+    uuid            UUID PRIMARY KEY UNIQUE NOT NULL,
+    href            VARCHAR(100) NOT NULL,
+    languages       VARCHAR(5) ARRAY NOT NULL,
     duration_total  INTEGER NOT NULL,
-    genres          VARCHAR(50) ARRAY,
     season_num      SMALLINT NOT NULL,
     release_date    TIMESTAMP NOT NULL,
     next_season     VARCHAR(255),
     prev_season     VARCHAR(255),
     episodes        VARCHAR ARRAY,
     soundtracks     VARCHAR(255) ARRAY,
-    trailers        VARCHAR ARRAY,
     budget          INTEGER,
     thumbnail       TEXT,
     images          TEXT ARRAY,
@@ -157,20 +148,28 @@ CREATE TABLE IF NOT EXISTS seasons (
     updated_at      TIMESTAMP NOT NULL DEFAULT now()
 );
 
-CREATE TRIGGER handle_updated_at_field BEFORE
-    UPDATE ON seasons
-    FOR EACH ROW
-EXECUTE PROCEDURE update_updated_at_field();
+-- Seasons translations
+CREATE TABLE IF NOT EXISTS seasons_translations (
+    id              INTEGER PRIMARY KEY UNIQUE GENERATED ALWAYS AS IDENTITY,
+    season_uuid     UUID NOT NULL,
+    language        VARCHAR(5) NOT NULL UNIQUE DEFAULT 'en-US',
+    title           VARCHAR(255) NOT NULL,
+    description     TEXT NOT NULL,
+    genres          VARCHAR(50) ARRAY,
+    trailers        VARCHAR ARRAY,
+    CONSTRAINT fk_season_uuid
+          FOREIGN KEY(season_uuid)
+          REFERENCES seasons(uuid)
+          ON UPDATE CASCADE
+          ON DELETE CASCADE
+);
 
---
 -- Locations
---
 CREATE TABLE IF NOT EXISTS locations (
     id              INTEGER GENERATED ALWAYS AS IDENTITY,
-    uuid            UUID PRIMARY KEY UNIQUE NOT NULL DEFAULT uuid_generate_v4(),
+    uuid            UUID PRIMARY KEY UNIQUE NOT NULL,
     href            VARCHAR(100) NOT NULL,
-    name            VARCHAR(255) NOT NULL,
-    description     TEXT NOT NULL,
+    languages       VARCHAR(5) ARRAY NOT NULL,
     thumbnail       TEXT,
     images          TEXT ARRAY,
     sources         TEXT ARRAY,
@@ -178,58 +177,142 @@ CREATE TABLE IF NOT EXISTS locations (
     updated_at      TIMESTAMP NOT NULL DEFAULT now()
 );
 
-CREATE TRIGGER handle_updated_at_field BEFORE
-    UPDATE ON locations
-    FOR EACH ROW
-EXECUTE PROCEDURE update_updated_at_field();
+-- Locations translations
+CREATE TABLE IF NOT EXISTS locations_translations (
+    id              INTEGER PRIMARY KEY UNIQUE GENERATED ALWAYS AS IDENTITY,
+    location_uuid   UUID NOT NULL,
+    language        VARCHAR(5) NOT NULL UNIQUE DEFAULT 'en-US',
+    name            VARCHAR(255) NOT NULL,
+    description     TEXT NOT NULL,
+    CONSTRAINT fk_location_uuid
+          FOREIGN KEY(location_uuid)
+          REFERENCES locations(uuid)
+          ON UPDATE CASCADE
+          ON DELETE CASCADE
+);
 
---
 -- Soundtracks
---
 CREATE TABLE IF NOT EXISTS soundtracks (
     id              INTEGER GENERATED ALWAYS AS IDENTITY,
-    uuid            UUID PRIMARY KEY UNIQUE NOT NULL DEFAULT uuid_generate_v4(),
+    uuid            UUID PRIMARY KEY UNIQUE NOT NULL,
     href            VARCHAR(100) NOT NULL,
     name            VARCHAR(255) NOT NULL,
-    duration        INTEGER NOT NULL,
     artist          VARCHAR(255) NOT NULL,
-    album           VARCHAR (255),
-    release_date    TIMESTAMP NOT NULL,
+    album           VARCHAR(255),
     urls            TEXT ARRAY NOT NULL,
+    duration        INTEGER NOT NULL,
+    release_date    TIMESTAMP NOT NULL,
     thumbnail       TEXT,
     sources         TEXT ARRAY,
     created_at      TIMESTAMP NOT NULL DEFAULT now(),
     updated_at      TIMESTAMP NOT NULL DEFAULT now()
 );
 
-CREATE TRIGGER handle_updated_at_field BEFORE
-    UPDATE ON soundtracks
-    FOR EACH ROW
-EXECUTE PROCEDURE update_updated_at_field();
-
---
 -- Games
---
 CREATE TABLE IF NOT EXISTS games (
     id              INTEGER GENERATED ALWAYS AS IDENTITY,
-    uuid            UUID PRIMARY KEY UNIQUE NOT NULL DEFAULT uuid_generate_v4(),
+    uuid            UUID PRIMARY KEY UNIQUE NOT NULL,
     href            VARCHAR(100) NOT NULL,
-    name            VARCHAR(255) NOT NULL,
-    platforms       VARCHAR(50) ARRAY,
-    genres          VARCHAR(50) ARRAY,
-    publishers      VARCHAR(50) ARRAY,
-    developers      VARCHAR(50) ARRAY,
+    languages       VARCHAR(5) ARRAY NOT NULL,
     release_date    TIMESTAMP NOT NULL,
     url             TEXT NOT NULL,
-    trailer         TEXT NOT NULL,
+    publishers      VARCHAR(50) ARRAY,
+    developers      VARCHAR(50) ARRAY,
+    platforms       VARCHAR(50) ARRAY,
+    genres          VARCHAR(50) ARRAY,
     thumbnail       TEXT,
     sources         TEXT ARRAY,
     created_at      TIMESTAMP NOT NULL DEFAULT now(),
     updated_at      TIMESTAMP NOT NULL DEFAULT now()
 );
 
-CREATE TRIGGER handle_updated_at_field BEFORE
+-- Games translations
+CREATE TABLE IF NOT EXISTS games_translations (
+    id              INTEGER PRIMARY KEY UNIQUE GENERATED ALWAYS AS IDENTITY,
+    game_uuid       UUID NOT NULL,
+    language        VARCHAR(5) NOT NULL UNIQUE DEFAULT 'en-US',
+    name            VARCHAR(255) NOT NULL,
+    description     TEXT NOT NULL,
+    trailer         TEXT NOT NULL,
+    CONSTRAINT fk_game_uuid
+          FOREIGN KEY(game_uuid)
+          REFERENCES games(uuid)
+          ON UPDATE CASCADE
+          ON DELETE CASCADE
+);
+
+--
+-- Triggers
+--
+
+-- # Set triggers to update column 'updated_at' every time some column is updated.
+
+-- Users
+CREATE TRIGGER handle_users_updated_at_column BEFORE
+    UPDATE ON users
+    FOR EACH ROW
+EXECUTE PROCEDURE update_updated_at_column();
+
+-- Characters
+CREATE TRIGGER handle_characters_updated_at_column BEFORE
+    UPDATE ON characters
+    FOR EACH ROW
+EXECUTE PROCEDURE update_updated_at_column();
+
+-- Actors
+CREATE TRIGGER handle_actors_updated_at_column BEFORE
+    UPDATE ON actors
+    FOR EACH ROW
+EXECUTE PROCEDURE update_updated_at_column();
+
+-- Episodes
+CREATE TRIGGER handle_episodes_updated_at_column BEFORE
+    UPDATE ON episodes
+    FOR EACH ROW
+EXECUTE PROCEDURE update_updated_at_column();
+
+-- Seasons
+CREATE TRIGGER handle_seasons_updated_at_column BEFORE
+    UPDATE ON seasons
+    FOR EACH ROW
+EXECUTE PROCEDURE update_updated_at_column();
+
+-- Locations
+CREATE TRIGGER handle_locations_updated_at_column BEFORE
+    UPDATE ON locations
+    FOR EACH ROW
+EXECUTE PROCEDURE update_updated_at_column();
+
+-- Soundtracks
+CREATE TRIGGER handle_soundtracks_updated_at_column BEFORE
+    UPDATE ON soundtracks
+    FOR EACH ROW
+EXECUTE PROCEDURE update_updated_at_column();
+
+-- Games
+CREATE TRIGGER handle_games_updated_at_column BEFORE
     UPDATE ON games
     FOR EACH ROW
-EXECUTE PROCEDURE update_updated_at_field();
+EXECUTE PROCEDURE update_updated_at_column();
 
+-- # Set triggers to update column 'updated_at' every time some column from '[*].translations' is updated.
+
+-- Actors
+CREATE TRIGGER handle_actors_child_update AFTER UPDATE ON actors_socials
+  FOR EACH ROW EXECUTE PROCEDURE handle_child_update ('actors', 'actor_uuid');
+
+-- Episodes
+CREATE TRIGGER handle_episodes_child_update AFTER UPDATE ON episodes_translations
+  FOR EACH ROW EXECUTE PROCEDURE handle_child_update ('episodes', 'episode_uuid');
+
+-- Seasons
+CREATE TRIGGER handle_seasons_child_update AFTER UPDATE ON seasons_translations
+  FOR EACH ROW EXECUTE PROCEDURE handle_child_update ('seasons', 'season_uuid');
+
+-- Locations
+CREATE TRIGGER handle_locations_child_update AFTER UPDATE ON locations_translations
+  FOR EACH ROW EXECUTE PROCEDURE handle_child_update ('locations', 'location_uuid');
+
+-- Games
+CREATE TRIGGER handle_games_child_update AFTER UPDATE ON games_translations
+  FOR EACH ROW EXECUTE PROCEDURE handle_child_update ('games', 'game_uuid');

@@ -1,19 +1,15 @@
 package com.lucasjosino.hawapi.models;
 
 import com.lucasjosino.hawapi.models.base.BaseModel;
+import com.lucasjosino.hawapi.models.translations.GameTranslation;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "games")
 public class GameModel extends BaseModel {
-
-    @Column(nullable = false)
-    private String name;
 
     @Type(type = "string-array")
     @Column(columnDefinition = "varchar[]")
@@ -37,19 +33,15 @@ public class GameModel extends BaseModel {
     @Column(nullable = false)
     private String url;
 
-    @Column(nullable = false)
-    private String trailer;
+    @Type(type = "string-array")
+    @Column(columnDefinition = "text[]")
+    private String[] languages;
 
     @Column
     private String thumbnail;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    @OneToOne(mappedBy = "game", cascade = CascadeType.ALL)
+    private GameTranslation translation;
 
     public String[] getPlatforms() {
         return platforms;
@@ -99,12 +91,12 @@ public class GameModel extends BaseModel {
         this.url = url;
     }
 
-    public String getTrailer() {
-        return trailer;
+    public String[] getLanguages() {
+        return languages;
     }
 
-    public void setTrailer(String trailer) {
-        this.trailer = trailer;
+    public void setLanguages(String[] languages) {
+        this.languages = languages;
     }
 
     public String getThumbnail() {
@@ -113,5 +105,13 @@ public class GameModel extends BaseModel {
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    public GameTranslation getTranslation() {
+        return translation;
+    }
+
+    public void setTranslation(GameTranslation translation) {
+        this.translation = translation;
     }
 }
