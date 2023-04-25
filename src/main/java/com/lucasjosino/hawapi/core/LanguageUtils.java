@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
+@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 public class LanguageUtils {
 
     @Value("${com.lucasjosino.hawapi.application.default-language}")
@@ -39,7 +40,7 @@ public class LanguageUtils {
     }
 
     public List<String> getLanguages() {
-        if (StringUtils.isNullOrEmpty(defaultLanguage)) {
+        if (languages == null || languages.isEmpty()) {
             throw new RuntimeException("Please specify the supported languages in 'application.properties'.");
         }
 
@@ -50,3 +51,4 @@ public class LanguageUtils {
         this.languages = languages;
     }
 }
+
