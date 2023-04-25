@@ -12,19 +12,9 @@ import java.time.LocalDate;
 @Table(name = "seasons")
 public class SeasonModel extends BaseModel {
 
-    @Column(nullable = false)
-    private transient String title;
-
-    @Column(nullable = false)
-    private transient String description;
-
     @JsonProperty("duration_total")
     @Column(nullable = false, name = "duration_total")
     private Integer durationTotal;
-
-    @Type(type = "string-array")
-    @Column(columnDefinition = "varchar[]")
-    private transient String[] genres;
 
     @JsonProperty("season_num")
     @Column(nullable = false, name = "season_num")
@@ -50,10 +40,6 @@ public class SeasonModel extends BaseModel {
     @Column(columnDefinition = "varchar[]")
     private String[] soundtracks;
 
-    @Type(type = "string-array")
-    @Column(columnDefinition = "text[]")
-    private transient String[] trailers;
-
     @Column
     private Integer budget;
 
@@ -71,36 +57,12 @@ public class SeasonModel extends BaseModel {
     @OneToOne(mappedBy = "season", cascade = CascadeType.ALL)
     private SeasonTranslation translation;
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public Integer getDurationTotal() {
         return durationTotal;
     }
 
     public void setDurationTotal(Integer durationTotal) {
         this.durationTotal = durationTotal;
-    }
-
-    public String[] getGenres() {
-        return genres;
-    }
-
-    public void setGenres(String[] genres) {
-        this.genres = genres;
     }
 
     public Byte getSeasonNum() {
@@ -149,14 +111,6 @@ public class SeasonModel extends BaseModel {
 
     public void setSoundtracks(String[] soundtracks) {
         this.soundtracks = soundtracks;
-    }
-
-    public String[] getTrailers() {
-        return trailers;
-    }
-
-    public void setTrailers(String[] trailers) {
-        this.trailers = trailers;
     }
 
     public Integer getBudget() {

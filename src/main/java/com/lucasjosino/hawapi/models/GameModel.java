@@ -11,9 +11,6 @@ import java.time.LocalDate;
 @Table(name = "games")
 public class GameModel extends BaseModel {
 
-    @Column(nullable = false)
-    private transient String name;
-
     @Type(type = "string-array")
     @Column(columnDefinition = "varchar[]")
     private String[] platforms;
@@ -36,9 +33,6 @@ public class GameModel extends BaseModel {
     @Column(nullable = false)
     private String url;
 
-    @Column(nullable = false)
-    private transient String trailer;
-
     @Type(type = "string-array")
     @Column(columnDefinition = "text[]")
     private String[] languages;
@@ -48,14 +42,6 @@ public class GameModel extends BaseModel {
 
     @OneToOne(mappedBy = "game", cascade = CascadeType.ALL)
     private GameTranslation translation;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String[] getPlatforms() {
         return platforms;
@@ -103,14 +89,6 @@ public class GameModel extends BaseModel {
 
     public void setUrl(String url) {
         this.url = url;
-    }
-
-    public String getTrailer() {
-        return trailer;
-    }
-
-    public void setTrailer(String trailer) {
-        this.trailer = trailer;
     }
 
     public String[] getLanguages() {

@@ -10,12 +10,6 @@ import javax.persistence.*;
 @Table(name = "locations")
 public class LocationModel extends BaseModel {
 
-    @Column(nullable = false)
-    private transient String name;
-
-    @Column(nullable = false)
-    private transient String description;
-
     @Type(type = "string-array")
     @Column(columnDefinition = "text[]")
     private String[] images;
@@ -29,22 +23,6 @@ public class LocationModel extends BaseModel {
 
     @OneToOne(mappedBy = "location", cascade = CascadeType.ALL)
     private LocationTranslation translation;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
     public String[] getImages() {
         return images;
