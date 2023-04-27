@@ -36,7 +36,12 @@ public class SoundtrackService {
     private final SpecificationBuilder<SoundtrackModel> spec;
 
     @Autowired
-    public SoundtrackService(SoundtrackRepository repository, ServiceUtils utils, OpenAPIProperty config, ModelMapper modelMapper) {
+    public SoundtrackService(
+            SoundtrackRepository repository,
+            ServiceUtils utils,
+            OpenAPIProperty config,
+            ModelMapper modelMapper
+    ) {
         this.utils = utils;
         this.repository = repository;
         this.modelMapper = modelMapper;

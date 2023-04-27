@@ -36,7 +36,12 @@ public class ActorService {
     private final SpecificationBuilder<ActorModel> spec;
 
     @Autowired
-    public ActorService(ActorRepository repository, ServiceUtils utils, OpenAPIProperty config, ModelMapper modelMapper) {
+    public ActorService(
+            ActorRepository repository,
+            ServiceUtils utils,
+            OpenAPIProperty config,
+            ModelMapper modelMapper
+    ) {
         this.utils = utils;
         this.repository = repository;
         this.modelMapper = modelMapper;

@@ -23,7 +23,11 @@ public class APIController {
     private final RequestMappingHandlerMapping mappingHandler;
 
     @Autowired
-    public APIController(List<String> endpoints, OpenAPIProperty apiConfig, RequestMappingHandlerMapping mappingHandler) {
+    public APIController(
+            List<String> endpoints,
+            OpenAPIProperty apiConfig,
+            RequestMappingHandlerMapping mappingHandler
+    ) {
         this.endpoints = endpoints;
         this.apiConfig = apiConfig;
         this.mappingHandler = mappingHandler;
