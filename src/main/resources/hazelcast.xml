@@ -22,6 +22,6 @@
         <cp-member-count>3</cp-member-count>
     </cp-subsystem>
 
-    <cache name="requestRateLimit"/>
+    <cache name="rate-limit-buckets"/>
 
 </hazelcast>
