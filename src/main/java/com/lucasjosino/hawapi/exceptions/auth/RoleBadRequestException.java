@@ -12,4 +12,8 @@ public class RoleBadRequestException extends RuntimeException {
     public RoleBadRequestException(String message) {
         super(message);
     }
+
+    public RoleBadRequestException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }
