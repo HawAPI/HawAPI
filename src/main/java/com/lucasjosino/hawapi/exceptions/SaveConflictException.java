@@ -7,10 +7,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class SaveConflictException extends RuntimeException {
 
     public SaveConflictException() {
-        super();
     }
 
     public SaveConflictException(String message) {
         super(message);
+    }
+
+    public SaveConflictException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

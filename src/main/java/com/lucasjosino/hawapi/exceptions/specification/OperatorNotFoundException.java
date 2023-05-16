@@ -13,4 +13,8 @@ public class OperatorNotFoundException extends RuntimeException {
     public OperatorNotFoundException(String message) {
         super(message);
     }
+
+    public OperatorNotFoundException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }
