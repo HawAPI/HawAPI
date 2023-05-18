@@ -3,6 +3,7 @@ package com.lucasjosino.hawapi.repositories.specification;
 import com.lucasjosino.hawapi.enums.specification.SegmentationType;
 import com.lucasjosino.hawapi.exceptions.InternalServerErrorException;
 import com.lucasjosino.hawapi.filters.base.BaseFilter;
+import com.lucasjosino.hawapi.filters.base.BaseTranslationFilter;
 import com.lucasjosino.hawapi.models.base.BaseModel;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -15,7 +16,8 @@ import java.util.*;
  * SpecificationBuilder provides functionality for convert all Filters (extended from {@link BaseFilter}) into a
  * {@link Specification}.
  * <p>
- * The builder will receive X values but only fields from the filter (extended from {@link BaseFilter}) will be used.
+ * The builder will receive X values but only fields from the filter (extended from {@link BaseFilter}
+ * or {@link BaseTranslationFilter}) will be used.
  */
 @SuppressWarnings({"NullableProblems", "unchecked", "rawtypes"})
 public class SpecificationBuilder<T extends BaseModel> implements Specification<T> {
@@ -24,21 +26,27 @@ public class SpecificationBuilder<T extends BaseModel> implements Specification<
 
     private Map<String, String> params;
 
-    private Class<? extends BaseFilter> filterClass;
+    private Class<? extends BaseFilter> fClass;
 
     private List<UUID> uuids;
 
-    public SpecificationBuilder() {
+    public SpecificationBuilder() {}
 
-    }
-
+    /**
+     * Initialize all the required params to build the query filter.
+     *
+     * @param params All filters
+     * @param fClass The filter class
+     * @param uuids  All uuids to be filtered
+     * @return The specification builder with defined params
+     */
     public <S extends BaseFilter> SpecificationBuilder<T> with(
             Map<String, String> params,
-            Class<S> filterClass,
+            Class<S> fClass,
             List<UUID> uuids
     ) {
         this.params = params;
-        this.filterClass = filterClass;
+        this.fClass = fClass;
         this.uuids = uuids;
         return this;
     }
@@ -49,42 +57,42 @@ public class SpecificationBuilder<T extends BaseModel> implements Specification<
         try {
             this.builder = builder;
 
-            // Every model will require the 'translation' table.
-            Join<T, Object> translation = root.join("translation", JoinType.INNER);
+            // Models with multi-languages will require the 'translation' table.
+            Join<T, Object> translation = null;
+            if (BaseTranslationFilter.class.isAssignableFrom(fClass)) {
+                translation = root.join("translation", JoinType.INNER);
 
-            // Get/Define the language value.
-            //
-            // By default, 'getLanguage' will always return 'en-US'. (Configured on application properties)
-            String language = params.get("language");
-            // With language equals to '*', the default language will be ignored. Returning all languages.
-            if (!language.equals("*")) {
-                predicates.add(builder.equal(translation.get("language"), language));
+                // By default, 'language' is defined as 'en-US'. (Configured on the application properties)
+                String language = params.get("language");
+
+                // Language field defined as '*' will return all languages.
+                if (!language.equals("*")) {
+                    predicates.add(builder.equal(translation.get("language"), language));
+                }
             }
 
-            // Loop over all fields from 'filterClass'. If not null, create a query.
-            for (Field field : filterClass.getDeclaredFields()) {
-                Class<?> fieldType = field.getType();
-
+            // Loop over all fields from 'fClass'.
+            //
+            // Field from superclass will be ignored using 'getDeclaredFields'. E.g: language
+            for (Field field : fClass.getDeclaredFields()) {
                 String fieldName = field.getName();
                 String fieldValue = params.get(fieldName);
 
-                if (fieldValue == null) continue;
+                if (fieldValue == null || fieldValue.isEmpty()) continue;
 
-                // All models will have the 'static' and 'translation' tables and all related fields.
-                // Filters will contain all fields from 'static' AND 'translation'.
-                //
                 // Calling 'root.get' using a non-existing 'fieldName' will throw 'IllegalArgumentException'.
                 // If this happens, try to get from 'translation' table.
                 Path<?> expression;
                 try {
                     expression = root.get(fieldName);
                 } catch (IllegalArgumentException argumentException) {
+                    // If 'fieldName' is unknown from 'root' and 'translation' is null, skip this field.
+                    if (translation == null) continue;
+
                     expression = translation.get(fieldName);
-                } catch (Exception exception) {
-                    throw new InternalServerErrorException(exception.getMessage());
                 }
 
-                Predicate predicate = createPredicate(expression, fieldValue, fieldType);
+                Predicate predicate = createPredicate(expression, fieldValue, field.getType());
                 predicates.add(predicate);
             }
         } catch (Exception exception) {
@@ -102,17 +110,11 @@ public class SpecificationBuilder<T extends BaseModel> implements Specification<
         uuids.forEach(uuidsIn::value);
         predicates.add(uuidsIn);
 
-        // The class will be reused so, clear the current 'params' map.
         params.clear();
         return builder.and(predicates.toArray(new Predicate[0]));
     }
 
-    private Predicate createInPredicate(
-            Expression expression,
-            String fieldValue,
-            Class<?> fieldType,
-            boolean include
-    ) {
+    private Predicate createInPredicate(Expression expression, String fieldValue, Class<?> fieldType, boolean include) {
         // Convert 'fieldValue' in a list of strings.
         //
         // E.g:

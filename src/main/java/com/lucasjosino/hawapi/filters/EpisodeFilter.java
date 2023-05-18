@@ -1,9 +1,9 @@
 package com.lucasjosino.hawapi.filters;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.lucasjosino.hawapi.filters.base.BaseFilter;
+import com.lucasjosino.hawapi.filters.base.BaseTranslationFilter;
 
-public class EpisodeFilter extends BaseFilter {
+public class EpisodeFilter extends BaseTranslationFilter {
 
     private String title;
 

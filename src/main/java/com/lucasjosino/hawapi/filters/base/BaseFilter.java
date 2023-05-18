@@ -1,14 +1,16 @@
 package com.lucasjosino.hawapi.filters.base;
 
+import java.time.LocalDateTime;
+
 abstract public class BaseFilter {
 
-    private String language;
+    private LocalDateTime updatedAt;
 
-    public String getLanguage() {
-        return language;
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setLanguage(String language) {
-        this.language = language;
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

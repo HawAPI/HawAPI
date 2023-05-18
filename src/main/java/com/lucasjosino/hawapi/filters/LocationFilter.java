@@ -1,8 +1,8 @@
 package com.lucasjosino.hawapi.filters;
 
-import com.lucasjosino.hawapi.filters.base.BaseFilter;
+import com.lucasjosino.hawapi.filters.base.BaseTranslationFilter;
 
-public class LocationFilter extends BaseFilter {
+public class LocationFilter extends BaseTranslationFilter {
 
     private String name;
 

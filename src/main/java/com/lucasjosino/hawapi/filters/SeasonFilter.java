@@ -1,10 +1,10 @@
 package com.lucasjosino.hawapi.filters;
 
-import com.lucasjosino.hawapi.filters.base.BaseFilter;
+import com.lucasjosino.hawapi.filters.base.BaseTranslationFilter;
 
 import java.time.LocalDate;
 
-public class SeasonFilter extends BaseFilter {
+public class SeasonFilter extends BaseTranslationFilter {
 
     private String title;
 
