@@ -1,4 +1,4 @@
-package com.lucasjosino.hawapi.exceptions.advisor;
+package com.lucasjosino.hawapi.controllers.advisor;
 
 import com.lucasjosino.hawapi.exceptions.BadRequestException;
 import com.lucasjosino.hawapi.exceptions.InternalServerErrorException;
