@@ -21,8 +21,14 @@ RESET   := $(shell tput -Txterm sgr0)
 
 ## Application
 
+dev: docker-start ## Start docker database and run spring application
+	@./mvnw spring-boot:run -e -Dmaven.test.skip=true
+
 run: clean ## Run the spring application
 	@./mvnw spring-boot:run -e -Dmaven.test.skip=true
+
+get: ## Get all pom dependencies
+	@./mvnw dependency:resolve-plugins
 
 test: test-setup ## Run ALL tests of the spring application
 	@./mvnw test
@@ -38,7 +44,7 @@ compile: clean ## Compile the spring application
 
 build: test ## Build website, test and package the spring application
 	@./scripts/build-website.sh --clean-before
-	@./mvnw package -Dmaven.test.skip=true
+	@./mvnw package -Dmaven.test.skip=true -Dspring.profiles.active=prod
 
 verify: clean ## Verify the spring application
 	@./mvnw verify
@@ -48,45 +54,43 @@ clean: ## Clear the spring application
 
 ## Build
 
-run-jar: ## Run the compiled application (target/hawapi-*.jar)
+jar-run: ## Run the compiled application (target/hawapi-*.jar)
 	@./scripts/run-jar.sh
 
 ## Website
 
-build-website: ## Build the website
+website-build: ## Build the website
 	@./scripts/build-website.sh --clean-before
 
-clean-website: ## Remove '.hawapi/' and 'resources/static/'
-	@./scripts/clean-website.sh -H -S
+website-clean: ## Remove '.hawapi/' and 'resources/static/'
+	@./scripts/clean-website.sh --clean-hawapi --clean-static
 
 ## Docker
 
-dk-status: ## Check the docker container status.
-	@docker ps --filter "name=hawapi-postgres"
+docker-status: ## Check the docker container status.
+	@docker ps --filter "name=${DOCKER_CONTAINER_NAME}"
 
-dk-run: ## Build & Run the local docker.
+docker-run: ## Build & Run the local docker.
 	@docker compose -f ${DOCKER_PATH} build ${DOCKER_NAME}
 	@docker compose -f ${DOCKER_PATH} up  ${DOCKER_NAME}
 
-dk-start: ## Start the local docker.
+docker-start: ## Start the local docker.
 	@docker compose -f ${DOCKER_PATH} start ${DOCKER_NAME}
 	@sleep 2
 
-dk-stop: ## Stop the local docker.
+docker-stop: ## Stop the local docker.
 	@docker compose -f ${DOCKER_PATH} stop ${DOCKER_NAME}
 
-dk-reset: ## Stop, Delete, Build and Start the local docker.
+docker-reset: ## Stop, Delete, Build and Start the local docker.
 	@docker compose -f ${DOCKER_PATH} stop ${DOCKER_NAME}
-	@docker compose -f ${DOCKER_PATH} down --volumes
 	@docker compose -f ${DOCKER_PATH} rm ${DOCKER_NAME}
 	@docker compose -f ${DOCKER_PATH} build ${DOCKER_NAME}
 	@docker compose -f ${DOCKER_PATH} up ${DOCKER_NAME}
 
-dk-prune: ## Delete all docker volumes.
+docker-prune: ## Delete local docker volumes.
 	@docker compose -f ${DOCKER_PATH} rm ${DOCKER_NAME}
 	@cd ./docker
 	@docker volume prune
-	@cd ..
 
 ## Help
 
@@ -115,6 +119,6 @@ help: ## Show this help.
 	@echo
 	@echo 'Targets:'
 	@awk 'BEGIN {FS = ":.*?## "} { \
-		if (/^[a-zA-Z_-]+:.*?##.*$$/) {printf "    ${CYAN}%-20s${GREEN}%s${RESET}\n", $$1, $$2} \
+		if (/[a-zA-Z_\-]+:.*?##.*$$/) {printf "    ${CYAN}%-25s${GREEN}%s${RESET}\n", $$1, $$2} \
 		else if (/^## .*$$/) {printf "  ${BLUE}%s${RESET}\n", substr($$1,4)} \
 		}' $(MAKEFILE_LIST)
