@@ -4,7 +4,7 @@ import com.lucasjosino.hawapi.models.ActorSocialModel;
 import com.lucasjosino.hawapi.models.base.BaseDTO;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Set;
 
 public class ActorDTO extends BaseDTO {
 
@@ -28,7 +28,7 @@ public class ActorDTO extends BaseDTO {
 
     private String character;
 
-    private List<ActorSocialModel> socials;
+    private Set<ActorSocialModel> socials;
 
     private String[] images;
 
@@ -114,11 +114,11 @@ public class ActorDTO extends BaseDTO {
         this.character = character;
     }
 
-    public List<ActorSocialModel> getSocials() {
+    public Set<ActorSocialModel> getSocials() {
         return socials;
     }
 
-    public void setSocials(List<ActorSocialModel> socials) {
+    public void setSocials(Set<ActorSocialModel> socials) {
         this.socials = socials;
     }
 

@@ -6,7 +6,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "actors")
@@ -51,7 +51,7 @@ public class ActorModel extends BaseModel {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "actor_uuid", referencedColumnName = "uuid", insertable = false, updatable = false)
-    private List<ActorSocialModel> socials;
+    private Set<ActorSocialModel> socials;
 
     @Type(type = "string-array")
     @Column(columnDefinition = "text[]")
@@ -140,11 +140,11 @@ public class ActorModel extends BaseModel {
         this.character = character;
     }
 
-    public List<ActorSocialModel> getSocials() {
+    public Set<ActorSocialModel> getSocials() {
         return socials;
     }
 
-    public void setSocials(List<ActorSocialModel> socials) {
+    public void setSocials(Set<ActorSocialModel> socials) {
         this.socials = socials;
     }
 
