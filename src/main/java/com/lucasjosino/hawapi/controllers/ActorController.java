@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -42,6 +43,8 @@ public class ActorController implements MappingInterface<ActorDTO> {
                 pageable,
                 uuids.getSize()
         );
+
+        if (uuids.isEmpty()) ResponseEntity.ok().headers(headers).body(Collections.emptyList());
 
         List<ActorDTO> res = service.findAll(filters, uuids.getContent());
         return ResponseEntity.ok().headers(headers).body(res);
