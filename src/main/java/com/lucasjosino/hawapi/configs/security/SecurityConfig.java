@@ -13,6 +13,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import java.util.Arrays;
+
 @Configuration
 public class SecurityConfig {
 
@@ -49,9 +51,14 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
+        config.setExposedHeaders(Arrays.asList(
+                "X-Pagination-Page-Index",
+                "X-Pagination-Page-Size",
+                "X-Pagination-Page-Total",
+                "X-Pagination-Item-Total"
+        ));
         config.addAllowedOrigin("*");
         config.addAllowedMethod("GET, POST, PATCH, DELETE");
-        config.addExposedHeader("X-Pagination-Count, X-Pagination-Page, X-Pagination-PageTotal, X-Pagination-Size");
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }

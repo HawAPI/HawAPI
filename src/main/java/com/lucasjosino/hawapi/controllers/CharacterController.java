@@ -41,7 +41,7 @@ public class CharacterController implements MappingInterface<CharacterDTO> {
                 filters.get("language"),
                 uuids,
                 pageable,
-                uuids.getSize()
+                uuids.getContent().size()
         );
 
         if (uuids.isEmpty()) ResponseEntity.ok().headers(headers).body(Collections.emptyList());

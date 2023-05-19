@@ -44,7 +44,7 @@ public class EpisodeController implements MappingInterface<EpisodeDTO>, Translat
                 filters.get("language"),
                 uuids,
                 pageable,
-                uuids.getSize()
+                uuids.getContent().size()
         );
 
         if (uuids.isEmpty()) ResponseEntity.ok().headers(headers).body(Collections.emptyList());

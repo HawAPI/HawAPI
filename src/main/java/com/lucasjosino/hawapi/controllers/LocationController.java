@@ -44,7 +44,7 @@ public class LocationController implements MappingInterface<LocationDTO>, Transl
                 filters.get("language"),
                 uuids,
                 pageable,
-                uuids.getSize()
+                uuids.getContent().size()
         );
 
         if (uuids.isEmpty()) ResponseEntity.ok().headers(headers).body(Collections.emptyList());

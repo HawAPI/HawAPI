@@ -28,10 +28,10 @@ public class ResponseUtils {
     ) {
         String languageOrDefault = language != null ? language : languageUtils.getDefaultLanguage();
         return new HttpHeaders() {{
-            add("X-Pagination-Page", String.valueOf(pageable.getPageNumber() + 1));
+            add("X-Pagination-Page-Index", String.valueOf(pageable.getPageNumber() + 1));
             add("X-Pagination-Page-Size", String.valueOf(pageable.getPageSize()));
-            add("X-Pagination-Page-Count", String.valueOf(modelPage.getTotalPages()));
-            add("X-Pagination-Item-Count", String.valueOf(count));
+            add("X-Pagination-Page-Total", String.valueOf(modelPage.getTotalPages()));
+            add("X-Pagination-Item-Total", String.valueOf(count));
             add("Content-Language", languageOrDefault);
         }};
     }
