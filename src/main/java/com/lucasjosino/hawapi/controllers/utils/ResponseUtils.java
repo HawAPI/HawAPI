@@ -1,4 +1,4 @@
-package com.lucasjosino.hawapi.controllers.api.v1.utils;
+package com.lucasjosino.hawapi.controllers.utils;
 
 import com.lucasjosino.hawapi.core.LanguageUtils;
 import com.lucasjosino.hawapi.models.base.BaseModel;

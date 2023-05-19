@@ -1,6 +1,6 @@
 package com.lucasjosino.hawapi.controllers.api.v1;
 
-import com.lucasjosino.hawapi.controllers.api.v1.utils.ResponseUtils;
+import com.lucasjosino.hawapi.controllers.utils.ResponseUtils;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.interfaces.MappingInterface;
 import com.lucasjosino.hawapi.models.dto.ActorDTO;
