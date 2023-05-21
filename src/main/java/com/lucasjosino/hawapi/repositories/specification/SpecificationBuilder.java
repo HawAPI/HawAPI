@@ -5,6 +5,8 @@ import com.lucasjosino.hawapi.exceptions.InternalServerErrorException;
 import com.lucasjosino.hawapi.filters.base.BaseFilter;
 import com.lucasjosino.hawapi.filters.base.BaseTranslationFilter;
 import com.lucasjosino.hawapi.models.base.BaseModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
@@ -21,6 +23,8 @@ import java.util.*;
  */
 @SuppressWarnings({"NullableProblems", "unchecked", "rawtypes"})
 public class SpecificationBuilder<T extends BaseModel> implements Specification<T> {
+
+    private static final Logger log = LoggerFactory.getLogger(SpecificationBuilder.class);
 
     private CriteriaBuilder builder;
 
@@ -60,6 +64,7 @@ public class SpecificationBuilder<T extends BaseModel> implements Specification<
             // Models with multi-languages will require the 'translation' table.
             Join<T, Object> translation = null;
             if (BaseTranslationFilter.class.isAssignableFrom(fClass)) {
+                log.debug("Filter class '{}' is assignable from 'BaseTranslationFilter'", fClass.getSimpleName());
                 translation = root.join("translation", JoinType.INNER);
 
                 // By default, 'language' is defined as 'en-US'. (Configured on the application properties)
@@ -69,6 +74,8 @@ public class SpecificationBuilder<T extends BaseModel> implements Specification<
                 if (!language.equals("*")) {
                     predicates.add(builder.equal(translation.get("language"), language));
                 }
+
+                log.debug("Defined language: {}", language);
             }
 
             // Loop over all fields from 'fClass'.
@@ -78,25 +85,41 @@ public class SpecificationBuilder<T extends BaseModel> implements Specification<
                 String fieldName = field.getName();
                 String fieldValue = params.get(fieldName);
 
-                if (fieldValue == null || fieldValue.isEmpty()) continue;
+                if (fieldValue == null || fieldValue.isEmpty()) {
+                    log.debug("Field '{}' has null or empty value. Skipping...", fieldName);
+                    continue;
+                }
+
+                log.debug("Field '{}' has value: {}", fieldName, fieldValue);
 
                 // Calling 'root.get' using a non-existing 'fieldName' will throw 'IllegalArgumentException'.
                 // If this happens, try to get from 'translation' table.
                 Path<?> expression;
                 try {
                     expression = root.get(fieldName);
+                    log.debug("Getting value from root");
                 } catch (IllegalArgumentException argumentException) {
+                    log.debug("Field '{}' not found on root. Getting value from translation", fieldName);
                     // If 'fieldName' is unknown from 'root' and 'translation' is null, skip this field.
-                    if (translation == null) continue;
+                    if (translation == null) {
+                        log.warn(
+                                "Couldn't find field name neither from root and translation, skipping field: {}",
+                                fieldName
+                        );
+                        continue;
+                    }
 
                     expression = translation.get(fieldName);
+                    log.debug("Getting value from translation");
                 }
 
                 Predicate predicate = createPredicate(expression, fieldValue, field.getType());
                 predicates.add(predicate);
             }
         } catch (Exception exception) {
-            throw new InternalServerErrorException(exception.getMessage());
+            String message = "Something went wrong while trying to build specification";
+            log.error(message + ": {}", exception.getMessage());
+            throw new InternalServerErrorException(message, exception);
         }
 
         // Hibernate will block the usage of pagination (page and size) when using join.
@@ -108,6 +131,8 @@ public class SpecificationBuilder<T extends BaseModel> implements Specification<
         // Ref²: https://stackoverflow.com/a/62782899
         CriteriaBuilder.In<UUID> uuidsIn = builder.in(root.get("uuid"));
         uuids.forEach(uuidsIn::value);
+
+        log.debug("Items count: {}", uuids.size());
         predicates.add(uuidsIn);
 
         params.clear();
@@ -122,10 +147,13 @@ public class SpecificationBuilder<T extends BaseModel> implements Specification<
         //  * NOT_IN(!:) = [..]?gender=:!0                 -> where <gender> not in ('0')
         String[] values = fieldValue.split(",");
         Predicate predicate = builder.conjunction();
+        log.debug("In predicate should include: '{}'", include);
 
         // Check if the field type is a list. If so, we need a different approach to search words in
         // PostgreSQL array.
         if (fieldType.isAssignableFrom(String[].class)) {
+            log.debug("Creating a postgres 'array_position' with predicate values: {}", fieldValue);
+
             for (String value : values) {
                 // Function: array_position(anyarray, anyelement [, int])
                 //
@@ -149,8 +177,9 @@ public class SpecificationBuilder<T extends BaseModel> implements Specification<
             return predicate;
         }
 
+        log.debug("Creating predicate with values: {}", fieldValue);
         // Normal 'in/not in' query.
-        predicate = expression.in(Arrays.stream(values).toArray());
+        predicate = expression.in(Arrays.asList(values));
         return include ? predicate : builder.not(predicate);
     }
 
@@ -164,6 +193,7 @@ public class SpecificationBuilder<T extends BaseModel> implements Specification<
         // By default, both 'start' and 'end' values will be strings.
         Comparable<?> startValue = values[0];
         Comparable<?> endValue = values[1];
+        log.debug("Between predicate values: Start '{}' - End '{}'", startValue, endValue);
 
         // Convert the 'startValue' and 'endValue' into predefined field filter.
 
@@ -188,8 +218,9 @@ public class SpecificationBuilder<T extends BaseModel> implements Specification<
     private <Y extends Comparable<? super Y>> Predicate createPredicate(
             Expression expression,
             String fieldValue,
-            Class<?> field
+            Class<?> fieldType
     ) {
+        log.debug("Creating predicate with class type '{}'", fieldType.getSimpleName());
         SegmentationType operator = SegmentationType.get(fieldValue);
 
         // Remove the operator from 'fieldValue'.
@@ -200,17 +231,18 @@ public class SpecificationBuilder<T extends BaseModel> implements Specification<
         //  * NOT_EQUALS(!)    = "!Lorem" -> "Lorem"
         String value = fieldValue.substring(operator.getValue().length());
 
+        log.debug("Predicate type '{}' defined with '{}' and value '{}'", operator, operator.getValue(), value);
         switch (operator) {
             case LIKE:
                 return builder.like(expression, "%" + value + "%");
             case NOT_LIKE:
                 return builder.notLike(expression, "%" + value + "%");
             case BETWEEN:
-                return createBetweenPredicate(expression, fieldValue, field);
+                return createBetweenPredicate(expression, fieldValue, fieldType);
             case NOT_IN:
-                return createInPredicate(expression, fieldValue, field, false);
+                return createInPredicate(expression, value, fieldType, false);
             case IN:
-                return createInPredicate(expression, fieldValue, field, true);
+                return createInPredicate(expression, value, fieldType, true);
             case GREATER_THAN:
                 return builder.greaterThan(expression, (Y) value);
             case LESS_THAN:
