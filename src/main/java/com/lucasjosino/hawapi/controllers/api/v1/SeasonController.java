@@ -1,12 +1,12 @@
-package com.lucasjosino.hawapi.controllers;
+package com.lucasjosino.hawapi.controllers.api.v1;
 
 import com.lucasjosino.hawapi.controllers.utils.ResponseUtils;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.interfaces.MappingInterface;
 import com.lucasjosino.hawapi.interfaces.TranslationInterface;
-import com.lucasjosino.hawapi.models.dto.GameDTO;
-import com.lucasjosino.hawapi.models.dto.translation.GameTranslationDTO;
-import com.lucasjosino.hawapi.services.GameService;
+import com.lucasjosino.hawapi.models.dto.SeasonDTO;
+import com.lucasjosino.hawapi.models.dto.translation.SeasonTranslationDTO;
+import com.lucasjosino.hawapi.services.SeasonService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,21 +22,21 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("${hawapi.apiBaseUrl}/games")
-public class GameController implements MappingInterface<GameDTO>, TranslationInterface<GameTranslationDTO> {
+@RequestMapping("${hawapi.apiBaseUrl}/seasons")
+public class SeasonController implements MappingInterface<SeasonDTO>, TranslationInterface<SeasonTranslationDTO> {
 
-    private final GameService service;
+    private final SeasonService service;
 
     private final ResponseUtils responseUtils;
 
     @Autowired
-    public GameController(GameService GameService, ResponseUtils responseUtils) {
-        this.service = GameService;
+    public SeasonController(SeasonService SeasonService, ResponseUtils responseUtils) {
+        this.service = SeasonService;
         this.responseUtils = responseUtils;
     }
 
     @GetMapping
-    public ResponseEntity<List<GameDTO>> findAll(Map<String, String> filters, Pageable pageable) {
+    public ResponseEntity<List<SeasonDTO>> findAll(Map<String, String> filters, Pageable pageable) {
         filters.putIfAbsent("language", responseUtils.getDefaultLanguage());
 
         Page<UUID> uuids = service.findAllUUIDs(pageable);
@@ -49,17 +49,17 @@ public class GameController implements MappingInterface<GameDTO>, TranslationInt
 
         if (uuids.isEmpty()) ResponseEntity.ok().headers(headers).body(Collections.emptyList());
 
-        List<GameDTO> res = service.findAll(filters, uuids.getContent());
+        List<SeasonDTO> res = service.findAll(filters, uuids.getContent());
         return ResponseEntity.ok().headers(headers).body(res);
     }
 
     @GetMapping("/{uuid}/translations")
-    public ResponseEntity<List<GameTranslationDTO>> findAllTranslationsBy(UUID uuid) {
+    public ResponseEntity<List<SeasonTranslationDTO>> findAllTranslationsBy(UUID uuid) {
         return ResponseEntity.ok(service.findAllTranslationsBy(uuid));
     }
 
     @GetMapping("/{uuid}")
-    public ResponseEntity<GameDTO> findBy(UUID uuid, String language) {
+    public ResponseEntity<SeasonDTO> findBy(UUID uuid, String language) {
         language = StringUtils.defaultIfEmpty(language, responseUtils.getDefaultLanguage());
 
         HttpHeaders headers = responseUtils.getHeaders(language);
@@ -67,22 +67,22 @@ public class GameController implements MappingInterface<GameDTO>, TranslationInt
     }
 
     @GetMapping("/{uuid}/translations/{language}")
-    public ResponseEntity<GameTranslationDTO> findTranslationBy(UUID uuid, String language) {
+    public ResponseEntity<SeasonTranslationDTO> findTranslationBy(UUID uuid, String language) {
         return ResponseEntity.ok(service.findTranslationBy(uuid, language));
     }
 
     @PostMapping
-    public ResponseEntity<GameDTO> save(GameDTO dto) {
+    public ResponseEntity<SeasonDTO> save(SeasonDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(dto));
     }
 
     @PostMapping("/{uuid}/translations")
-    public ResponseEntity<GameTranslationDTO> saveTranslation(UUID uuid, GameTranslationDTO dto) {
+    public ResponseEntity<SeasonTranslationDTO> saveTranslation(UUID uuid, SeasonTranslationDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.saveTranslation(uuid, dto));
     }
 
     @PatchMapping("/{uuid}")
-    public ResponseEntity<GameDTO> patch(UUID uuid, GameDTO patch) {
+    public ResponseEntity<SeasonDTO> patch(UUID uuid, SeasonDTO patch) {
         try {
             service.patch(uuid, patch);
         } catch (ItemNotFoundException notFound) {
@@ -94,10 +94,10 @@ public class GameController implements MappingInterface<GameDTO>, TranslationInt
     }
 
     @PatchMapping("/{uuid}/translations/{language}")
-    public ResponseEntity<GameTranslationDTO> patchTranslation(
+    public ResponseEntity<SeasonTranslationDTO> patchTranslation(
             UUID uuid,
             String language,
-            GameTranslationDTO dto
+            SeasonTranslationDTO dto
     ) {
         try {
             service.patchTranslation(uuid, language, dto);

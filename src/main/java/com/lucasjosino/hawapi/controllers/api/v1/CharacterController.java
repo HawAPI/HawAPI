@@ -1,10 +1,10 @@
-package com.lucasjosino.hawapi.controllers;
+package com.lucasjosino.hawapi.controllers.api.v1;
 
 import com.lucasjosino.hawapi.controllers.utils.ResponseUtils;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.interfaces.MappingInterface;
-import com.lucasjosino.hawapi.models.dto.ActorDTO;
-import com.lucasjosino.hawapi.services.ActorService;
+import com.lucasjosino.hawapi.models.dto.CharacterDTO;
+import com.lucasjosino.hawapi.services.CharacterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,21 +19,21 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("${hawapi.apiBaseUrl}/actors")
-public class ActorController implements MappingInterface<ActorDTO> {
+@RequestMapping("${hawapi.apiBaseUrl}/characters")
+public class CharacterController implements MappingInterface<CharacterDTO> {
 
-    private final ActorService service;
+    private final CharacterService service;
 
     private final ResponseUtils responseUtils;
 
     @Autowired
-    public ActorController(ActorService service, ResponseUtils responseUtils) {
+    public CharacterController(CharacterService service, ResponseUtils responseUtils) {
         this.service = service;
         this.responseUtils = responseUtils;
     }
 
     @GetMapping
-    public ResponseEntity<List<ActorDTO>> findAll(Map<String, String> filters, Pageable pageable) {
+    public ResponseEntity<List<CharacterDTO>> findAll(Map<String, String> filters, Pageable pageable) {
         filters.putIfAbsent("language", responseUtils.getDefaultLanguage());
 
         Page<UUID> uuids = service.findAllUUIDs(pageable);
@@ -46,22 +46,22 @@ public class ActorController implements MappingInterface<ActorDTO> {
 
         if (uuids.isEmpty()) ResponseEntity.ok().headers(headers).body(Collections.emptyList());
 
-        List<ActorDTO> res = service.findAll(filters, uuids.getContent());
+        List<CharacterDTO> res = service.findAll(filters, uuids.getContent());
         return ResponseEntity.ok().headers(headers).body(res);
     }
 
     @GetMapping("/{uuid}")
-    public ResponseEntity<ActorDTO> findBy(UUID uuid, String language) {
+    public ResponseEntity<CharacterDTO> findBy(UUID uuid, String language) {
         return ResponseEntity.ok(service.findBy(uuid));
     }
 
     @PostMapping
-    public ResponseEntity<ActorDTO> save(ActorDTO dto) {
+    public ResponseEntity<CharacterDTO> save(CharacterDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(dto));
     }
 
     @PatchMapping("/{uuid}")
-    public ResponseEntity<ActorDTO> patch(UUID uuid, ActorDTO patch) {
+    public ResponseEntity<CharacterDTO> patch(UUID uuid, CharacterDTO patch) {
         try {
             service.patch(uuid, patch);
         } catch (ItemNotFoundException notFound) {
@@ -69,12 +69,12 @@ public class ActorController implements MappingInterface<ActorDTO> {
         } catch (Exception ex) {
             return ResponseEntity.internalServerError().build();
         }
-        return ResponseEntity.ok(patch);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{uuid}")
     public ResponseEntity<Void> delete(UUID uuid) {
-        service.deleteById(uuid);
+        service.delete(uuid);
         return ResponseEntity.noContent().build();
     }
 }

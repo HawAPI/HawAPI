@@ -1,4 +1,4 @@
-package com.lucasjosino.hawapi.controllers.auth;
+package com.lucasjosino.hawapi.controllers.api.v1.auth;
 
 import com.lucasjosino.hawapi.exceptions.auth.UserUnauthorizedException;
 import com.lucasjosino.hawapi.models.dto.auth.UserDTO;

@@ -1,4 +1,4 @@
-package com.lucasjosino.hawapi.controllers;
+package com.lucasjosino.hawapi.controllers.api.v1;
 
 import com.lucasjosino.hawapi.properties.OpenAPIProperty;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,12 +1,12 @@
-package com.lucasjosino.hawapi.controllers;
+package com.lucasjosino.hawapi.controllers.api.v1;
 
 import com.lucasjosino.hawapi.controllers.utils.ResponseUtils;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.interfaces.MappingInterface;
 import com.lucasjosino.hawapi.interfaces.TranslationInterface;
-import com.lucasjosino.hawapi.models.dto.SeasonDTO;
-import com.lucasjosino.hawapi.models.dto.translation.SeasonTranslationDTO;
-import com.lucasjosino.hawapi.services.SeasonService;
+import com.lucasjosino.hawapi.models.dto.LocationDTO;
+import com.lucasjosino.hawapi.models.dto.translation.LocationTranslationDTO;
+import com.lucasjosino.hawapi.services.LocationService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,21 +22,21 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("${hawapi.apiBaseUrl}/seasons")
-public class SeasonController implements MappingInterface<SeasonDTO>, TranslationInterface<SeasonTranslationDTO> {
+@RequestMapping("${hawapi.apiBaseUrl}/locations")
+public class LocationController implements MappingInterface<LocationDTO>, TranslationInterface<LocationTranslationDTO> {
 
-    private final SeasonService service;
+    private final LocationService service;
 
     private final ResponseUtils responseUtils;
 
     @Autowired
-    public SeasonController(SeasonService SeasonService, ResponseUtils responseUtils) {
-        this.service = SeasonService;
+    public LocationController(LocationService LocationService, ResponseUtils responseUtils) {
+        this.service = LocationService;
         this.responseUtils = responseUtils;
     }
 
     @GetMapping
-    public ResponseEntity<List<SeasonDTO>> findAll(Map<String, String> filters, Pageable pageable) {
+    public ResponseEntity<List<LocationDTO>> findAll(Map<String, String> filters, Pageable pageable) {
         filters.putIfAbsent("language", responseUtils.getDefaultLanguage());
 
         Page<UUID> uuids = service.findAllUUIDs(pageable);
@@ -49,17 +49,17 @@ public class SeasonController implements MappingInterface<SeasonDTO>, Translatio
 
         if (uuids.isEmpty()) ResponseEntity.ok().headers(headers).body(Collections.emptyList());
 
-        List<SeasonDTO> res = service.findAll(filters, uuids.getContent());
+        List<LocationDTO> res = service.findAll(filters, uuids.getContent());
         return ResponseEntity.ok().headers(headers).body(res);
     }
 
     @GetMapping("/{uuid}/translations")
-    public ResponseEntity<List<SeasonTranslationDTO>> findAllTranslationsBy(UUID uuid) {
+    public ResponseEntity<List<LocationTranslationDTO>> findAllTranslationsBy(UUID uuid) {
         return ResponseEntity.ok(service.findAllTranslationsBy(uuid));
     }
 
     @GetMapping("/{uuid}")
-    public ResponseEntity<SeasonDTO> findBy(UUID uuid, String language) {
+    public ResponseEntity<LocationDTO> findBy(UUID uuid, String language) {
         language = StringUtils.defaultIfEmpty(language, responseUtils.getDefaultLanguage());
 
         HttpHeaders headers = responseUtils.getHeaders(language);
@@ -67,22 +67,22 @@ public class SeasonController implements MappingInterface<SeasonDTO>, Translatio
     }
 
     @GetMapping("/{uuid}/translations/{language}")
-    public ResponseEntity<SeasonTranslationDTO> findTranslationBy(UUID uuid, String language) {
+    public ResponseEntity<LocationTranslationDTO> findTranslationBy(UUID uuid, String language) {
         return ResponseEntity.ok(service.findTranslationBy(uuid, language));
     }
 
     @PostMapping
-    public ResponseEntity<SeasonDTO> save(SeasonDTO dto) {
+    public ResponseEntity<LocationDTO> save(LocationDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(dto));
     }
 
     @PostMapping("/{uuid}/translations")
-    public ResponseEntity<SeasonTranslationDTO> saveTranslation(UUID uuid, SeasonTranslationDTO dto) {
+    public ResponseEntity<LocationTranslationDTO> saveTranslation(UUID uuid, LocationTranslationDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.saveTranslation(uuid, dto));
     }
 
     @PatchMapping("/{uuid}")
-    public ResponseEntity<SeasonDTO> patch(UUID uuid, SeasonDTO patch) {
+    public ResponseEntity<LocationDTO> patch(UUID uuid, LocationDTO patch) {
         try {
             service.patch(uuid, patch);
         } catch (ItemNotFoundException notFound) {
@@ -94,10 +94,10 @@ public class SeasonController implements MappingInterface<SeasonDTO>, Translatio
     }
 
     @PatchMapping("/{uuid}/translations/{language}")
-    public ResponseEntity<SeasonTranslationDTO> patchTranslation(
+    public ResponseEntity<LocationTranslationDTO> patchTranslation(
             UUID uuid,
             String language,
-            SeasonTranslationDTO dto
+            LocationTranslationDTO dto
     ) {
         try {
             service.patchTranslation(uuid, language, dto);

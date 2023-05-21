@@ -1,12 +1,12 @@
-package com.lucasjosino.hawapi.controllers;
+package com.lucasjosino.hawapi.controllers.api.v1;
 
 import com.lucasjosino.hawapi.controllers.utils.ResponseUtils;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.interfaces.MappingInterface;
 import com.lucasjosino.hawapi.interfaces.TranslationInterface;
-import com.lucasjosino.hawapi.models.dto.EpisodeDTO;
-import com.lucasjosino.hawapi.models.dto.translation.EpisodeTranslationDTO;
-import com.lucasjosino.hawapi.services.EpisodeService;
+import com.lucasjosino.hawapi.models.dto.GameDTO;
+import com.lucasjosino.hawapi.models.dto.translation.GameTranslationDTO;
+import com.lucasjosino.hawapi.services.GameService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,21 +22,21 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("${hawapi.apiBaseUrl}/episodes")
-public class EpisodeController implements MappingInterface<EpisodeDTO>, TranslationInterface<EpisodeTranslationDTO> {
+@RequestMapping("${hawapi.apiBaseUrl}/games")
+public class GameController implements MappingInterface<GameDTO>, TranslationInterface<GameTranslationDTO> {
 
-    private final EpisodeService service;
+    private final GameService service;
 
     private final ResponseUtils responseUtils;
 
     @Autowired
-    public EpisodeController(EpisodeService service, ResponseUtils responseUtils) {
-        this.service = service;
+    public GameController(GameService GameService, ResponseUtils responseUtils) {
+        this.service = GameService;
         this.responseUtils = responseUtils;
     }
 
     @GetMapping
-    public ResponseEntity<List<EpisodeDTO>> findAll(Map<String, String> filters, Pageable pageable) {
+    public ResponseEntity<List<GameDTO>> findAll(Map<String, String> filters, Pageable pageable) {
         filters.putIfAbsent("language", responseUtils.getDefaultLanguage());
 
         Page<UUID> uuids = service.findAllUUIDs(pageable);
@@ -49,17 +49,17 @@ public class EpisodeController implements MappingInterface<EpisodeDTO>, Translat
 
         if (uuids.isEmpty()) ResponseEntity.ok().headers(headers).body(Collections.emptyList());
 
-        List<EpisodeDTO> res = service.findAll(filters, uuids.getContent());
+        List<GameDTO> res = service.findAll(filters, uuids.getContent());
         return ResponseEntity.ok().headers(headers).body(res);
     }
 
     @GetMapping("/{uuid}/translations")
-    public ResponseEntity<List<EpisodeTranslationDTO>> findAllTranslationsBy(UUID uuid) {
+    public ResponseEntity<List<GameTranslationDTO>> findAllTranslationsBy(UUID uuid) {
         return ResponseEntity.ok(service.findAllTranslationsBy(uuid));
     }
 
     @GetMapping("/{uuid}")
-    public ResponseEntity<EpisodeDTO> findBy(UUID uuid, String language) {
+    public ResponseEntity<GameDTO> findBy(UUID uuid, String language) {
         language = StringUtils.defaultIfEmpty(language, responseUtils.getDefaultLanguage());
 
         HttpHeaders headers = responseUtils.getHeaders(language);
@@ -67,22 +67,22 @@ public class EpisodeController implements MappingInterface<EpisodeDTO>, Translat
     }
 
     @GetMapping("/{uuid}/translations/{language}")
-    public ResponseEntity<EpisodeTranslationDTO> findTranslationBy(UUID uuid, String language) {
+    public ResponseEntity<GameTranslationDTO> findTranslationBy(UUID uuid, String language) {
         return ResponseEntity.ok(service.findTranslationBy(uuid, language));
     }
 
     @PostMapping
-    public ResponseEntity<EpisodeDTO> save(EpisodeDTO dto) {
+    public ResponseEntity<GameDTO> save(GameDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(dto));
     }
 
     @PostMapping("/{uuid}/translations")
-    public ResponseEntity<EpisodeTranslationDTO> saveTranslation(UUID uuid, EpisodeTranslationDTO dto) {
+    public ResponseEntity<GameTranslationDTO> saveTranslation(UUID uuid, GameTranslationDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.saveTranslation(uuid, dto));
     }
 
     @PatchMapping("/{uuid}")
-    public ResponseEntity<EpisodeDTO> patch(UUID uuid, EpisodeDTO patch) {
+    public ResponseEntity<GameDTO> patch(UUID uuid, GameDTO patch) {
         try {
             service.patch(uuid, patch);
         } catch (ItemNotFoundException notFound) {
@@ -94,10 +94,10 @@ public class EpisodeController implements MappingInterface<EpisodeDTO>, Translat
     }
 
     @PatchMapping("/{uuid}/translations/{language}")
-    public ResponseEntity<EpisodeTranslationDTO> patchTranslation(
+    public ResponseEntity<GameTranslationDTO> patchTranslation(
             UUID uuid,
             String language,
-            EpisodeTranslationDTO dto
+            GameTranslationDTO dto
     ) {
         try {
             service.patchTranslation(uuid, language, dto);
