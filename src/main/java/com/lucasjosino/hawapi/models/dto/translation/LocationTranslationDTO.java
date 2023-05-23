@@ -23,4 +23,12 @@ public class LocationTranslationDTO extends BaseTranslationDTO {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    @Override
+    public String toString() {
+        return "LocationTranslationDTO{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

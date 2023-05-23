@@ -60,4 +60,14 @@ public class EpisodeTranslation extends BaseTranslation {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    @Override
+    public String toString() {
+        return "EpisodeTranslation{" +
+                "episodeUuid=" + episodeUuid +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", episode=" + episode +
+                '}';
+    }
 }

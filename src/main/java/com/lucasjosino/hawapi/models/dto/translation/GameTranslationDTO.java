@@ -33,4 +33,13 @@ public class GameTranslationDTO extends BaseTranslationDTO {
     public void setTrailer(String trailer) {
         this.trailer = trailer;
     }
+
+    @Override
+    public String toString() {
+        return "GameTranslationDTO{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", trailer='" + trailer + '\'' +
+                '}';
+    }
 }

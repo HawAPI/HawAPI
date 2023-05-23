@@ -5,6 +5,7 @@ import com.lucasjosino.hawapi.models.translations.LocationTranslation;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.Arrays;
 
 @Entity
 @Table(name = "locations")
@@ -54,5 +55,15 @@ public class LocationModel extends BaseModel {
 
     public void setTranslation(LocationTranslation translation) {
         this.translation = translation;
+    }
+
+    @Override
+    public String toString() {
+        return "LocationModel{" +
+                "images=" + Arrays.toString(images) +
+                ", languages=" + Arrays.toString(languages) +
+                ", thumbnail='" + thumbnail + '\'' +
+                ", translation=" + translation +
+                '}';
     }
 }

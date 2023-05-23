@@ -6,6 +6,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Set;
 
 @Entity
@@ -162,5 +163,24 @@ public class ActorModel extends BaseModel {
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    @Override
+    public String toString() {
+        return "ActorModel{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", nicknames=" + Arrays.toString(nicknames) +
+                ", birthDate=" + birthDate +
+                ", deathDate=" + deathDate +
+                ", gender=" + gender +
+                ", nationality='" + nationality + '\'' +
+                ", seasons=" + Arrays.toString(seasons) +
+                ", awards=" + Arrays.toString(awards) +
+                ", character='" + character + '\'' +
+                ", socials=" + socials +
+                ", images=" + Arrays.toString(images) +
+                ", thumbnail='" + thumbnail + '\'' +
+                '}';
     }
 }

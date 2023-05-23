@@ -3,6 +3,7 @@ package com.lucasjosino.hawapi.models.dto;
 import com.lucasjosino.hawapi.models.base.BaseDTO;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 
 public class SeasonDTO extends BaseDTO {
 
@@ -154,5 +155,26 @@ public class SeasonDTO extends BaseDTO {
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    @Override
+    public String toString() {
+        return "SeasonDTO{" +
+                "title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", durationTotal=" + durationTotal +
+                ", genres=" + Arrays.toString(genres) +
+                ", seasonNum=" + seasonNum +
+                ", releaseDate=" + releaseDate +
+                ", nextSeason='" + nextSeason + '\'' +
+                ", prevSeason='" + prevSeason + '\'' +
+                ", episodes=" + Arrays.toString(episodes) +
+                ", soundtracks=" + Arrays.toString(soundtracks) +
+                ", trailers=" + Arrays.toString(trailers) +
+                ", budget=" + budget +
+                ", images=" + Arrays.toString(images) +
+                ", languages=" + Arrays.toString(languages) +
+                ", thumbnail='" + thumbnail + '\'' +
+                '}';
     }
 }

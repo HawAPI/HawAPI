@@ -8,6 +8,7 @@ import com.lucasjosino.hawapi.models.base.BaseTranslation;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.Arrays;
 import java.util.UUID;
 
 @Entity
@@ -84,5 +85,17 @@ public class SeasonTranslation extends BaseTranslation {
 
     public void setSeason(SeasonModel season) {
         this.season = season;
+    }
+
+    @Override
+    public String toString() {
+        return "SeasonTranslation{" +
+                "seasonUuid=" + seasonUuid +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", genres=" + Arrays.toString(genres) +
+                ", trailers=" + Arrays.toString(trailers) +
+                ", season=" + season +
+                '}';
     }
 }

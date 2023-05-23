@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.time.LocalDate;
+import java.util.Arrays;
 
 @Entity
 @Table(name = "characters")
@@ -116,5 +117,20 @@ public class CharacterModel extends BaseModel {
 
     public void setImages(String[] images) {
         this.images = images;
+    }
+
+    @Override
+    public String toString() {
+        return "CharacterModel{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", nicknames=" + Arrays.toString(nicknames) +
+                ", birthDate=" + birthDate +
+                ", deathDate=" + deathDate +
+                ", gender=" + gender +
+                ", thumbnail='" + thumbnail + '\'' +
+                ", actor='" + actor + '\'' +
+                ", images=" + Arrays.toString(images) +
+                '}';
     }
 }

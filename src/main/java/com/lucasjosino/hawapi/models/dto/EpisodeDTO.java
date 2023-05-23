@@ -2,6 +2,8 @@ package com.lucasjosino.hawapi.models.dto;
 
 import com.lucasjosino.hawapi.models.base.BaseDTO;
 
+import java.util.Arrays;
+
 public class EpisodeDTO extends BaseDTO {
 
     private String title;
@@ -112,5 +114,22 @@ public class EpisodeDTO extends BaseDTO {
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    @Override
+    public String toString() {
+        return "EpisodeDTO{" +
+                "title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", language='" + language + '\'' +
+                ", duration=" + duration +
+                ", episodeNum=" + episodeNum +
+                ", nextEpisode='" + nextEpisode + '\'' +
+                ", prevEpisode='" + prevEpisode + '\'' +
+                ", season='" + season + '\'' +
+                ", images=" + Arrays.toString(images) +
+                ", languages=" + Arrays.toString(languages) +
+                ", thumbnail='" + thumbnail + '\'' +
+                '}';
     }
 }

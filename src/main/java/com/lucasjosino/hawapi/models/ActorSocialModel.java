@@ -69,4 +69,15 @@ public class ActorSocialModel implements Serializable {
     public void setActorUuid(UUID actorUuid) {
         this.actorUuid = actorUuid;
     }
+
+    @Override
+    public String toString() {
+        return "ActorSocialModel{" +
+                "id=" + id +
+                ", social='" + social + '\'' +
+                ", handle='" + handle + '\'' +
+                ", url='" + url + '\'' +
+                ", actorUuid=" + actorUuid +
+                '}';
+    }
 }

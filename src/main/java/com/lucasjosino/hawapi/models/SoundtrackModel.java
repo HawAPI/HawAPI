@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.time.LocalDate;
+import java.util.Arrays;
 
 @Entity
 @Table(name = "soundtracks")
@@ -90,5 +91,18 @@ public class SoundtrackModel extends BaseModel {
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    @Override
+    public String toString() {
+        return "SoundtrackModel{" +
+                "name='" + name + '\'' +
+                ", duration=" + duration +
+                ", artist='" + artist + '\'' +
+                ", album='" + album + '\'' +
+                ", releaseDate=" + releaseDate +
+                ", urls=" + Arrays.toString(urls) +
+                ", thumbnail='" + thumbnail + '\'' +
+                '}';
     }
 }

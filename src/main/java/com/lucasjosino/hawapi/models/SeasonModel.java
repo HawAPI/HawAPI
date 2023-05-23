@@ -7,6 +7,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Arrays;
 
 @Entity
 @Table(name = "seasons")
@@ -151,5 +152,23 @@ public class SeasonModel extends BaseModel {
 
     public void setTranslation(SeasonTranslation translation) {
         this.translation = translation;
+    }
+
+    @Override
+    public String toString() {
+        return "SeasonModel{" +
+                "durationTotal=" + durationTotal +
+                ", seasonNum=" + seasonNum +
+                ", releaseDate=" + releaseDate +
+                ", nextSeason='" + nextSeason + '\'' +
+                ", prevSeason='" + prevSeason + '\'' +
+                ", episodes=" + Arrays.toString(episodes) +
+                ", soundtracks=" + Arrays.toString(soundtracks) +
+                ", budget=" + budget +
+                ", images=" + Arrays.toString(images) +
+                ", languages=" + Arrays.toString(languages) +
+                ", thumbnail='" + thumbnail + '\'' +
+                ", translation=" + translation +
+                '}';
     }
 }

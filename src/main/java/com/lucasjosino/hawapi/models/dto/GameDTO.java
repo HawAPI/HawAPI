@@ -3,6 +3,7 @@ package com.lucasjosino.hawapi.models.dto;
 import com.lucasjosino.hawapi.models.base.BaseDTO;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 
 public class GameDTO extends BaseDTO {
 
@@ -114,5 +115,22 @@ public class GameDTO extends BaseDTO {
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    @Override
+    public String toString() {
+        return "GameDTO{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", platforms=" + Arrays.toString(platforms) +
+                ", genres=" + Arrays.toString(genres) +
+                ", publishers=" + Arrays.toString(publishers) +
+                ", developers=" + Arrays.toString(developers) +
+                ", releaseDate=" + releaseDate +
+                ", url='" + url + '\'' +
+                ", languages=" + Arrays.toString(languages) +
+                ", trailer='" + trailer + '\'' +
+                ", thumbnail='" + thumbnail + '\'' +
+                '}';
     }
 }

@@ -60,4 +60,14 @@ public class LocationTranslation extends BaseTranslation {
     public void setLocation(LocationModel location) {
         this.location = location;
     }
+
+    @Override
+    public String toString() {
+        return "LocationTranslation{" +
+                "locationUuid=" + locationUuid +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", location=" + location +
+                '}';
+    }
 }

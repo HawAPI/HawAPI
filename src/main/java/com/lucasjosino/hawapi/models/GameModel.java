@@ -6,6 +6,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Arrays;
 
 @Entity
 @Table(name = "games")
@@ -113,5 +114,20 @@ public class GameModel extends BaseModel {
 
     public void setTranslation(GameTranslation translation) {
         this.translation = translation;
+    }
+
+    @Override
+    public String toString() {
+        return "GameModel{" +
+                "platforms=" + Arrays.toString(platforms) +
+                ", genres=" + Arrays.toString(genres) +
+                ", publishers=" + Arrays.toString(publishers) +
+                ", developers=" + Arrays.toString(developers) +
+                ", releaseDate=" + releaseDate +
+                ", url='" + url + '\'' +
+                ", languages=" + Arrays.toString(languages) +
+                ", thumbnail='" + thumbnail + '\'' +
+                ", translation=" + translation +
+                '}';
     }
 }

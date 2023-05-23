@@ -2,6 +2,8 @@ package com.lucasjosino.hawapi.models.dto;
 
 import com.lucasjosino.hawapi.models.base.BaseDTO;
 
+import java.util.Arrays;
+
 public class LocationDTO extends BaseDTO {
 
     private String name;
@@ -52,5 +54,16 @@ public class LocationDTO extends BaseDTO {
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    @Override
+    public String toString() {
+        return "LocationDTO{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", images=" + Arrays.toString(images) +
+                ", languages=" + Arrays.toString(languages) +
+                ", thumbnail='" + thumbnail + '\'' +
+                '}';
     }
 }

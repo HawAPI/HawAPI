@@ -86,4 +86,18 @@ public class ExceptionResponse {
     public void setParams(String params) {
         this.params = params;
     }
+
+    @Override
+    public String toString() {
+        return "ExceptionResponse{" +
+                "code=" + code +
+                ", status='" + status + '\'' +
+                ", method='" + method + '\'' +
+                ", cause='" + cause + '\'' +
+                ", message='" + message + '\'' +
+                ", timestamps=" + timestamps +
+                ", url='" + url + '\'' +
+                ", params='" + params + '\'' +
+                '}';
+    }
 }

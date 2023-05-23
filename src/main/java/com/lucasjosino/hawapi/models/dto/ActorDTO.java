@@ -4,6 +4,7 @@ import com.lucasjosino.hawapi.models.ActorSocialModel;
 import com.lucasjosino.hawapi.models.base.BaseDTO;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Set;
 
 public class ActorDTO extends BaseDTO {
@@ -136,5 +137,24 @@ public class ActorDTO extends BaseDTO {
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    @Override
+    public String toString() {
+        return "ActorDTO{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", nicknames=" + Arrays.toString(nicknames) +
+                ", birthDate=" + birthDate +
+                ", deathDate=" + deathDate +
+                ", gender=" + gender +
+                ", nationality='" + nationality + '\'' +
+                ", seasons=" + Arrays.toString(seasons) +
+                ", awards=" + Arrays.toString(awards) +
+                ", character='" + character + '\'' +
+                ", socials=" + socials +
+                ", images=" + Arrays.toString(images) +
+                ", thumbnail='" + thumbnail + '\'' +
+                '}';
     }
 }

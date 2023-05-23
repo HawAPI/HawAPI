@@ -6,6 +6,7 @@ import com.lucasjosino.hawapi.models.translations.EpisodeTranslation;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.Arrays;
 
 @Entity
 @Table(name = "episodes")
@@ -113,5 +114,20 @@ public class EpisodeModel extends BaseModel {
 
     public void setTranslation(EpisodeTranslation translation) {
         this.translation = translation;
+    }
+
+    @Override
+    public String toString() {
+        return "EpisodeModel{" +
+                "duration=" + duration +
+                ", episodeNum=" + episodeNum +
+                ", nextEpisode='" + nextEpisode + '\'' +
+                ", prevEpisode='" + prevEpisode + '\'' +
+                ", season='" + season + '\'' +
+                ", images=" + Arrays.toString(images) +
+                ", languages=" + Arrays.toString(languages) +
+                ", thumbnail='" + thumbnail + '\'' +
+                ", translation=" + translation +
+                '}';
     }
 }

@@ -71,4 +71,15 @@ public class GameTranslation extends BaseTranslation {
     public void setGame(GameModel game) {
         this.game = game;
     }
+
+    @Override
+    public String toString() {
+        return "GameTranslation{" +
+                "gameUuid=" + gameUuid +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", trailer='" + trailer + '\'' +
+                ", game=" + game +
+                '}';
+    }
 }

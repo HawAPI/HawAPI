@@ -3,6 +3,7 @@ package com.lucasjosino.hawapi.models.dto;
 import com.lucasjosino.hawapi.models.base.BaseDTO;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 
 public class SoundtrackDTO extends BaseDTO {
 
@@ -74,5 +75,18 @@ public class SoundtrackDTO extends BaseDTO {
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    @Override
+    public String toString() {
+        return "SoundtrackDTO{" +
+                "name='" + name + '\'' +
+                ", duration=" + duration +
+                ", artist='" + artist + '\'' +
+                ", album='" + album + '\'' +
+                ", releaseDate=" + releaseDate +
+                ", urls=" + Arrays.toString(urls) +
+                ", thumbnail='" + thumbnail + '\'' +
+                '}';
     }
 }

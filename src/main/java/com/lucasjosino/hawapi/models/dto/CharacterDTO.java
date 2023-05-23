@@ -3,6 +3,7 @@ package com.lucasjosino.hawapi.models.dto;
 import com.lucasjosino.hawapi.models.base.BaseDTO;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 
 public class CharacterDTO extends BaseDTO {
 
@@ -30,5 +31,20 @@ public class CharacterDTO extends BaseDTO {
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
+    }
+
+    @Override
+    public String toString() {
+        return "CharacterDTO{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", nicknames=" + Arrays.toString(nicknames) +
+                ", birthDate=" + birthDate +
+                ", deathDate=" + deathDate +
+                ", gender=" + gender +
+                ", thumbnail='" + thumbnail + '\'' +
+                ", actor='" + actor + '\'' +
+                ", images=" + Arrays.toString(images) +
+                '}';
     }
 }
