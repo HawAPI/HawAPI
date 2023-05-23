@@ -40,4 +40,5 @@ build/
 ### Project
 .hawapi/
 .downloads/
+/logs/
 /src/main/resources/static/
