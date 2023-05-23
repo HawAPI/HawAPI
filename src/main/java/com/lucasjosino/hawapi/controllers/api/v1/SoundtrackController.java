@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("${hawapi.apiBaseUrl}/soundtracks")
+@RequestMapping("/api/v1/soundtracks")
 public class SoundtrackController implements MappingInterface<SoundtrackDTO> {
 
     private final SoundtrackService service;

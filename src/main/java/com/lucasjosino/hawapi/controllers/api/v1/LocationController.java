@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("${hawapi.apiBaseUrl}/locations")
+@RequestMapping("/api/v1/locations")
 public class LocationController implements MappingInterface<LocationDTO>, TranslationInterface<LocationTranslationDTO> {
 
     private final LocationService service;

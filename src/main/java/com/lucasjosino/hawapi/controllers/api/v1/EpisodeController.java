@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("${hawapi.apiBaseUrl}/episodes")
+@RequestMapping("/api/v1/episodes")
 public class EpisodeController implements MappingInterface<EpisodeDTO>, TranslationInterface<EpisodeTranslationDTO> {
 
     private final EpisodeService service;

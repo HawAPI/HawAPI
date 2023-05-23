@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("${hawapi.apiBaseUrl}/actors")
+@RequestMapping("/api/v1/actors")
 public class ActorController implements MappingInterface<ActorDTO> {
 
     private final ActorService service;

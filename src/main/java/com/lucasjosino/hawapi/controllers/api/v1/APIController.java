@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 @RestController
-@RequestMapping("${hawapi.apiPath}")
+@RequestMapping("/api")
 public class APIController {
 
     private final List<String> endpoints;

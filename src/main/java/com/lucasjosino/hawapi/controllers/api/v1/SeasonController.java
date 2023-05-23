@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("${hawapi.apiBaseUrl}/seasons")
+@RequestMapping("/api/v1/seasons")
 public class SeasonController implements MappingInterface<SeasonDTO>, TranslationInterface<SeasonTranslationDTO> {
 
     private final SeasonService service;

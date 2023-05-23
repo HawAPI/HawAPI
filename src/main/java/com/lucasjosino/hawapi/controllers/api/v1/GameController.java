@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("${hawapi.apiBaseUrl}/games")
+@RequestMapping("/api/v1/games")
 public class GameController implements MappingInterface<GameDTO>, TranslationInterface<GameTranslationDTO> {
 
     private final GameService service;
