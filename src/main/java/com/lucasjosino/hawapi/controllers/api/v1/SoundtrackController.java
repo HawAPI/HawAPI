@@ -50,6 +50,11 @@ public class SoundtrackController implements MappingInterface<SoundtrackDTO> {
         return ResponseEntity.ok().headers(headers).body(res);
     }
 
+    @GetMapping("/random")
+    public ResponseEntity<SoundtrackDTO> findRandom(String language) {
+        return ResponseEntity.ok().body(service.findRandom());
+    }
+
     @GetMapping("/{uuid}")
     public ResponseEntity<SoundtrackDTO> findBy(UUID uuid, String language) {
         return ResponseEntity.ok(service.findBy(uuid));

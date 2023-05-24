@@ -7,7 +7,6 @@ import com.lucasjosino.hawapi.interfaces.TranslationInterface;
 import com.lucasjosino.hawapi.models.dto.LocationDTO;
 import com.lucasjosino.hawapi.models.dto.translation.LocationTranslationDTO;
 import com.lucasjosino.hawapi.services.LocationService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +19,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import static com.lucasjosino.hawapi.core.StringUtils.isNullOrEmpty;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 @RestController
 @RequestMapping("/api/v1/locations")
@@ -53,6 +55,14 @@ public class LocationController implements MappingInterface<LocationDTO>, Transl
         return ResponseEntity.ok().headers(headers).body(res);
     }
 
+    @GetMapping("/random")
+    public ResponseEntity<LocationDTO> findRandom(String language) {
+        if (isNullOrEmpty(language)) language = responseUtils.getDefaultLanguage();
+
+        HttpHeaders headers = responseUtils.getHeaders(language);
+        return ResponseEntity.ok().headers(headers).body(service.findRandom(language));
+    }
+
     @GetMapping("/{uuid}/translations")
     public ResponseEntity<List<LocationTranslationDTO>> findAllTranslationsBy(UUID uuid) {
         return ResponseEntity.ok(service.findAllTranslationsBy(uuid));
@@ -60,7 +70,7 @@ public class LocationController implements MappingInterface<LocationDTO>, Transl
 
     @GetMapping("/{uuid}")
     public ResponseEntity<LocationDTO> findBy(UUID uuid, String language) {
-        language = StringUtils.defaultIfEmpty(language, responseUtils.getDefaultLanguage());
+        language = defaultIfEmpty(language, responseUtils.getDefaultLanguage());
 
         HttpHeaders headers = responseUtils.getHeaders(language);
         return ResponseEntity.ok().headers(headers).body(service.findBy(uuid, language));
