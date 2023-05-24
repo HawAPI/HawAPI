@@ -11,19 +11,21 @@ import com.lucasjosino.hawapi.services.utils.ServiceUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class CharacterService {
+
+    private static final SpecificationBuilder<CharacterModel> spec = new SpecificationBuilder<>();
+
+    private static final Random random = new Random();
 
     private final String basePath;
 
@@ -32,8 +34,6 @@ public class CharacterService {
     private final ModelMapper modelMapper;
 
     private final CharacterRepository repository;
-
-    private final SpecificationBuilder<CharacterModel> spec;
 
     @Autowired
     public CharacterService(
@@ -45,7 +45,6 @@ public class CharacterService {
         this.utils = utils;
         this.repository = repository;
         this.modelMapper = modelMapper;
-        this.spec = new SpecificationBuilder<>();
         this.basePath = config.getApiBaseUrl() + "/characters";
     }
 
@@ -60,6 +59,17 @@ public class CharacterService {
     public List<CharacterDTO> findAll(Map<String, String> filters, List<UUID> uuids) {
         List<CharacterModel> res = repository.findAll(spec.with(filters, CharacterFilter.class, uuids));
         return Arrays.asList(modelMapper.map(res, CharacterDTO[].class));
+    }
+
+    @Transactional
+    public CharacterDTO findRandom() {
+        long count = repository.count();
+        int index = random.nextInt((int) count);
+
+        PageRequest singleAndRandomItem = PageRequest.of(index, 1);
+        Page<CharacterModel> page = repository.findAll(singleAndRandomItem);
+
+        return modelMapper.map(page.getContent().get(0), CharacterDTO.class);
     }
 
     @Transactional

@@ -18,19 +18,21 @@ import com.lucasjosino.hawapi.services.utils.ServiceUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class LocationService {
+
+    private static final SpecificationBuilder<LocationModel> spec = new SpecificationBuilder<>();
+
+    private static final Random random = new Random();
 
     private final String basePath;
 
@@ -41,8 +43,6 @@ public class LocationService {
     private final LanguageUtils languageUtils;
 
     private final LocationRepository repository;
-
-    private final SpecificationBuilder<LocationModel> spec;
 
     private final LocationTranslationRepository translationRepository;
 
@@ -58,7 +58,6 @@ public class LocationService {
         this.repository = repository;
         this.modelMapper = modelMapper;
         this.languageUtils = languageUtils;
-        this.spec = new SpecificationBuilder<>();
         this.translationRepository = translationRepository;
         this.basePath = config.getApiBaseUrl() + "/places";
     }
@@ -74,6 +73,17 @@ public class LocationService {
     public List<LocationDTO> findAll(Map<String, String> filters, List<UUID> uuids) {
         List<LocationModel> res = repository.findAll(spec.with(filters, LocationFilter.class, uuids));
         return Arrays.asList(modelMapper.map(res, LocationDTO[].class));
+    }
+
+    @Transactional
+    public LocationDTO findRandom(String language) {
+        long count = repository.count();
+        int index = random.nextInt((int) count);
+
+        PageRequest singleAndRandomItem = PageRequest.of(index, 1);
+        Page<LocationModel> page = repository.findAll(spec.withTranslation(language), singleAndRandomItem);
+
+        return modelMapper.map(page.getContent().get(0), LocationDTO.class);
     }
 
     @Transactional
