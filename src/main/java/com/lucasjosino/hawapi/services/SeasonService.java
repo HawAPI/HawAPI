@@ -93,6 +93,17 @@ public class SeasonService {
     }
 
     @Transactional
+    public SeasonTranslationDTO findRandomTranslation(UUID uuid) {
+        long count = repository.count();
+        int index = random.nextInt((int) count);
+
+        PageRequest singleAndRandomItem = PageRequest.of(index, 1);
+        Page<SeasonTranslation> page = translationRepository.findAllBySeasonUuid(uuid, singleAndRandomItem);
+
+        return modelMapper.map(page.getContent().get(0), SeasonTranslationDTO.class);
+    }
+
+    @Transactional
     public SeasonDTO findBy(UUID uuid, String language) {
         SeasonModel res = repository
                 .findByUuidAndTranslationLanguage(uuid, language)

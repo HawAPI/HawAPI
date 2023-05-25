@@ -93,6 +93,17 @@ public class LocationService {
     }
 
     @Transactional
+    public LocationTranslationDTO findRandomTranslation(UUID uuid) {
+        long count = repository.count();
+        int index = random.nextInt((int) count);
+
+        PageRequest singleAndRandomItem = PageRequest.of(index, 1);
+        Page<LocationTranslation> page = translationRepository.findAllByLocationUuid(uuid, singleAndRandomItem);
+
+        return modelMapper.map(page.getContent().get(0), LocationTranslationDTO.class);
+    }
+
+    @Transactional
     public LocationDTO findBy(UUID uuid, String language) {
         LocationModel res = repository
                 .findByUuidAndTranslationLanguage(uuid, language)

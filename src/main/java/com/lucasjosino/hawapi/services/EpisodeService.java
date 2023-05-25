@@ -79,7 +79,7 @@ public class EpisodeService {
     public EpisodeDTO findRandom(String language) {
         long count = repository.count();
         int index = random.nextInt((int) count);
-        
+
         PageRequest singleAndRandomItem = PageRequest.of(index, 1);
         Page<EpisodeModel> page = repository.findAll(spec.withTranslation(language), singleAndRandomItem);
 
@@ -90,6 +90,17 @@ public class EpisodeService {
     public List<EpisodeTranslationDTO> findAllTranslationsBy(UUID uuid) {
         List<EpisodeTranslation> res = translationRepository.findAllByEpisodeUuid(uuid);
         return Arrays.asList(modelMapper.map(res, EpisodeTranslationDTO[].class));
+    }
+
+    @Transactional
+    public EpisodeTranslationDTO findRandomTranslation(UUID uuid) {
+        long count = repository.count();
+        int index = random.nextInt((int) count);
+
+        PageRequest singleAndRandomItem = PageRequest.of(index, 1);
+        Page<EpisodeTranslation> page = translationRepository.findAllByEpisodeUuid(uuid, singleAndRandomItem);
+
+        return modelMapper.map(page.getContent().get(0), EpisodeTranslationDTO.class);
     }
 
     @Transactional
