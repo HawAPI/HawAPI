@@ -4,7 +4,7 @@ import com.lucasjosino.hawapi.controllers.utils.ResponseUtils;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.interfaces.MappingInterface;
 import com.lucasjosino.hawapi.models.dto.CharacterDTO;
-import com.lucasjosino.hawapi.services.CharacterService;
+import com.lucasjosino.hawapi.services.impl.CharacterServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,12 +22,12 @@ import java.util.UUID;
 @RequestMapping("/api/v1/characters")
 public class CharacterController implements MappingInterface<CharacterDTO> {
 
-    private final CharacterService service;
+    private final CharacterServiceImpl service;
 
     private final ResponseUtils responseUtils;
 
     @Autowired
-    public CharacterController(CharacterService service, ResponseUtils responseUtils) {
+    public CharacterController(CharacterServiceImpl service, ResponseUtils responseUtils) {
         this.service = service;
         this.responseUtils = responseUtils;
     }
@@ -49,12 +49,12 @@ public class CharacterController implements MappingInterface<CharacterDTO> {
 
     @GetMapping("/random")
     public ResponseEntity<CharacterDTO> findRandom(String language) {
-        return ResponseEntity.ok().body(service.findRandom());
+        return ResponseEntity.ok().body(service.findRandom(language));
     }
 
     @GetMapping("/{uuid}")
     public ResponseEntity<CharacterDTO> findBy(UUID uuid, String language) {
-        return ResponseEntity.ok(service.findBy(uuid));
+        return ResponseEntity.ok(service.findBy(uuid, language));
     }
 
     @PostMapping
@@ -76,7 +76,7 @@ public class CharacterController implements MappingInterface<CharacterDTO> {
 
     @DeleteMapping("/{uuid}")
     public ResponseEntity<Void> delete(UUID uuid) {
-        service.delete(uuid);
+        service.deleteById(uuid);
         return ResponseEntity.noContent().build();
     }
 }

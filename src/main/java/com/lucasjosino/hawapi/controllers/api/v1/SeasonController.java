@@ -6,7 +6,7 @@ import com.lucasjosino.hawapi.interfaces.MappingInterface;
 import com.lucasjosino.hawapi.interfaces.TranslationInterface;
 import com.lucasjosino.hawapi.models.dto.SeasonDTO;
 import com.lucasjosino.hawapi.models.dto.translation.SeasonTranslationDTO;
-import com.lucasjosino.hawapi.services.SeasonService;
+import com.lucasjosino.hawapi.services.impl.SeasonServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,12 +27,12 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 @RequestMapping("/api/v1/seasons")
 public class SeasonController implements MappingInterface<SeasonDTO>, TranslationInterface<SeasonTranslationDTO> {
 
-    private final SeasonService service;
+    private final SeasonServiceImpl service;
 
     private final ResponseUtils responseUtils;
 
     @Autowired
-    public SeasonController(SeasonService SeasonService, ResponseUtils responseUtils) {
+    public SeasonController(SeasonServiceImpl SeasonService, ResponseUtils responseUtils) {
         this.service = SeasonService;
         this.responseUtils = responseUtils;
     }
@@ -125,7 +125,7 @@ public class SeasonController implements MappingInterface<SeasonDTO>, Translatio
 
     @DeleteMapping("/{uuid}")
     public ResponseEntity<Void> delete(UUID uuid) {
-        service.delete(uuid);
+        service.deleteById(uuid);
         return ResponseEntity.noContent().build();
     }
 

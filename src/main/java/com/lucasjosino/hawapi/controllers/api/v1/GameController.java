@@ -6,7 +6,7 @@ import com.lucasjosino.hawapi.interfaces.MappingInterface;
 import com.lucasjosino.hawapi.interfaces.TranslationInterface;
 import com.lucasjosino.hawapi.models.dto.GameDTO;
 import com.lucasjosino.hawapi.models.dto.translation.GameTranslationDTO;
-import com.lucasjosino.hawapi.services.GameService;
+import com.lucasjosino.hawapi.services.impl.GameServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,12 +27,12 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 @RequestMapping("/api/v1/games")
 public class GameController implements MappingInterface<GameDTO>, TranslationInterface<GameTranslationDTO> {
 
-    private final GameService service;
+    private final GameServiceImpl service;
 
     private final ResponseUtils responseUtils;
 
     @Autowired
-    public GameController(GameService GameService, ResponseUtils responseUtils) {
+    public GameController(GameServiceImpl GameService, ResponseUtils responseUtils) {
         this.service = GameService;
         this.responseUtils = responseUtils;
     }
@@ -125,7 +125,7 @@ public class GameController implements MappingInterface<GameDTO>, TranslationInt
 
     @DeleteMapping("/{uuid}")
     public ResponseEntity<Void> delete(UUID uuid) {
-        service.delete(uuid);
+        service.deleteById(uuid);
         return ResponseEntity.noContent().build();
     }
 
