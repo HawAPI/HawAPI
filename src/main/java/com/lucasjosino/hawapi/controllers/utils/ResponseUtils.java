@@ -10,6 +10,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
+import static com.lucasjosino.hawapi.core.StringUtils.isNullOrEmpty;
+
+
 @Component
 public class ResponseUtils {
 
@@ -20,20 +23,17 @@ public class ResponseUtils {
         this.languageUtils = languageUtils;
     }
 
-    public <T extends BaseModel> HttpHeaders getHeaders(
-            String language,
-            Page<UUID> modelPage,
-            Pageable pageable,
-            int count
-    ) {
-        String languageOrDefault = language != null ? language : languageUtils.getDefaultLanguage();
-        return new HttpHeaders() {{
+    public <T extends BaseModel> HttpHeaders getHeaders(Page<UUID> modelPage, Pageable pageable, String language) {
+        HttpHeaders headers = new HttpHeaders() {{
             add("X-Pagination-Page-Index", String.valueOf(pageable.getPageNumber() + 1));
             add("X-Pagination-Page-Size", String.valueOf(pageable.getPageSize()));
             add("X-Pagination-Page-Total", String.valueOf(modelPage.getTotalPages()));
-            add("X-Pagination-Item-Total", String.valueOf(count));
-            add("Content-Language", languageOrDefault);
+            add("X-Pagination-Item-Total", String.valueOf(modelPage.getContent().size()));
         }};
+
+        if (!isNullOrEmpty(language)) headers.add("Content-Language", language);
+
+        return headers;
     }
 
     public HttpHeaders getHeaders(String language) {
