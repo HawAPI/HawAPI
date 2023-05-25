@@ -12,6 +12,8 @@ public interface TranslationInterface<D extends BaseTranslationDTO> {
 
     ResponseEntity<List<D>> findAllTranslationsBy(@PathVariable UUID uuid);
 
+    ResponseEntity<D> findRandomTranslation(@PathVariable UUID uuid);
+
     ResponseEntity<D> findTranslationBy(@PathVariable UUID uuid, @PathVariable String language);
 
     ResponseEntity<D> saveTranslation(@PathVariable UUID uuid, @RequestBody D dto);
