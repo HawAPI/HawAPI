@@ -34,14 +34,11 @@ public class SoundtrackController implements MappingInterface<SoundtrackDTO> {
 
     @GetMapping
     public ResponseEntity<List<SoundtrackDTO>> findAll(Map<String, String> filters, Pageable pageable) {
-        filters.putIfAbsent("language", responseUtils.getDefaultLanguage());
-
         Page<UUID> uuids = service.findAllUUIDs(pageable);
         HttpHeaders headers = responseUtils.getHeaders(
-                filters.get("language"),
                 uuids,
                 pageable,
-                uuids.getContent().size()
+                null
         );
 
         if (uuids.isEmpty()) ResponseEntity.ok().headers(headers).body(Collections.emptyList());

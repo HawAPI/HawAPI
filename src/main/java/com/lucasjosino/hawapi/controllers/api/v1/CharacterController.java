@@ -34,14 +34,11 @@ public class CharacterController implements MappingInterface<CharacterDTO> {
 
     @GetMapping
     public ResponseEntity<List<CharacterDTO>> findAll(Map<String, String> filters, Pageable pageable) {
-        filters.putIfAbsent("language", responseUtils.getDefaultLanguage());
-
         Page<UUID> uuids = service.findAllUUIDs(pageable);
         HttpHeaders headers = responseUtils.getHeaders(
-                filters.get("language"),
                 uuids,
                 pageable,
-                uuids.getContent().size()
+                null
         );
 
         if (uuids.isEmpty()) ResponseEntity.ok().headers(headers).body(Collections.emptyList());
