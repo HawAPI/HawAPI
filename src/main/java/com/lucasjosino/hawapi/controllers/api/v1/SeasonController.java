@@ -68,6 +68,11 @@ public class SeasonController implements MappingInterface<SeasonDTO>, Translatio
         return ResponseEntity.ok(service.findAllTranslationsBy(uuid));
     }
 
+    @GetMapping("/{uuid}/translations/random")
+    public ResponseEntity<SeasonTranslationDTO> findRandomTranslation(UUID uuid) {
+        return ResponseEntity.ok(service.findRandomTranslation(uuid));
+    }
+
     @GetMapping("/{uuid}")
     public ResponseEntity<SeasonDTO> findBy(UUID uuid, String language) {
         language = defaultIfEmpty(language, responseUtils.getDefaultLanguage());

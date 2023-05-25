@@ -68,6 +68,11 @@ public class EpisodeController implements MappingInterface<EpisodeDTO>, Translat
         return ResponseEntity.ok(service.findAllTranslationsBy(uuid));
     }
 
+    @GetMapping("/{uuid}/translations/random")
+    public ResponseEntity<EpisodeTranslationDTO> findRandomTranslation(UUID uuid) {
+        return ResponseEntity.ok(service.findRandomTranslation(uuid));
+    }
+
     @GetMapping("/{uuid}")
     public ResponseEntity<EpisodeDTO> findBy(UUID uuid, String language) {
         language = defaultIfEmpty(language, responseUtils.getDefaultLanguage());

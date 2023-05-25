@@ -68,6 +68,11 @@ public class LocationController implements MappingInterface<LocationDTO>, Transl
         return ResponseEntity.ok(service.findAllTranslationsBy(uuid));
     }
 
+    @GetMapping("/{uuid}/translations/random")
+    public ResponseEntity<LocationTranslationDTO> findRandomTranslation(UUID uuid) {
+        return ResponseEntity.ok(service.findRandomTranslation(uuid));
+    }
+
     @GetMapping("/{uuid}")
     public ResponseEntity<LocationDTO> findBy(UUID uuid, String language) {
         language = defaultIfEmpty(language, responseUtils.getDefaultLanguage());

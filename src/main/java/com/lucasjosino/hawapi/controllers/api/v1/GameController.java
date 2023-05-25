@@ -68,6 +68,11 @@ public class GameController implements MappingInterface<GameDTO>, TranslationInt
         return ResponseEntity.ok(service.findAllTranslationsBy(uuid));
     }
 
+    @GetMapping("/{uuid}/translations/random")
+    public ResponseEntity<GameTranslationDTO> findRandomTranslation(UUID uuid) {
+        return ResponseEntity.ok(service.findRandomTranslation(uuid));
+    }
+
     @GetMapping("/{uuid}")
     public ResponseEntity<GameDTO> findBy(UUID uuid, String language) {
         language = defaultIfEmpty(language, responseUtils.getDefaultLanguage());
