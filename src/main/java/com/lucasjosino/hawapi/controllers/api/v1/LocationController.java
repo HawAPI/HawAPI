@@ -43,10 +43,9 @@ public class LocationController implements MappingInterface<LocationDTO>, Transl
 
         Page<UUID> uuids = service.findAllUUIDs(pageable);
         HttpHeaders headers = responseUtils.getHeaders(
-                filters.get("language"),
                 uuids,
                 pageable,
-                uuids.getContent().size()
+                filters.get("language")
         );
 
         if (uuids.isEmpty()) ResponseEntity.ok().headers(headers).body(Collections.emptyList());
