@@ -1,6 +1,8 @@
 package com.lucasjosino.hawapi.repositories.translation;
 
 import com.lucasjosino.hawapi.models.translations.LocationTranslation;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,6 +14,8 @@ import java.util.UUID;
 public interface LocationTranslationRepository extends JpaRepository<LocationTranslation, Integer> {
 
     List<LocationTranslation> findAllByLocationUuid(UUID uuid);
+
+    Page<LocationTranslation> findAllByLocationUuid(UUID uuid, PageRequest pageable);
 
     Optional<LocationTranslation> findByLocationUuidAndLanguage(UUID locationUuid, String language);
 

@@ -1,6 +1,8 @@
 package com.lucasjosino.hawapi.repositories.translation;
 
 import com.lucasjosino.hawapi.models.translations.EpisodeTranslation;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,6 +14,8 @@ import java.util.UUID;
 public interface EpisodeTranslationRepository extends JpaRepository<EpisodeTranslation, Integer> {
 
     List<EpisodeTranslation> findAllByEpisodeUuid(UUID uuid);
+
+    Page<EpisodeTranslation> findAllByEpisodeUuid(UUID uuid, PageRequest pageable);
 
     Optional<EpisodeTranslation> findByEpisodeUuidAndLanguage(UUID episodeUuid, String language);
 
