@@ -16,7 +16,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.*;
@@ -49,20 +48,17 @@ public class SoundtrackServiceImpl implements SoundtrackService {
         this.basePath = config.getApiBaseUrl() + "/soundtracks";
     }
 
-    @Transactional
     public Page<UUID> findAllUUIDs(Pageable pageable) {
         List<UUID> res = repository.findAllUUIDs(pageable);
         long count = repository.count();
         return PageableExecutionUtils.getPage(res, pageable, () -> count);
     }
 
-    @Transactional
     public List<SoundtrackDTO> findAll(Map<String, String> filters, List<UUID> uuids) {
         List<SoundtrackModel> res = repository.findAll(spec.with(filters, SoundtrackFilter.class, uuids));
         return Arrays.asList(modelMapper.map(res, SoundtrackDTO[].class));
     }
 
-    @Transactional
     public SoundtrackDTO findRandom(String language) {
         long count = repository.count();
         int index = random.nextInt((int) count);
@@ -73,13 +69,11 @@ public class SoundtrackServiceImpl implements SoundtrackService {
         return modelMapper.map(page.getContent().get(0), SoundtrackDTO.class);
     }
 
-    @Transactional
     public SoundtrackDTO findBy(UUID uuid, String language) {
         SoundtrackModel res = repository.findById(uuid).orElseThrow(ItemNotFoundException::new);
         return modelMapper.map(res, SoundtrackDTO.class);
     }
 
-    @Transactional
     public SoundtrackDTO save(SoundtrackDTO dto) {
         UUID uuid = UUID.randomUUID();
         dto.setUuid(uuid);
@@ -91,7 +85,6 @@ public class SoundtrackServiceImpl implements SoundtrackService {
         return modelMapper.map(res, SoundtrackDTO.class);
     }
 
-    @Transactional
     public void patch(UUID uuid, SoundtrackDTO patch) throws IOException {
         SoundtrackModel dbRes = repository.findById(uuid).orElseThrow(ItemNotFoundException::new);
 
@@ -102,7 +95,6 @@ public class SoundtrackServiceImpl implements SoundtrackService {
         repository.save(patchedModel);
     }
 
-    @Transactional
     public void deleteById(UUID uuid) {
         if (!repository.existsById(uuid)) throw new ItemNotFoundException();
 

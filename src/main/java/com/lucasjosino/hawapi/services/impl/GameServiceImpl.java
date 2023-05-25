@@ -23,7 +23,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.*;
@@ -63,20 +62,17 @@ public class GameServiceImpl implements GameService {
         this.basePath = config.getApiBaseUrl() + "/games";
     }
 
-    @Transactional
     public Page<UUID> findAllUUIDs(Pageable pageable) {
         List<UUID> res = repository.findAllUUIDs(pageable);
         long count = repository.count();
         return PageableExecutionUtils.getPage(res, pageable, () -> count);
     }
 
-    @Transactional
     public List<GameDTO> findAll(Map<String, String> filters, List<UUID> uuids) {
         List<GameModel> res = repository.findAll(spec.with(filters, GameFilter.class, uuids));
         return Arrays.asList(modelMapper.map(res, GameDTO[].class));
     }
 
-    @Transactional
     public GameDTO findRandom(String language) {
         long count = repository.count();
         int index = random.nextInt((int) count);
@@ -87,13 +83,11 @@ public class GameServiceImpl implements GameService {
         return modelMapper.map(page.getContent().get(0), GameDTO.class);
     }
 
-    @Transactional
     public List<GameTranslationDTO> findAllTranslationsBy(UUID uuid) {
         List<GameTranslation> res = translationRepository.findAllByGameUuid(uuid);
         return Arrays.asList(modelMapper.map(res, GameTranslationDTO[].class));
     }
 
-    @Transactional
     public GameTranslationDTO findRandomTranslation(UUID uuid) {
         long count = repository.count();
         int index = random.nextInt((int) count);
@@ -104,7 +98,6 @@ public class GameServiceImpl implements GameService {
         return modelMapper.map(page.getContent().get(0), GameTranslationDTO.class);
     }
 
-    @Transactional
     public GameDTO findBy(UUID uuid, String language) {
         GameModel res = repository
                 .findByUuidAndTranslationLanguage(uuid, language)
@@ -112,7 +105,6 @@ public class GameServiceImpl implements GameService {
         return modelMapper.map(res, GameDTO.class);
     }
 
-    @Transactional
     public GameTranslationDTO findTranslationBy(UUID uuid, String language) {
         GameTranslation res = translationRepository
                 .findByGameUuidAndLanguage(uuid, language)
@@ -120,7 +112,6 @@ public class GameServiceImpl implements GameService {
         return modelMapper.map(res, GameTranslationDTO.class);
     }
 
-    @Transactional
     public GameDTO save(GameDTO dto) {
         UUID uuid = UUID.randomUUID();
         dto.setUuid(uuid);
@@ -137,7 +128,6 @@ public class GameServiceImpl implements GameService {
         return modelMapper.map(res, GameDTO.class);
     }
 
-    @Transactional
     public GameTranslationDTO saveTranslation(UUID uuid, GameTranslationDTO dto) {
         validateDTO(uuid, dto.getLanguage());
 
@@ -149,7 +139,6 @@ public class GameServiceImpl implements GameService {
         return modelMapper.map(res, GameTranslationDTO.class);
     }
 
-    @Transactional
     public void patch(UUID uuid, GameDTO patch) throws IOException {
         GameModel dbRes = repository.findById(uuid).orElseThrow(ItemNotFoundException::new);
 
@@ -160,7 +149,6 @@ public class GameServiceImpl implements GameService {
         repository.save(patchedModel);
     }
 
-    @Transactional
     public void patchTranslation(UUID uuid, String language, GameTranslationDTO patch) throws IOException {
         GameTranslation translation = translationRepository.findByGameUuidAndLanguage(uuid, language)
                 .orElseThrow(ItemNotFoundException::new);
@@ -171,14 +159,12 @@ public class GameServiceImpl implements GameService {
         translationRepository.save(patchedTranslation);
     }
 
-    @Transactional
     public void deleteById(UUID uuid) {
         if (!repository.existsById(uuid)) throw new ItemNotFoundException();
 
         repository.deleteById(uuid);
     }
 
-    @Transactional
     public void deleteTranslation(UUID uuid, String language) {
         if (!translationRepository.existsByGameUuidAndLanguage(uuid, language)) {
             throw new ItemNotFoundException();

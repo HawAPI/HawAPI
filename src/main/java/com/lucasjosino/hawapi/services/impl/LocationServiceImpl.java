@@ -23,7 +23,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.*;
@@ -63,20 +62,17 @@ public class LocationServiceImpl implements LocationService {
         this.basePath = config.getApiBaseUrl() + "/places";
     }
 
-    @Transactional
     public Page<UUID> findAllUUIDs(Pageable pageable) {
         List<UUID> res = repository.findAllUUIDs(pageable);
         long count = repository.count();
         return PageableExecutionUtils.getPage(res, pageable, () -> count);
     }
 
-    @Transactional
     public List<LocationDTO> findAll(Map<String, String> filters, List<UUID> uuids) {
         List<LocationModel> res = repository.findAll(spec.with(filters, LocationFilter.class, uuids));
         return Arrays.asList(modelMapper.map(res, LocationDTO[].class));
     }
 
-    @Transactional
     public LocationDTO findRandom(String language) {
         long count = repository.count();
         int index = random.nextInt((int) count);
@@ -87,13 +83,11 @@ public class LocationServiceImpl implements LocationService {
         return modelMapper.map(page.getContent().get(0), LocationDTO.class);
     }
 
-    @Transactional
     public List<LocationTranslationDTO> findAllTranslationsBy(UUID uuid) {
         List<LocationTranslation> res = translationRepository.findAllByLocationUuid(uuid);
         return Arrays.asList(modelMapper.map(res, LocationTranslationDTO[].class));
     }
 
-    @Transactional
     public LocationTranslationDTO findRandomTranslation(UUID uuid) {
         long count = repository.count();
         int index = random.nextInt((int) count);
@@ -104,7 +98,6 @@ public class LocationServiceImpl implements LocationService {
         return modelMapper.map(page.getContent().get(0), LocationTranslationDTO.class);
     }
 
-    @Transactional
     public LocationDTO findBy(UUID uuid, String language) {
         LocationModel res = repository
                 .findByUuidAndTranslationLanguage(uuid, language)
@@ -112,7 +105,6 @@ public class LocationServiceImpl implements LocationService {
         return modelMapper.map(res, LocationDTO.class);
     }
 
-    @Transactional
     public LocationTranslationDTO findTranslationBy(UUID uuid, String language) {
         LocationTranslation res = translationRepository
                 .findByLocationUuidAndLanguage(uuid, language)
@@ -120,7 +112,6 @@ public class LocationServiceImpl implements LocationService {
         return modelMapper.map(res, LocationTranslationDTO.class);
     }
 
-    @Transactional
     public LocationDTO save(LocationDTO dto) {
         UUID uuid = UUID.randomUUID();
         dto.setUuid(uuid);
@@ -137,7 +128,6 @@ public class LocationServiceImpl implements LocationService {
         return modelMapper.map(res, LocationDTO.class);
     }
 
-    @Transactional
     public LocationTranslationDTO saveTranslation(UUID uuid, LocationTranslationDTO dto) {
         validateDTO(uuid, dto.getLanguage());
 
@@ -149,7 +139,6 @@ public class LocationServiceImpl implements LocationService {
         return modelMapper.map(res, LocationTranslationDTO.class);
     }
 
-    @Transactional
     public void patch(UUID uuid, LocationDTO patch) throws IOException {
         LocationModel dbRes = repository.findById(uuid).orElseThrow(ItemNotFoundException::new);
 
@@ -160,7 +149,6 @@ public class LocationServiceImpl implements LocationService {
         repository.save(patchedModel);
     }
 
-    @Transactional
     public void patchTranslation(UUID uuid, String language, LocationTranslationDTO patch) throws IOException {
         LocationTranslation translation = translationRepository.findByLocationUuidAndLanguage(uuid, language)
                 .orElseThrow(ItemNotFoundException::new);
@@ -171,14 +159,12 @@ public class LocationServiceImpl implements LocationService {
         translationRepository.save(patchedTranslation);
     }
 
-    @Transactional
     public void deleteById(UUID uuid) {
         if (!repository.existsById(uuid)) throw new ItemNotFoundException();
 
         repository.deleteById(uuid);
     }
 
-    @Transactional
     public void deleteTranslation(UUID uuid, String language) {
         if (!translationRepository.existsByLocationUuidAndLanguage(uuid, language)) {
             throw new ItemNotFoundException();

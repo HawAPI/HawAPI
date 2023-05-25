@@ -16,7 +16,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.*;
@@ -49,20 +48,17 @@ public class CharacterServiceImpl implements CharacterService {
         this.basePath = config.getApiBaseUrl() + "/characters";
     }
 
-    @Transactional
     public Page<UUID> findAllUUIDs(Pageable pageable) {
         List<UUID> res = repository.findAllUUIDs(pageable);
         long count = repository.count();
         return PageableExecutionUtils.getPage(res, pageable, () -> count);
     }
 
-    @Transactional
     public List<CharacterDTO> findAll(Map<String, String> filters, List<UUID> uuids) {
         List<CharacterModel> res = repository.findAll(spec.with(filters, CharacterFilter.class, uuids));
         return Arrays.asList(modelMapper.map(res, CharacterDTO[].class));
     }
 
-    @Transactional
     public CharacterDTO findRandom(String language) {
         long count = repository.count();
         int index = random.nextInt((int) count);
@@ -73,13 +69,11 @@ public class CharacterServiceImpl implements CharacterService {
         return modelMapper.map(page.getContent().get(0), CharacterDTO.class);
     }
 
-    @Transactional
     public CharacterDTO findBy(UUID uuid, String language) {
         CharacterModel res = repository.findById(uuid).orElseThrow(ItemNotFoundException::new);
         return modelMapper.map(res, CharacterDTO.class);
     }
 
-    @Transactional
     public CharacterDTO save(CharacterDTO dto) {
         UUID uuid = UUID.randomUUID();
         dto.setUuid(uuid);
@@ -91,7 +85,6 @@ public class CharacterServiceImpl implements CharacterService {
         return modelMapper.map(res, CharacterDTO.class);
     }
 
-    @Transactional
     public void patch(UUID uuid, CharacterDTO patch) throws IOException {
         CharacterModel dbRes = repository.findById(uuid).orElseThrow(ItemNotFoundException::new);
 
@@ -102,7 +95,6 @@ public class CharacterServiceImpl implements CharacterService {
         repository.save(patchedModel);
     }
 
-    @Transactional
     public void deleteById(UUID uuid) {
         if (!repository.existsById(uuid)) throw new ItemNotFoundException();
 

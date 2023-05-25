@@ -23,7 +23,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.*;
@@ -63,20 +62,17 @@ public class EpisodeServiceImpl implements EpisodeService {
         this.basePath = config.getApiBaseUrl() + "/episodes";
     }
 
-    @Transactional
     public Page<UUID> findAllUUIDs(Pageable pageable) {
         List<UUID> res = repository.findAllUUIDs(pageable);
         long count = repository.count();
         return PageableExecutionUtils.getPage(res, pageable, () -> count);
     }
 
-    @Transactional
     public List<EpisodeDTO> findAll(Map<String, String> filters, List<UUID> uuids) {
         List<EpisodeModel> res = repository.findAll(spec.with(filters, EpisodeFilter.class, uuids));
         return Arrays.asList(modelMapper.map(res, EpisodeDTO[].class));
     }
 
-    @Transactional
     public EpisodeDTO findRandom(String language) {
         long count = repository.count();
         int index = random.nextInt((int) count);
@@ -87,13 +83,11 @@ public class EpisodeServiceImpl implements EpisodeService {
         return modelMapper.map(page.getContent().get(0), EpisodeDTO.class);
     }
 
-    @Transactional
     public List<EpisodeTranslationDTO> findAllTranslationsBy(UUID uuid) {
         List<EpisodeTranslation> res = translationRepository.findAllByEpisodeUuid(uuid);
         return Arrays.asList(modelMapper.map(res, EpisodeTranslationDTO[].class));
     }
 
-    @Transactional
     public EpisodeTranslationDTO findRandomTranslation(UUID uuid) {
         long count = repository.count();
         int index = random.nextInt((int) count);
@@ -104,7 +98,6 @@ public class EpisodeServiceImpl implements EpisodeService {
         return modelMapper.map(page.getContent().get(0), EpisodeTranslationDTO.class);
     }
 
-    @Transactional
     public EpisodeDTO findBy(UUID uuid, String language) {
         EpisodeModel res = repository
                 .findByUuidAndTranslationLanguage(uuid, language)
@@ -112,7 +105,6 @@ public class EpisodeServiceImpl implements EpisodeService {
         return modelMapper.map(res, EpisodeDTO.class);
     }
 
-    @Transactional
     public EpisodeTranslationDTO findTranslationBy(UUID uuid, String language) {
         EpisodeTranslation res = translationRepository
                 .findByEpisodeUuidAndLanguage(uuid, language)
@@ -120,7 +112,6 @@ public class EpisodeServiceImpl implements EpisodeService {
         return modelMapper.map(res, EpisodeTranslationDTO.class);
     }
 
-    @Transactional
     public EpisodeDTO save(EpisodeDTO dto) {
         UUID uuid = UUID.randomUUID();
         dto.setUuid(uuid);
@@ -137,7 +128,6 @@ public class EpisodeServiceImpl implements EpisodeService {
         return modelMapper.map(res, EpisodeDTO.class);
     }
 
-    @Transactional
     public EpisodeTranslationDTO saveTranslation(UUID uuid, EpisodeTranslationDTO dto) {
         validateDTO(uuid, dto.getLanguage());
 
@@ -149,7 +139,6 @@ public class EpisodeServiceImpl implements EpisodeService {
         return modelMapper.map(res, EpisodeTranslationDTO.class);
     }
 
-    @Transactional
     public void patch(UUID uuid, EpisodeDTO patch) throws IOException {
         EpisodeModel dbRes = repository.findById(uuid).orElseThrow(ItemNotFoundException::new);
 
@@ -160,7 +149,6 @@ public class EpisodeServiceImpl implements EpisodeService {
         repository.save(patchedModel);
     }
 
-    @Transactional
     public void patchTranslation(UUID uuid, String language, EpisodeTranslationDTO patch) throws IOException {
         EpisodeTranslation translation = translationRepository.findByEpisodeUuidAndLanguage(uuid, language)
                 .orElseThrow(ItemNotFoundException::new);
@@ -171,14 +159,12 @@ public class EpisodeServiceImpl implements EpisodeService {
         translationRepository.save(patchedTranslation);
     }
 
-    @Transactional
     public void deleteById(UUID uuid) {
         if (!repository.existsById(uuid)) throw new ItemNotFoundException();
 
         repository.deleteById(uuid);
     }
 
-    @Transactional
     public void deleteTranslation(UUID uuid, String language) {
         if (!translationRepository.existsByEpisodeUuidAndLanguage(uuid, language)) {
             throw new ItemNotFoundException();

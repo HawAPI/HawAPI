@@ -23,7 +23,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.*;
@@ -63,20 +62,17 @@ public class SeasonServiceImpl implements SeasonService {
         this.basePath = config.getApiBaseUrl() + "/seasons";
     }
 
-    @Transactional
     public Page<UUID> findAllUUIDs(Pageable pageable) {
         List<UUID> res = repository.findAllUUIDs(pageable);
         long count = repository.count();
         return PageableExecutionUtils.getPage(res, pageable, () -> count);
     }
 
-    @Transactional
     public List<SeasonDTO> findAll(Map<String, String> filters, List<UUID> uuids) {
         List<SeasonModel> res = repository.findAll(spec.with(filters, SeasonFilter.class, uuids));
         return Arrays.asList(modelMapper.map(res, SeasonDTO[].class));
     }
 
-    @Transactional
     public SeasonDTO findRandom(String language) {
         long count = repository.count();
         int index = random.nextInt((int) count);
@@ -87,13 +83,11 @@ public class SeasonServiceImpl implements SeasonService {
         return modelMapper.map(page.getContent().get(0), SeasonDTO.class);
     }
 
-    @Transactional
     public List<SeasonTranslationDTO> findAllTranslationsBy(UUID uuid) {
         List<SeasonTranslation> res = translationRepository.findAllBySeasonUuid(uuid);
         return Arrays.asList(modelMapper.map(res, SeasonTranslationDTO[].class));
     }
 
-    @Transactional
     public SeasonTranslationDTO findRandomTranslation(UUID uuid) {
         long count = repository.count();
         int index = random.nextInt((int) count);
@@ -104,7 +98,6 @@ public class SeasonServiceImpl implements SeasonService {
         return modelMapper.map(page.getContent().get(0), SeasonTranslationDTO.class);
     }
 
-    @Transactional
     public SeasonDTO findBy(UUID uuid, String language) {
         SeasonModel res = repository
                 .findByUuidAndTranslationLanguage(uuid, language)
@@ -112,7 +105,6 @@ public class SeasonServiceImpl implements SeasonService {
         return modelMapper.map(res, SeasonDTO.class);
     }
 
-    @Transactional
     public SeasonTranslationDTO findTranslationBy(UUID uuid, String language) {
         SeasonTranslation res = translationRepository
                 .findBySeasonUuidAndLanguage(uuid, language)
@@ -120,7 +112,6 @@ public class SeasonServiceImpl implements SeasonService {
         return modelMapper.map(res, SeasonTranslationDTO.class);
     }
 
-    @Transactional
     public SeasonDTO save(SeasonDTO dto) {
         UUID uuid = UUID.randomUUID();
         dto.setUuid(uuid);
@@ -137,7 +128,6 @@ public class SeasonServiceImpl implements SeasonService {
         return modelMapper.map(res, SeasonDTO.class);
     }
 
-    @Transactional
     public SeasonTranslationDTO saveTranslation(UUID uuid, SeasonTranslationDTO dto) {
         validateDTO(uuid, dto.getLanguage());
 
@@ -149,7 +139,6 @@ public class SeasonServiceImpl implements SeasonService {
         return modelMapper.map(res, SeasonTranslationDTO.class);
     }
 
-    @Transactional
     public void patch(UUID uuid, SeasonDTO patch) throws IOException {
         SeasonModel dbRes = repository.findById(uuid).orElseThrow(ItemNotFoundException::new);
 
@@ -160,7 +149,6 @@ public class SeasonServiceImpl implements SeasonService {
         repository.save(patchedModel);
     }
 
-    @Transactional
     public void patchTranslation(UUID uuid, String language, SeasonTranslationDTO patch) throws IOException {
         SeasonTranslation translation = translationRepository.findBySeasonUuidAndLanguage(uuid, language)
                 .orElseThrow(ItemNotFoundException::new);
@@ -171,14 +159,12 @@ public class SeasonServiceImpl implements SeasonService {
         translationRepository.save(patchedTranslation);
     }
 
-    @Transactional
     public void deleteById(UUID uuid) {
         if (!repository.existsById(uuid)) throw new ItemNotFoundException();
 
         repository.deleteById(uuid);
     }
 
-    @Transactional
     public void deleteTranslation(UUID uuid, String language) {
         if (!translationRepository.existsBySeasonUuidAndLanguage(uuid, language)) {
             throw new ItemNotFoundException();
