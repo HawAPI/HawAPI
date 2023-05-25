@@ -50,6 +50,11 @@ public class CharacterController implements MappingInterface<CharacterDTO> {
         return ResponseEntity.ok().headers(headers).body(res);
     }
 
+    @GetMapping("/random")
+    public ResponseEntity<CharacterDTO> findRandom(String language) {
+        return ResponseEntity.ok().body(service.findRandom());
+    }
+
     @GetMapping("/{uuid}")
     public ResponseEntity<CharacterDTO> findBy(UUID uuid, String language) {
         return ResponseEntity.ok(service.findBy(uuid));

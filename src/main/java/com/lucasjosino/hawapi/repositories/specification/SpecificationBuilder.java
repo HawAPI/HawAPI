@@ -55,6 +55,28 @@ public class SpecificationBuilder<T extends BaseModel> implements Specification<
         return this;
     }
 
+    /**
+     * Create a specification filter with specific item translation language.
+     *
+     * @param language The item language to be filtered.
+     * @return The specification filter with defined language.
+     * @throws InternalServerErrorException If table doesn't have translation table.
+     */
+    public Specification<T> withTranslation(String language) {
+        return (root, query, builder) -> {
+            try {
+                // Get 'translation' table.
+                Join<T, Object> translation = root.join("translation", JoinType.INNER);
+                // Add translation language filter.
+                return builder.and(builder.equal(translation.get("language"), language));
+            } catch (Exception exception) {
+                String message = "Something went wrong while trying to build specification";
+                log.error(message + ": {}", exception.getMessage());
+                throw new InternalServerErrorException(message, exception);
+            }
+        };
+    }
+
     @Override
     public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
         List<Predicate> predicates = new ArrayList<>();

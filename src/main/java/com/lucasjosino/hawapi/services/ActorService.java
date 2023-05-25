@@ -11,19 +11,21 @@ import com.lucasjosino.hawapi.services.utils.ServiceUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class ActorService {
+
+    private static final SpecificationBuilder<ActorModel> spec = new SpecificationBuilder<>();
+
+    private static final Random random = new Random();
 
     private final String basePath;
 
@@ -32,8 +34,6 @@ public class ActorService {
     private final ModelMapper modelMapper;
 
     private final ActorRepository repository;
-
-    private final SpecificationBuilder<ActorModel> spec;
 
     @Autowired
     public ActorService(
@@ -45,7 +45,6 @@ public class ActorService {
         this.utils = utils;
         this.repository = repository;
         this.modelMapper = modelMapper;
-        this.spec = new SpecificationBuilder<>();
         this.basePath = config.getApiBaseUrl() + "/actors";
     }
 
@@ -60,6 +59,17 @@ public class ActorService {
     public List<ActorDTO> findAll(Map<String, String> filters, List<UUID> uuids) {
         List<ActorModel> res = repository.findAll(spec.with(filters, ActorFilter.class, uuids));
         return Arrays.asList(modelMapper.map(res, ActorDTO[].class));
+    }
+
+    @Transactional
+    public ActorDTO findRandom() {
+        long count = repository.count();
+        int index = random.nextInt((int) count);
+
+        PageRequest singleAndRandomItem = PageRequest.of(index, 1);
+        Page<ActorModel> page = repository.findAll(singleAndRandomItem);
+
+        return modelMapper.map(page.getContent().get(0), ActorDTO.class);
     }
 
     @Transactional

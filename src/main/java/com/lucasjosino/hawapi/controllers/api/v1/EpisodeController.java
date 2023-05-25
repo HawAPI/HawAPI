@@ -7,7 +7,6 @@ import com.lucasjosino.hawapi.interfaces.TranslationInterface;
 import com.lucasjosino.hawapi.models.dto.EpisodeDTO;
 import com.lucasjosino.hawapi.models.dto.translation.EpisodeTranslationDTO;
 import com.lucasjosino.hawapi.services.EpisodeService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +19,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import static com.lucasjosino.hawapi.core.StringUtils.isNullOrEmpty;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 @RestController
 @RequestMapping("/api/v1/episodes")
@@ -53,14 +55,27 @@ public class EpisodeController implements MappingInterface<EpisodeDTO>, Translat
         return ResponseEntity.ok().headers(headers).body(res);
     }
 
+    @GetMapping("/random")
+    public ResponseEntity<EpisodeDTO> findRandom(String language) {
+        if (isNullOrEmpty(language)) language = responseUtils.getDefaultLanguage();
+
+        HttpHeaders headers = responseUtils.getHeaders(language);
+        return ResponseEntity.ok().headers(headers).body(service.findRandom(language));
+    }
+
     @GetMapping("/{uuid}/translations")
     public ResponseEntity<List<EpisodeTranslationDTO>> findAllTranslationsBy(UUID uuid) {
         return ResponseEntity.ok(service.findAllTranslationsBy(uuid));
     }
 
+    @GetMapping("/{uuid}/translations/random")
+    public ResponseEntity<EpisodeTranslationDTO> findRandomTranslation(UUID uuid) {
+        return ResponseEntity.ok(service.findRandomTranslation(uuid));
+    }
+
     @GetMapping("/{uuid}")
     public ResponseEntity<EpisodeDTO> findBy(UUID uuid, String language) {
-        language = StringUtils.defaultIfEmpty(language, responseUtils.getDefaultLanguage());
+        language = defaultIfEmpty(language, responseUtils.getDefaultLanguage());
 
         HttpHeaders headers = responseUtils.getHeaders(language);
         return ResponseEntity.ok().headers(headers).body(service.findBy(uuid, language));

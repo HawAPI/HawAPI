@@ -14,6 +14,8 @@ import java.util.UUID;
 public interface MappingInterface<D extends BaseDTO> {
     ResponseEntity<List<D>> findAll(@RequestParam Map<String, String> filters, Pageable pageable);
 
+    ResponseEntity<D> findRandom(@RequestParam(required = false) String language);
+
     ResponseEntity<D> findBy(@PathVariable UUID uuid, @RequestParam(required = false) String language);
 
     ResponseEntity<D> save(@RequestBody D dto);

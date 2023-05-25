@@ -50,6 +50,11 @@ public class ActorController implements MappingInterface<ActorDTO> {
         return ResponseEntity.ok().headers(headers).body(res);
     }
 
+    @GetMapping("/random")
+    public ResponseEntity<ActorDTO> findRandom(String language) {
+        return ResponseEntity.ok().body(service.findRandom());
+    }
+
     @GetMapping("/{uuid}")
     public ResponseEntity<ActorDTO> findBy(UUID uuid, String language) {
         return ResponseEntity.ok(service.findBy(uuid));

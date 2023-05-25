@@ -1,6 +1,8 @@
 package com.lucasjosino.hawapi.repositories.translation;
 
 import com.lucasjosino.hawapi.models.translations.GameTranslation;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,6 +14,8 @@ import java.util.UUID;
 public interface GameTranslationRepository extends JpaRepository<GameTranslation, Integer> {
 
     List<GameTranslation> findAllByGameUuid(UUID uuid);
+
+    Page<GameTranslation> findAllByGameUuid(UUID uuid, PageRequest pageable);
 
     Optional<GameTranslation> findByGameUuidAndLanguage(UUID gameUuid, String language);
 
