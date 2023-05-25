@@ -8,7 +8,7 @@ import com.lucasjosino.hawapi.controllers.LocationController;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.filters.LocationFilter;
 import com.lucasjosino.hawapi.models.LocationModel;
-import com.lucasjosino.hawapi.services.LocationService;
+import com.lucasjosino.hawapi.services.impl.LocationServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -36,7 +36,7 @@ public class LocationControllerUnitTest {
     private static final LocationModel location = getSingleLocation();
 
     @Mock
-    private LocationService locationService;
+    private LocationServiceImpl locationService;
 
     @InjectMocks
     private LocationController locationController;

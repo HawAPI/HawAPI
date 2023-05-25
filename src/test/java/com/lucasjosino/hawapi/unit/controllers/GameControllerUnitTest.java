@@ -8,7 +8,7 @@ import com.lucasjosino.hawapi.controllers.GameController;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.filters.GameFilter;
 import com.lucasjosino.hawapi.models.GameModel;
-import com.lucasjosino.hawapi.services.GameService;
+import com.lucasjosino.hawapi.services.impl.GameServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -36,7 +36,7 @@ public class GameControllerUnitTest {
     private static final GameModel game = getSingleGame();
 
     @Mock
-    private GameService gameService;
+    private GameServiceImpl gameService;
 
     @InjectMocks
     private GameController gameController;

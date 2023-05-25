@@ -8,7 +8,7 @@ import com.lucasjosino.hawapi.controllers.EpisodeController;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.filters.EpisodeFilter;
 import com.lucasjosino.hawapi.models.EpisodeModel;
-import com.lucasjosino.hawapi.services.EpisodeService;
+import com.lucasjosino.hawapi.services.impl.EpisodeServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -36,7 +36,7 @@ public class EpisodeControllerUnitTest {
     private static final EpisodeModel episode = getSingleEpisode();
 
     @Mock
-    private EpisodeService episodeService;
+    private EpisodeServiceImpl episodeService;
 
     @InjectMocks
     private EpisodeController episodeController;

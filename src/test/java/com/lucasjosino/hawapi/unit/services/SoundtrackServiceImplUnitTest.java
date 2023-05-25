@@ -9,7 +9,7 @@ import com.lucasjosino.hawapi.filters.SoundtrackFilter;
 import com.lucasjosino.hawapi.models.SoundtrackModel;
 import com.lucasjosino.hawapi.properties.OpenAPIProperty;
 import com.lucasjosino.hawapi.repositories.SoundtrackRepository;
-import com.lucasjosino.hawapi.services.SoundtrackService;
+import com.lucasjosino.hawapi.services.impl.SoundtrackServiceImpl;
 import com.lucasjosino.hawapi.services.utils.ServiceUtils;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -28,7 +28,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @UnitTestConfig
-public class SoundtrackServiceUnitTest {
+public class SoundtrackServiceImplUnitTest {
 
     private static final SoundtrackModel soundtrack = getSingleSoundtrack();
 
@@ -42,7 +42,7 @@ public class SoundtrackServiceUnitTest {
     private SoundtrackRepository soundtrackRepository;
 
     @InjectMocks
-    private SoundtrackService soundtrackService;
+    private SoundtrackServiceImpl soundtrackService;
 
     @Test
     public void shouldCreateSoundtrack() {

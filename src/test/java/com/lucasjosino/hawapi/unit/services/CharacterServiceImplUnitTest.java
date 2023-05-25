@@ -9,7 +9,7 @@ import com.lucasjosino.hawapi.filters.CharacterFilter;
 import com.lucasjosino.hawapi.models.CharacterModel;
 import com.lucasjosino.hawapi.properties.OpenAPIProperty;
 import com.lucasjosino.hawapi.repositories.CharacterRepository;
-import com.lucasjosino.hawapi.services.CharacterService;
+import com.lucasjosino.hawapi.services.impl.CharacterServiceImpl;
 import com.lucasjosino.hawapi.services.utils.ServiceUtils;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -28,7 +28,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @UnitTestConfig
-public class CharacterServiceUnitTest {
+public class CharacterServiceImplUnitTest {
 
     private static final CharacterModel character = getSingleCharacter();
 
@@ -42,7 +42,7 @@ public class CharacterServiceUnitTest {
     private CharacterRepository characterRepository;
 
     @InjectMocks
-    private CharacterService characterService;
+    private CharacterServiceImpl characterService;
 
     @Test
     public void shouldCreateCharacter() {

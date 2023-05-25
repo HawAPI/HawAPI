@@ -9,7 +9,7 @@ import com.lucasjosino.hawapi.filters.LocationFilter;
 import com.lucasjosino.hawapi.models.LocationModel;
 import com.lucasjosino.hawapi.properties.OpenAPIProperty;
 import com.lucasjosino.hawapi.repositories.LocationRepository;
-import com.lucasjosino.hawapi.services.LocationService;
+import com.lucasjosino.hawapi.services.impl.LocationServiceImpl;
 import com.lucasjosino.hawapi.services.utils.ServiceUtils;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -28,7 +28,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @UnitTestConfig
-public class LocationServiceUnitTest {
+public class LocationServiceImplUnitTest {
 
     private static final LocationModel location = getSingleLocation();
 
@@ -42,7 +42,7 @@ public class LocationServiceUnitTest {
     private LocationRepository locationRepository;
 
     @InjectMocks
-    private LocationService locationService;
+    private LocationServiceImpl locationService;
 
     @Test
     public void shouldCreateLocation() {

@@ -9,7 +9,7 @@ import com.lucasjosino.hawapi.filters.SeasonFilter;
 import com.lucasjosino.hawapi.models.SeasonModel;
 import com.lucasjosino.hawapi.properties.OpenAPIProperty;
 import com.lucasjosino.hawapi.repositories.SeasonRepository;
-import com.lucasjosino.hawapi.services.SeasonService;
+import com.lucasjosino.hawapi.services.impl.SeasonServiceImpl;
 import com.lucasjosino.hawapi.services.utils.ServiceUtils;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -28,7 +28,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @UnitTestConfig
-public class SeasonServiceUnitTest {
+public class SeasonServiceImplUnitTest {
 
     private static final SeasonModel season = getSingleSeason();
 
@@ -42,7 +42,7 @@ public class SeasonServiceUnitTest {
     private SeasonRepository seasonRepository;
 
     @InjectMocks
-    private SeasonService seasonService;
+    private SeasonServiceImpl seasonService;
 
     @Test
     public void shouldCreateSeason() {
