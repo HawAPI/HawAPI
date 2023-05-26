@@ -4,7 +4,7 @@ import com.lucasjosino.hawapi.controllers.utils.ResponseUtils;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.interfaces.MappingInterface;
 import com.lucasjosino.hawapi.models.dto.SoundtrackDTO;
-import com.lucasjosino.hawapi.services.SoundtrackService;
+import com.lucasjosino.hawapi.services.impl.SoundtrackServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,12 +22,12 @@ import java.util.UUID;
 @RequestMapping("/api/v1/soundtracks")
 public class SoundtrackController implements MappingInterface<SoundtrackDTO> {
 
-    private final SoundtrackService service;
+    private final SoundtrackServiceImpl service;
 
     private final ResponseUtils responseUtils;
 
     @Autowired
-    public SoundtrackController(SoundtrackService SoundtrackService, ResponseUtils responseUtils) {
+    public SoundtrackController(SoundtrackServiceImpl SoundtrackService, ResponseUtils responseUtils) {
         this.service = SoundtrackService;
         this.responseUtils = responseUtils;
     }
@@ -49,12 +49,12 @@ public class SoundtrackController implements MappingInterface<SoundtrackDTO> {
 
     @GetMapping("/random")
     public ResponseEntity<SoundtrackDTO> findRandom(String language) {
-        return ResponseEntity.ok().body(service.findRandom());
+        return ResponseEntity.ok().body(service.findRandom(language));
     }
 
     @GetMapping("/{uuid}")
     public ResponseEntity<SoundtrackDTO> findBy(UUID uuid, String language) {
-        return ResponseEntity.ok(service.findBy(uuid));
+        return ResponseEntity.ok(service.findBy(uuid, language));
     }
 
     @PostMapping
@@ -76,7 +76,7 @@ public class SoundtrackController implements MappingInterface<SoundtrackDTO> {
 
     @DeleteMapping("/{uuid}")
     public ResponseEntity<Void> delete(UUID uuid) {
-        service.delete(uuid);
+        service.deleteById(uuid);
         return ResponseEntity.noContent().build();
     }
 }

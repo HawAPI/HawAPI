@@ -8,7 +8,7 @@ import com.lucasjosino.hawapi.controllers.SoundtrackController;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.filters.SoundtrackFilter;
 import com.lucasjosino.hawapi.models.SoundtrackModel;
-import com.lucasjosino.hawapi.services.SoundtrackService;
+import com.lucasjosino.hawapi.services.impl.SoundtrackServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -36,7 +36,7 @@ public class SoundtrackControllerUnitTest {
     private static final SoundtrackModel soundtrack = getSingleSoundtrack();
 
     @Mock
-    private SoundtrackService soundtrackService;
+    private SoundtrackServiceImpl soundtrackService;
 
     @InjectMocks
     private SoundtrackController soundtrackController;

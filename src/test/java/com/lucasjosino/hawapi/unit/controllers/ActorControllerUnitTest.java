@@ -8,7 +8,7 @@ import com.lucasjosino.hawapi.controllers.ActorController;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.filters.ActorFilter;
 import com.lucasjosino.hawapi.models.ActorModel;
-import com.lucasjosino.hawapi.services.ActorService;
+import com.lucasjosino.hawapi.services.impl.ActorServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -36,7 +36,7 @@ public class ActorControllerUnitTest {
     private static final ActorModel actor = getSingleActor();
 
     @Mock
-    private ActorService actorService;
+    private ActorServiceImpl actorService;
 
     @InjectMocks
     private ActorController actorController;

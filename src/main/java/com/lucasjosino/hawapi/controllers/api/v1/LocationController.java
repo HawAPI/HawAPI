@@ -6,7 +6,7 @@ import com.lucasjosino.hawapi.interfaces.MappingInterface;
 import com.lucasjosino.hawapi.interfaces.TranslationInterface;
 import com.lucasjosino.hawapi.models.dto.LocationDTO;
 import com.lucasjosino.hawapi.models.dto.translation.LocationTranslationDTO;
-import com.lucasjosino.hawapi.services.LocationService;
+import com.lucasjosino.hawapi.services.impl.LocationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,12 +27,12 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 @RequestMapping("/api/v1/locations")
 public class LocationController implements MappingInterface<LocationDTO>, TranslationInterface<LocationTranslationDTO> {
 
-    private final LocationService service;
+    private final LocationServiceImpl service;
 
     private final ResponseUtils responseUtils;
 
     @Autowired
-    public LocationController(LocationService LocationService, ResponseUtils responseUtils) {
+    public LocationController(LocationServiceImpl LocationService, ResponseUtils responseUtils) {
         this.service = LocationService;
         this.responseUtils = responseUtils;
     }
@@ -125,7 +125,7 @@ public class LocationController implements MappingInterface<LocationDTO>, Transl
 
     @DeleteMapping("/{uuid}")
     public ResponseEntity<Void> delete(UUID uuid) {
-        service.delete(uuid);
+        service.deleteById(uuid);
         return ResponseEntity.noContent().build();
     }
 

@@ -8,7 +8,7 @@ import com.lucasjosino.hawapi.controllers.SeasonController;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.filters.SeasonFilter;
 import com.lucasjosino.hawapi.models.SeasonModel;
-import com.lucasjosino.hawapi.services.SeasonService;
+import com.lucasjosino.hawapi.services.impl.SeasonServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -36,7 +36,7 @@ public class SeasonControllerUnitTest {
     private static final SeasonModel season = getSingleSeason();
 
     @Mock
-    private SeasonService seasonService;
+    private SeasonServiceImpl seasonService;
 
     @InjectMocks
     private SeasonController seasonController;

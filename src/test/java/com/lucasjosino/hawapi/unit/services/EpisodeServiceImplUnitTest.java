@@ -9,7 +9,7 @@ import com.lucasjosino.hawapi.filters.EpisodeFilter;
 import com.lucasjosino.hawapi.models.EpisodeModel;
 import com.lucasjosino.hawapi.properties.OpenAPIProperty;
 import com.lucasjosino.hawapi.repositories.EpisodeRepository;
-import com.lucasjosino.hawapi.services.EpisodeService;
+import com.lucasjosino.hawapi.services.impl.EpisodeServiceImpl;
 import com.lucasjosino.hawapi.services.utils.ServiceUtils;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -28,7 +28,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @UnitTestConfig
-public class EpisodeServiceUnitTest {
+public class EpisodeServiceImplUnitTest {
 
     private static final EpisodeModel episode = getSingleEpisode();
 
@@ -42,7 +42,7 @@ public class EpisodeServiceUnitTest {
     private EpisodeRepository episodeRepository;
 
     @InjectMocks
-    private EpisodeService episodeService;
+    private EpisodeServiceImpl episodeService;
 
     @Test
     public void shouldCreateEpisode() {

@@ -9,7 +9,7 @@ import com.lucasjosino.hawapi.filters.GameFilter;
 import com.lucasjosino.hawapi.models.GameModel;
 import com.lucasjosino.hawapi.properties.OpenAPIProperty;
 import com.lucasjosino.hawapi.repositories.GameRepository;
-import com.lucasjosino.hawapi.services.GameService;
+import com.lucasjosino.hawapi.services.impl.GameServiceImpl;
 import com.lucasjosino.hawapi.services.utils.ServiceUtils;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -28,7 +28,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @UnitTestConfig
-public class GameServiceUnitTest {
+public class GameServiceImplUnitTest {
 
     private static final GameModel game = getSingleGame();
 
@@ -42,7 +42,7 @@ public class GameServiceUnitTest {
     private GameRepository gameRepository;
 
     @InjectMocks
-    private GameService gameService;
+    private GameServiceImpl gameService;
 
     @Test
     public void shouldCreateGame() {

@@ -4,7 +4,7 @@ import com.lucasjosino.hawapi.controllers.utils.ResponseUtils;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.interfaces.MappingInterface;
 import com.lucasjosino.hawapi.models.dto.ActorDTO;
-import com.lucasjosino.hawapi.services.ActorService;
+import com.lucasjosino.hawapi.services.impl.ActorServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,12 +22,12 @@ import java.util.UUID;
 @RequestMapping("/api/v1/actors")
 public class ActorController implements MappingInterface<ActorDTO> {
 
-    private final ActorService service;
+    private final ActorServiceImpl service;
 
     private final ResponseUtils responseUtils;
 
     @Autowired
-    public ActorController(ActorService service, ResponseUtils responseUtils) {
+    public ActorController(ActorServiceImpl service, ResponseUtils responseUtils) {
         this.service = service;
         this.responseUtils = responseUtils;
     }
@@ -49,12 +49,12 @@ public class ActorController implements MappingInterface<ActorDTO> {
 
     @GetMapping("/random")
     public ResponseEntity<ActorDTO> findRandom(String language) {
-        return ResponseEntity.ok().body(service.findRandom());
+        return ResponseEntity.ok().body(service.findRandom(language));
     }
 
     @GetMapping("/{uuid}")
     public ResponseEntity<ActorDTO> findBy(UUID uuid, String language) {
-        return ResponseEntity.ok(service.findBy(uuid));
+        return ResponseEntity.ok(service.findBy(uuid, language));
     }
 
     @PostMapping

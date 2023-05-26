@@ -8,7 +8,7 @@ import com.lucasjosino.hawapi.controllers.CharacterController;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.filters.CharacterFilter;
 import com.lucasjosino.hawapi.models.CharacterModel;
-import com.lucasjosino.hawapi.services.CharacterService;
+import com.lucasjosino.hawapi.services.impl.CharacterServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -36,7 +36,7 @@ public class CharacterControllerUnitTest {
     private static final CharacterModel character = getSingleCharacter();
 
     @Mock
-    private CharacterService characterService;
+    private CharacterServiceImpl characterService;
 
     @InjectMocks
     private CharacterController characterController;

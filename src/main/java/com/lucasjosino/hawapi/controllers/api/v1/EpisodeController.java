@@ -6,7 +6,7 @@ import com.lucasjosino.hawapi.interfaces.MappingInterface;
 import com.lucasjosino.hawapi.interfaces.TranslationInterface;
 import com.lucasjosino.hawapi.models.dto.EpisodeDTO;
 import com.lucasjosino.hawapi.models.dto.translation.EpisodeTranslationDTO;
-import com.lucasjosino.hawapi.services.EpisodeService;
+import com.lucasjosino.hawapi.services.impl.EpisodeServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,12 +27,12 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 @RequestMapping("/api/v1/episodes")
 public class EpisodeController implements MappingInterface<EpisodeDTO>, TranslationInterface<EpisodeTranslationDTO> {
 
-    private final EpisodeService service;
+    private final EpisodeServiceImpl service;
 
     private final ResponseUtils responseUtils;
 
     @Autowired
-    public EpisodeController(EpisodeService service, ResponseUtils responseUtils) {
+    public EpisodeController(EpisodeServiceImpl service, ResponseUtils responseUtils) {
         this.service = service;
         this.responseUtils = responseUtils;
     }
@@ -125,7 +125,7 @@ public class EpisodeController implements MappingInterface<EpisodeDTO>, Translat
 
     @DeleteMapping("/{uuid}")
     public ResponseEntity<Void> delete(UUID uuid) {
-        service.delete(uuid);
+        service.deleteById(uuid);
         return ResponseEntity.noContent().build();
     }
 
