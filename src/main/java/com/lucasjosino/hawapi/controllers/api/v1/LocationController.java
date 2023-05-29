@@ -2,18 +2,22 @@ package com.lucasjosino.hawapi.controllers.api.v1;
 
 import com.lucasjosino.hawapi.controllers.utils.ResponseUtils;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
-import com.lucasjosino.hawapi.interfaces.MappingInterface;
-import com.lucasjosino.hawapi.interfaces.TranslationInterface;
+import com.lucasjosino.hawapi.interfaces.BaseTranslationInterface;
 import com.lucasjosino.hawapi.models.dto.LocationDTO;
 import com.lucasjosino.hawapi.models.dto.translation.LocationTranslationDTO;
 import com.lucasjosino.hawapi.services.impl.LocationServiceImpl;
+import io.swagger.v3.oas.annotations.ExternalDocumentation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
 import java.util.List;
@@ -25,7 +29,14 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 @RestController
 @RequestMapping("/api/v1/locations")
-public class LocationController implements MappingInterface<LocationDTO>, TranslationInterface<LocationTranslationDTO> {
+@Tag(
+        name = "Locations",
+        description = "Endpoints for managing locations",
+        externalDocs = @ExternalDocumentation(
+                url = "/docs/api/locations"
+        )
+)
+public class LocationController implements BaseTranslationInterface<LocationDTO, LocationTranslationDTO> {
 
     private final LocationServiceImpl service;
 
@@ -37,7 +48,7 @@ public class LocationController implements MappingInterface<LocationDTO>, Transl
         this.responseUtils = responseUtils;
     }
 
-    @GetMapping
+    @Operation(summary = "Get all locations")
     public ResponseEntity<List<LocationDTO>> findAll(Map<String, String> filters, Pageable pageable) {
         filters.putIfAbsent("language", responseUtils.getDefaultLanguage());
 
@@ -54,7 +65,7 @@ public class LocationController implements MappingInterface<LocationDTO>, Transl
         return ResponseEntity.ok().headers(headers).body(res);
     }
 
-    @GetMapping("/random")
+    @Operation(summary = "Get random location")
     public ResponseEntity<LocationDTO> findRandom(String language) {
         if (isNullOrEmpty(language)) language = responseUtils.getDefaultLanguage();
 
@@ -62,17 +73,17 @@ public class LocationController implements MappingInterface<LocationDTO>, Transl
         return ResponseEntity.ok().headers(headers).body(service.findRandom(language));
     }
 
-    @GetMapping("/{uuid}/translations")
+    @Operation(summary = "Get all location translations")
     public ResponseEntity<List<LocationTranslationDTO>> findAllTranslationsBy(UUID uuid) {
         return ResponseEntity.ok(service.findAllTranslationsBy(uuid));
     }
 
-    @GetMapping("/{uuid}/translations/random")
+    @Operation(summary = "Get random location translation")
     public ResponseEntity<LocationTranslationDTO> findRandomTranslation(UUID uuid) {
         return ResponseEntity.ok(service.findRandomTranslation(uuid));
     }
 
-    @GetMapping("/{uuid}")
+    @Operation(summary = "Get location")
     public ResponseEntity<LocationDTO> findBy(UUID uuid, String language) {
         language = defaultIfEmpty(language, responseUtils.getDefaultLanguage());
 
@@ -80,22 +91,22 @@ public class LocationController implements MappingInterface<LocationDTO>, Transl
         return ResponseEntity.ok().headers(headers).body(service.findBy(uuid, language));
     }
 
-    @GetMapping("/{uuid}/translations/{language}")
+    @Operation(summary = "Get location translation")
     public ResponseEntity<LocationTranslationDTO> findTranslationBy(UUID uuid, String language) {
         return ResponseEntity.ok(service.findTranslationBy(uuid, language));
     }
 
-    @PostMapping
+    @Operation(summary = "Save location", security = @SecurityRequirement(name = "Bearer"))
     public ResponseEntity<LocationDTO> save(LocationDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(dto));
     }
 
-    @PostMapping("/{uuid}/translations")
+    @Operation(summary = "Save location translation", security = @SecurityRequirement(name = "Bearer"))
     public ResponseEntity<LocationTranslationDTO> saveTranslation(UUID uuid, LocationTranslationDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.saveTranslation(uuid, dto));
     }
 
-    @PatchMapping("/{uuid}")
+    @Operation(summary = "Patch location", security = @SecurityRequirement(name = "Bearer"))
     public ResponseEntity<LocationDTO> patch(UUID uuid, LocationDTO patch) {
         try {
             service.patch(uuid, patch);
@@ -107,7 +118,7 @@ public class LocationController implements MappingInterface<LocationDTO>, Transl
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{uuid}/translations/{language}")
+    @Operation(summary = "Patch location translation", security = @SecurityRequirement(name = "Bearer"))
     public ResponseEntity<LocationTranslationDTO> patchTranslation(
             UUID uuid,
             String language,
@@ -123,13 +134,13 @@ public class LocationController implements MappingInterface<LocationDTO>, Transl
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/{uuid}")
+    @Operation(summary = "Delete location", security = @SecurityRequirement(name = "Bearer"))
     public ResponseEntity<Void> delete(UUID uuid) {
         service.deleteById(uuid);
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/{uuid}/translations/{language}")
+    @Operation(summary = "Delete location translation", security = @SecurityRequirement(name = "Bearer"))
     public ResponseEntity<Void> deleteTranslation(UUID uuid, String language) {
         service.deleteTranslation(uuid, language);
         return ResponseEntity.noContent().build();
