@@ -10,8 +10,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
 
@@ -28,12 +28,12 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests(req -> req
-                        // Swagger and Errors
-                        .antMatchers(HttpMethod.GET, "/swagger-ui/**", "/api-docs/**").permitAll()
+                        // API Docs
+                        .antMatchers(HttpMethod.GET, "/v3/api-docs", "/v3/api-docs/**").permitAll()
                         // Errors
                         .antMatchers(HttpMethod.GET, "/error").permitAll()
                         // Auth
-                        .antMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
+                        .antMatchers(HttpMethod.POST, "/api/v1/auth/**").permitAll()
                         // API
                         .antMatchers(HttpMethod.GET, "/api/**").permitAll()
                         .antMatchers(HttpMethod.PATCH, "/api/**").hasRole("ADMIN")
@@ -47,7 +47,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public CorsFilter corsFilter() {
+    public CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
@@ -57,10 +57,19 @@ public class SecurityConfig {
                 "X-Pagination-Page-Total",
                 "X-Pagination-Item-Total"
         ));
-        config.addAllowedOrigin("*");
-        config.addAllowedMethod("GET, POST, PATCH, DELETE");
+        config.setAllowedHeaders(Arrays.asList(
+                "Content-Type",
+                "Bearer"
+        ));
+        config.setAllowedMethods(Arrays.asList(
+                "GET",
+                "POST",
+                "PATCH",
+                "DELETE"
+        ));
+        config.addAllowedOriginPattern("*");
         source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
+        return source;
     }
 
     @Bean
