@@ -1,4 +1,4 @@
-package com.lucasjosino.hawapi.interfaces;
+package com.lucasjosino.hawapi.controllers.interfaces;
 
 import com.lucasjosino.hawapi.models.base.BaseDTO;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -48,7 +49,7 @@ public interface BaseControllerInterface<D extends BaseDTO> {
     @ApiResponse(responseCode = "429", description = "Too Many Requests", content = @Content(schema = @Schema(hidden = true)))
     @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true)))
     @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))
-    ResponseEntity<D> save(@RequestBody D dto);
+    ResponseEntity<D> save(@Valid @RequestBody D dto);
 
     @PatchMapping(
             value = "/{uuid}",
@@ -59,7 +60,7 @@ public interface BaseControllerInterface<D extends BaseDTO> {
     @ApiResponse(responseCode = "429", description = "Too Many Requests", content = @Content(schema = @Schema(hidden = true)))
     @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true)))
     @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))
-    ResponseEntity<D> patch(@PathVariable UUID uuid, @RequestBody D dto);
+    ResponseEntity<D> patch(@PathVariable UUID uuid, @Valid @RequestBody D dto);
 
     @DeleteMapping(value = "/{uuid}")
     @ApiResponse(responseCode = "204", description = "No Content")

@@ -1,8 +1,8 @@
 package com.lucasjosino.hawapi.controllers.api.v1;
 
+import com.lucasjosino.hawapi.controllers.interfaces.BaseTranslationInterface;
 import com.lucasjosino.hawapi.controllers.utils.ResponseUtils;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
-import com.lucasjosino.hawapi.interfaces.BaseTranslationInterface;
 import com.lucasjosino.hawapi.models.dto.SeasonDTO;
 import com.lucasjosino.hawapi.models.dto.translation.SeasonTranslationDTO;
 import com.lucasjosino.hawapi.services.impl.SeasonServiceImpl;

@@ -1,9 +1,7 @@
-package com.lucasjosino.hawapi.interfaces;
+package com.lucasjosino.hawapi.controllers.interfaces;
 
 import com.lucasjosino.hawapi.models.base.BaseDTO;
-import com.lucasjosino.hawapi.models.base.BaseTranslation;
 import com.lucasjosino.hawapi.models.base.BaseTranslationDTO;
-import com.lucasjosino.hawapi.models.dto.EpisodeDTO;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -11,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,7 +43,7 @@ public interface BaseTranslationInterface<M extends BaseDTO, T extends BaseTrans
     @ApiResponse(responseCode = "429", description = "Too Many Requests", content = @Content(schema = @Schema(hidden = true)))
     @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true)))
     @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))
-    ResponseEntity<T> saveTranslation(@PathVariable UUID uuid, @RequestBody T dto);
+    ResponseEntity<T> saveTranslation(@PathVariable UUID uuid, @Valid @RequestBody T dto);
 
     @PatchMapping(
             value = "/{uuid}/translations/{language}",
@@ -55,7 +54,11 @@ public interface BaseTranslationInterface<M extends BaseDTO, T extends BaseTrans
     @ApiResponse(responseCode = "429", description = "Too Many Requests", content = @Content(schema = @Schema(hidden = true)))
     @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true)))
     @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))
-    ResponseEntity<T> patchTranslation(@PathVariable UUID uuid, @PathVariable String language, @RequestBody T dto);
+    ResponseEntity<T> patchTranslation(
+            @PathVariable UUID uuid,
+            @PathVariable String language,
+            @Valid @RequestBody T dto
+    );
 
     @DeleteMapping(value = "/{uuid}/translations/{language}")
     @ApiResponse(responseCode = "204", description = "No Content")

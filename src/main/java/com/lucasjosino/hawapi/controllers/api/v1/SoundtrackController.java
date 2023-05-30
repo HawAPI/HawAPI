@@ -1,8 +1,8 @@
 package com.lucasjosino.hawapi.controllers.api.v1;
 
+import com.lucasjosino.hawapi.controllers.interfaces.BaseControllerInterface;
 import com.lucasjosino.hawapi.controllers.utils.ResponseUtils;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
-import com.lucasjosino.hawapi.interfaces.BaseControllerInterface;
 import com.lucasjosino.hawapi.models.dto.SoundtrackDTO;
 import com.lucasjosino.hawapi.services.impl.SoundtrackServiceImpl;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
