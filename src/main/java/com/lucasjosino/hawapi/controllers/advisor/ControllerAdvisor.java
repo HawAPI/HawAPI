@@ -10,19 +10,28 @@ import com.lucasjosino.hawapi.exceptions.auth.UserNotFoundException;
 import com.lucasjosino.hawapi.exceptions.auth.UserUnauthorizedException;
 import com.lucasjosino.hawapi.exceptions.specification.OperatorNotFoundException;
 import com.lucasjosino.hawapi.models.http.ExceptionResponse;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Optional;
 import java.util.StringJoiner;
 
 @ControllerAdvice
+@SuppressWarnings("NullableProblems")
 public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
     private final ExceptionResponse response = new ExceptionResponse();
@@ -61,6 +70,28 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     ) {
         return handleExceptionInternal(ex, HttpStatus.BAD_REQUEST, servletRequest);
     }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+            MethodArgumentNotValidException ex,
+            HttpHeaders headers,
+            HttpStatus status,
+            WebRequest request
+    ) {
+        Optional<ObjectError> error = ex.getBindingResult().getAllErrors().stream().findFirst();
+
+        String message = null;
+        if (error.isPresent()) message = error.get().getDefaultMessage();
+
+        RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
+        if (attributes == null) {
+            return super.handleExceptionInternal(ex, "Method not valid", headers, status, request);
+        }
+
+        HttpServletRequest servletRequest = ((ServletRequestAttributes) attributes).getRequest();
+        return handleBadRequestException(new BadRequestException(message), servletRequest);
+    }
+
 
     @ExceptionHandler(SaveConflictException.class)
     public ResponseEntity<Object> handleConflictException(
