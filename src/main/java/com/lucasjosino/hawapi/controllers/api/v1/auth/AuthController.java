@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api/v1/auth")
 @Tag(
@@ -49,7 +51,7 @@ public class AuthController {
     @ApiResponse(responseCode = "201", description = "Created")
     @ApiResponse(responseCode = "429", description = "Too Many Requests", content = @Content(schema = @Schema(hidden = true)))
     @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true)))
-    public ResponseEntity<UserDTO> register(@RequestBody UserModel user) {
+    public ResponseEntity<UserDTO> register(@Valid @RequestBody UserModel user) {
         if (registrationIsEnable) {
             return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(user));
         }
@@ -66,7 +68,7 @@ public class AuthController {
     @ApiResponse(responseCode = "200", description = "Successful")
     @ApiResponse(responseCode = "429", description = "Too Many Requests", content = @Content(schema = @Schema(hidden = true)))
     @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true)))
-    public ResponseEntity<UserDTO> authenticate(@RequestBody UserAuthenticationModel userAuth) {
+    public ResponseEntity<UserDTO> authenticate(@Valid @RequestBody UserAuthenticationModel userAuth) {
         return ResponseEntity.ok(authService.authenticate(userAuth));
     }
 
@@ -75,7 +77,7 @@ public class AuthController {
     @ApiResponse(responseCode = "204", description = "No Content")
     @ApiResponse(responseCode = "429", description = "Too Many Requests", content = @Content(schema = @Schema(hidden = true)))
     @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true)))
-    public ResponseEntity<Void> delete(@RequestBody UserAuthenticationModel userAuth) {
+    public ResponseEntity<Void> delete(@Valid @RequestBody UserAuthenticationModel userAuth) {
         authService.delete(userAuth);
         return ResponseEntity.noContent().build();
     }
