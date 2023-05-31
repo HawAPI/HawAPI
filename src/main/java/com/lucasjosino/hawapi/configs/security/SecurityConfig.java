@@ -21,6 +21,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
+                .headers(req ->
+                        req.frameOptions().sameOrigin()
+                )
                 .cors()
                 .and()
                 .csrf().disable()
