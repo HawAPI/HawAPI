@@ -30,6 +30,9 @@ run: clean ## Run the spring application
 get: ## Get all pom dependencies
 	@./mvnw dependency:resolve-plugins
 
+javadoc: ## Generate javadoc files
+	@./mvnw javadoc:javadoc
+
 test: test-setup ## Run ALL tests of the spring application
 	@./mvnw test
 

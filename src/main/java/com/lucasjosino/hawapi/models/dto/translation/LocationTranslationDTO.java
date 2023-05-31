@@ -2,10 +2,16 @@ package com.lucasjosino.hawapi.models.dto.translation;
 
 import com.lucasjosino.hawapi.models.base.BaseTranslationDTO;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 public class LocationTranslationDTO extends BaseTranslationDTO {
 
+    @Size(max = 255)
+    @NotBlank(message = "Field 'name' is required")
     private String name;
 
+    @NotBlank(message = "Field 'description' is required")
     private String description;
 
     public String getName() {

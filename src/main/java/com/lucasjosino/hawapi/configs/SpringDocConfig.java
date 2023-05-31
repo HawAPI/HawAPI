@@ -5,6 +5,7 @@ import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,9 +32,10 @@ public class SpringDocConfig {
                                 .url(api.getLicenseUrl())
                         )
                 )
+                .addServersItem(new Server().url(api.getUrl()).description("HawAPI Project"))
                 .externalDocs(new ExternalDocumentation()
-                        .description("HawAPI | Docs")
-                        .url("https://hawapi.theproject.id/docs")
+                        .description(api.getTitle() + " | Docs")
+                        .url(api.getDocs())
                 );
     }
 }

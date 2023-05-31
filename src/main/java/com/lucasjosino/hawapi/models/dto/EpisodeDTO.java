@@ -1,32 +1,50 @@
 package com.lucasjosino.hawapi.models.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lucasjosino.hawapi.models.base.BaseDTO;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Arrays;
 
 public class EpisodeDTO extends BaseDTO {
 
+    @Size(max = 255)
+    @NotBlank(message = "Field 'title' is required")
     private String title;
 
+    @NotBlank(message = "Field 'description' is required")
     private String description;
 
+    @Size(max = 5)
+    @NotBlank(message = "Field 'language' is required")
     private String language;
 
+    @NotNull(message = "Field 'duration' is required")
     private Integer duration;
 
+    @JsonProperty("episode_num")
+    @NotNull(message = "Field 'episode_num' is required")
     private Byte episodeNum;
 
+    @Size(max = 255)
+    @JsonProperty("next_episode")
+    @NotBlank(message = "Field 'next_episode' is required")
     private String nextEpisode;
 
+    @Size(max = 255)
+    @JsonProperty("prev_episode")
+    @NotBlank(message = "Field 'prev_episode' is required")
     private String prevEpisode;
 
+    @Size(max = 255)
+    @NotBlank(message = "Field 'season' is required")
     private String season;
 
     private String[] images;
 
     private String[] languages;
-
-    private String thumbnail;
 
     public String getTitle() {
         return title;
@@ -108,14 +126,6 @@ public class EpisodeDTO extends BaseDTO {
         this.languages = languages;
     }
 
-    public String getThumbnail() {
-        return thumbnail;
-    }
-
-    public void setThumbnail(String thumbnail) {
-        this.thumbnail = thumbnail;
-    }
-
     @Override
     public String toString() {
         return "EpisodeDTO{" +
@@ -129,7 +139,6 @@ public class EpisodeDTO extends BaseDTO {
                 ", season='" + season + '\'' +
                 ", images=" + Arrays.toString(images) +
                 ", languages=" + Arrays.toString(languages) +
-                ", thumbnail='" + thumbnail + '\'' +
                 '}';
     }
 }

@@ -1,13 +1,22 @@
 package com.lucasjosino.hawapi.models.dto.translation;
 
 import com.lucasjosino.hawapi.models.base.BaseTranslationDTO;
+import com.lucasjosino.hawapi.validators.annotations.BasicURL;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 public class GameTranslationDTO extends BaseTranslationDTO {
 
+    @Size(max = 255)
+    @NotBlank(message = "Field 'name' is required")
     private String name;
 
+    @NotBlank(message = "Field 'description' is required")
     private String description;
 
+    @BasicURL
+    @NotBlank(message = "Field 'trailer' is required")
     private String trailer;
 
     public String getName() {

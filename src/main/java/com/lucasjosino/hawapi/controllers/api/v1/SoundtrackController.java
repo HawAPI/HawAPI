@@ -1,10 +1,12 @@
 package com.lucasjosino.hawapi.controllers.api.v1;
 
+import com.lucasjosino.hawapi.controllers.interfaces.BaseControllerInterface;
 import com.lucasjosino.hawapi.controllers.utils.ResponseUtils;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
-import com.lucasjosino.hawapi.interfaces.MappingInterface;
 import com.lucasjosino.hawapi.models.dto.SoundtrackDTO;
 import com.lucasjosino.hawapi.services.impl.SoundtrackServiceImpl;
+import io.swagger.v3.oas.annotations.ExternalDocumentation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +22,14 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/soundtracks")
-public class SoundtrackController implements MappingInterface<SoundtrackDTO> {
+@Tag(
+        name = "Soundtracks",
+        description = "Endpoints for managing soundtracks",
+        externalDocs = @ExternalDocumentation(
+                url = "/docs/api/soundtracks"
+        )
+)
+public class SoundtrackController implements BaseControllerInterface<SoundtrackDTO> {
 
     private final SoundtrackServiceImpl service;
 

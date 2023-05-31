@@ -1,17 +1,22 @@
 package com.lucasjosino.hawapi.controllers.api.v1;
 
+import com.lucasjosino.hawapi.controllers.interfaces.BaseControllerInterface;
 import com.lucasjosino.hawapi.controllers.utils.ResponseUtils;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
-import com.lucasjosino.hawapi.interfaces.MappingInterface;
 import com.lucasjosino.hawapi.models.dto.ActorDTO;
 import com.lucasjosino.hawapi.services.impl.ActorServiceImpl;
+import io.swagger.v3.oas.annotations.ExternalDocumentation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
 import java.util.List;
@@ -20,7 +25,14 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/actors")
-public class ActorController implements MappingInterface<ActorDTO> {
+@Tag(
+        name = "Actors",
+        description = "Endpoints for managing actors",
+        externalDocs = @ExternalDocumentation(
+                url = "/docs/api/actors"
+        )
+)
+public class ActorController implements BaseControllerInterface<ActorDTO> {
 
     private final ActorServiceImpl service;
 
@@ -32,7 +44,7 @@ public class ActorController implements MappingInterface<ActorDTO> {
         this.responseUtils = responseUtils;
     }
 
-    @GetMapping
+    @Operation(summary = "Get all actors")
     public ResponseEntity<List<ActorDTO>> findAll(Map<String, String> filters, Pageable pageable) {
         Page<UUID> uuids = service.findAllUUIDs(pageable);
         HttpHeaders headers = responseUtils.getHeaders(
@@ -47,22 +59,22 @@ public class ActorController implements MappingInterface<ActorDTO> {
         return ResponseEntity.ok().headers(headers).body(res);
     }
 
-    @GetMapping("/random")
+    @Operation(summary = "Get random actor")
     public ResponseEntity<ActorDTO> findRandom(String language) {
         return ResponseEntity.ok().body(service.findRandom(language));
     }
 
-    @GetMapping("/{uuid}")
+    @Operation(summary = "Get actor")
     public ResponseEntity<ActorDTO> findBy(UUID uuid, String language) {
         return ResponseEntity.ok(service.findBy(uuid, language));
     }
 
-    @PostMapping
+    @Operation(summary = "Save actor", security = @SecurityRequirement(name = "Bearer"))
     public ResponseEntity<ActorDTO> save(ActorDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(dto));
     }
 
-    @PatchMapping("/{uuid}")
+    @Operation(summary = "Patch actor", security = @SecurityRequirement(name = "Bearer"))
     public ResponseEntity<ActorDTO> patch(UUID uuid, ActorDTO patch) {
         try {
             service.patch(uuid, patch);
@@ -74,7 +86,7 @@ public class ActorController implements MappingInterface<ActorDTO> {
         return ResponseEntity.ok(patch);
     }
 
-    @DeleteMapping("/{uuid}")
+    @Operation(summary = "Delete actor", security = @SecurityRequirement(name = "Bearer"))
     public ResponseEntity<Void> delete(UUID uuid) {
         service.deleteById(uuid);
         return ResponseEntity.noContent().build();

@@ -1,25 +1,31 @@
 package com.lucasjosino.hawapi.models.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lucasjosino.hawapi.models.base.BaseDTO;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Arrays;
 
 public class SoundtrackDTO extends BaseDTO {
 
+    @NotBlank(message = "Field 'name' is required")
     private String name;
 
+    @NotNull(message = "Field 'duration' is required")
     private Integer duration;
 
+    @NotBlank(message = "Field 'artist' is required")
     private String artist;
 
     private String album;
 
+    @JsonProperty("release_date")
+    @NotNull(message = "Field 'release_date' is required")
     private LocalDate releaseDate;
 
     private String[] urls;
-
-    private String thumbnail;
 
     public String getName() {
         return name;
@@ -69,14 +75,6 @@ public class SoundtrackDTO extends BaseDTO {
         this.urls = urls;
     }
 
-    public String getThumbnail() {
-        return thumbnail;
-    }
-
-    public void setThumbnail(String thumbnail) {
-        this.thumbnail = thumbnail;
-    }
-
     @Override
     public String toString() {
         return "SoundtrackDTO{" +
@@ -86,7 +84,6 @@ public class SoundtrackDTO extends BaseDTO {
                 ", album='" + album + '\'' +
                 ", releaseDate=" + releaseDate +
                 ", urls=" + Arrays.toString(urls) +
-                ", thumbnail='" + thumbnail + '\'' +
                 '}';
     }
 }

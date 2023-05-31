@@ -1,25 +1,50 @@
 package com.lucasjosino.hawapi.models.dto.auth;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 
 public class UserDTO {
 
+    @Max(value = 30)
+    @JsonProperty("first_name")
+    @NotBlank(message = "Field 'first_name' is required")
     private String firstName;
 
+    @Max(value = 30)
+    @JsonProperty("last_name")
+    @NotBlank(message = "Field 'last_name' is required")
     private String lastName;
 
+    @Max(value = 30)
+    @NotBlank(message = "Field 'username' is required")
     private String username;
 
+    @Email
+    @Max(value = 50)
+    @NotBlank(message = "Field 'email' is required")
     private String email;
 
+    @Max(value = 15)
+    @Pattern(
+            regexp = "^(BASIC|DEV|ADMIN)$",
+            message = "For the account type only the values BASIC, DEV, or ADMIN are accepted."
+    )
     private String role;
 
     private String token;
 
+    @JsonProperty("token_type")
     private String tokenType;
 
+    @JsonProperty("created_at")
     private LocalDateTime createdAt;
 
+    @JsonProperty("updated_at")
     private LocalDateTime updatedAt;
 
     public String getFirstName() {

@@ -1,19 +1,23 @@
 package com.lucasjosino.hawapi.controllers.api.v1;
 
+import com.lucasjosino.hawapi.controllers.interfaces.BaseTranslationInterface;
 import com.lucasjosino.hawapi.controllers.utils.ResponseUtils;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
-import com.lucasjosino.hawapi.interfaces.MappingInterface;
-import com.lucasjosino.hawapi.interfaces.TranslationInterface;
 import com.lucasjosino.hawapi.models.dto.SeasonDTO;
 import com.lucasjosino.hawapi.models.dto.translation.SeasonTranslationDTO;
 import com.lucasjosino.hawapi.services.impl.SeasonServiceImpl;
+import io.swagger.v3.oas.annotations.ExternalDocumentation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
 import java.util.List;
@@ -25,7 +29,14 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 @RestController
 @RequestMapping("/api/v1/seasons")
-public class SeasonController implements MappingInterface<SeasonDTO>, TranslationInterface<SeasonTranslationDTO> {
+@Tag(
+        name = "Seasons",
+        description = "Endpoints for managing seasons",
+        externalDocs = @ExternalDocumentation(
+                url = "/docs/api/seasons"
+        )
+)
+public class SeasonController implements BaseTranslationInterface<SeasonDTO, SeasonTranslationDTO> {
 
     private final SeasonServiceImpl service;
 
@@ -37,7 +48,7 @@ public class SeasonController implements MappingInterface<SeasonDTO>, Translatio
         this.responseUtils = responseUtils;
     }
 
-    @GetMapping
+    @Operation(summary = "Get all seasons")
     public ResponseEntity<List<SeasonDTO>> findAll(Map<String, String> filters, Pageable pageable) {
         filters.putIfAbsent("language", responseUtils.getDefaultLanguage());
 
@@ -54,7 +65,7 @@ public class SeasonController implements MappingInterface<SeasonDTO>, Translatio
         return ResponseEntity.ok().headers(headers).body(res);
     }
 
-    @GetMapping("/random")
+    @Operation(summary = "Get random season")
     public ResponseEntity<SeasonDTO> findRandom(String language) {
         if (isNullOrEmpty(language)) language = responseUtils.getDefaultLanguage();
 
@@ -62,17 +73,17 @@ public class SeasonController implements MappingInterface<SeasonDTO>, Translatio
         return ResponseEntity.ok().headers(headers).body(service.findRandom(language));
     }
 
-    @GetMapping("/{uuid}/translations")
+    @Operation(summary = "Get all season translations")
     public ResponseEntity<List<SeasonTranslationDTO>> findAllTranslationsBy(UUID uuid) {
         return ResponseEntity.ok(service.findAllTranslationsBy(uuid));
     }
 
-    @GetMapping("/{uuid}/translations/random")
+    @Operation(summary = "Get random season translation")
     public ResponseEntity<SeasonTranslationDTO> findRandomTranslation(UUID uuid) {
         return ResponseEntity.ok(service.findRandomTranslation(uuid));
     }
 
-    @GetMapping("/{uuid}")
+    @Operation(summary = "Get season")
     public ResponseEntity<SeasonDTO> findBy(UUID uuid, String language) {
         language = defaultIfEmpty(language, responseUtils.getDefaultLanguage());
 
@@ -80,22 +91,22 @@ public class SeasonController implements MappingInterface<SeasonDTO>, Translatio
         return ResponseEntity.ok().headers(headers).body(service.findBy(uuid, language));
     }
 
-    @GetMapping("/{uuid}/translations/{language}")
+    @Operation(summary = "Get season translation")
     public ResponseEntity<SeasonTranslationDTO> findTranslationBy(UUID uuid, String language) {
         return ResponseEntity.ok(service.findTranslationBy(uuid, language));
     }
 
-    @PostMapping
+    @Operation(summary = "Save season", security = @SecurityRequirement(name = "Bearer"))
     public ResponseEntity<SeasonDTO> save(SeasonDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(dto));
     }
 
-    @PostMapping("/{uuid}/translations")
+    @Operation(summary = "Save season translation", security = @SecurityRequirement(name = "Bearer"))
     public ResponseEntity<SeasonTranslationDTO> saveTranslation(UUID uuid, SeasonTranslationDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.saveTranslation(uuid, dto));
     }
 
-    @PatchMapping("/{uuid}")
+    @Operation(summary = "Patch season", security = @SecurityRequirement(name = "Bearer"))
     public ResponseEntity<SeasonDTO> patch(UUID uuid, SeasonDTO patch) {
         try {
             service.patch(uuid, patch);
@@ -107,7 +118,7 @@ public class SeasonController implements MappingInterface<SeasonDTO>, Translatio
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{uuid}/translations/{language}")
+    @Operation(summary = "Patch season translation", security = @SecurityRequirement(name = "Bearer"))
     public ResponseEntity<SeasonTranslationDTO> patchTranslation(
             UUID uuid,
             String language,
@@ -123,13 +134,13 @@ public class SeasonController implements MappingInterface<SeasonDTO>, Translatio
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/{uuid}")
+    @Operation(summary = "Delete season", security = @SecurityRequirement(name = "Bearer"))
     public ResponseEntity<Void> delete(UUID uuid) {
         service.deleteById(uuid);
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/{uuid}/translations/{language}")
+    @Operation(summary = "Delete season translation", security = @SecurityRequirement(name = "Bearer"))
     public ResponseEntity<Void> deleteTranslation(UUID uuid, String language) {
         service.deleteTranslation(uuid, language);
         return ResponseEntity.noContent().build();
