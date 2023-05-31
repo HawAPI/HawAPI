@@ -1,6 +1,8 @@
 package com.lucasjosino.hawapi.models.base;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.lucasjosino.hawapi.validators.annotations.BasicURL;
 
 import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
@@ -15,12 +17,15 @@ abstract public class BaseDTO implements Serializable {
 
     private String href;
 
-    private String language;
-
     private String[] sources;
 
+    @BasicURL(image = true, message = "Field 'thumbnail' doesn't have a valid image URL")
+    private String thumbnail;
+
+    @JsonProperty("created_at")
     private LocalDateTime createdAt;
 
+    @JsonProperty("updated_at")
     private LocalDateTime updatedAt;
 
     public UUID getUuid() {
@@ -39,20 +44,20 @@ abstract public class BaseDTO implements Serializable {
         this.href = href;
     }
 
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
     public String[] getSources() {
         return sources;
     }
 
     public void setSources(String[] sources) {
         this.sources = sources;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 
     public LocalDateTime getCreatedAt() {

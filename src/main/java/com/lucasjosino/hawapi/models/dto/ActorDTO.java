@@ -1,39 +1,57 @@
 package com.lucasjosino.hawapi.models.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lucasjosino.hawapi.models.ActorSocialModel;
 import com.lucasjosino.hawapi.models.base.BaseDTO;
 
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 public class ActorDTO extends BaseDTO {
 
+    @Size(max = 50)
+    @JsonProperty("first_name")
+    @NotBlank(message = "Field 'first_name' is required")
     private String firstName;
 
+    @Size(max = 50)
+    @JsonProperty("last_name")
+    @NotBlank(message = "Field 'last_name' is required")
     private String lastName;
 
-    private String[] nicknames;
+    @Size(max = 10, message = "Field 'nicknames' cannot exceed 10 names")
+    private List<String> nicknames;
 
+    @PastOrPresent
+    @JsonProperty("birth_date")
     private LocalDate birthDate;
 
+    @PastOrPresent
+    @JsonProperty("death_date")
     private LocalDate deathDate;
 
+    @NotNull(message = "Field 'gender' is required")
+    @PositiveOrZero(message = "Field 'gender' cannot be negative")
+    @Max(value = 9, message = "Field 'gender' can only be defined as: 0, 1, 2 or 9")
     private Byte gender;
 
+    @Size(max = 50)
     private String nationality;
 
     private String[] seasons;
 
+    @Size(max = 10, message = "Field 'awards' cannot exceed 10 names")
     private String[] awards;
 
+    @NotBlank(message = "Field 'character' is required")
     private String character;
 
     private Set<ActorSocialModel> socials;
 
     private String[] images;
-
-    private String thumbnail;
 
     public String getFirstName() {
         return firstName;
@@ -51,11 +69,11 @@ public class ActorDTO extends BaseDTO {
         this.lastName = lastName;
     }
 
-    public String[] getNicknames() {
+    public List<String> getNicknames() {
         return nicknames;
     }
 
-    public void setNicknames(String[] nicknames) {
+    public void setNicknames(List<String> nicknames) {
         this.nicknames = nicknames;
     }
 
@@ -131,20 +149,12 @@ public class ActorDTO extends BaseDTO {
         this.images = images;
     }
 
-    public String getThumbnail() {
-        return thumbnail;
-    }
-
-    public void setThumbnail(String thumbnail) {
-        this.thumbnail = thumbnail;
-    }
-
     @Override
     public String toString() {
         return "ActorDTO{" +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", nicknames=" + Arrays.toString(nicknames) +
+                ", nicknames=" + nicknames +
                 ", birthDate=" + birthDate +
                 ", deathDate=" + deathDate +
                 ", gender=" + gender +
@@ -154,7 +164,6 @@ public class ActorDTO extends BaseDTO {
                 ", character='" + character + '\'' +
                 ", socials=" + socials +
                 ", images=" + Arrays.toString(images) +
-                ", thumbnail='" + thumbnail + '\'' +
                 '}';
     }
 }

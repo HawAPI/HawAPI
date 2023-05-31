@@ -1,41 +1,65 @@
 package com.lucasjosino.hawapi.models.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lucasjosino.hawapi.models.base.BaseDTO;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.Arrays;
 
 public class SeasonDTO extends BaseDTO {
 
+    @Size(max = 255)
+    @NotBlank(message = "Field 'title' is required")
     private String title;
 
+    @NotBlank(message = "Field 'description' is required")
     private String description;
 
+    @Size(max = 5)
+    @NotBlank(message = "Field 'language' is required")
+    private String language;
+
+    @JsonProperty("duration_total")
+    @Positive(message = "The value must be positive")
+    @NotNull(message = "Field 'duration_total' is required")
     private Integer durationTotal;
 
+    @Size(max = 10, message = "Field 'genres' cannot exceed 10 names")
     private String[] genres;
 
+    @JsonProperty("season_num")
+    @Positive(message = "The value must be positive")
+    @NotNull(message = "Field 'season_num' is required")
     private Byte seasonNum;
 
+    @JsonProperty("release_date")
+    @NotNull(message = "Field 'release_date' is required")
     private LocalDate releaseDate;
 
+    @JsonProperty("next_season")
     private String nextSeason;
 
+    @JsonProperty("prev_season")
     private String prevSeason;
 
     private String[] episodes;
 
+    @Size(max = 10, message = "Field 'soundtracks' cannot exceed 10 soundtracks")
     private String[] soundtracks;
 
+    @Size(max = 10, message = "Field 'trailers' cannot exceed 10 trailers")
     private String[] trailers;
 
+    @Positive(message = "Field 'budget' value must be positive")
     private Integer budget;
 
     private String[] images;
 
     private String[] languages;
-
-    private String thumbnail;
 
     public String getTitle() {
         return title;
@@ -51,6 +75,14 @@ public class SeasonDTO extends BaseDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
     public Integer getDurationTotal() {
@@ -149,14 +181,6 @@ public class SeasonDTO extends BaseDTO {
         this.languages = languages;
     }
 
-    public String getThumbnail() {
-        return thumbnail;
-    }
-
-    public void setThumbnail(String thumbnail) {
-        this.thumbnail = thumbnail;
-    }
-
     @Override
     public String toString() {
         return "SeasonDTO{" +
@@ -174,7 +198,6 @@ public class SeasonDTO extends BaseDTO {
                 ", budget=" + budget +
                 ", images=" + Arrays.toString(images) +
                 ", languages=" + Arrays.toString(languages) +
-                ", thumbnail='" + thumbnail + '\'' +
                 '}';
     }
 }

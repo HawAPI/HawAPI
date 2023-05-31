@@ -1,33 +1,51 @@
 package com.lucasjosino.hawapi.models.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lucasjosino.hawapi.models.base.BaseDTO;
+import com.lucasjosino.hawapi.validators.annotations.BasicURL;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.Arrays;
 
 public class GameDTO extends BaseDTO {
 
+    @Size(max = 255)
+    @NotBlank(message = "Field 'name' is required")
     private String name;
 
+    @NotBlank(message = "Field 'description' is required")
     private String description;
+
+    @Size(max = 5)
+    @NotBlank(message = "Field 'language' is required")
+    private String language;
 
     private String[] platforms;
 
+    @Size(max = 10, message = "Field 'genres' cannot exceed 10 names")
     private String[] genres;
 
+    @Size(max = 5, message = "Field 'publishers' cannot exceed 10 names")
     private String[] publishers;
 
+    @Size(max = 10, message = "Field 'developers' cannot exceed 10 names")
     private String[] developers;
 
+    @JsonProperty("release_date")
+    @NotNull(message = "Field 'release_date' is required")
     private LocalDate releaseDate;
 
+    @NotBlank(message = "Field 'url' is required")
+    @BasicURL(message = "Field 'url' doesn't have a valid URL")
     private String url;
 
     private String[] languages;
 
+    @NotNull(message = "Field 'trailer' is required")
     private String trailer;
-
-    private String thumbnail;
 
     public String getName() {
         return name;
@@ -43,6 +61,14 @@ public class GameDTO extends BaseDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
     public String[] getPlatforms() {
@@ -109,14 +135,6 @@ public class GameDTO extends BaseDTO {
         this.trailer = trailer;
     }
 
-    public String getThumbnail() {
-        return thumbnail;
-    }
-
-    public void setThumbnail(String thumbnail) {
-        this.thumbnail = thumbnail;
-    }
-
     @Override
     public String toString() {
         return "GameDTO{" +
@@ -130,7 +148,6 @@ public class GameDTO extends BaseDTO {
                 ", url='" + url + '\'' +
                 ", languages=" + Arrays.toString(languages) +
                 ", trailer='" + trailer + '\'' +
-                ", thumbnail='" + thumbnail + '\'' +
                 '}';
     }
 }
