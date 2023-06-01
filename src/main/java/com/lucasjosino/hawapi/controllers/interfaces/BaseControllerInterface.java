@@ -1,6 +1,7 @@
 package com.lucasjosino.hawapi.controllers.interfaces;
 
 import com.lucasjosino.hawapi.models.base.BaseDTO;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-@RestController
 public interface BaseControllerInterface<D extends BaseDTO> {
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -24,7 +24,7 @@ public interface BaseControllerInterface<D extends BaseDTO> {
     @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true)))
     ResponseEntity<List<D>> findAll(
             @Parameter(hidden = true) @RequestParam Map<String, String> filters,
-            Pageable pageable
+            @Parameter(hidden = true) Pageable pageable
     );
 
     @GetMapping(value = "/random", produces = MediaType.APPLICATION_JSON_VALUE)
