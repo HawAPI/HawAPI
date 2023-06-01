@@ -7,10 +7,9 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UserDTO {
+public class UserRegistrationDTO {
 
     @Size(max = 30)
     @JsonProperty("first_name")
@@ -38,16 +37,9 @@ public class UserDTO {
     )
     private String role;
 
-    private String token;
-
-    @JsonProperty("token_type")
-    private String tokenType;
-
-    @JsonProperty("created_at")
-    private LocalDateTime createdAt;
-
-    @JsonProperty("updated_at")
-    private LocalDateTime updatedAt;
+    @Size(min = 8, max = 24)
+    @NotBlank(message = "Field 'password' is required")
+    private String password;
 
     public String getFirstName() {
         return firstName;
@@ -89,49 +81,22 @@ public class UserDTO {
         this.role = role;
     }
 
-    public String getToken() {
-        return token;
+    public String getPassword() {
+        return password;
     }
 
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public String getTokenType() {
-        return tokenType;
-    }
-
-    public void setTokenType(String tokenType) {
-        this.tokenType = tokenType;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override
     public String toString() {
-        return "UserDTO{" +
+        return "UserRegistrationDTO{" +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", role='" + role + '\'' +
-                ", tokenType='" + tokenType + '\'' +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
                 '}';
     }
 }

@@ -1,10 +1,10 @@
-package com.lucasjosino.hawapi.models.user;
+package com.lucasjosino.hawapi.models.dto.auth;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-public class UserAuthenticationModel {
+public class UserAuthDTO {
 
     @Size(max = 30)
     @NotBlank(message = "Field 'username' is required")
@@ -45,7 +45,7 @@ public class UserAuthenticationModel {
 
     @Override
     public String toString() {
-        return "UserAuthenticationModel{" +
+        return "UserAuthDTO{" +
                 "username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 '}';
