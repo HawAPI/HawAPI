@@ -17,7 +17,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -44,7 +43,6 @@ public class AuthServiceImpl implements AuthService {
         this.modelMapper = modelMapper;
     }
 
-    @Transactional
     public UserDTO register(UserRegistrationDTO user) {
         if (authRepository.existsByUsername(user.getUsername())) {
             throw new UserConflictException("Username '" + user.getUsername() + "' already registered!");
@@ -93,7 +91,6 @@ public class AuthServiceImpl implements AuthService {
         }};
     }
 
-    @Transactional
     public UserDTO authenticate(UserAuthDTO userAuth) {
         UserModel dbUser = validateUser(userAuth);
 
@@ -117,7 +114,6 @@ public class AuthServiceImpl implements AuthService {
         }};
     }
 
-    @Transactional
     public void delete(UserAuthDTO userAuth) {
         UserModel dbUser = validateUser(userAuth);
 
