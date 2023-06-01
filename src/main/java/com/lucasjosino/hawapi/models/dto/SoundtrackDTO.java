@@ -5,11 +5,13 @@ import com.lucasjosino.hawapi.models.base.BaseDTO;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.Arrays;
 
 public class SoundtrackDTO extends BaseDTO {
 
+    @Size(max = 5)
     @NotBlank(message = "Field 'name' is required")
     private String name;
 
