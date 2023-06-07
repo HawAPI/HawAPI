@@ -34,7 +34,7 @@ public class CharacterDTO extends BaseDTO {
 
     @NotNull(message = "Field 'gender' is required")
     @PositiveOrZero(message = "Field 'gender' cannot be negative")
-    @Size(max = 9, message = "Field 'gender' can only be defined as: 0, 1, 2 or 9")
+    @Max(value = 9, message = "Field 'gender' can only be defined as: 0, 1, 2 or 9")
     private Byte gender;
 
     private String actor;
