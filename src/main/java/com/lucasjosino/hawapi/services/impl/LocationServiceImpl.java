@@ -74,7 +74,7 @@ public class LocationServiceImpl implements LocationService {
     }
 
     public LocationDTO findRandom(String language) {
-        long count = repository.count();
+        long count = utils.getCountOrThrow(repository.count());
         int index = random.nextInt((int) count);
 
         PageRequest singleAndRandomItem = PageRequest.of(index, 1);
@@ -89,7 +89,7 @@ public class LocationServiceImpl implements LocationService {
     }
 
     public LocationTranslationDTO findRandomTranslation(UUID uuid) {
-        long count = repository.count();
+        long count = utils.getCountOrThrow(repository.count());
         int index = random.nextInt((int) count);
 
         PageRequest singleAndRandomItem = PageRequest.of(index, 1);

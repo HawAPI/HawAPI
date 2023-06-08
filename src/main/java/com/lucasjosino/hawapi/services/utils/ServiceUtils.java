@@ -2,6 +2,7 @@ package com.lucasjosino.hawapi.services.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,5 +20,10 @@ public class ServiceUtils {
 
     public <T, Y> T merge(T model, Y dto) throws IOException {
         return mapper.readerForUpdating(model).readValue((JsonNode) mapper.valueToTree(dto));
+    }
+
+    public long getCountOrThrow(long count) {
+        if (count > 0) return count;
+        throw new ItemNotFoundException("Empty list");
     }
 }

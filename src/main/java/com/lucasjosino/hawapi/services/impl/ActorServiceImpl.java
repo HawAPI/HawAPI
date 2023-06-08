@@ -60,7 +60,7 @@ public class ActorServiceImpl implements ActorService {
     }
 
     public ActorDTO findRandom(String language) {
-        long count = repository.count();
+        long count = utils.getCountOrThrow(repository.count());
         int index = random.nextInt((int) count);
 
         PageRequest singleAndRandomItem = PageRequest.of(index, 1);

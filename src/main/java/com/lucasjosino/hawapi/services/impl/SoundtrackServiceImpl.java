@@ -60,7 +60,7 @@ public class SoundtrackServiceImpl implements SoundtrackService {
     }
 
     public SoundtrackDTO findRandom(String language) {
-        long count = repository.count();
+        long count = utils.getCountOrThrow(repository.count());
         int index = random.nextInt((int) count);
 
         PageRequest singleAndRandomItem = PageRequest.of(index, 1);
