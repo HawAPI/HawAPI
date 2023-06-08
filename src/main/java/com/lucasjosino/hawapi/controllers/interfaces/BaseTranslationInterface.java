@@ -57,7 +57,7 @@ public interface BaseTranslationInterface<M extends BaseDTO, T extends BaseTrans
     ResponseEntity<T> patchTranslation(
             @PathVariable UUID uuid,
             @PathVariable String language,
-            @Valid @RequestBody T dto
+            @RequestBody T dto
     );
 
     @DeleteMapping(value = "/{uuid}/translations/{language}")
