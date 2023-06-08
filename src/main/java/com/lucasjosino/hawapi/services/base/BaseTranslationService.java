@@ -17,18 +17,18 @@ public interface BaseTranslationService<D extends BaseDTO, T extends BaseTransla
 
     T findRandomTranslation(UUID uuid);
 
-    @Cacheable(value = "findTranslationBy")
+    @Cacheable(value = "findTranslationBy", key = "{ #uuid, #language }")
     T findTranslationBy(UUID uuid, String language);
 
     @Transactional
-    @CacheEvict(cacheNames = {"findAllTranslation", "findTranslationBy"}, key = "#uuid")
+    @CacheEvict(cacheNames = {"findAllTranslation", "findTranslationBy"}, allEntries = true)
     T saveTranslation(UUID uuid, T dto);
 
     @Transactional
-    @CacheEvict(cacheNames = {"findAllTranslation", "findTranslationBy"}, key = "#uuid")
+    @CacheEvict(cacheNames = {"findAllTranslation", "findTranslationBy"}, allEntries = true)
     void patchTranslation(UUID uuid, String language, T patch) throws IOException;
 
     @Transactional
-    @CacheEvict(cacheNames = {"findAllTranslation", "findTranslationBy"}, key = "#uuid")
+    @CacheEvict(cacheNames = {"findAllTranslation", "findTranslationBy"}, allEntries = true)
     void deleteTranslation(UUID uuid, String language);
 }

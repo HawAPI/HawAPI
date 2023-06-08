@@ -25,14 +25,14 @@ public interface BaseService<D extends BaseDTO> {
     D findBy(UUID uuid, String language);
 
     @Transactional
-    @CacheEvict(cacheNames = {"findAll", "findBy"}, key = "#dto.uuid")
+    @CacheEvict(cacheNames = {"findAll", "findBy"}, allEntries = true)
     D save(D dto);
 
     @Transactional
-    @CacheEvict(cacheNames = {"findAll", "findBy"}, key = "#uuid")
+    @CacheEvict(cacheNames = {"findAll", "findBy"}, allEntries = true)
     void patch(UUID uuid, D patch) throws IOException;
 
     @Transactional
-    @CacheEvict(cacheNames = {"findAll", "findBy"}, key = "#uuid")
+    @CacheEvict(cacheNames = {"findAll", "findBy"}, allEntries = true)
     void deleteById(UUID uuid);
 }
