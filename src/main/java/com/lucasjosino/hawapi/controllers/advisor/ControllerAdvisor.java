@@ -49,7 +49,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({InternalServerErrorException.class, Exception.class, NullPointerException.class})
     public ResponseEntity<Object> handleInternalServerErrorException(
-            InternalServerErrorException ex,
+            Exception ex,
             HttpServletRequest servletRequest
     ) {
         return handleExceptionInternal(ex, HttpStatus.INTERNAL_SERVER_ERROR, servletRequest);
