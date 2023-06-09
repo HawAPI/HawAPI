@@ -2,13 +2,14 @@ package com.lucasjosino.hawapi.models.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lucasjosino.hawapi.models.base.BaseDTO;
+import com.lucasjosino.hawapi.validators.annotations.BasicURL;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.Arrays;
+import java.util.List;
 
 public class SeasonDTO extends BaseDTO {
 
@@ -29,7 +30,7 @@ public class SeasonDTO extends BaseDTO {
     private Integer durationTotal;
 
     @Size(max = 10, message = "Field 'genres' cannot exceed 10 names")
-    private String[] genres;
+    private List<String> genres;
 
     @JsonProperty("season_num")
     @Positive(message = "The value must be positive")
@@ -46,20 +47,20 @@ public class SeasonDTO extends BaseDTO {
     @JsonProperty("prev_season")
     private String prevSeason;
 
-    private String[] episodes;
+    private List<String> episodes;
 
     @Size(max = 10, message = "Field 'soundtracks' cannot exceed 10 soundtracks")
-    private String[] soundtracks;
+    private List<String> soundtracks;
 
     @Size(max = 10, message = "Field 'trailers' cannot exceed 10 trailers")
-    private String[] trailers;
+    private List<@BasicURL(message = "Field 'trailers' doesn't have valid URLs") String> trailers;
 
     @Positive(message = "Field 'budget' value must be positive")
     private Integer budget;
 
-    private String[] images;
+    private List<@BasicURL(image = true) String> images;
 
-    private String[] languages;
+    private List<String> languages;
 
     public String getTitle() {
         return title;
@@ -93,11 +94,11 @@ public class SeasonDTO extends BaseDTO {
         this.durationTotal = durationTotal;
     }
 
-    public String[] getGenres() {
+    public List<String> getGenres() {
         return genres;
     }
 
-    public void setGenres(String[] genres) {
+    public void setGenres(List<String> genres) {
         this.genres = genres;
     }
 
@@ -133,27 +134,27 @@ public class SeasonDTO extends BaseDTO {
         this.prevSeason = prevSeason;
     }
 
-    public String[] getEpisodes() {
+    public List<String> getEpisodes() {
         return episodes;
     }
 
-    public void setEpisodes(String[] episodes) {
+    public void setEpisodes(List<String> episodes) {
         this.episodes = episodes;
     }
 
-    public String[] getSoundtracks() {
+    public List<String> getSoundtracks() {
         return soundtracks;
     }
 
-    public void setSoundtracks(String[] soundtracks) {
+    public void setSoundtracks(List<String> soundtracks) {
         this.soundtracks = soundtracks;
     }
 
-    public String[] getTrailers() {
+    public List<String> getTrailers() {
         return trailers;
     }
 
-    public void setTrailers(String[] trailers) {
+    public void setTrailers(List<String> trailers) {
         this.trailers = trailers;
     }
 
@@ -165,19 +166,19 @@ public class SeasonDTO extends BaseDTO {
         this.budget = budget;
     }
 
-    public String[] getImages() {
+    public List<String> getImages() {
         return images;
     }
 
-    public void setImages(String[] images) {
+    public void setImages(List<String> images) {
         this.images = images;
     }
 
-    public String[] getLanguages() {
+    public List<String> getLanguages() {
         return languages;
     }
 
-    public void setLanguages(String[] languages) {
+    public void setLanguages(List<String> languages) {
         this.languages = languages;
     }
 
@@ -186,18 +187,19 @@ public class SeasonDTO extends BaseDTO {
         return "SeasonDTO{" +
                 "title='" + title + '\'' +
                 ", description='" + description + '\'' +
+                ", language='" + language + '\'' +
                 ", durationTotal=" + durationTotal +
-                ", genres=" + Arrays.toString(genres) +
+                ", genres=" + genres +
                 ", seasonNum=" + seasonNum +
                 ", releaseDate=" + releaseDate +
                 ", nextSeason='" + nextSeason + '\'' +
                 ", prevSeason='" + prevSeason + '\'' +
-                ", episodes=" + Arrays.toString(episodes) +
-                ", soundtracks=" + Arrays.toString(soundtracks) +
-                ", trailers=" + Arrays.toString(trailers) +
+                ", episodes=" + episodes +
+                ", soundtracks=" + soundtracks +
+                ", trailers=" + trailers +
                 ", budget=" + budget +
-                ", images=" + Arrays.toString(images) +
-                ", languages=" + Arrays.toString(languages) +
+                ", images=" + images +
+                ", languages=" + languages +
                 '}';
     }
 }

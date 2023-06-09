@@ -1,10 +1,11 @@
 package com.lucasjosino.hawapi.models.dto;
 
 import com.lucasjosino.hawapi.models.base.BaseDTO;
+import com.lucasjosino.hawapi.validators.annotations.BasicURL;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.Arrays;
+import java.util.List;
 
 public class LocationDTO extends BaseDTO {
 
@@ -19,9 +20,9 @@ public class LocationDTO extends BaseDTO {
     @NotBlank(message = "Field 'language' is required")
     private String language;
 
-    private String[] images;
+    private List<@BasicURL(image = true) String> images;
 
-    private String[] languages;
+    private List<String> languages;
 
     public String getName() {
         return name;
@@ -47,19 +48,19 @@ public class LocationDTO extends BaseDTO {
         this.language = language;
     }
 
-    public String[] getImages() {
+    public List<String> getImages() {
         return images;
     }
 
-    public void setImages(String[] images) {
+    public void setImages(List<String> images) {
         this.images = images;
     }
 
-    public String[] getLanguages() {
+    public List<String> getLanguages() {
         return languages;
     }
 
-    public void setLanguages(String[] languages) {
+    public void setLanguages(List<String> languages) {
         this.languages = languages;
     }
 
@@ -68,8 +69,9 @@ public class LocationDTO extends BaseDTO {
         return "LocationDTO{" +
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", images=" + Arrays.toString(images) +
-                ", languages=" + Arrays.toString(languages) +
+                ", language='" + language + '\'' +
+                ", images=" + images +
+                ", languages=" + languages +
                 '}';
     }
 }

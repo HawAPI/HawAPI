@@ -8,7 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.Arrays;
+import java.util.List;
 
 public class GameDTO extends BaseDTO {
 
@@ -23,16 +23,16 @@ public class GameDTO extends BaseDTO {
     @NotBlank(message = "Field 'language' is required")
     private String language;
 
-    private String[] platforms;
+    private List<String> platforms;
 
     @Size(max = 10, message = "Field 'genres' cannot exceed 10 names")
-    private String[] genres;
+    private List<String> genres;
 
     @Size(max = 5, message = "Field 'publishers' cannot exceed 10 names")
-    private String[] publishers;
+    private List<String> publishers;
 
     @Size(max = 10, message = "Field 'developers' cannot exceed 10 names")
-    private String[] developers;
+    private List<String> developers;
 
     @JsonProperty("release_date")
     @NotNull(message = "Field 'release_date' is required")
@@ -42,9 +42,10 @@ public class GameDTO extends BaseDTO {
     @BasicURL(message = "Field 'url' doesn't have a valid URL")
     private String url;
 
-    private String[] languages;
+    private List<String> languages;
 
     @NotNull(message = "Field 'trailer' is required")
+    @BasicURL(message = "Field 'trailer' doesn't have a valid URL")
     private String trailer;
 
     public String getName() {
@@ -71,35 +72,35 @@ public class GameDTO extends BaseDTO {
         this.language = language;
     }
 
-    public String[] getPlatforms() {
+    public List<String> getPlatforms() {
         return platforms;
     }
 
-    public void setPlatforms(String[] platforms) {
+    public void setPlatforms(List<String> platforms) {
         this.platforms = platforms;
     }
 
-    public String[] getGenres() {
+    public List<String> getGenres() {
         return genres;
     }
 
-    public void setGenres(String[] genres) {
+    public void setGenres(List<String> genres) {
         this.genres = genres;
     }
 
-    public String[] getPublishers() {
+    public List<String> getPublishers() {
         return publishers;
     }
 
-    public void setPublishers(String[] publishers) {
+    public void setPublishers(List<String> publishers) {
         this.publishers = publishers;
     }
 
-    public String[] getDevelopers() {
+    public List<String> getDevelopers() {
         return developers;
     }
 
-    public void setDevelopers(String[] developers) {
+    public void setDevelopers(List<String> developers) {
         this.developers = developers;
     }
 
@@ -119,11 +120,11 @@ public class GameDTO extends BaseDTO {
         this.url = url;
     }
 
-    public String[] getLanguages() {
+    public List<String> getLanguages() {
         return languages;
     }
 
-    public void setLanguages(String[] languages) {
+    public void setLanguages(List<String> languages) {
         this.languages = languages;
     }
 
@@ -140,13 +141,14 @@ public class GameDTO extends BaseDTO {
         return "GameDTO{" +
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", platforms=" + Arrays.toString(platforms) +
-                ", genres=" + Arrays.toString(genres) +
-                ", publishers=" + Arrays.toString(publishers) +
-                ", developers=" + Arrays.toString(developers) +
+                ", language='" + language + '\'' +
+                ", platforms=" + platforms +
+                ", genres=" + genres +
+                ", publishers=" + publishers +
+                ", developers=" + developers +
                 ", releaseDate=" + releaseDate +
                 ", url='" + url + '\'' +
-                ", languages=" + Arrays.toString(languages) +
+                ", languages=" + languages +
                 ", trailer='" + trailer + '\'' +
                 '}';
     }

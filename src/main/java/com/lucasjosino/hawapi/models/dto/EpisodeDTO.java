@@ -2,11 +2,12 @@ package com.lucasjosino.hawapi.models.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lucasjosino.hawapi.models.base.BaseDTO;
+import com.lucasjosino.hawapi.validators.annotations.BasicURL;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Arrays;
+import java.util.List;
 
 public class EpisodeDTO extends BaseDTO {
 
@@ -42,9 +43,9 @@ public class EpisodeDTO extends BaseDTO {
     @NotBlank(message = "Field 'season' is required")
     private String season;
 
-    private String[] images;
+    private List<@BasicURL(image = true) String> images;
 
-    private String[] languages;
+    private List<String> languages;
 
     public String getTitle() {
         return title;
@@ -110,19 +111,19 @@ public class EpisodeDTO extends BaseDTO {
         this.season = season;
     }
 
-    public String[] getImages() {
+    public List<String> getImages() {
         return images;
     }
 
-    public void setImages(String[] images) {
+    public void setImages(List<String> images) {
         this.images = images;
     }
 
-    public String[] getLanguages() {
+    public List<String> getLanguages() {
         return languages;
     }
 
-    public void setLanguages(String[] languages) {
+    public void setLanguages(List<String> languages) {
         this.languages = languages;
     }
 
@@ -137,8 +138,8 @@ public class EpisodeDTO extends BaseDTO {
                 ", nextEpisode='" + nextEpisode + '\'' +
                 ", prevEpisode='" + prevEpisode + '\'' +
                 ", season='" + season + '\'' +
-                ", images=" + Arrays.toString(images) +
-                ", languages=" + Arrays.toString(languages) +
+                ", images=" + images +
+                ", languages=" + languages +
                 '}';
     }
 }
