@@ -116,7 +116,7 @@ public class LocationServiceImpl implements LocationService {
         UUID uuid = UUID.randomUUID();
         dto.setUuid(uuid);
         dto.setHref(basePath + "/" + uuid);
-        dto.setLanguages(new String[]{dto.getLanguage()});
+        dto.setLanguages(Collections.singletonList(dto.getLanguage()));
 
         validateDTO(uuid, dto.getLanguage());
 
