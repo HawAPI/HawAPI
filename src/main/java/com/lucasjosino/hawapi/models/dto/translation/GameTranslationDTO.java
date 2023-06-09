@@ -15,8 +15,8 @@ public class GameTranslationDTO extends BaseTranslationDTO {
     @NotBlank(message = "Field 'description' is required")
     private String description;
 
-    @BasicURL
     @NotBlank(message = "Field 'trailer' is required")
+    @BasicURL(message = "Field 'trailer' doesn't have a valid URL")
     private String trailer;
 
     public String getName() {

@@ -1,11 +1,12 @@
 package com.lucasjosino.hawapi.models.dto.translation;
 
 import com.lucasjosino.hawapi.models.base.BaseTranslationDTO;
+import com.lucasjosino.hawapi.validators.annotations.BasicURL;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-import java.util.Arrays;
+import java.util.List;
 
 public class SeasonTranslationDTO extends BaseTranslationDTO {
 
@@ -17,9 +18,9 @@ public class SeasonTranslationDTO extends BaseTranslationDTO {
     private String description;
 
     @NotEmpty(message = "Input movie list cannot be empty.")
-    private String[] genres;
+    private List<String> genres;
 
-    private String[] trailers;
+    private List<@BasicURL(message = "Field 'trailers' doesn't have valid URLs") String> trailers;
 
     public String getTitle() {
         return title;
@@ -37,19 +38,19 @@ public class SeasonTranslationDTO extends BaseTranslationDTO {
         this.description = description;
     }
 
-    public String[] getGenres() {
+    public List<String> getGenres() {
         return genres;
     }
 
-    public void setGenres(String[] genres) {
+    public void setGenres(List<String> genres) {
         this.genres = genres;
     }
 
-    public String[] getTrailers() {
+    public List<String> getTrailers() {
         return trailers;
     }
 
-    public void setTrailers(String[] trailers) {
+    public void setTrailers(List<String> trailers) {
         this.trailers = trailers;
     }
 
@@ -58,8 +59,8 @@ public class SeasonTranslationDTO extends BaseTranslationDTO {
         return "SeasonTranslationDTO{" +
                 "title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", genres=" + Arrays.toString(genres) +
-                ", trailers=" + Arrays.toString(trailers) +
+                ", genres=" + genres +
+                ", trailers=" + trailers +
                 '}';
     }
 }
