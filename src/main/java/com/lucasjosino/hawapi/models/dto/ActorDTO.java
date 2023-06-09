@@ -3,10 +3,10 @@ package com.lucasjosino.hawapi.models.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lucasjosino.hawapi.models.ActorSocialModel;
 import com.lucasjosino.hawapi.models.base.BaseDTO;
+import com.lucasjosino.hawapi.validators.annotations.BasicURL;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -41,17 +41,17 @@ public class ActorDTO extends BaseDTO {
     @Size(max = 50)
     private String nationality;
 
-    private String[] seasons;
+    private List<String> seasons;
 
     @Size(max = 10, message = "Field 'awards' cannot exceed 10 names")
-    private String[] awards;
+    private List<String> awards;
 
     @NotBlank(message = "Field 'character' is required")
     private String character;
 
     private Set<ActorSocialModel> socials;
 
-    private String[] images;
+    private List<@BasicURL(image = true) String> images;
 
     public String getFirstName() {
         return firstName;
@@ -109,19 +109,19 @@ public class ActorDTO extends BaseDTO {
         this.nationality = nationality;
     }
 
-    public String[] getSeasons() {
+    public List<String> getSeasons() {
         return seasons;
     }
 
-    public void setSeasons(String[] seasons) {
+    public void setSeasons(List<String> seasons) {
         this.seasons = seasons;
     }
 
-    public String[] getAwards() {
+    public List<String> getAwards() {
         return awards;
     }
 
-    public void setAwards(String[] awards) {
+    public void setAwards(List<String> awards) {
         this.awards = awards;
     }
 
@@ -141,11 +141,11 @@ public class ActorDTO extends BaseDTO {
         this.socials = socials;
     }
 
-    public String[] getImages() {
+    public List<String> getImages() {
         return images;
     }
 
-    public void setImages(String[] images) {
+    public void setImages(List<String> images) {
         this.images = images;
     }
 
@@ -159,11 +159,11 @@ public class ActorDTO extends BaseDTO {
                 ", deathDate=" + deathDate +
                 ", gender=" + gender +
                 ", nationality='" + nationality + '\'' +
-                ", seasons=" + Arrays.toString(seasons) +
-                ", awards=" + Arrays.toString(awards) +
+                ", seasons=" + seasons +
+                ", awards=" + awards +
                 ", character='" + character + '\'' +
                 ", socials=" + socials +
-                ", images=" + Arrays.toString(images) +
+                ", images=" + images +
                 '}';
     }
 }

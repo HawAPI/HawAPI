@@ -7,6 +7,7 @@ import com.lucasjosino.hawapi.validators.annotations.BasicURL;
 import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @MappedSuperclass
@@ -17,7 +18,7 @@ abstract public class BaseDTO implements Serializable {
 
     private String href;
 
-    private String[] sources;
+    private List<@BasicURL String> sources;
 
     @BasicURL(image = true, message = "Field 'thumbnail' doesn't have a valid image URL")
     private String thumbnail;
@@ -44,11 +45,11 @@ abstract public class BaseDTO implements Serializable {
         this.href = href;
     }
 
-    public String[] getSources() {
+    public List<String> getSources() {
         return sources;
     }
 
-    public void setSources(String[] sources) {
+    public void setSources(List<String> sources) {
         this.sources = sources;
     }
 
@@ -74,5 +75,17 @@ abstract public class BaseDTO implements Serializable {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    @Override
+    public String toString() {
+        return "BaseDTO{" +
+                "uuid=" + uuid +
+                ", href='" + href + '\'' +
+                ", sources=" + sources +
+                ", thumbnail='" + thumbnail + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
     }
 }

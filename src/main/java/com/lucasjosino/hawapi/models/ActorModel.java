@@ -6,7 +6,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -21,9 +21,9 @@ public class ActorModel extends BaseModel {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Type(type = "string-array")
+    @Type(type = "list-array")
     @Column(columnDefinition = "varchar[]")
-    private String[] nicknames;
+    private List<String> nicknames;
 
     @JsonProperty("birth_date")
     @Column(name = "birth_date")
@@ -39,13 +39,13 @@ public class ActorModel extends BaseModel {
     @Column
     private String nationality;
 
-    @Type(type = "string-array")
+    @Type(type = "list-array")
     @Column(columnDefinition = "varchar[]")
-    private String[] seasons;
+    private List<String> seasons;
 
-    @Type(type = "string-array")
+    @Type(type = "list-array")
     @Column(columnDefinition = "varchar[]")
-    private String[] awards;
+    private List<String> awards;
 
     @Column(nullable = false)
     private String character;
@@ -54,12 +54,9 @@ public class ActorModel extends BaseModel {
     @JoinColumn(name = "actor_uuid", referencedColumnName = "uuid", insertable = false, updatable = false)
     private Set<ActorSocialModel> socials;
 
-    @Type(type = "string-array")
+    @Type(type = "list-array")
     @Column(columnDefinition = "text[]")
-    private String[] images;
-
-    @Column
-    private String thumbnail;
+    private List<String> images;
 
     public String getFirstName() {
         return firstName;
@@ -77,11 +74,11 @@ public class ActorModel extends BaseModel {
         this.lastName = lastName;
     }
 
-    public String[] getNicknames() {
+    public List<String> getNicknames() {
         return nicknames;
     }
 
-    public void setNicknames(String[] nicknames) {
+    public void setNicknames(List<String> nicknames) {
         this.nicknames = nicknames;
     }
 
@@ -117,19 +114,19 @@ public class ActorModel extends BaseModel {
         this.nationality = nationality;
     }
 
-    public String[] getSeasons() {
+    public List<String> getSeasons() {
         return seasons;
     }
 
-    public void setSeasons(String[] seasons) {
+    public void setSeasons(List<String> seasons) {
         this.seasons = seasons;
     }
 
-    public String[] getAwards() {
+    public List<String> getAwards() {
         return awards;
     }
 
-    public void setAwards(String[] awards) {
+    public void setAwards(List<String> awards) {
         this.awards = awards;
     }
 
@@ -149,20 +146,12 @@ public class ActorModel extends BaseModel {
         this.socials = socials;
     }
 
-    public String[] getImages() {
+    public List<String> getImages() {
         return images;
     }
 
-    public void setImages(String[] images) {
+    public void setImages(List<String> images) {
         this.images = images;
-    }
-
-    public String getThumbnail() {
-        return thumbnail;
-    }
-
-    public void setThumbnail(String thumbnail) {
-        this.thumbnail = thumbnail;
     }
 
     @Override
@@ -170,17 +159,16 @@ public class ActorModel extends BaseModel {
         return "ActorModel{" +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", nicknames=" + Arrays.toString(nicknames) +
+                ", nicknames=" + nicknames +
                 ", birthDate=" + birthDate +
                 ", deathDate=" + deathDate +
                 ", gender=" + gender +
                 ", nationality='" + nationality + '\'' +
-                ", seasons=" + Arrays.toString(seasons) +
-                ", awards=" + Arrays.toString(awards) +
+                ", seasons=" + seasons +
+                ", awards=" + awards +
                 ", character='" + character + '\'' +
                 ", socials=" + socials +
-                ", images=" + Arrays.toString(images) +
-                ", thumbnail='" + thumbnail + '\'' +
+                ", images=" + images +
                 '}';
     }
 }

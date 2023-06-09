@@ -2,12 +2,13 @@ package com.lucasjosino.hawapi.models.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lucasjosino.hawapi.models.base.BaseDTO;
+import com.lucasjosino.hawapi.validators.annotations.BasicURL;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.Arrays;
+import java.util.List;
 
 public class SoundtrackDTO extends BaseDTO {
 
@@ -27,7 +28,8 @@ public class SoundtrackDTO extends BaseDTO {
     @NotNull(message = "Field 'release_date' is required")
     private LocalDate releaseDate;
 
-    private String[] urls;
+    @Size(max = 10, message = "Field 'urls' cannot exceed 10 urls")
+    private List<@BasicURL(message = "Field 'urls' doesn't have valid URLs") String> urls;
 
     public String getName() {
         return name;
@@ -69,11 +71,11 @@ public class SoundtrackDTO extends BaseDTO {
         this.releaseDate = releaseDate;
     }
 
-    public String[] getUrls() {
+    public List<String> getUrls() {
         return urls;
     }
 
-    public void setUrls(String[] urls) {
+    public void setUrls(List<String> urls) {
         this.urls = urls;
     }
 
@@ -85,7 +87,7 @@ public class SoundtrackDTO extends BaseDTO {
                 ", artist='" + artist + '\'' +
                 ", album='" + album + '\'' +
                 ", releaseDate=" + releaseDate +
-                ", urls=" + Arrays.toString(urls) +
+                ", urls=" + urls +
                 '}';
     }
 }

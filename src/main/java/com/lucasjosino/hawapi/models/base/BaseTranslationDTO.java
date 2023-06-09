@@ -22,4 +22,11 @@ abstract public class BaseTranslationDTO implements Serializable {
     public void setLanguage(String language) {
         this.language = language;
     }
+
+    @Override
+    public String toString() {
+        return "BaseTranslationDTO{" +
+                "language='" + language + '\'' +
+                '}';
+    }
 }

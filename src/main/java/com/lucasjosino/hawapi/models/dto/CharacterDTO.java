@@ -2,10 +2,11 @@ package com.lucasjosino.hawapi.models.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lucasjosino.hawapi.models.base.BaseDTO;
+import com.lucasjosino.hawapi.validators.annotations.BasicURL;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
-import java.util.Arrays;
+import java.util.List;
 
 public class CharacterDTO extends BaseDTO {
 
@@ -20,7 +21,7 @@ public class CharacterDTO extends BaseDTO {
     private String lastName;
 
     @Size(max = 10, message = "Field 'nicknames' cannot exceed 10 names")
-    private String[] nicknames;
+    private List<String> nicknames;
 
     @PastOrPresent
     @JsonProperty("birth_date")
@@ -39,7 +40,7 @@ public class CharacterDTO extends BaseDTO {
 
     private String actor;
 
-    private String[] images;
+    private List<@BasicURL(image = true) String> images;
 
     public String getFirstName() {
         return firstName;
@@ -57,11 +58,11 @@ public class CharacterDTO extends BaseDTO {
         this.lastName = lastName;
     }
 
-    public String[] getNicknames() {
+    public List<String> getNicknames() {
         return nicknames;
     }
 
-    public void setNicknames(String[] nicknames) {
+    public void setNicknames(List<String> nicknames) {
         this.nicknames = nicknames;
     }
 
@@ -97,11 +98,11 @@ public class CharacterDTO extends BaseDTO {
         this.actor = actor;
     }
 
-    public String[] getImages() {
+    public List<String> getImages() {
         return images;
     }
 
-    public void setImages(String[] images) {
+    public void setImages(List<String> images) {
         this.images = images;
     }
 
@@ -110,12 +111,12 @@ public class CharacterDTO extends BaseDTO {
         return "CharacterDTO{" +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", nicknames=" + Arrays.toString(nicknames) +
+                ", nicknames=" + nicknames +
                 ", birthDate=" + birthDate +
                 ", deathDate=" + deathDate +
                 ", gender=" + gender +
                 ", actor='" + actor + '\'' +
-                ", images=" + Arrays.toString(images) +
+                ", images=" + images +
                 '}';
     }
 }

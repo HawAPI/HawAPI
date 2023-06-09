@@ -34,4 +34,12 @@ abstract public class BaseTranslation implements Serializable {
     public void setLanguage(String language) {
         this.language = language;
     }
+
+    @Override
+    public String toString() {
+        return "BaseTranslation{" +
+                "id=" + id +
+                ", language='" + language + '\'' +
+                '}';
+    }
 }

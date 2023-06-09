@@ -5,10 +5,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lucasjosino.hawapi.models.SeasonModel;
 import com.lucasjosino.hawapi.models.base.BaseTranslation;
+import com.lucasjosino.hawapi.validators.annotations.BasicURL;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -26,13 +27,13 @@ public class SeasonTranslation extends BaseTranslation {
     @Column
     private String description;
 
-    @Type(type = "string-array")
+    @Type(type = "list-array")
     @Column(columnDefinition = "varchar[]")
-    private String[] genres;
+    private List<String> genres;
 
-    @Type(type = "string-array")
+    @Type(type = "list-array")
     @Column(columnDefinition = "text[]")
-    private String[] trailers;
+    private List<@BasicURL String> trailers;
 
     @JsonIgnore
     @OneToOne(optional = false, fetch = FetchType.LAZY)
@@ -63,19 +64,19 @@ public class SeasonTranslation extends BaseTranslation {
         this.description = description;
     }
 
-    public String[] getGenres() {
+    public List<String> getGenres() {
         return genres;
     }
 
-    public void setGenres(String[] genres) {
+    public void setGenres(List<String> genres) {
         this.genres = genres;
     }
 
-    public String[] getTrailers() {
+    public List<String> getTrailers() {
         return trailers;
     }
 
-    public void setTrailers(String[] trailers) {
+    public void setTrailers(List<String> trailers) {
         this.trailers = trailers;
     }
 
@@ -93,8 +94,8 @@ public class SeasonTranslation extends BaseTranslation {
                 "seasonUuid=" + seasonUuid +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", genres=" + Arrays.toString(genres) +
-                ", trailers=" + Arrays.toString(trailers) +
+                ", genres=" + genres +
+                ", trailers=" + trailers +
                 ", season=" + season +
                 '}';
     }

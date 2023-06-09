@@ -8,7 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.time.LocalDate;
-import java.util.Arrays;
+import java.util.List;
 
 @Entity
 @Table(name = "soundtracks")
@@ -30,12 +30,9 @@ public class SoundtrackModel extends BaseModel {
     @Column(nullable = false, name = "release_date")
     private LocalDate releaseDate;
 
-    @Type(type = "string-array")
+    @Type(type = "list-array")
     @Column(columnDefinition = "text[]")
-    private String[] urls;
-
-    @Column
-    private String thumbnail;
+    private List<String> urls;
 
     public String getName() {
         return name;
@@ -77,20 +74,12 @@ public class SoundtrackModel extends BaseModel {
         this.releaseDate = releaseDate;
     }
 
-    public String[] getUrls() {
+    public List<String> getUrls() {
         return urls;
     }
 
-    public void setUrls(String[] urls) {
+    public void setUrls(List<String> urls) {
         this.urls = urls;
-    }
-
-    public String getThumbnail() {
-        return thumbnail;
-    }
-
-    public void setThumbnail(String thumbnail) {
-        this.thumbnail = thumbnail;
     }
 
     @Override
@@ -101,8 +90,7 @@ public class SoundtrackModel extends BaseModel {
                 ", artist='" + artist + '\'' +
                 ", album='" + album + '\'' +
                 ", releaseDate=" + releaseDate +
-                ", urls=" + Arrays.toString(urls) +
-                ", thumbnail='" + thumbnail + '\'' +
+                ", urls=" + urls +
                 '}';
     }
 }
