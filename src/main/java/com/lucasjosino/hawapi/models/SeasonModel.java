@@ -7,7 +7,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Arrays;
+import java.util.List;
 
 @Entity
 @Table(name = "seasons")
@@ -33,27 +33,24 @@ public class SeasonModel extends BaseModel {
     @Column(name = "prev_season")
     private String prevSeason;
 
-    @Type(type = "string-array")
+    @Type(type = "list-array")
     @Column(columnDefinition = "varchar[]")
-    private String[] episodes;
+    private List<String> episodes;
 
-    @Type(type = "string-array")
+    @Type(type = "list-array")
     @Column(columnDefinition = "varchar[]")
-    private String[] soundtracks;
+    private List<String> soundtracks;
 
     @Column
     private Integer budget;
 
-    @Type(type = "string-array")
+    @Type(type = "list-array")
     @Column(columnDefinition = "text[]")
-    private String[] images;
+    private List<String> images;
 
-    @Type(type = "string-array")
+    @Type(type = "list-array")
     @Column(columnDefinition = "text[]")
-    private String[] languages;
-
-    @Column
-    private String thumbnail;
+    private List<String> languages;
 
     @OneToOne(mappedBy = "season", cascade = CascadeType.ALL)
     private SeasonTranslation translation;
@@ -98,19 +95,19 @@ public class SeasonModel extends BaseModel {
         this.prevSeason = prevSeason;
     }
 
-    public String[] getEpisodes() {
+    public List<String> getEpisodes() {
         return episodes;
     }
 
-    public void setEpisodes(String[] episodes) {
+    public void setEpisodes(List<String> episodes) {
         this.episodes = episodes;
     }
 
-    public String[] getSoundtracks() {
+    public List<String> getSoundtracks() {
         return soundtracks;
     }
 
-    public void setSoundtracks(String[] soundtracks) {
+    public void setSoundtracks(List<String> soundtracks) {
         this.soundtracks = soundtracks;
     }
 
@@ -122,28 +119,20 @@ public class SeasonModel extends BaseModel {
         this.budget = budget;
     }
 
-    public String[] getImages() {
+    public List<String> getImages() {
         return images;
     }
 
-    public void setImages(String[] images) {
+    public void setImages(List<String> images) {
         this.images = images;
     }
 
-    public String[] getLanguages() {
+    public List<String> getLanguages() {
         return languages;
     }
 
-    public void setLanguages(String[] languages) {
+    public void setLanguages(List<String> languages) {
         this.languages = languages;
-    }
-
-    public String getThumbnail() {
-        return thumbnail;
-    }
-
-    public void setThumbnail(String thumbnail) {
-        this.thumbnail = thumbnail;
     }
 
     public SeasonTranslation getTranslation() {
@@ -162,12 +151,11 @@ public class SeasonModel extends BaseModel {
                 ", releaseDate=" + releaseDate +
                 ", nextSeason='" + nextSeason + '\'' +
                 ", prevSeason='" + prevSeason + '\'' +
-                ", episodes=" + Arrays.toString(episodes) +
-                ", soundtracks=" + Arrays.toString(soundtracks) +
+                ", episodes=" + episodes +
+                ", soundtracks=" + soundtracks +
                 ", budget=" + budget +
-                ", images=" + Arrays.toString(images) +
-                ", languages=" + Arrays.toString(languages) +
-                ", thumbnail='" + thumbnail + '\'' +
+                ", images=" + images +
+                ", languages=" + languages +
                 ", translation=" + translation +
                 '}';
     }

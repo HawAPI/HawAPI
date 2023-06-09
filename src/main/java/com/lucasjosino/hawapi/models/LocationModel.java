@@ -5,48 +5,37 @@ import com.lucasjosino.hawapi.models.translations.LocationTranslation;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import java.util.Arrays;
+import java.util.List;
 
 @Entity
 @Table(name = "locations")
 public class LocationModel extends BaseModel {
 
-    @Type(type = "string-array")
+    @Type(type = "list-array")
     @Column(columnDefinition = "text[]")
-    private String[] images;
+    private List<String> images;
 
-    @Type(type = "string-array")
+    @Type(type = "list-array")
     @Column(columnDefinition = "text[]")
-    private String[] languages;
-
-    @Column
-    private String thumbnail;
+    private List<String> languages;
 
     @OneToOne(mappedBy = "location", cascade = CascadeType.ALL)
     private LocationTranslation translation;
 
-    public String[] getImages() {
+    public List<String> getImages() {
         return images;
     }
 
-    public void setImages(String[] images) {
+    public void setImages(List<String> images) {
         this.images = images;
     }
 
-    public String[] getLanguages() {
+    public List<String> getLanguages() {
         return languages;
     }
 
-    public void setLanguages(String[] languages) {
+    public void setLanguages(List<String> languages) {
         this.languages = languages;
-    }
-
-    public String getThumbnail() {
-        return thumbnail;
-    }
-
-    public void setThumbnail(String thumbnail) {
-        this.thumbnail = thumbnail;
     }
 
     public LocationTranslation getTranslation() {
@@ -60,9 +49,8 @@ public class LocationModel extends BaseModel {
     @Override
     public String toString() {
         return "LocationModel{" +
-                "images=" + Arrays.toString(images) +
-                ", languages=" + Arrays.toString(languages) +
-                ", thumbnail='" + thumbnail + '\'' +
+                "images=" + images +
+                ", languages=" + languages +
                 ", translation=" + translation +
                 '}';
     }

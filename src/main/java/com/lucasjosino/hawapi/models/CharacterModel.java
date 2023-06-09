@@ -8,7 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.time.LocalDate;
-import java.util.Arrays;
+import java.util.List;
 
 @Entity
 @Table(name = "characters")
@@ -22,9 +22,9 @@ public class CharacterModel extends BaseModel {
     @Column(name = "last_name")
     private String lastName;
 
-    @Type(type = "string-array")
+    @Type(type = "list-array")
     @Column(columnDefinition = "varchar[]")
-    private String[] nicknames;
+    private List<String> nicknames;
 
     @JsonProperty("birth_date")
     @Column(name = "birth_date")
@@ -38,14 +38,11 @@ public class CharacterModel extends BaseModel {
     private Byte gender;
 
     @Column
-    private String thumbnail;
-
-    @Column
     private String actor;
 
-    @Type(type = "string-array")
+    @Type(type = "list-array")
     @Column(columnDefinition = "text[]")
-    private String[] images;
+    private List<String> images;
 
     public String getFirstName() {
         return firstName;
@@ -63,11 +60,11 @@ public class CharacterModel extends BaseModel {
         this.lastName = lastName;
     }
 
-    public String[] getNicknames() {
+    public List<String> getNicknames() {
         return nicknames;
     }
 
-    public void setNicknames(String[] nicknames) {
+    public void setNicknames(List<String> nicknames) {
         this.nicknames = nicknames;
     }
 
@@ -95,14 +92,6 @@ public class CharacterModel extends BaseModel {
         this.gender = gender;
     }
 
-    public String getThumbnail() {
-        return thumbnail;
-    }
-
-    public void setThumbnail(String thumbnail) {
-        this.thumbnail = thumbnail;
-    }
-
     public String getActor() {
         return actor;
     }
@@ -111,11 +100,11 @@ public class CharacterModel extends BaseModel {
         this.actor = actor;
     }
 
-    public String[] getImages() {
+    public List<String> getImages() {
         return images;
     }
 
-    public void setImages(String[] images) {
+    public void setImages(List<String> images) {
         this.images = images;
     }
 
@@ -124,13 +113,12 @@ public class CharacterModel extends BaseModel {
         return "CharacterModel{" +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", nicknames=" + Arrays.toString(nicknames) +
+                ", nicknames=" + nicknames +
                 ", birthDate=" + birthDate +
                 ", deathDate=" + deathDate +
                 ", gender=" + gender +
-                ", thumbnail='" + thumbnail + '\'' +
                 ", actor='" + actor + '\'' +
-                ", images=" + Arrays.toString(images) +
+                ", images=" + images +
                 '}';
     }
 }

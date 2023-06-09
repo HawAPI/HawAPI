@@ -3,8 +3,10 @@ package com.lucasjosino.hawapi.models.base;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vladmihalcea.hibernate.type.array.ListArrayType;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Column;
@@ -12,10 +14,12 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @MappedSuperclass
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@TypeDef(name = "list-array", typeClass = ListArrayType.class)
 abstract public class BaseModel implements Serializable {
 
     @JsonIgnore
@@ -31,9 +35,12 @@ abstract public class BaseModel implements Serializable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String href;
 
-    @Type(type = "string-array")
+    @Column
+    private String thumbnail;
+
+    @Type(type = "list-array")
     @Column(columnDefinition = "text[]")
-    private String[] sources;
+    private List<String> sources;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false, insertable = false)
@@ -69,11 +76,19 @@ abstract public class BaseModel implements Serializable {
         this.href = href;
     }
 
-    public String[] getSources() {
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public List<String> getSources() {
         return sources;
     }
 
-    public void setSources(String[] sources) {
+    public void setSources(List<String> sources) {
         this.sources = sources;
     }
 
@@ -91,5 +106,18 @@ abstract public class BaseModel implements Serializable {
 
     public void setUpdatedAt(LocalDateTime updated_at) {
         this.updatedAt = updated_at;
+    }
+
+    @Override
+    public String toString() {
+        return "BaseModel{" +
+                "id=" + id +
+                ", uuid=" + uuid +
+                ", href='" + href + '\'' +
+                ", thumbnail='" + thumbnail + '\'' +
+                ", sources=" + sources +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
     }
 }

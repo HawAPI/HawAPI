@@ -6,7 +6,7 @@ import com.lucasjosino.hawapi.models.translations.EpisodeTranslation;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import java.util.Arrays;
+import java.util.List;
 
 @Entity
 @Table(name = "episodes")
@@ -30,16 +30,13 @@ public class EpisodeModel extends BaseModel {
     @Column(nullable = false)
     private String season;
 
-    @Type(type = "string-array")
+    @Type(type = "list-array")
     @Column(columnDefinition = "text[]")
-    private String[] images;
+    private List<String> images;
 
-    @Type(type = "string-array")
+    @Type(type = "list-array")
     @Column(columnDefinition = "text[]")
-    private String[] languages;
-
-    @Column
-    private String thumbnail;
+    private List<String> languages;
 
     @OneToOne(mappedBy = "episode", cascade = CascadeType.ALL)
     private EpisodeTranslation translation;
@@ -84,28 +81,20 @@ public class EpisodeModel extends BaseModel {
         this.season = season;
     }
 
-    public String[] getImages() {
+    public List<String> getImages() {
         return images;
     }
 
-    public void setImages(String[] images) {
+    public void setImages(List<String> images) {
         this.images = images;
     }
 
-    public String[] getLanguages() {
+    public List<String> getLanguages() {
         return languages;
     }
 
-    public void setLanguages(String[] languages) {
+    public void setLanguages(List<String> languages) {
         this.languages = languages;
-    }
-
-    public String getThumbnail() {
-        return thumbnail;
-    }
-
-    public void setThumbnail(String thumbnail) {
-        this.thumbnail = thumbnail;
     }
 
     public EpisodeTranslation getTranslation() {
@@ -124,9 +113,8 @@ public class EpisodeModel extends BaseModel {
                 ", nextEpisode='" + nextEpisode + '\'' +
                 ", prevEpisode='" + prevEpisode + '\'' +
                 ", season='" + season + '\'' +
-                ", images=" + Arrays.toString(images) +
-                ", languages=" + Arrays.toString(languages) +
-                ", thumbnail='" + thumbnail + '\'' +
+                ", images=" + images +
+                ", languages=" + languages +
                 ", translation=" + translation +
                 '}';
     }
