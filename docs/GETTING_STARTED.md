@@ -19,7 +19,10 @@
 
 ## Project Structure
 
-<!-- tree -d -I '*.properties|*.java|*.class|target' -->
+<!-- tree -d -I '*.properties|*.java|*.class|target|static' -->
+
+<details>
+<summary>Click to expand</summary>
 
 ```
 .
@@ -27,6 +30,8 @@
 │   └── postgres
 │       ├── init
 │       └── migration
+├── docs
+├── logs
 ├── scripts
 └── src
     ├── main
@@ -34,30 +39,52 @@
     │   │   └── com
     │   │       └── lucasjosino
     │   │           └── hawapi
+    │   │               ├── cache
+    │   │               │   └── generator
     │   │               ├── configs
     │   │               │   └── security
     │   │               ├── controllers
-    │   │               │   └── auth
+    │   │               │   ├── advisor
+    │   │               │   ├── api
+    │   │               │   │   └── v1
+    │   │               │   │       └── auth
+    │   │               │   ├── interfaces
+    │   │               │   └── utils
+    │   │               ├── core
     │   │               ├── enums
-    │   │               │   └── auth
+    │   │               │   ├── auth
+    │   │               │   └── specification
     │   │               ├── exceptions
-    │   │               │   └── auth
+    │   │               │   ├── auth
+    │   │               │   └── specification
     │   │               ├── filters
     │   │               │   ├── base
     │   │               │   └── http
-    │   │               ├── interfaces
     │   │               ├── jwt
     │   │               │   └── validators
     │   │               ├── models
     │   │               │   ├── base
+    │   │               │   ├── dto
+    │   │               │   │   ├── auth
+    │   │               │   │   └── translation
+    │   │               │   ├── http
+    │   │               │   ├── translations
     │   │               │   └── user
     │   │               ├── properties
     │   │               ├── repositories
-    │   │               │   └── auth
+    │   │               │   ├── auth
+    │   │               │   ├── base
+    │   │               │   ├── specification
+    │   │               │   └── translation
     │   │               ├── resolvers
-    │   │               └── services
-    │   │                   ├── auth
-    │   │                   └── utils
+    │   │               ├── services
+    │   │               │   ├── auth
+    │   │               │   ├── base
+    │   │               │   ├── impl
+    │   │               │   │   └── auth
+    │   │               │   └── utils
+    │   │               └── validators
+    │   │                   └── annotations
     │   └── resources
     │       └── keys
     └── test
@@ -78,15 +105,21 @@
         └── resources
 ```
 
+</details>
+
 ## Prerequisites
 
-- Git and GitHub account (If you want [Contributing](CONTRIBUTING.md))
-- Text editor or IDE (IntelliJ IDEA, VsCode, Netbeans, Eclipse)
-- Docker
-- Java 8 (1.8)
+- Text editor or IDE (**IntelliJ IDEA**, VsCode, Netbeans, Eclipse)
+- Terminal (with bash) for [Scripts](../scripts)
+- Docker for [Database](../docker/docker-compose.yml)
+- Java 8 (1.8) for [Application](../src/main/java/com/lucasjosino/hawapi/HawAPIApplication.java)
 - Npm/Yarn
-    - [Astro](https://astro.build/) for [website](https://github.com/HawAPI/website) generation
-    - [Retype](https://retype.com/) for [docs](https://github.com/HawAPI/website) generation
+    - [Astro (v2.5.X)](https://astro.build/) for [website](https://github.com/HawAPI/website) generation
+    - [Retype (v3.X.X)](https://retype.com/) for [docs](https://github.com/HawAPI/website) generation
+
+### Optional
+
+- Git and GitHub account for [Contributing](CONTRIBUTING.md)
 
 ## Docker
 
@@ -100,17 +133,17 @@ docker compose -f ./docker/docker-compose.yml up postgres
 ```
 
 > **Note** \
-> The command `make dk-run` is easy to remember.
+> The command `make docker-run` is easy to remember.
 
 ### Aliases
 
 ```make
-dk-status: ## Check the docker container status.
-dk-run: ## Build & Run the local docker.
-dk-start: ## Start the local docker.
-dk-stop: ## Stop the local docker.
-dk-reset: ## Stop, Delete, Build and Start the local docker.
-dk-prune: ## Delete all docker volumes.
+docker-status: ## Check the docker container status.
+docker-run: ## Build & Run the local docker.
+docker-start: ## Start the local docker.
+docker-stop: ## Stop the local docker.
+docker-reset: ## Stop, Delete, Build and Start the local docker.
+docker-prune: ## Delete local docker volumes.
 ```
 
 ## Setup
@@ -151,7 +184,7 @@ docker compose -f ./docker/docker-compose.yml start postgres
 - Makefile
 
 ```
-make dk-start
+make docker-start
 ```
 
 ### Website/Docs
@@ -283,31 +316,33 @@ Usage:
 
 Targets:
   Application
-    run                 Run the spring application
-    test                Run ALL tests of the spring application
-    test-unit           Run ONLY unit tests of the spring application
-    test-int            Run ONLY integration tests of the spring application
-    compile             Compile the spring application
-    build               Build website, test and package the spring application
-    verify              Verify the spring application
-    clean               Clear the spring application
+    dev                      Start docker database and run spring application
+    run                      Run the spring application
+    get                      Get all pom dependencies
+    javadoc                  Generate javadoc files
+    test                     Run ALL tests of the spring application
+    test-unit                Run ONLY unit tests of the spring application
+    test-int                 Run ONLY integration tests of the spring application
+    compile                  Compile the spring application
+    build                    Build website, test and package the spring application
+    verify                   Verify the spring application
+    clean                    Clear the spring application
   Build
-    run-jar             Run the compiled application (target/hawapi-*.jar)
+    jar-run                  Run the compiled application (target/hawapi-*.jar)
   Website
-    build-website       Build the website
-    clean-website       Remove '.hawapi/' and 'resources/static/'
+    website-build            Build the website
+    website-clean            Remove '.hawapi/' and 'resources/static/'
   Docker
-    dk-status           Check the docker container status.
-    dk-run              Build & Run the local docker.
-    dk-start            Start the local docker.
-    dk-stop             Stop the local docker.
-    dk-reset            Stop, Delete, Build and Start the local docker.
-    dk-prune            Delete all docker volumes.
+    docker-status            Check the docker container status.
+    docker-run               Build & Run the local docker.
+    docker-start             Start the local docker.
+    docker-stop              Stop the local docker.
+    docker-reset             Stop, Delete, Build and Start the local docker.
+    docker-prune             Delete local docker volumes.
   Help
-    test-setup          Setup for tests
-    config              Show all configuration (Docker, database, etc...)
-    help                Show this help.
-
+    test-setup               Setup for tests
+    config                   Show all configuration (Docker, database, etc...)
+    help                     Show this help.
 ```
 
 ### Shell/Bash

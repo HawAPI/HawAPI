@@ -33,22 +33,22 @@ via JSON and allows developers to create **desktop**, **web** and **mobile** app
 ## Getting Started
 
 - [I18N Support](#internationalization-support)
-- [Project Structure](GETTING_STARTED.md#project-structure)
-- [Prerequisites](GETTING_STARTED.md#prerequisites)
-- [Docker](GETTING_STARTED.md#docker)
-    - [Usage](GETTING_STARTED.md#usage)
-    - [Aliases](GETTING_STARTED.md#aliases)
-- [Setup](GETTING_STARTED.md#setup)
-    - [Clone](GETTING_STARTED.md#clone)
-    - [Database](GETTING_STARTED.md#database)
-    - [Website/Docs](GETTING_STARTED.md#websitedocs)
-    - [Application](GETTING_STARTED.md#application)
-- [Tests](GETTING_STARTED.md#tests)
-    - [Unit Tests](GETTING_STARTED.md#unit-tests)
-    - [Integration Tests](GETTING_STARTED.md#integration-tests)
-- [Scripts](GETTING_STARTED.md#scripts)
-    - [Makefile](GETTING_STARTED.md#makefile)
-    - [Shell/Bash](GETTING_STARTED.md#shellbash)
+- [Project Structure](./docs/GETTING_STARTED.md#project-structure)
+- [Prerequisites](./docs/GETTING_STARTED.md#prerequisites)
+- [Docker](./docs/GETTING_STARTED.md#docker)
+    - [Usage](./docs/GETTING_STARTED.md#usage)
+    - [Aliases](./docs/GETTING_STARTED.md#aliases)
+- [Setup](./docs/GETTING_STARTED.md#setup)
+    - [Clone](./docs/GETTING_STARTED.md#clone)
+    - [Database](./docs/GETTING_STARTED.md#database)
+    - [Website/Docs](./docs/GETTING_STARTED.md#websitedocs)
+    - [Application](./docs/GETTING_STARTED.md#application)
+- [Tests](./docs/GETTING_STARTED.md#tests)
+    - [Unit Tests](./docs/GETTING_STARTED.md#unit-tests)
+    - [Integration Tests](./docs/GETTING_STARTED.md#integration-tests)
+- [Scripts](./docs/GETTING_STARTED.md#scripts)
+    - [Makefile](./docs/GETTING_STARTED.md#makefile)
+    - [Shell/Bash](./docs/GETTING_STARTED.md#shellbash)
 
 #### Links
 
@@ -66,21 +66,21 @@ via JSON and allows developers to create **desktop**, **web** and **mobile** app
 
 ## Internationalization Support
 
-| Scope       | en-US |
-|:------------|:-----:|
-| Actors      |  Yes  |
-| Characters  |  Yes  |
-| Episodes    |  Yes  |
-| Games       |  Yes  |
-| Locations   |  Yes  |
-| Seasons     |  Yes  |
-| Soundtracks |  Yes  |
+| Scope       | en-US | pt-BR |
+|:------------|:-----:|:-----:|
+| Actors      |  --   |  No   |
+| Characters  |  --   |  No   |
+| Episodes    |  Yes  |  No   |
+| Games       |  Yes  |  No   |
+| Locations   |  Yes  |  No   |
+| Seasons     |  Yes  |  No   |
+| Soundtracks |  --   |  No   |
 
 ## Contributing
 
 You could help continuing its development by:
 
-- [Contribute](CONTRIBUTING.md) to the source code
+- [Contribute](./docs/CONTRIBUTING.md) to the source code
 - Suggest new features and report issues
 
 ## Contact
