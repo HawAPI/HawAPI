@@ -2,7 +2,11 @@ package com.lucasjosino.hawapi.controllers.api.v1;
 
 import com.lucasjosino.hawapi.controllers.interfaces.BaseTranslationInterface;
 import com.lucasjosino.hawapi.controllers.utils.ResponseUtils;
+import com.lucasjosino.hawapi.exceptions.BadRequestException;
+import com.lucasjosino.hawapi.exceptions.InternalServerErrorException;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
+import com.lucasjosino.hawapi.exceptions.SaveConflictException;
+import com.lucasjosino.hawapi.filters.GameFilter;
 import com.lucasjosino.hawapi.models.dto.GameDTO;
 import com.lucasjosino.hawapi.models.dto.translation.GameTranslationDTO;
 import com.lucasjosino.hawapi.services.impl.GameServiceImpl;
@@ -27,6 +31,13 @@ import java.util.UUID;
 import static com.lucasjosino.hawapi.core.StringUtils.isNullOrEmpty;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
+/**
+ * Endpoints for managing games
+ *
+ * @author Lucas Josino
+ * @see <a href="https://hawapi.theproject.id/docs/api/games">HawAPI#Games</a>
+ * @since 1.0.0
+ */
 @RestController
 @RequestMapping("/api/v1/games")
 @Tag(
@@ -48,6 +59,15 @@ public class GameController implements BaseTranslationInterface<GameDTO, GameTra
         this.responseUtils = responseUtils;
     }
 
+    /**
+     * Method that get all games
+     *
+     * @param filters  An {@link Map} of params that represents {@link GameFilter}. Can be empty
+     * @param pageable An {@link Page} with pageable params. Can be null
+     * @return A {@link List} of {@link GameDTO} or empty
+     * @throws InternalServerErrorException If a valid filter is not provided
+     * @since 1.0.0
+     */
     @Operation(summary = "Get all games")
     public ResponseEntity<List<GameDTO>> findAll(Map<String, String> filters, Pageable pageable) {
         filters.putIfAbsent("language", responseUtils.getDefaultLanguage());
@@ -65,6 +85,13 @@ public class GameController implements BaseTranslationInterface<GameDTO, GameTra
         return ResponseEntity.ok().headers(headers).body(res);
     }
 
+    /**
+     * Method that get a single random game
+     *
+     * @return An single {@link GameDTO}
+     * @throws ItemNotFoundException If no item was found
+     * @since 1.0.0
+     */
     @Operation(summary = "Get random game")
     public ResponseEntity<GameDTO> findRandom(String language) {
         if (isNullOrEmpty(language)) language = responseUtils.getDefaultLanguage();
@@ -73,16 +100,41 @@ public class GameController implements BaseTranslationInterface<GameDTO, GameTra
         return ResponseEntity.ok().headers(headers).body(service.findRandom(language));
     }
 
+    /**
+     * Method that get all game translations
+     *
+     * @param uuid An {@link UUID} that represents a specific item
+     * @return A {@link List} of {@link GameTranslationDTO} or empty
+     * @throws ItemNotFoundException If item with <strong>uuid</strong> doesn't exist
+     * @since 1.0.0
+     */
     @Operation(summary = "Get all game translations")
     public ResponseEntity<List<GameTranslationDTO>> findAllTranslationsBy(UUID uuid) {
         return ResponseEntity.ok(service.findAllTranslationsBy(uuid));
     }
 
+    /**
+     * Method that get a single random game translation
+     *
+     * @param uuid An {@link UUID} that represents a specific item
+     * @return An single {@link GameTranslationDTO}
+     * @throws ItemNotFoundException If no item was found
+     * @since 1.0.0
+     */
     @Operation(summary = "Get random game translation")
     public ResponseEntity<GameTranslationDTO> findRandomTranslation(UUID uuid) {
         return ResponseEntity.ok(service.findRandomTranslation(uuid));
     }
 
+    /**
+     * Method that get a single game
+     *
+     * @param uuid     An {@link UUID} that represents a specific item
+     * @param language An {@link String} that specify a language filter
+     * @return An single {@link GameDTO}
+     * @throws ItemNotFoundException If no item was found
+     * @since 1.0.0
+     */
     @Operation(summary = "Get game")
     public ResponseEntity<GameDTO> findBy(UUID uuid, String language) {
         language = defaultIfEmpty(language, responseUtils.getDefaultLanguage());
@@ -91,21 +143,59 @@ public class GameController implements BaseTranslationInterface<GameDTO, GameTra
         return ResponseEntity.ok().headers(headers).body(service.findBy(uuid, language));
     }
 
+    /**
+     * Method that get a single game translation
+     *
+     * @param uuid     An {@link UUID} that represents a specific item
+     * @param language An {@link String} that specify a language filter
+     * @return An single {@link GameTranslationDTO}
+     * @throws ItemNotFoundException If no item was found
+     * @since 1.0.0
+     */
     @Operation(summary = "Get game translation")
     public ResponseEntity<GameTranslationDTO> findTranslationBy(UUID uuid, String language) {
         return ResponseEntity.ok(service.findTranslationBy(uuid, language));
     }
 
+    /**
+     * Method that crates a game
+     *
+     * @param dto An {@link GameDTO} with all game fields
+     * @return An {@link GameDTO} with the saved object
+     * @throws BadRequestException   If dto validation fails
+     * @throws SaveConflictException If language already exist or uuid is invalid
+     * @since 1.0.0
+     */
     @Operation(summary = "Save game", security = @SecurityRequirement(name = "Bearer"))
     public ResponseEntity<GameDTO> save(GameDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(dto));
     }
 
+    /**
+     * Method that crates a game translation
+     *
+     * @param dto An {@link GameDTO} with all game fields
+     * @return An {@link GameTranslationDTO} with the saved object
+     * @throws BadRequestException   If dto validation fails
+     * @throws SaveConflictException If language already exist or uuid is invalid
+     * @throws ItemNotFoundException If no item was found
+     * @since 1.0.0
+     */
     @Operation(summary = "Patch game", security = @SecurityRequirement(name = "Bearer"))
     public ResponseEntity<GameTranslationDTO> saveTranslation(UUID uuid, GameTranslationDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.saveTranslation(uuid, dto));
     }
 
+    /**
+     * Method that updates a game
+     *
+     * @param uuid  An {@link UUID} that represents a specific item
+     * @param patch An {@link GameDTO} with updated game fields
+     * @return An {@link GameDTO} with the updated object
+     * @throws ItemNotFoundException If no item was found
+     * @throws SaveConflictException If language already exist or uuid is invalid
+     * @since 1.0.0
+     */
     @Operation(summary = "Patch game", security = @SecurityRequirement(name = "Bearer"))
     public ResponseEntity<GameDTO> patch(UUID uuid, GameDTO patch) {
         try {
@@ -118,6 +208,17 @@ public class GameController implements BaseTranslationInterface<GameDTO, GameTra
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Method that updates a game translation
+     *
+     * @param uuid     An {@link UUID} that represents a specific item
+     * @param language An {@link String} that specify a language filter
+     * @param dto      An {@link GameTranslationDTO} with updated game fields
+     * @return An {@link GameTranslationDTO} with the updated object
+     * @throws ItemNotFoundException If no item was found
+     * @throws SaveConflictException If language already exist or uuid is invalid
+     * @since 1.0.0
+     */
     @Operation(summary = "Patch game translation", security = @SecurityRequirement(name = "Bearer"))
     public ResponseEntity<GameTranslationDTO> patchTranslation(
             UUID uuid,
@@ -134,12 +235,27 @@ public class GameController implements BaseTranslationInterface<GameDTO, GameTra
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Method that delete a game and all translations
+     *
+     * @param uuid An {@link UUID} that represents a specific item
+     * @throws ItemNotFoundException If no item was found
+     * @since 1.0.0
+     */
     @Operation(summary = "Delete game", security = @SecurityRequirement(name = "Bearer"))
     public ResponseEntity<Void> delete(UUID uuid) {
         service.deleteById(uuid);
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Method that delete a game translation
+     *
+     * @param uuid     An {@link UUID} that represents a specific item
+     * @param language An {@link String} that specify a language filter
+     * @throws ItemNotFoundException If no item was found
+     * @since 1.0.0
+     */
     @Operation(summary = "Delete game translation", security = @SecurityRequirement(name = "Bearer"))
     public ResponseEntity<Void> deleteTranslation(UUID uuid, String language) {
         service.deleteTranslation(uuid, language);

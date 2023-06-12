@@ -2,7 +2,10 @@ package com.lucasjosino.hawapi.controllers.api.v1;
 
 import com.lucasjosino.hawapi.controllers.interfaces.BaseControllerInterface;
 import com.lucasjosino.hawapi.controllers.utils.ResponseUtils;
+import com.lucasjosino.hawapi.exceptions.BadRequestException;
+import com.lucasjosino.hawapi.exceptions.InternalServerErrorException;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
+import com.lucasjosino.hawapi.filters.CharacterFilter;
 import com.lucasjosino.hawapi.models.dto.CharacterDTO;
 import com.lucasjosino.hawapi.services.impl.CharacterServiceImpl;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
@@ -23,6 +26,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Endpoints for managing characters
+ *
+ * @author Lucas Josino
+ * @see <a href="https://hawapi.theproject.id/docs/api/characters">HawAPI#Characters</a>
+ * @since 1.0.0
+ */
 @RestController
 @RequestMapping("/api/v1/characters")
 @Tag(
@@ -44,6 +54,15 @@ public class CharacterController implements BaseControllerInterface<CharacterDTO
         this.responseUtils = responseUtils;
     }
 
+    /**
+     * Method that get all characters
+     *
+     * @param filters  An {@link Map} of params that represents {@link CharacterFilter}. Can be empty
+     * @param pageable An {@link Page} with pageable params. Can be null
+     * @return A {@link List} of {@link CharacterDTO} or empty
+     * @throws InternalServerErrorException If a valid filter is not provided
+     * @since 1.0.0
+     */
     @Operation(summary = "Get all characters")
     public ResponseEntity<List<CharacterDTO>> findAll(Map<String, String> filters, Pageable pageable) {
         Page<UUID> uuids = service.findAllUUIDs(pageable);
@@ -59,21 +78,53 @@ public class CharacterController implements BaseControllerInterface<CharacterDTO
         return ResponseEntity.ok().headers(headers).body(res);
     }
 
+    /**
+     * Method that get a single random character
+     *
+     * @return An single {@link CharacterDTO}
+     * @throws ItemNotFoundException If no item was found
+     * @since 1.0.0
+     */
     @Operation(summary = "Get random character")
     public ResponseEntity<CharacterDTO> findRandom(String language) {
         return ResponseEntity.ok().body(service.findRandom(language));
     }
 
+    /**
+     * Method that get a single character
+     *
+     * @param uuid An {@link UUID} that represents a specific item
+     * @return An single {@link CharacterDTO}
+     * @throws ItemNotFoundException If no item was found
+     * @since 1.0.0
+     */
     @Operation(summary = "Get character")
     public ResponseEntity<CharacterDTO> findBy(UUID uuid, String language) {
         return ResponseEntity.ok(service.findBy(uuid, language));
     }
 
+    /**
+     * Method that crates a character
+     *
+     * @param dto An {@link CharacterDTO} with all character fields
+     * @return An {@link CharacterDTO} with the saved object
+     * @throws BadRequestException If dto validation fail
+     * @since 1.0.0
+     */
     @Operation(summary = "Save character", security = @SecurityRequirement(name = "Bearer"))
     public ResponseEntity<CharacterDTO> save(CharacterDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(dto));
     }
 
+    /**
+     * Method that updates a character
+     *
+     * @param uuid  An {@link UUID} that represents a specific item
+     * @param patch An {@link CharacterDTO} with updated character fields
+     * @return An {@link CharacterDTO} with the updated object
+     * @throws ItemNotFoundException If no item was found
+     * @since 1.0.0
+     */
     @Operation(summary = "Patch character", security = @SecurityRequirement(name = "Bearer"))
     public ResponseEntity<CharacterDTO> patch(UUID uuid, CharacterDTO patch) {
         try {
@@ -86,6 +137,13 @@ public class CharacterController implements BaseControllerInterface<CharacterDTO
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Method that delete a character
+     *
+     * @param uuid An {@link UUID} that represents a specific item
+     * @throws ItemNotFoundException If no item was found
+     * @since 1.0.0
+     */
     @Operation(summary = "Delete character", security = @SecurityRequirement(name = "Bearer"))
     public ResponseEntity<Void> delete(UUID uuid) {
         service.deleteById(uuid);
