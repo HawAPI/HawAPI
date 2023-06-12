@@ -13,6 +13,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Interface that implements the Game Repository, with JPA CRUD methods.
+ *
+ * @author Lucas josino
+ * @see BaseJpaRepository
+ * @see EntityGraph
+ * @see GameModel
+ * @since 1.0.0
+ */
 @Repository
 @SuppressWarnings("NullableProblems")
 public interface GameRepository extends BaseJpaRepository<GameModel, UUID> {
@@ -37,6 +46,14 @@ public interface GameRepository extends BaseJpaRepository<GameModel, UUID> {
     @EntityGraph(attributePaths = "translation")
     Page<GameModel> findAll(Specification<GameModel> spec, Pageable pageable);
 
+    /**
+     * Method to get a game by {@link UUID} and language.
+     *
+     * @param uuid     An {@link UUID} that represents a specific item
+     * @param language An {@link String} that specify a language filter
+     * @return An {@link Optional} of {@link GameModel}
+     * @since 1.0.0
+     */
     @EntityGraph(attributePaths = "translation")
     Optional<GameModel> findByUuidAndTranslationLanguage(UUID uuid, String language);
 }

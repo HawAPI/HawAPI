@@ -17,9 +17,13 @@ import java.util.*;
 /**
  * SpecificationBuilder provides functionality for convert all Filters (extended from {@link BaseFilter}) into a
  * {@link Specification}.
- * <p>
- * The builder will receive X values but only fields from the filter (extended from {@link BaseFilter}
+ * <p> The builder will receive X values but only fields from the filter (extended from {@link BaseFilter}
  * or {@link BaseTranslationFilter}) will be used.
+ *
+ * @author Lucas Josino
+ * @see Specification
+ * @see BaseModel
+ * @since 1.0.0
  */
 @SuppressWarnings({"NullableProblems", "unchecked", "rawtypes"})
 public class SpecificationBuilder<T extends BaseModel> implements Specification<T> {
@@ -43,6 +47,7 @@ public class SpecificationBuilder<T extends BaseModel> implements Specification<
      * @param fClass The filter class
      * @param uuids  All uuids to be filtered
      * @return The specification builder with defined params
+     * @since 1.0.0
      */
     public <S extends BaseFilter> SpecificationBuilder<T> with(
             Map<String, String> params,
@@ -61,6 +66,7 @@ public class SpecificationBuilder<T extends BaseModel> implements Specification<
      * @param language The item language to be filtered.
      * @return The specification filter with defined language.
      * @throws InternalServerErrorException If table doesn't have translation table.
+     * @since 1.0.0
      */
     public Specification<T> withTranslation(String language) {
         return (root, query, builder) -> {

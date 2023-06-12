@@ -12,6 +12,15 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Interface that implements the Actor Repository, with JPA CRUD methods.
+ *
+ * @author Lucas josino
+ * @see BaseJpaRepository
+ * @see EntityGraph
+ * @see ActorModel
+ * @since 1.0.0
+ */
 @Repository
 @SuppressWarnings("NullableProblems")
 public interface ActorRepository extends BaseJpaRepository<ActorModel, UUID> {
