@@ -7,6 +7,16 @@ import org.springframework.web.servlet.resource.ResourceResolverChain;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+/**
+ * Handler requests for static files (web).
+ * <p>
+ * E.g:
+ * <ul>
+ * <li>/        -> /index.html</li>
+ * <li>/try-it  -> /try-it/index.html</li>
+ * <li>/docs    -> /docs/index.html</li>
+ * </ul>
+ */
 @SuppressWarnings("NullableProblems")
 public class IndexFallbackResourceResolver extends PathResourceResolver {
 
@@ -27,11 +37,6 @@ public class IndexFallbackResourceResolver extends PathResourceResolver {
                 && !requestPath.contains("fonts");
 
         // Redirect all pages to '/index.html'
-        //
-        // E.g:
-        //  * /        -> /index.html
-        //  * /try-it  -> /try-it/index.html
-        //  * /docs    -> /docs/index.html
         if (resource == null && isAPage) {
             resource = super.resolveResourceInternal(
                     request,
