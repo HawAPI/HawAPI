@@ -6,6 +6,9 @@ import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Configuration for endpoints cache
+ */
 @Configuration
 public class CacheConfig extends CachingConfigurerSupport {
 
