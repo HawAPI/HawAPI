@@ -8,6 +8,10 @@ import java.lang.annotation.*;
 
 /**
  * The annotated element must be a valid basic url.
+ *
+ * @author Lucas Josino
+ * @see BasicURLValidator
+ * @since 1.0.0
  */
 @Documented
 @Target({ElementType.FIELD, ElementType.TYPE_USE})
