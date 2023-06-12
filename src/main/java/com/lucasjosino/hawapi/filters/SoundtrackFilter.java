@@ -1,10 +1,28 @@
 package com.lucasjosino.hawapi.filters;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.lucasjosino.hawapi.controllers.api.v1.SoundtrackController;
 import com.lucasjosino.hawapi.filters.base.BaseFilter;
+import com.lucasjosino.hawapi.models.SoundtrackModel;
+import com.lucasjosino.hawapi.models.dto.SoundtrackDTO;
+import com.lucasjosino.hawapi.repositories.SoundtrackRepository;
+import com.lucasjosino.hawapi.repositories.specification.SpecificationBuilder;
+import com.lucasjosino.hawapi.services.SoundtrackService;
 
 import java.time.LocalDate;
 
+/**
+ * Soundtrack filter model
+ *
+ * @author Lucas Josino
+ * @see SoundtrackModel
+ * @see SoundtrackDTO
+ * @see SoundtrackController
+ * @see SoundtrackService
+ * @see SoundtrackRepository
+ * @see SpecificationBuilder
+ * @since 1.0.0
+ */
 public class SoundtrackFilter extends BaseFilter {
 
     private String name;

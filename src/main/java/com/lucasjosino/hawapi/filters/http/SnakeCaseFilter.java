@@ -15,7 +15,14 @@ import java.util.Enumeration;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Request filter to handle conversion from <strong>Camel case</strong> to <strong>Snake case</strong>
+ *
+ * @author Lucas Josino
+ * @since 1.0.0
+ */
 @Configuration
+@SuppressWarnings("NullableProblems")
 public class SnakeCaseFilter extends OncePerRequestFilter {
 
     @Override

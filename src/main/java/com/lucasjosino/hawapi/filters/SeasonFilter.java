@@ -1,9 +1,27 @@
 package com.lucasjosino.hawapi.filters;
 
+import com.lucasjosino.hawapi.controllers.api.v1.SeasonController;
 import com.lucasjosino.hawapi.filters.base.BaseTranslationFilter;
+import com.lucasjosino.hawapi.models.SeasonModel;
+import com.lucasjosino.hawapi.models.dto.SeasonDTO;
+import com.lucasjosino.hawapi.repositories.SeasonRepository;
+import com.lucasjosino.hawapi.repositories.specification.SpecificationBuilder;
+import com.lucasjosino.hawapi.services.SeasonService;
 
 import java.time.LocalDate;
 
+/**
+ * Season filter model
+ *
+ * @author Lucas Josino
+ * @see SeasonModel
+ * @see SeasonDTO
+ * @see SeasonController
+ * @see SeasonService
+ * @see SeasonRepository
+ * @see SpecificationBuilder
+ * @since 1.0.0
+ */
 public class SeasonFilter extends BaseTranslationFilter {
 
     private String title;

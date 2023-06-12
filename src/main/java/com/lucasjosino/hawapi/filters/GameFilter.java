@@ -1,10 +1,28 @@
 package com.lucasjosino.hawapi.filters;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.lucasjosino.hawapi.controllers.api.v1.GameController;
 import com.lucasjosino.hawapi.filters.base.BaseTranslationFilter;
+import com.lucasjosino.hawapi.models.GameModel;
+import com.lucasjosino.hawapi.models.dto.GameDTO;
+import com.lucasjosino.hawapi.repositories.GameRepository;
+import com.lucasjosino.hawapi.repositories.specification.SpecificationBuilder;
+import com.lucasjosino.hawapi.services.GameService;
 
 import java.time.LocalDate;
 
+/**
+ * Game filter model
+ *
+ * @author Lucas Josino
+ * @see GameModel
+ * @see GameDTO
+ * @see GameController
+ * @see GameService
+ * @see GameRepository
+ * @see SpecificationBuilder
+ * @since 1.0.0
+ */
 public class GameFilter extends BaseTranslationFilter {
 
     private String name;
