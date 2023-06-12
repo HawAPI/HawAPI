@@ -11,6 +11,14 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.UUID;
 
+/**
+ * A JWT Manager to handle token creation
+ *
+ * @author Lucas Josino
+ * @see OpenAPIProperty
+ * @see UserModel
+ * @since 1.0.0
+ */
 @Component
 public class JwtManager {
 
@@ -27,6 +35,20 @@ public class JwtManager {
         this.apiProperty = apiProperty;
     }
 
+    /**
+     * Generate a JWT with using:
+     * <ul>
+     *     <li>Random {@link UUID}</li>
+     *     <li>Project name</li>
+     *     <li>Request time</li>
+     *     <li>Project url</li>
+     *     <li>Username</li>
+     *     <li>Email</li>
+     *     <li>Role</li>
+     * </ul>
+     *
+     * @see OpenAPIProperty
+     */
     public String generateToken(UserModel user) {
         Instant now = Instant.now();
 
