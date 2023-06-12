@@ -12,9 +12,9 @@ import java.util.List;
  * <p>
  * E.g:
  * <ul>
- * <li>/        -> /index.html</li>
- * <li>/try-it  -> /try-it/index.html</li>
- * <li>/docs    -> /docs/index.html</li>
+ * <li>/        - /index.html</li>
+ * <li>/try-it  - /try-it/index.html</li>
+ * <li>/docs    - /docs/index.html</li>
  * </ul>
  */
 @SuppressWarnings("NullableProblems")

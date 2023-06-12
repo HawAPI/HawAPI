@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Generate key for 'findAll' cache methods using only params delimited with <strong>comma<strong/>.
+ * Generate key for 'findAll' cache methods using only params delimited with <strong>comma</strong>.
  *
  * @see BaseService#findAll(Map, List)
  */
