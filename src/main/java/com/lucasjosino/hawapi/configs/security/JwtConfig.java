@@ -31,6 +31,9 @@ import java.util.List;
  *      <li>Authenticator</li>
  *      <li>Validator</li>
  * </ul>
+ *
+ * @author Lucas Josino
+ * @since 1.0.0
  */
 @Configuration
 public class JwtConfig {

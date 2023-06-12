@@ -19,6 +19,9 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
  *      <li>ObjectMapper</li>
  *      <li>ModelMapper</li>
  * </ul>
+ *
+ * @author Lucas Josino
+ * @since 1.0.0
  */
 @Configuration
 public class MappersConfig {

@@ -11,6 +11,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * <ul>
  *      <li>Static files</li>
  * </ul>
+ *
+ * @author Lucas Josino
+ * @since 1.0.0
  */
 @Configuration
 public class StaticResourceConfig implements WebMvcConfigurer {

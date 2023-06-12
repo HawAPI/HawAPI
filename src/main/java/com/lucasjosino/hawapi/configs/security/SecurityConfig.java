@@ -24,6 +24,9 @@ import java.util.Arrays;
  *      <li>Password encoder</li>
  *      <li>API endpoints</li>
  * </ul>
+ *
+ * @author Lucas Josino
+ * @since 1.0.0
  */
 @Configuration
 public class SecurityConfig {

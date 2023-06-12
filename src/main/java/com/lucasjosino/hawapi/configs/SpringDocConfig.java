@@ -15,6 +15,9 @@ import org.springframework.context.annotation.Configuration;
  * <ul>
  *      <li>OpenAPI</li>
  * </ul>
+ *
+ * @author Lucas Josino
+ * @since 1.0.0
  */
 @Configuration
 public class SpringDocConfig {

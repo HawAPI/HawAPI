@@ -11,7 +11,9 @@ import java.util.Map;
 /**
  * Generate key for 'findAll' cache methods using only params delimited with <strong>comma</strong>.
  *
+ * @author Lucas Josino
  * @see BaseService#findAll(Map, List)
+ * @since 1.0.0
  */
 @SuppressWarnings("NullableProblems")
 public class FindAllKeyGenerator implements KeyGenerator {
