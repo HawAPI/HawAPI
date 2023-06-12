@@ -1,5 +1,6 @@
 package com.lucasjosino.hawapi.resolvers;
 
+import com.lucasjosino.hawapi.configs.StaticResourceConfig;
 import org.springframework.core.io.Resource;
 import org.springframework.web.servlet.resource.PathResourceResolver;
 import org.springframework.web.servlet.resource.ResourceResolverChain;
@@ -9,13 +10,17 @@ import java.util.List;
 
 /**
  * Handler requests for static files (web).
- * <p>
- * E.g:
+ * <p> E.g:
  * <ul>
- * <li>/        - /index.html</li>
- * <li>/try-it  - /try-it/index.html</li>
- * <li>/docs    - /docs/index.html</li>
+ *      <li>/        - /index.html</li>
+ *      <li>/try-it  - /try-it/index.html</li>
+ *      <li>/docs    - /docs/index.html</li>
  * </ul>
+ *
+ * @author Lucas Josino
+ * @see PathResourceResolver
+ * @see StaticResourceConfig
+ * @since 1.0.0
  */
 @SuppressWarnings("NullableProblems")
 public class IndexFallbackResourceResolver extends PathResourceResolver {
