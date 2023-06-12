@@ -71,7 +71,7 @@ public interface SeasonTranslationRepository extends JpaRepository<SeasonTransla
     boolean existsByTitleAndLanguage(String title, String language);
 
     /**
-     * Method to delete a season translation sing its <strong>uuid</strong> and <strong>language</strong>.
+     * Method to delete a season translation using its <strong>uuid</strong> and <strong>language</strong>.
      *
      * @param seasonUuid An {@link UUID} that represents a specific item title
      * @param language   An {@link String} that specify a language filter

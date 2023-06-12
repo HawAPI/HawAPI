@@ -71,7 +71,7 @@ public interface GameTranslationRepository extends JpaRepository<GameTranslation
     boolean existsByNameAndLanguage(String title, String language);
 
     /**
-     * Method to delete a game translation sing its <strong>uuid</strong> and <strong>language</strong>.
+     * Method to delete a game translation using its <strong>uuid</strong> and <strong>language</strong>.
      *
      * @param gameUuid An {@link UUID} that represents a specific item title
      * @param language An {@link String} that specify a language filter

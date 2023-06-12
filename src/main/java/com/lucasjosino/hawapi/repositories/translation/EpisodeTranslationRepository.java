@@ -71,7 +71,7 @@ public interface EpisodeTranslationRepository extends JpaRepository<EpisodeTrans
     boolean existsByTitleAndLanguage(String title, String language);
 
     /**
-     * Method to delete an episode translation sing its <strong>uuid</strong> and <strong>language</strong>.
+     * Method to delete an episode translation using its <strong>uuid</strong> and <strong>language</strong>.
      *
      * @param episodeUuid An {@link UUID} that represents a specific item title
      * @param language    An {@link String} that specify a language filter

@@ -71,7 +71,7 @@ public interface LocationTranslationRepository extends JpaRepository<LocationTra
     boolean existsByNameAndLanguage(String title, String language);
 
     /**
-     * Method to delete a location translation sing its <strong>uuid</strong> and <strong>language</strong>.
+     * Method to delete a location translation using its <strong>uuid</strong> and <strong>language</strong>.
      *
      * @param locationUuid An {@link UUID} that represents a specific item title
      * @param language     An {@link String} that specify a language filter
