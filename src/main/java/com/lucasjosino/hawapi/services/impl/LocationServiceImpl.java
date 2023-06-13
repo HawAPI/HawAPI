@@ -1,7 +1,6 @@
 package com.lucasjosino.hawapi.services.impl;
 
 import com.lucasjosino.hawapi.controllers.api.v1.LocationController;
-import com.lucasjosino.hawapi.core.LanguageUtils;
 import com.lucasjosino.hawapi.core.StringUtils;
 import com.lucasjosino.hawapi.exceptions.BadRequestException;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
@@ -48,8 +47,6 @@ public class LocationServiceImpl implements LocationService {
 
     private final ModelMapper modelMapper;
 
-    private final LanguageUtils languageUtils;
-
     private final LocationRepository repository;
 
     private final LocationTranslationRepository translationRepository;
@@ -59,14 +56,12 @@ public class LocationServiceImpl implements LocationService {
             Random random, LocationRepository repository,
             ServiceUtils utils,
             OpenAPIProperty config,
-            ModelMapper modelMapper,
-            LanguageUtils languageUtils, LocationTranslationRepository translationRepository
+            ModelMapper modelMapper, LocationTranslationRepository translationRepository
     ) {
         this.random = random;
         this.utils = utils;
         this.repository = repository;
         this.modelMapper = modelMapper;
-        this.languageUtils = languageUtils;
         this.translationRepository = translationRepository;
         this.basePath = config.getApiBaseUrl() + "/places";
     }
@@ -118,6 +113,8 @@ public class LocationServiceImpl implements LocationService {
      * @since 1.0.0
      */
     public List<LocationTranslationDTO> findAllTranslationsBy(UUID uuid) {
+        existsByIdOrThrow(uuid);
+
         List<LocationTranslation> res = translationRepository.findAllByLocationUuid(uuid);
         return Arrays.asList(modelMapper.map(res, LocationTranslationDTO[].class));
     }
@@ -129,6 +126,8 @@ public class LocationServiceImpl implements LocationService {
      * @since 1.0.0
      */
     public LocationTranslationDTO findRandomTranslation(UUID uuid) {
+        existsByIdOrThrow(uuid);
+
         long count = utils.getCountOrThrow(repository.count());
         int index = random.nextInt((int) count);
 
@@ -261,17 +260,37 @@ public class LocationServiceImpl implements LocationService {
         translationRepository.deleteByLocationUuidAndLanguage(uuid, language);
     }
 
+    /**
+     * Method to validate an DTO
+     * <ul>
+     *     <li>Validate if language is valid</li>
+     *     <li>Validate if field with same uuid and language already exists</li>
+     * </ul>
+     *
+     * @param uuid     An {@link UUID} to validate
+     * @param language An {@link String} to validate
+     * @throws BadRequestException   If <strong>language</strong> field is null or empty
+     * @throws SaveConflictException If item already exists
+     * @since 1.0.0
+     */
     private void validateDTO(UUID uuid, String language) {
         if (StringUtils.isNullOrEmpty(language)) {
             throw new BadRequestException("Column 'language' is required");
         }
 
-        if (!languageUtils.isSupportedLanguage(language)) {
-            throw new BadRequestException("Language '" + language + "' is currently not supported!");
-        }
-
         if (translationRepository.existsByLocationUuidAndLanguage(uuid, language)) {
             throw new SaveConflictException("Language '" + language + "' already exist!");
         }
+    }
+
+    /**
+     * Method to validate an {@link UUID}
+     *
+     * @param uuid An {@link UUID} to validate
+     * @throws ItemNotFoundException {@link UUID} doesn't exists
+     */
+    private void existsByIdOrThrow(UUID uuid) {
+        if (repository.existsById(uuid)) return;
+        throw new ItemNotFoundException("Location '" + uuid + "' not found!");
     }
 }
