@@ -1,7 +1,7 @@
 package com.lucasjosino.hawapi.jwt;
 
+import com.lucasjosino.hawapi.models.properties.OpenAPIProperty;
 import com.lucasjosino.hawapi.models.user.UserModel;
-import com.lucasjosino.hawapi.properties.OpenAPIProperty;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;

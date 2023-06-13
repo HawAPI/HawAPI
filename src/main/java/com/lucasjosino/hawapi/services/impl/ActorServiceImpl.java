@@ -5,7 +5,7 @@ import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.filters.ActorFilter;
 import com.lucasjosino.hawapi.models.ActorModel;
 import com.lucasjosino.hawapi.models.dto.ActorDTO;
-import com.lucasjosino.hawapi.properties.OpenAPIProperty;
+import com.lucasjosino.hawapi.models.properties.OpenAPIProperty;
 import com.lucasjosino.hawapi.repositories.ActorRepository;
 import com.lucasjosino.hawapi.repositories.specification.SpecificationBuilder;
 import com.lucasjosino.hawapi.services.ActorService;

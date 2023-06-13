@@ -7,7 +7,7 @@ import com.lucasjosino.hawapi.configs.UnitTestConfig;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.filters.EpisodeFilter;
 import com.lucasjosino.hawapi.models.EpisodeModel;
-import com.lucasjosino.hawapi.properties.OpenAPIProperty;
+import com.lucasjosino.hawapi.models.properties.OpenAPIProperty;
 import com.lucasjosino.hawapi.repositories.EpisodeRepository;
 import com.lucasjosino.hawapi.services.impl.EpisodeServiceImpl;
 import com.lucasjosino.hawapi.services.utils.ServiceUtils;

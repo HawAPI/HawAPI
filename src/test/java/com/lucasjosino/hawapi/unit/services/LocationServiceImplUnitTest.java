@@ -7,7 +7,7 @@ import com.lucasjosino.hawapi.configs.UnitTestConfig;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.filters.LocationFilter;
 import com.lucasjosino.hawapi.models.LocationModel;
-import com.lucasjosino.hawapi.properties.OpenAPIProperty;
+import com.lucasjosino.hawapi.models.properties.OpenAPIProperty;
 import com.lucasjosino.hawapi.repositories.LocationRepository;
 import com.lucasjosino.hawapi.services.impl.LocationServiceImpl;
 import com.lucasjosino.hawapi.services.utils.ServiceUtils;

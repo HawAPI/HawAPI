@@ -1,6 +1,6 @@
 package com.lucasjosino.hawapi.controllers.api.v1;
 
-import com.lucasjosino.hawapi.properties.OpenAPIProperty;
+import com.lucasjosino.hawapi.models.properties.OpenAPIProperty;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

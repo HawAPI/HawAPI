@@ -1,4 +1,4 @@
-package com.lucasjosino.hawapi.properties;
+package com.lucasjosino.hawapi.models.properties;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;

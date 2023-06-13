@@ -5,7 +5,7 @@ import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.filters.SoundtrackFilter;
 import com.lucasjosino.hawapi.models.SoundtrackModel;
 import com.lucasjosino.hawapi.models.dto.SoundtrackDTO;
-import com.lucasjosino.hawapi.properties.OpenAPIProperty;
+import com.lucasjosino.hawapi.models.properties.OpenAPIProperty;
 import com.lucasjosino.hawapi.repositories.SoundtrackRepository;
 import com.lucasjosino.hawapi.repositories.specification.SpecificationBuilder;
 import com.lucasjosino.hawapi.services.SoundtrackService;

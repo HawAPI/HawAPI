@@ -5,7 +5,7 @@ import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.filters.CharacterFilter;
 import com.lucasjosino.hawapi.models.CharacterModel;
 import com.lucasjosino.hawapi.models.dto.CharacterDTO;
-import com.lucasjosino.hawapi.properties.OpenAPIProperty;
+import com.lucasjosino.hawapi.models.properties.OpenAPIProperty;
 import com.lucasjosino.hawapi.repositories.CharacterRepository;
 import com.lucasjosino.hawapi.repositories.specification.SpecificationBuilder;
 import com.lucasjosino.hawapi.services.CharacterService;
