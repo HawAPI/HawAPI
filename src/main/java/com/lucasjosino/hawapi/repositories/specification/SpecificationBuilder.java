@@ -1,6 +1,5 @@
 package com.lucasjosino.hawapi.repositories.specification;
 
-import com.lucasjosino.hawapi.enums.specification.SegmentationType;
 import com.lucasjosino.hawapi.exceptions.InternalServerErrorException;
 import com.lucasjosino.hawapi.filters.base.BaseFilter;
 import com.lucasjosino.hawapi.filters.base.BaseTranslationFilter;
@@ -284,6 +283,57 @@ public class SpecificationBuilder<T extends BaseModel> implements Specification<
             case EQUALS:
             default:
                 return builder.equal(expression, value);
+        }
+    }
+
+    /**
+     * Values for the API filtering parameter.
+     *
+     * @author Lucas Josino
+     * @see SpecificationBuilder
+     * @since 1.0.0
+     */
+    public enum SegmentationType {
+        LIKE("*"),
+        NOT_LIKE("!*"),
+        BETWEEN("::"),
+        NOT_IN("!:"),
+        IN(":"),
+        GREATER_OR_EQUALS_TO(">="),
+        LESS_OR_EQUALS_TO("<="),
+        GREATER_THAN(">"),
+        LESS_THAN("<"),
+        NOT_EQUALS("!"),
+        EQUALS("");
+
+        private final String value;
+
+        SegmentationType(String value) {
+            this.value = value;
+        }
+
+        /**
+         * Method to get a {@link SegmentationType} from a {@link String}
+         *
+         * @param value An {@link String} value representing a filter
+         * @since 1.0.0
+         */
+        public static SegmentationType get(String value) {
+            // TODO: Check for false result.
+            for (SegmentationType operator : SegmentationType.values()) {
+                if (value.startsWith(operator.getValue()) || value.contains(operator.getValue())) return operator;
+            }
+            return SegmentationType.EQUALS;
+        }
+
+        /**
+         * Method to get the {@link String} value of an {@link SegmentationType}
+         *
+         * @return An {@link String} representation from segmentation
+         * @since 1.0.0
+         */
+        public String getValue() {
+            return value;
         }
     }
 }

@@ -1,7 +1,6 @@
 package com.lucasjosino.hawapi.services.impl.auth;
 
 import com.lucasjosino.hawapi.controllers.api.v1.auth.AuthController;
-import com.lucasjosino.hawapi.enums.auth.RoleType;
 import com.lucasjosino.hawapi.exceptions.auth.RoleBadRequestException;
 import com.lucasjosino.hawapi.exceptions.auth.UserConflictException;
 import com.lucasjosino.hawapi.exceptions.auth.UserNotFoundException;
@@ -225,5 +224,34 @@ public class AuthServiceImpl implements AuthService {
         }
 
         return false;
+    }
+
+    /**
+     * Values for the role parameter.
+     *
+     * @author Lucas Josino
+     * @see AuthServiceImpl
+     * @since 1.0.0
+     */
+    public enum RoleType {
+        ANONYMOUS,
+        BASIC,
+        DEV,
+        ADMIN;
+
+        /**
+         * Validate if param is a role
+         * <p> Before validation, the param will be converted to lowercase
+         *
+         * @param name An {@link String} to be validated
+         * @return true if param is a valid role name
+         * @since 1.0.0
+         */
+        public static boolean isValid(String name) {
+            for (RoleType role : values()) {
+                if (role.name().equalsIgnoreCase(name)) return true;
+            }
+            return false;
+        }
     }
 }
