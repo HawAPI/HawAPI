@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
 
+/**
+ * A base auth controller interface with all required endpoints.
+ */
 public interface BaseAuthControllerInterface {
 
     @PostMapping(
