@@ -5,9 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Random;
 
 /**
  * Service utils for HawAPI project
@@ -30,6 +32,11 @@ public class ServiceUtils {
     @Autowired
     public ServiceUtils(ObjectMapper mapper) {
         this.mapper = mapper;
+    }
+
+    @Bean
+    public Random random() {
+        return new Random();
     }
 
     /**

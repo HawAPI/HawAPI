@@ -40,7 +40,7 @@ public class EpisodeServiceImpl implements EpisodeService {
 
     private static final SpecificationBuilder<EpisodeModel> spec = new SpecificationBuilder<>();
 
-    private static final Random random = new Random();
+    private final Random random;
 
     private final String basePath;
 
@@ -56,12 +56,13 @@ public class EpisodeServiceImpl implements EpisodeService {
 
     @Autowired
     public EpisodeServiceImpl(
-            EpisodeRepository repository,
+            Random random, EpisodeRepository repository,
             ServiceUtils utils,
             OpenAPIProperty config,
             ModelMapper modelMapper,
             LanguageUtils languageUtils, EpisodeTranslationRepository translationRepository
     ) {
+        this.random = random;
         this.utils = utils;
         this.repository = repository;
         this.modelMapper = modelMapper;

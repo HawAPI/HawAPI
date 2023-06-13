@@ -33,7 +33,7 @@ public class ActorServiceImpl implements ActorService {
 
     private static final SpecificationBuilder<ActorModel> spec = new SpecificationBuilder<>();
 
-    private static final Random random = new Random();
+    private final Random random;
 
     private final String basePath;
 
@@ -45,11 +45,12 @@ public class ActorServiceImpl implements ActorService {
 
     @Autowired
     public ActorServiceImpl(
-            ActorRepository repository,
+            Random random, ActorRepository repository,
             ServiceUtils utils,
             OpenAPIProperty config,
             ModelMapper modelMapper
     ) {
+        this.random = random;
         this.utils = utils;
         this.repository = repository;
         this.modelMapper = modelMapper;

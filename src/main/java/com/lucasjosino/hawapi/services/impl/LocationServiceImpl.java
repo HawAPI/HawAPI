@@ -40,7 +40,7 @@ public class LocationServiceImpl implements LocationService {
 
     private static final SpecificationBuilder<LocationModel> spec = new SpecificationBuilder<>();
 
-    private static final Random random = new Random();
+    private final Random random;
 
     private final String basePath;
 
@@ -56,12 +56,13 @@ public class LocationServiceImpl implements LocationService {
 
     @Autowired
     public LocationServiceImpl(
-            LocationRepository repository,
+            Random random, LocationRepository repository,
             ServiceUtils utils,
             OpenAPIProperty config,
             ModelMapper modelMapper,
             LanguageUtils languageUtils, LocationTranslationRepository translationRepository
     ) {
+        this.random = random;
         this.utils = utils;
         this.repository = repository;
         this.modelMapper = modelMapper;

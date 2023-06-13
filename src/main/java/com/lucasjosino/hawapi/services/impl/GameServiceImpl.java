@@ -40,7 +40,7 @@ public class GameServiceImpl implements GameService {
 
     private static final SpecificationBuilder<GameModel> spec = new SpecificationBuilder<>();
 
-    private static final Random random = new Random();
+    private final Random random;
 
     private final String basePath;
 
@@ -56,12 +56,13 @@ public class GameServiceImpl implements GameService {
 
     @Autowired
     public GameServiceImpl(
-            GameRepository repository,
+            Random random, GameRepository repository,
             ServiceUtils utils,
             OpenAPIProperty config,
             ModelMapper modelMapper,
             LanguageUtils languageUtils, GameTranslationRepository translationRepository
     ) {
+        this.random = random;
         this.utils = utils;
         this.repository = repository;
         this.modelMapper = modelMapper;

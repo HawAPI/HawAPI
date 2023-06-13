@@ -40,7 +40,7 @@ public class SeasonServiceImpl implements SeasonService {
 
     private static final SpecificationBuilder<SeasonModel> spec = new SpecificationBuilder<>();
 
-    private static final Random random = new Random();
+    private final Random random;
 
     private final String basePath;
 
@@ -56,12 +56,13 @@ public class SeasonServiceImpl implements SeasonService {
 
     @Autowired
     public SeasonServiceImpl(
-            SeasonRepository repository,
+            Random random, SeasonRepository repository,
             ServiceUtils utils,
             OpenAPIProperty config,
             ModelMapper modelMapper,
             LanguageUtils languageUtils, SeasonTranslationRepository translationRepository
     ) {
+        this.random = random;
         this.utils = utils;
         this.repository = repository;
         this.modelMapper = modelMapper;

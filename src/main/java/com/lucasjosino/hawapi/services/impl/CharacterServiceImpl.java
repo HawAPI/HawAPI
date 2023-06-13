@@ -33,7 +33,7 @@ public class CharacterServiceImpl implements CharacterService {
 
     private static final SpecificationBuilder<CharacterModel> spec = new SpecificationBuilder<>();
 
-    private static final Random random = new Random();
+    private final Random random;
 
     private final String basePath;
 
@@ -45,11 +45,12 @@ public class CharacterServiceImpl implements CharacterService {
 
     @Autowired
     public CharacterServiceImpl(
-            ServiceUtils utils,
+            Random random, ServiceUtils utils,
             OpenAPIProperty config,
             ModelMapper modelMapper,
             CharacterRepository repository
     ) {
+        this.random = random;
         this.utils = utils;
         this.repository = repository;
         this.modelMapper = modelMapper;

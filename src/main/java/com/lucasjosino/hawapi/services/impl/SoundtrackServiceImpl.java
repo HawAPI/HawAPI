@@ -33,7 +33,7 @@ public class SoundtrackServiceImpl implements SoundtrackService {
 
     private static final SpecificationBuilder<SoundtrackModel> spec = new SpecificationBuilder<>();
 
-    private static final Random random = new Random();
+    private final Random random;
 
     private final String basePath;
 
@@ -45,11 +45,12 @@ public class SoundtrackServiceImpl implements SoundtrackService {
 
     @Autowired
     public SoundtrackServiceImpl(
-            SoundtrackRepository repository,
+            Random random, SoundtrackRepository repository,
             ServiceUtils utils,
             OpenAPIProperty config,
             ModelMapper modelMapper
     ) {
+        this.random = random;
         this.utils = utils;
         this.repository = repository;
         this.modelMapper = modelMapper;
