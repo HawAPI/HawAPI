@@ -1,5 +1,6 @@
 package com.lucasjosino.hawapi.services.impl;
 
+import com.lucasjosino.hawapi.controllers.api.v1.EpisodeController;
 import com.lucasjosino.hawapi.core.LanguageUtils;
 import com.lucasjosino.hawapi.core.StringUtils;
 import com.lucasjosino.hawapi.exceptions.BadRequestException;
@@ -27,6 +28,13 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * Methods to handle episodes
+ *
+ * @author Lucas Josino
+ * @see EpisodeController
+ * @since 1.0.0
+ */
 @Service
 public class EpisodeServiceImpl implements EpisodeService {
 
@@ -62,17 +70,36 @@ public class EpisodeServiceImpl implements EpisodeService {
         this.basePath = config.getApiBaseUrl() + "/episodes";
     }
 
+    /**
+     * Method that get all episode uuids filtering with {@link Pageable}
+     *
+     * @param pageable An {@link Page} with pageable params. Can be null
+     * @return A {@link Page} of {@link UUID} or empty
+     * @since 1.0.0
+     */
     public Page<UUID> findAllUUIDs(Pageable pageable) {
         List<UUID> res = repository.findAllUUIDs(pageable);
         long count = repository.count();
         return PageableExecutionUtils.getPage(res, pageable, () -> count);
     }
 
+    /**
+     * Method that get all episodes from the database
+     *
+     * @see EpisodeController#findAll(Map, Pageable)
+     * @since 1.0.0
+     */
     public List<EpisodeDTO> findAll(Map<String, String> filters, List<UUID> uuids) {
         List<EpisodeModel> res = repository.findAll(spec.with(filters, EpisodeFilter.class, uuids));
         return Arrays.asList(modelMapper.map(res, EpisodeDTO[].class));
     }
 
+    /**
+     * Method that get a single random episode from the database
+     *
+     * @see EpisodeController#findRandom(String)
+     * @since 1.0.0
+     */
     public EpisodeDTO findRandom(String language) {
         long count = utils.getCountOrThrow(repository.count());
         int index = random.nextInt((int) count);
@@ -83,11 +110,23 @@ public class EpisodeServiceImpl implements EpisodeService {
         return modelMapper.map(page.getContent().get(0), EpisodeDTO.class);
     }
 
+    /**
+     * Method that get all episode translations from the database
+     *
+     * @see EpisodeController#findAllTranslationsBy(UUID)
+     * @since 1.0.0
+     */
     public List<EpisodeTranslationDTO> findAllTranslationsBy(UUID uuid) {
         List<EpisodeTranslation> res = translationRepository.findAllByEpisodeUuid(uuid);
         return Arrays.asList(modelMapper.map(res, EpisodeTranslationDTO[].class));
     }
 
+    /**
+     * Method that get a single random episode translation from the database
+     *
+     * @see EpisodeController#findRandomTranslation(UUID)
+     * @since 1.0.0
+     */
     public EpisodeTranslationDTO findRandomTranslation(UUID uuid) {
         long count = utils.getCountOrThrow(repository.count());
         int index = random.nextInt((int) count);
@@ -98,6 +137,12 @@ public class EpisodeServiceImpl implements EpisodeService {
         return modelMapper.map(page.getContent().get(0), EpisodeTranslationDTO.class);
     }
 
+    /**
+     * Method that get a single episode from the database
+     *
+     * @see EpisodeController#findBy(UUID, String)
+     * @since 1.0.0
+     */
     public EpisodeDTO findBy(UUID uuid, String language) {
         EpisodeModel res = repository
                 .findByUuidAndTranslationLanguage(uuid, language)
@@ -105,6 +150,12 @@ public class EpisodeServiceImpl implements EpisodeService {
         return modelMapper.map(res, EpisodeDTO.class);
     }
 
+    /**
+     * Method that get a single episode translation from the database
+     *
+     * @see EpisodeController#findTranslationBy(UUID, String)
+     * @since 1.0.0
+     */
     public EpisodeTranslationDTO findTranslationBy(UUID uuid, String language) {
         EpisodeTranslation res = translationRepository
                 .findByEpisodeUuidAndLanguage(uuid, language)
@@ -112,6 +163,12 @@ public class EpisodeServiceImpl implements EpisodeService {
         return modelMapper.map(res, EpisodeTranslationDTO.class);
     }
 
+    /**
+     * Method that crates an episode on the database
+     *
+     * @see EpisodeController#save(EpisodeDTO)
+     * @since 1.0.0
+     */
     public EpisodeDTO save(EpisodeDTO dto) {
         UUID uuid = UUID.randomUUID();
         dto.setUuid(uuid);
@@ -128,6 +185,12 @@ public class EpisodeServiceImpl implements EpisodeService {
         return modelMapper.map(res, EpisodeDTO.class);
     }
 
+    /**
+     * Method that crates an episode translation on the database
+     *
+     * @see EpisodeController#saveTranslation(UUID, EpisodeTranslationDTO)
+     * @since 1.0.0
+     */
     public EpisodeTranslationDTO saveTranslation(UUID uuid, EpisodeTranslationDTO dto) {
         validateDTO(uuid, dto.getLanguage());
 
@@ -139,6 +202,12 @@ public class EpisodeServiceImpl implements EpisodeService {
         return modelMapper.map(res, EpisodeTranslationDTO.class);
     }
 
+    /**
+     * Method that updates an episode on the database
+     *
+     * @see EpisodeController#patch(UUID, EpisodeDTO)
+     * @since 1.0.0
+     */
     public void patch(UUID uuid, EpisodeDTO patch) throws IOException {
         EpisodeModel dbRes = repository.findById(uuid).orElseThrow(ItemNotFoundException::new);
 
@@ -149,6 +218,12 @@ public class EpisodeServiceImpl implements EpisodeService {
         repository.save(patchedModel);
     }
 
+    /**
+     * Method that updates an episode translation on the database
+     *
+     * @see EpisodeController#patchTranslation(UUID, String, EpisodeTranslationDTO)
+     * @since 1.0.0
+     */
     public void patchTranslation(UUID uuid, String language, EpisodeTranslationDTO patch) throws IOException {
         EpisodeTranslation translation = translationRepository.findByEpisodeUuidAndLanguage(uuid, language)
                 .orElseThrow(ItemNotFoundException::new);
@@ -159,12 +234,24 @@ public class EpisodeServiceImpl implements EpisodeService {
         translationRepository.save(patchedTranslation);
     }
 
+    /**
+     * Method that delete an episode from the database
+     *
+     * @see EpisodeController#delete(UUID)
+     * @since 1.0.0
+     */
     public void deleteById(UUID uuid) {
         if (!repository.existsById(uuid)) throw new ItemNotFoundException();
 
         repository.deleteById(uuid);
     }
 
+    /**
+     * Method that delete an episode translation from the database
+     *
+     * @see EpisodeController#deleteTranslation(UUID, String)
+     * @since 1.0.0
+     */
     public void deleteTranslation(UUID uuid, String language) {
         if (!translationRepository.existsByEpisodeUuidAndLanguage(uuid, language)) {
             throw new ItemNotFoundException();

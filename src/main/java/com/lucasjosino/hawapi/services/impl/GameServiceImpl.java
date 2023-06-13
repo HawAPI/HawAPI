@@ -1,5 +1,6 @@
 package com.lucasjosino.hawapi.services.impl;
 
+import com.lucasjosino.hawapi.controllers.api.v1.GameController;
 import com.lucasjosino.hawapi.core.LanguageUtils;
 import com.lucasjosino.hawapi.core.StringUtils;
 import com.lucasjosino.hawapi.exceptions.BadRequestException;
@@ -27,6 +28,13 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * Methods to handle games
+ *
+ * @author Lucas Josino
+ * @see GameController
+ * @since 1.0.0
+ */
 @Service
 public class GameServiceImpl implements GameService {
 
@@ -62,17 +70,36 @@ public class GameServiceImpl implements GameService {
         this.basePath = config.getApiBaseUrl() + "/games";
     }
 
+    /**
+     * Method that get all game uuids filtering with {@link Pageable}
+     *
+     * @param pageable An {@link Page} with pageable params. Can be null
+     * @return A {@link Page} of {@link UUID} or empty
+     * @since 1.0.0
+     */
     public Page<UUID> findAllUUIDs(Pageable pageable) {
         List<UUID> res = repository.findAllUUIDs(pageable);
         long count = repository.count();
         return PageableExecutionUtils.getPage(res, pageable, () -> count);
     }
 
+    /**
+     * Method that get all games from the database
+     *
+     * @see GameController#findAll(Map, Pageable)
+     * @since 1.0.0
+     */
     public List<GameDTO> findAll(Map<String, String> filters, List<UUID> uuids) {
         List<GameModel> res = repository.findAll(spec.with(filters, GameFilter.class, uuids));
         return Arrays.asList(modelMapper.map(res, GameDTO[].class));
     }
 
+    /**
+     * Method that get a single random game from the database
+     *
+     * @see GameController#findRandom(String)
+     * @since 1.0.0
+     */
     public GameDTO findRandom(String language) {
         long count = utils.getCountOrThrow(repository.count());
         int index = random.nextInt((int) count);
@@ -83,11 +110,23 @@ public class GameServiceImpl implements GameService {
         return modelMapper.map(page.getContent().get(0), GameDTO.class);
     }
 
+    /**
+     * Method that get all game translations from the database
+     *
+     * @see GameController#findAllTranslationsBy(UUID)
+     * @since 1.0.0
+     */
     public List<GameTranslationDTO> findAllTranslationsBy(UUID uuid) {
         List<GameTranslation> res = translationRepository.findAllByGameUuid(uuid);
         return Arrays.asList(modelMapper.map(res, GameTranslationDTO[].class));
     }
 
+    /**
+     * Method that get a single random game translation from the database
+     *
+     * @see GameController#findRandomTranslation(UUID)
+     * @since 1.0.0
+     */
     public GameTranslationDTO findRandomTranslation(UUID uuid) {
         long count = utils.getCountOrThrow(repository.count());
         int index = random.nextInt((int) count);
@@ -98,6 +137,12 @@ public class GameServiceImpl implements GameService {
         return modelMapper.map(page.getContent().get(0), GameTranslationDTO.class);
     }
 
+    /**
+     * Method that get a single game from the database
+     *
+     * @see GameController#findBy(UUID, String)
+     * @since 1.0.0
+     */
     public GameDTO findBy(UUID uuid, String language) {
         GameModel res = repository
                 .findByUuidAndTranslationLanguage(uuid, language)
@@ -105,6 +150,12 @@ public class GameServiceImpl implements GameService {
         return modelMapper.map(res, GameDTO.class);
     }
 
+    /**
+     * Method that get a single game translation from the database
+     *
+     * @see GameController#findTranslationBy(UUID, String)
+     * @since 1.0.0
+     */
     public GameTranslationDTO findTranslationBy(UUID uuid, String language) {
         GameTranslation res = translationRepository
                 .findByGameUuidAndLanguage(uuid, language)
@@ -112,6 +163,12 @@ public class GameServiceImpl implements GameService {
         return modelMapper.map(res, GameTranslationDTO.class);
     }
 
+    /**
+     * Method that crates a game on the database
+     *
+     * @see GameController#save(GameDTO)
+     * @since 1.0.0
+     */
     public GameDTO save(GameDTO dto) {
         UUID uuid = UUID.randomUUID();
         dto.setUuid(uuid);
@@ -128,6 +185,12 @@ public class GameServiceImpl implements GameService {
         return modelMapper.map(res, GameDTO.class);
     }
 
+    /**
+     * Method that crates a game translation on the database
+     *
+     * @see GameController#saveTranslation(UUID, GameTranslationDTO)
+     * @since 1.0.0
+     */
     public GameTranslationDTO saveTranslation(UUID uuid, GameTranslationDTO dto) {
         validateDTO(uuid, dto.getLanguage());
 
@@ -139,6 +202,12 @@ public class GameServiceImpl implements GameService {
         return modelMapper.map(res, GameTranslationDTO.class);
     }
 
+    /**
+     * Method that updates a game on the database
+     *
+     * @see GameController#patch(UUID, GameDTO)
+     * @since 1.0.0
+     */
     public void patch(UUID uuid, GameDTO patch) throws IOException {
         GameModel dbRes = repository.findById(uuid).orElseThrow(ItemNotFoundException::new);
 
@@ -149,6 +218,12 @@ public class GameServiceImpl implements GameService {
         repository.save(patchedModel);
     }
 
+    /**
+     * Method that updates a game translation on the database
+     *
+     * @see GameController#patchTranslation(UUID, String, GameTranslationDTO)
+     * @since 1.0.0
+     */
     public void patchTranslation(UUID uuid, String language, GameTranslationDTO patch) throws IOException {
         GameTranslation translation = translationRepository.findByGameUuidAndLanguage(uuid, language)
                 .orElseThrow(ItemNotFoundException::new);
@@ -159,12 +234,24 @@ public class GameServiceImpl implements GameService {
         translationRepository.save(patchedTranslation);
     }
 
+    /**
+     * Method that delete a game from the database
+     *
+     * @see GameController#delete(UUID)
+     * @since 1.0.0
+     */
     public void deleteById(UUID uuid) {
         if (!repository.existsById(uuid)) throw new ItemNotFoundException();
 
         repository.deleteById(uuid);
     }
 
+    /**
+     * Method that delete a game translation from the database
+     *
+     * @see GameController#deleteTranslation(UUID, String)
+     * @since 1.0.0
+     */
     public void deleteTranslation(UUID uuid, String language) {
         if (!translationRepository.existsByGameUuidAndLanguage(uuid, language)) {
             throw new ItemNotFoundException();

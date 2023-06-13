@@ -1,5 +1,6 @@
 package com.lucasjosino.hawapi.services.impl;
 
+import com.lucasjosino.hawapi.controllers.api.v1.SeasonController;
 import com.lucasjosino.hawapi.core.LanguageUtils;
 import com.lucasjosino.hawapi.core.StringUtils;
 import com.lucasjosino.hawapi.exceptions.BadRequestException;
@@ -27,6 +28,13 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * Methods to handle seasons
+ *
+ * @author Lucas Josino
+ * @see SeasonController
+ * @since 1.0.0
+ */
 @Service
 public class SeasonServiceImpl implements SeasonService {
 
@@ -62,17 +70,36 @@ public class SeasonServiceImpl implements SeasonService {
         this.basePath = config.getApiBaseUrl() + "/seasons";
     }
 
+    /**
+     * Method that get all season uuids filtering with {@link Pageable}
+     *
+     * @param pageable An {@link Page} with pageable params. Can be null
+     * @return A {@link Page} of {@link UUID} or empty
+     * @since 1.0.0
+     */
     public Page<UUID> findAllUUIDs(Pageable pageable) {
         List<UUID> res = repository.findAllUUIDs(pageable);
         long count = repository.count();
         return PageableExecutionUtils.getPage(res, pageable, () -> count);
     }
 
+    /**
+     * Method that get all seasons from the database
+     *
+     * @see SeasonController#findAll(Map, Pageable)
+     * @since 1.0.0
+     */
     public List<SeasonDTO> findAll(Map<String, String> filters, List<UUID> uuids) {
         List<SeasonModel> res = repository.findAll(spec.with(filters, SeasonFilter.class, uuids));
         return Arrays.asList(modelMapper.map(res, SeasonDTO[].class));
     }
 
+    /**
+     * Method that get a single random season from the database
+     *
+     * @see SeasonController#findRandom(String)
+     * @since 1.0.0
+     */
     public SeasonDTO findRandom(String language) {
         long count = utils.getCountOrThrow(repository.count());
         int index = random.nextInt((int) count);
@@ -83,11 +110,23 @@ public class SeasonServiceImpl implements SeasonService {
         return modelMapper.map(page.getContent().get(0), SeasonDTO.class);
     }
 
+    /**
+     * Method that get all season translations from the database
+     *
+     * @see SeasonController#findAllTranslationsBy(UUID)
+     * @since 1.0.0
+     */
     public List<SeasonTranslationDTO> findAllTranslationsBy(UUID uuid) {
         List<SeasonTranslation> res = translationRepository.findAllBySeasonUuid(uuid);
         return Arrays.asList(modelMapper.map(res, SeasonTranslationDTO[].class));
     }
 
+    /**
+     * Method that get a single random season translation from the database
+     *
+     * @see SeasonController#findRandomTranslation(UUID)
+     * @since 1.0.0
+     */
     public SeasonTranslationDTO findRandomTranslation(UUID uuid) {
         long count = utils.getCountOrThrow(repository.count());
         int index = random.nextInt((int) count);
@@ -98,6 +137,12 @@ public class SeasonServiceImpl implements SeasonService {
         return modelMapper.map(page.getContent().get(0), SeasonTranslationDTO.class);
     }
 
+    /**
+     * Method that get a single season from the database
+     *
+     * @see SeasonController#findBy(UUID, String)
+     * @since 1.0.0
+     */
     public SeasonDTO findBy(UUID uuid, String language) {
         SeasonModel res = repository
                 .findByUuidAndTranslationLanguage(uuid, language)
@@ -105,6 +150,12 @@ public class SeasonServiceImpl implements SeasonService {
         return modelMapper.map(res, SeasonDTO.class);
     }
 
+    /**
+     * Method that get a single season translation from the database
+     *
+     * @see SeasonController#findTranslationBy(UUID, String)
+     * @since 1.0.0
+     */
     public SeasonTranslationDTO findTranslationBy(UUID uuid, String language) {
         SeasonTranslation res = translationRepository
                 .findBySeasonUuidAndLanguage(uuid, language)
@@ -112,6 +163,12 @@ public class SeasonServiceImpl implements SeasonService {
         return modelMapper.map(res, SeasonTranslationDTO.class);
     }
 
+    /**
+     * Method that crates a season on the database
+     *
+     * @see SeasonController#save(SeasonDTO)
+     * @since 1.0.0
+     */
     public SeasonDTO save(SeasonDTO dto) {
         UUID uuid = UUID.randomUUID();
         dto.setUuid(uuid);
@@ -128,6 +185,12 @@ public class SeasonServiceImpl implements SeasonService {
         return modelMapper.map(res, SeasonDTO.class);
     }
 
+    /**
+     * Method that crates a season translation on the database
+     *
+     * @see SeasonController#saveTranslation(UUID, SeasonTranslationDTO)
+     * @since 1.0.0
+     */
     public SeasonTranslationDTO saveTranslation(UUID uuid, SeasonTranslationDTO dto) {
         validateDTO(uuid, dto.getLanguage());
 
@@ -139,6 +202,12 @@ public class SeasonServiceImpl implements SeasonService {
         return modelMapper.map(res, SeasonTranslationDTO.class);
     }
 
+    /**
+     * Method that updates a season on the database
+     *
+     * @see SeasonController#patch(UUID, SeasonDTO)
+     * @since 1.0.0
+     */
     public void patch(UUID uuid, SeasonDTO patch) throws IOException {
         SeasonModel dbRes = repository.findById(uuid).orElseThrow(ItemNotFoundException::new);
 
@@ -149,6 +218,12 @@ public class SeasonServiceImpl implements SeasonService {
         repository.save(patchedModel);
     }
 
+    /**
+     * Method that updates a season translation on the database
+     *
+     * @see SeasonController#patchTranslation(UUID, String, SeasonTranslationDTO)
+     * @since 1.0.0
+     */
     public void patchTranslation(UUID uuid, String language, SeasonTranslationDTO patch) throws IOException {
         SeasonTranslation translation = translationRepository.findBySeasonUuidAndLanguage(uuid, language)
                 .orElseThrow(ItemNotFoundException::new);
@@ -159,12 +234,24 @@ public class SeasonServiceImpl implements SeasonService {
         translationRepository.save(patchedTranslation);
     }
 
+    /**
+     * Method that delete a season from the database
+     *
+     * @see SeasonController#delete(UUID)
+     * @since 1.0.0
+     */
     public void deleteById(UUID uuid) {
         if (!repository.existsById(uuid)) throw new ItemNotFoundException();
 
         repository.deleteById(uuid);
     }
 
+    /**
+     * Method that delete a season translation from the database
+     *
+     * @see SeasonController#deleteTranslation(UUID, String)
+     * @since 1.0.0
+     */
     public void deleteTranslation(UUID uuid, String language) {
         if (!translationRepository.existsBySeasonUuidAndLanguage(uuid, language)) {
             throw new ItemNotFoundException();

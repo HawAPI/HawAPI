@@ -1,5 +1,6 @@
 package com.lucasjosino.hawapi.services.impl;
 
+import com.lucasjosino.hawapi.controllers.api.v1.CharacterController;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.filters.CharacterFilter;
 import com.lucasjosino.hawapi.models.CharacterModel;
@@ -20,6 +21,13 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * Methods to handle characters
+ *
+ * @author Lucas Josino
+ * @see CharacterController
+ * @since 1.0.0
+ */
 @Service
 public class CharacterServiceImpl implements CharacterService {
 
@@ -48,17 +56,36 @@ public class CharacterServiceImpl implements CharacterService {
         this.basePath = config.getApiBaseUrl() + "/characters";
     }
 
+    /**
+     * Method that get all character uuids filtering with {@link Pageable}
+     *
+     * @param pageable An {@link Page} with pageable params. Can be null
+     * @return A {@link Page} of {@link UUID} or empty
+     * @since 1.0.0
+     */
     public Page<UUID> findAllUUIDs(Pageable pageable) {
         List<UUID> res = repository.findAllUUIDs(pageable);
         long count = repository.count();
         return PageableExecutionUtils.getPage(res, pageable, () -> count);
     }
 
+    /**
+     * Method that get all characters from the database
+     *
+     * @see CharacterController#findAll(Map, Pageable)
+     * @since 1.0.0
+     */
     public List<CharacterDTO> findAll(Map<String, String> filters, List<UUID> uuids) {
         List<CharacterModel> res = repository.findAll(spec.with(filters, CharacterFilter.class, uuids));
         return Arrays.asList(modelMapper.map(res, CharacterDTO[].class));
     }
 
+    /**
+     * Method that get a single random character from the database
+     *
+     * @see CharacterController#findRandom(String)
+     * @since 1.0.0
+     */
     public CharacterDTO findRandom(String language) {
         long count = utils.getCountOrThrow(repository.count());
         int index = random.nextInt((int) count);
@@ -69,11 +96,23 @@ public class CharacterServiceImpl implements CharacterService {
         return modelMapper.map(page.getContent().get(0), CharacterDTO.class);
     }
 
+    /**
+     * Method that get a single character from the database
+     *
+     * @see CharacterController#findBy(UUID, String)
+     * @since 1.0.0
+     */
     public CharacterDTO findBy(UUID uuid, String language) {
         CharacterModel res = repository.findById(uuid).orElseThrow(ItemNotFoundException::new);
         return modelMapper.map(res, CharacterDTO.class);
     }
 
+    /**
+     * Method that crates a character on the database
+     *
+     * @see CharacterController#save(CharacterDTO)
+     * @since 1.0.0
+     */
     public CharacterDTO save(CharacterDTO dto) {
         UUID uuid = UUID.randomUUID();
         dto.setUuid(uuid);
@@ -85,6 +124,12 @@ public class CharacterServiceImpl implements CharacterService {
         return modelMapper.map(res, CharacterDTO.class);
     }
 
+    /**
+     * Method that updates a character on the database
+     *
+     * @see CharacterController#patch(UUID, CharacterDTO)
+     * @since 1.0.0
+     */
     public void patch(UUID uuid, CharacterDTO patch) throws IOException {
         CharacterModel dbRes = repository.findById(uuid).orElseThrow(ItemNotFoundException::new);
 
@@ -95,6 +140,12 @@ public class CharacterServiceImpl implements CharacterService {
         repository.save(patchedModel);
     }
 
+    /**
+     * Method that delete a character from the database
+     *
+     * @see CharacterController#delete(UUID)
+     * @since 1.0.0
+     */
     public void deleteById(UUID uuid) {
         if (!repository.existsById(uuid)) throw new ItemNotFoundException();
 
