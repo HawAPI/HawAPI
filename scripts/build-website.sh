@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
 org_name="HawAPI"
-repository_name="website"
-repository="https://github.com/${org_name}/${repository_name}/archive/refs/heads/main.zip"
+website_repository="website"
+docs_repository="docs"
+website_zip="https://github.com/${org_name}/${website_repository}/archive/refs/heads/main.zip"
+docs_zip="https://github.com/${org_name}/${docs_repository}/archive/refs/heads/main.zip"
 
 red=$(tput setaf 1)
 green=$(tput setaf 2)
@@ -47,15 +49,8 @@ fi
 # Check location
 
 if ! [ -d "src/" ]; then
-    cd ..
-    echo
-    echo "${yellow}Unknown location! Moving to: $PWD"
-
-    if ! [ -d "src/" ]; then
-        echo
-        echo "${red}Unknown location! Exiting"
-        exit 1
-    fi
+    echo "${yellow}Unknown location! Cancelling"
+    exit 1
 fi
 
 # Start script
@@ -75,7 +70,7 @@ else
     if ! type yarn; then
         ## Yarn is required. Ask to install (GLOBALLY)
         echo "${cyan}[$0] ${red}<Yarn> command not found!"
-        echo "${cyan}[$0] ${green}Install yarn globally? (Y/n)"
+        echo "${cyan}[$0] ${green}Install yarn? (GLOBALLY) (Y/n)"
         read -n1 -s -r yarn_response
         
         if ! echo "$yarn_response" | grep '^[Yy]\?$'; then
@@ -89,9 +84,9 @@ else
 fi
 
 if ! type retype; then
-    ## Retype is required. Ask to install (LOCALLY)
+    ## Retype is required. Ask to install
     echo "${cyan}[$0] ${red}<Retype> command not found!"
-    echo "${cyan}[$0] ${green}Install retype? (Y/n)"
+    echo "${cyan}[$0] ${green}Install retype? (GLOBALLY) (Y/n)"
     read -n1 -s -r retype_response
     
     if ! echo "$retype_response" | grep '^[Yy]\?$'; then
@@ -112,16 +107,22 @@ if ! [ -d ".hawapi/website" ]; then
 
     ## Check if '.downloads/' already exist. If not, download the project from git repository.
     if ! [ -d ".downloads/" ]; then
-        echo "${cyan}[$0] ${green}Directory '.downloads/' not found! Downloading '${org_name}/${repository_name}' from Github..."
+        echo "${cyan}[$0] ${green}Directory '.downloads/' not found!"
         mkdir -p .downloads/
-        wget ${repository} -q --show-progress -P .downloads/
+        wget ${website_zip} -q --show-progress -P .downloads/
+        echo "${cyan}[$0] Downloading '${org_name}/${website_repository}' from Github..."
+        wget ${docs_zip} -q --show-progress -P .downloads/
+        echo "${cyan}[$0] Downloading '${org_name}/${docs_repository}' from Github..."
     fi
 
-    echo "${cyan}[$0] ${green}Extracting 'main.zip' into '.hawapi/website'..."
+    echo "${cyan}[$0] ${green}Extracting files into '.hawapi/website'..."
     mkdir -p .hawapi/website
-    unzip -q .downloads/main.zip -d .hawapi/website/
-    mv .hawapi/website/${repository_name}-main/* .hawapi/website/
-    rm -rf .hawapi/website/${repository_name}-main/
+    unzip -q .downloads/${website_repository}-main.zip -d .hawapi/website/
+    unzip -q .downloads/${docs_repository}-main.zip -d .hawapi/docs/
+    mv .hawapi/website/${website_repository}-main/* .hawapi/website/
+    mv .hawapi/docs/${docs_repository}-main/* .hawapi/website/docs/
+    rm -rf .hawapi/website/${website_repository}-main/
+    rm -rf .hawapi/docs/
 fi
 
 echo "${cyan}[$0] ${green}Building the website..."
