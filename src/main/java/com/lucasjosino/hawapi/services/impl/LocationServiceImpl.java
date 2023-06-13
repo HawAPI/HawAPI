@@ -1,5 +1,6 @@
 package com.lucasjosino.hawapi.services.impl;
 
+import com.lucasjosino.hawapi.controllers.api.v1.LocationController;
 import com.lucasjosino.hawapi.core.LanguageUtils;
 import com.lucasjosino.hawapi.core.StringUtils;
 import com.lucasjosino.hawapi.exceptions.BadRequestException;
@@ -27,6 +28,13 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * Methods to handle locations
+ *
+ * @author Lucas Josino
+ * @see LocationController
+ * @since 1.0.0
+ */
 @Service
 public class LocationServiceImpl implements LocationService {
 
@@ -62,17 +70,36 @@ public class LocationServiceImpl implements LocationService {
         this.basePath = config.getApiBaseUrl() + "/places";
     }
 
+    /**
+     * Method that get all location uuids filtering with {@link Pageable}
+     *
+     * @param pageable An {@link Page} with pageable params. Can be null
+     * @return A {@link Page} of {@link UUID} or empty
+     * @since 1.0.0
+     */
     public Page<UUID> findAllUUIDs(Pageable pageable) {
         List<UUID> res = repository.findAllUUIDs(pageable);
         long count = repository.count();
         return PageableExecutionUtils.getPage(res, pageable, () -> count);
     }
 
+    /**
+     * Method that get all locations from the database
+     *
+     * @see LocationController#findAll(Map, Pageable)
+     * @since 1.0.0
+     */
     public List<LocationDTO> findAll(Map<String, String> filters, List<UUID> uuids) {
         List<LocationModel> res = repository.findAll(spec.with(filters, LocationFilter.class, uuids));
         return Arrays.asList(modelMapper.map(res, LocationDTO[].class));
     }
 
+    /**
+     * Method that get a single random location from the database
+     *
+     * @see LocationController#findRandom(String)
+     * @since 1.0.0
+     */
     public LocationDTO findRandom(String language) {
         long count = utils.getCountOrThrow(repository.count());
         int index = random.nextInt((int) count);
@@ -83,11 +110,23 @@ public class LocationServiceImpl implements LocationService {
         return modelMapper.map(page.getContent().get(0), LocationDTO.class);
     }
 
+    /**
+     * Method that get all location translations from the database
+     *
+     * @see LocationController#findAllTranslationsBy(UUID)
+     * @since 1.0.0
+     */
     public List<LocationTranslationDTO> findAllTranslationsBy(UUID uuid) {
         List<LocationTranslation> res = translationRepository.findAllByLocationUuid(uuid);
         return Arrays.asList(modelMapper.map(res, LocationTranslationDTO[].class));
     }
 
+    /**
+     * Method that get a single random location translation from the database
+     *
+     * @see LocationController#findRandomTranslation(UUID)
+     * @since 1.0.0
+     */
     public LocationTranslationDTO findRandomTranslation(UUID uuid) {
         long count = utils.getCountOrThrow(repository.count());
         int index = random.nextInt((int) count);
@@ -98,6 +137,12 @@ public class LocationServiceImpl implements LocationService {
         return modelMapper.map(page.getContent().get(0), LocationTranslationDTO.class);
     }
 
+    /**
+     * Method that get a single location from the database
+     *
+     * @see LocationController#findBy(UUID, String)
+     * @since 1.0.0
+     */
     public LocationDTO findBy(UUID uuid, String language) {
         LocationModel res = repository
                 .findByUuidAndTranslationLanguage(uuid, language)
@@ -105,6 +150,12 @@ public class LocationServiceImpl implements LocationService {
         return modelMapper.map(res, LocationDTO.class);
     }
 
+    /**
+     * Method that get a single location translation from the database
+     *
+     * @see LocationController#findTranslationBy(UUID, String)
+     * @since 1.0.0
+     */
     public LocationTranslationDTO findTranslationBy(UUID uuid, String language) {
         LocationTranslation res = translationRepository
                 .findByLocationUuidAndLanguage(uuid, language)
@@ -112,6 +163,12 @@ public class LocationServiceImpl implements LocationService {
         return modelMapper.map(res, LocationTranslationDTO.class);
     }
 
+    /**
+     * Method that crates a location on the database
+     *
+     * @see LocationController#save(LocationDTO)
+     * @since 1.0.0
+     */
     public LocationDTO save(LocationDTO dto) {
         UUID uuid = UUID.randomUUID();
         dto.setUuid(uuid);
@@ -128,6 +185,12 @@ public class LocationServiceImpl implements LocationService {
         return modelMapper.map(res, LocationDTO.class);
     }
 
+    /**
+     * Method that crates a location translation on the database
+     *
+     * @see LocationController#saveTranslation(UUID, LocationTranslationDTO)
+     * @since 1.0.0
+     */
     public LocationTranslationDTO saveTranslation(UUID uuid, LocationTranslationDTO dto) {
         validateDTO(uuid, dto.getLanguage());
 
@@ -139,6 +202,12 @@ public class LocationServiceImpl implements LocationService {
         return modelMapper.map(res, LocationTranslationDTO.class);
     }
 
+    /**
+     * Method that updates a location on the database
+     *
+     * @see LocationController#patch(UUID, LocationDTO)
+     * @since 1.0.0
+     */
     public void patch(UUID uuid, LocationDTO patch) throws IOException {
         LocationModel dbRes = repository.findById(uuid).orElseThrow(ItemNotFoundException::new);
 
@@ -149,6 +218,12 @@ public class LocationServiceImpl implements LocationService {
         repository.save(patchedModel);
     }
 
+    /**
+     * Method that updates a location translation on the database
+     *
+     * @see LocationController#patchTranslation(UUID, String, LocationTranslationDTO)
+     * @since 1.0.0
+     */
     public void patchTranslation(UUID uuid, String language, LocationTranslationDTO patch) throws IOException {
         LocationTranslation translation = translationRepository.findByLocationUuidAndLanguage(uuid, language)
                 .orElseThrow(ItemNotFoundException::new);
@@ -159,12 +234,24 @@ public class LocationServiceImpl implements LocationService {
         translationRepository.save(patchedTranslation);
     }
 
+    /**
+     * Method that delete a location from the database
+     *
+     * @see LocationController#delete(UUID)
+     * @since 1.0.0
+     */
     public void deleteById(UUID uuid) {
         if (!repository.existsById(uuid)) throw new ItemNotFoundException();
 
         repository.deleteById(uuid);
     }
 
+    /**
+     * Method that delete a location translation from the database
+     *
+     * @see LocationController#deleteTranslation(UUID, String)
+     * @since 1.0.0
+     */
     public void deleteTranslation(UUID uuid, String language) {
         if (!translationRepository.existsByLocationUuidAndLanguage(uuid, language)) {
             throw new ItemNotFoundException();

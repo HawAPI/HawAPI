@@ -10,6 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Configuration for spring documentation:
+ * <ul>
+ *      <li>OpenAPI</li>
+ * </ul>
+ *
+ * @author Lucas Josino
+ * @since 1.0.0
+ */
 @Configuration
 public class SpringDocConfig {
 

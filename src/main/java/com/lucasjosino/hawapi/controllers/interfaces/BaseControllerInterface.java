@@ -15,12 +15,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * A base controller interface with all required endpoints.
+ *
+ * <p> All methods contain a predefined mappings (GET, POST, PATCH, DELETE) and swagger documentation configurations.
+ *
+ * @param <D> param that extends {@link BaseDTO}
+ */
 public interface BaseControllerInterface<D extends BaseDTO> {
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiResponse(responseCode = "200", description = "Successful")
-    @ApiResponse(responseCode = "429", description = "Too Many Requests", content = @Content(schema = @Schema(hidden = true)))
+    @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(hidden = true)))
     @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true)))
+    @ApiResponse(responseCode = "429", description = "Too Many Requests", content = @Content(schema = @Schema(hidden = true)))
     ResponseEntity<List<D>> findAll(
             @Parameter(hidden = true) @RequestParam Map<String, String> filters,
             @Parameter(hidden = true) Pageable pageable
@@ -28,15 +36,17 @@ public interface BaseControllerInterface<D extends BaseDTO> {
 
     @GetMapping(value = "/random", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiResponse(responseCode = "200", description = "Successful")
-    @ApiResponse(responseCode = "429", description = "Too Many Requests", content = @Content(schema = @Schema(hidden = true)))
+    @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(hidden = true)))
     @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true)))
+    @ApiResponse(responseCode = "429", description = "Too Many Requests", content = @Content(schema = @Schema(hidden = true)))
     ResponseEntity<D> findRandom(@RequestParam(required = false) String language);
 
     @GetMapping(value = "/{uuid}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiResponse(responseCode = "200", description = "Successful")
-    @ApiResponse(responseCode = "429", description = "Too Many Requests", content = @Content(schema = @Schema(hidden = true)))
+    @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(hidden = true)))
     @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true)))
     @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))
+    @ApiResponse(responseCode = "429", description = "Too Many Requests", content = @Content(schema = @Schema(hidden = true)))
     ResponseEntity<D> findBy(@PathVariable UUID uuid, @RequestParam(required = false) String language);
 
     @PostMapping(
@@ -45,9 +55,10 @@ public interface BaseControllerInterface<D extends BaseDTO> {
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
     @ApiResponse(responseCode = "201", description = "Created")
-    @ApiResponse(responseCode = "429", description = "Too Many Requests", content = @Content(schema = @Schema(hidden = true)))
+    @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(hidden = true)))
     @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true)))
     @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))
+    @ApiResponse(responseCode = "429", description = "Too Many Requests", content = @Content(schema = @Schema(hidden = true)))
     ResponseEntity<D> save(@Valid @RequestBody D dto);
 
     @PatchMapping(
@@ -56,15 +67,17 @@ public interface BaseControllerInterface<D extends BaseDTO> {
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
     @ApiResponse(responseCode = "200", description = "Successful")
-    @ApiResponse(responseCode = "429", description = "Too Many Requests", content = @Content(schema = @Schema(hidden = true)))
+    @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(hidden = true)))
     @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true)))
     @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))
+    @ApiResponse(responseCode = "429", description = "Too Many Requests", content = @Content(schema = @Schema(hidden = true)))
     ResponseEntity<D> patch(@PathVariable UUID uuid, @RequestBody D dto);
 
     @DeleteMapping(value = "/{uuid}")
     @ApiResponse(responseCode = "204", description = "No Content")
-    @ApiResponse(responseCode = "429", description = "Too Many Requests", content = @Content(schema = @Schema(hidden = true)))
+    @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(hidden = true)))
     @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true)))
     @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))
+    @ApiResponse(responseCode = "429", description = "Too Many Requests", content = @Content(schema = @Schema(hidden = true)))
     ResponseEntity<Void> delete(@PathVariable UUID uuid);
 }

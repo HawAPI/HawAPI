@@ -1,5 +1,6 @@
 package com.lucasjosino.hawapi.resolvers;
 
+import com.lucasjosino.hawapi.configs.StaticResourceConfig;
 import org.springframework.core.io.Resource;
 import org.springframework.web.servlet.resource.PathResourceResolver;
 import org.springframework.web.servlet.resource.ResourceResolverChain;
@@ -7,6 +8,20 @@ import org.springframework.web.servlet.resource.ResourceResolverChain;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+/**
+ * Handler requests for static files (web).
+ * <p> E.g:
+ * <ul>
+ *      <li>/        - /index.html</li>
+ *      <li>/try-it  - /try-it/index.html</li>
+ *      <li>/docs    - /docs/index.html</li>
+ * </ul>
+ *
+ * @author Lucas Josino
+ * @see PathResourceResolver
+ * @see StaticResourceConfig
+ * @since 1.0.0
+ */
 @SuppressWarnings("NullableProblems")
 public class IndexFallbackResourceResolver extends PathResourceResolver {
 
@@ -27,11 +42,6 @@ public class IndexFallbackResourceResolver extends PathResourceResolver {
                 && !requestPath.contains("fonts");
 
         // Redirect all pages to '/index.html'
-        //
-        // E.g:
-        //  * /        -> /index.html
-        //  * /try-it  -> /try-it/index.html
-        //  * /docs    -> /docs/index.html
         if (resource == null && isAPage) {
             resource = super.resolveResourceInternal(
                     request,

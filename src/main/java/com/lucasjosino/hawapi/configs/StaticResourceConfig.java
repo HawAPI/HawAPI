@@ -6,6 +6,15 @@ import org.springframework.core.Ordered;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/**
+ * Configuration for spring static resources:
+ * <ul>
+ *      <li>Static files</li>
+ * </ul>
+ *
+ * @author Lucas Josino
+ * @since 1.0.0
+ */
 @Configuration
 public class StaticResourceConfig implements WebMvcConfigurer {
 

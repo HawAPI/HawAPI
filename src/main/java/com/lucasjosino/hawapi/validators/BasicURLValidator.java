@@ -11,6 +11,10 @@ import java.util.regex.Pattern;
 
 /**
  * Basic url validator.
+ *
+ * @author Lucas Josino
+ * @see BasicURL
+ * @since 1.0.0
  */
 public class BasicURLValidator implements ConstraintValidator<BasicURL, String> {
 

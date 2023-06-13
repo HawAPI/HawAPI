@@ -13,6 +13,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Interface that implements the Location Repository, with JPA CRUD methods.
+ *
+ * @author Lucas josino
+ * @see BaseJpaRepository
+ * @see EntityGraph
+ * @see LocationModel
+ * @since 1.0.0
+ */
 @Repository
 @SuppressWarnings("NullableProblems")
 public interface LocationRepository extends BaseJpaRepository<LocationModel, UUID> {
@@ -37,6 +46,14 @@ public interface LocationRepository extends BaseJpaRepository<LocationModel, UUI
     @EntityGraph(attributePaths = "translation")
     Page<LocationModel> findAll(Specification<LocationModel> spec, Pageable pageable);
 
+    /**
+     * Method to get a location by {@link UUID} and language.
+     *
+     * @param uuid     An {@link UUID} that represents a specific item
+     * @param language An {@link String} that specify a language filter
+     * @return An {@link Optional} of {@link LocationModel}
+     * @since 1.0.0
+     */
     @EntityGraph(attributePaths = "translation")
     Optional<LocationModel> findByUuidAndTranslationLanguage(UUID uuid, String language);
 }

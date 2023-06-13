@@ -13,6 +13,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
+/**
+ * Configuration for mappers:
+ * <ul>
+ *      <li>ObjectMapper</li>
+ *      <li>ModelMapper</li>
+ * </ul>
+ *
+ * @author Lucas Josino
+ * @since 1.0.0
+ */
 @Configuration
 public class MappersConfig {
 

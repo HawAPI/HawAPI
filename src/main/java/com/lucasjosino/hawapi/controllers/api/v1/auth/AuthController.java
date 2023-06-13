@@ -15,6 +15,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Endpoints for managing auth
+ *
+ * @author Lucas Josino
+ * @see <a href="https://hawapi.theproject.id/docs/guides/authentication">HawAPI#Authentication</a>
+ * @since 1.0.0
+ */
 @RestController
 @RequestMapping("/api/v1/auth")
 @Tag(
@@ -35,6 +42,14 @@ public class AuthController implements BaseAuthControllerInterface {
         this.service = service;
     }
 
+    /**
+     * Method that creates a user
+     *
+     * @param user An {@link UserRegistrationDTO} with all user fields
+     * @return An {@link UserDTO} with the saved object
+     * @throws UserUnauthorizedException If registration is disabled
+     * @since 1.0.0
+     */
     @Operation(summary = "Register user")
     public ResponseEntity<UserDTO> register(UserRegistrationDTO user) {
         if (registrationIsEnable) {
@@ -44,21 +59,45 @@ public class AuthController implements BaseAuthControllerInterface {
         throw new UserUnauthorizedException("Registration is not available at the moment");
     }
 
+    /**
+     * Method that authenticate a user
+     *
+     * @param userAuth An {@link UserAuthDTO} with all user fields
+     * @return An {@link UserDTO} with the authenticated object
+     * @throws UserUnauthorizedException If user couldn't be authenticated
+     * @since 1.0.0
+     */
     @Operation(summary = "Authenticate user")
     public ResponseEntity<UserDTO> authenticate(UserAuthDTO userAuth) {
         return ResponseEntity.ok(service.authenticate(userAuth));
     }
 
+    /**
+     * Method that delete a user
+     *
+     * @param userAuth An {@link UserAuthDTO} with all user fields
+     * @throws UserUnauthorizedException If user couldn't be authenticated
+     * @since 1.0.0
+     */
     @Operation(summary = "Delete user")
     public ResponseEntity<Void> delete(UserAuthDTO userAuth) {
         service.delete(userAuth);
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Method checks if registration is available
+     *
+     * @since 1.0.0
+     */
     public boolean isRegistrationIsEnable() {
         return registrationIsEnable;
     }
 
+    /**
+     * Method to enable/disable user registration
+     * <p> This method will override the value defined in the application.properties
+     */
     public void setRegistrationIsEnable(boolean registrationIsEnable) {
         this.registrationIsEnable = registrationIsEnable;
     }

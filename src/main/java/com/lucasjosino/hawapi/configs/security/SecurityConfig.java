@@ -15,6 +15,19 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 
+/**
+ * Configuration for spring:
+ * <ul>
+ *      <li>Headers</li>
+ *      <li>Csrf</li>
+ *      <li>Cors</li>
+ *      <li>Password encoder</li>
+ *      <li>API endpoints</li>
+ * </ul>
+ *
+ * @author Lucas Josino
+ * @since 1.0.0
+ */
 @Configuration
 public class SecurityConfig {
 

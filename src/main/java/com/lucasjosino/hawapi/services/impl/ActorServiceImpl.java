@@ -1,5 +1,6 @@
 package com.lucasjosino.hawapi.services.impl;
 
+import com.lucasjosino.hawapi.controllers.api.v1.ActorController;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.filters.ActorFilter;
 import com.lucasjosino.hawapi.models.ActorModel;
@@ -20,6 +21,13 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * Methods to handle actors
+ *
+ * @author Lucas Josino
+ * @see ActorController
+ * @since 1.0.0
+ */
 @Service
 public class ActorServiceImpl implements ActorService {
 
@@ -48,17 +56,36 @@ public class ActorServiceImpl implements ActorService {
         this.basePath = config.getApiBaseUrl() + "/actors";
     }
 
+    /**
+     * Method that get all actor uuids filtering with {@link Pageable}
+     *
+     * @param pageable An {@link Page} with pageable params. Can be null
+     * @return A {@link Page} of {@link UUID} or empty
+     * @since 1.0.0
+     */
     public Page<UUID> findAllUUIDs(Pageable pageable) {
         List<UUID> res = repository.findAllUUIDs(pageable);
         long count = repository.count();
         return PageableExecutionUtils.getPage(res, pageable, () -> count);
     }
 
+    /**
+     * Method that get all actors from the database
+     *
+     * @see ActorController#findAll(Map, Pageable)
+     * @since 1.0.0
+     */
     public List<ActorDTO> findAll(Map<String, String> filters, List<UUID> uuids) {
         List<ActorModel> res = repository.findAll(spec.with(filters, ActorFilter.class, uuids));
         return Arrays.asList(modelMapper.map(res, ActorDTO[].class));
     }
 
+    /**
+     * Method that get a single random actor from the database
+     *
+     * @see ActorController#findRandom(String)
+     * @since 1.0.0
+     */
     public ActorDTO findRandom(String language) {
         long count = utils.getCountOrThrow(repository.count());
         int index = random.nextInt((int) count);
@@ -69,11 +96,23 @@ public class ActorServiceImpl implements ActorService {
         return modelMapper.map(page.getContent().get(0), ActorDTO.class);
     }
 
+    /**
+     * Method that get a single actor from the database
+     *
+     * @see ActorController#findBy(UUID, String)
+     * @since 1.0.0
+     */
     public ActorDTO findBy(UUID uuid, String language) {
         ActorModel res = repository.findById(uuid).orElseThrow(ItemNotFoundException::new);
         return modelMapper.map(res, ActorDTO.class);
     }
 
+    /**
+     * Method that crates an actor on the database
+     *
+     * @see ActorController#save(ActorDTO)
+     * @since 1.0.0
+     */
     public ActorDTO save(ActorDTO dto) {
         UUID uuid = UUID.randomUUID();
         dto.setUuid(uuid);
@@ -89,6 +128,12 @@ public class ActorServiceImpl implements ActorService {
         return modelMapper.map(res, ActorDTO.class);
     }
 
+    /**
+     * Method that updates an actor on the database
+     *
+     * @see ActorController#patch(UUID, ActorDTO)
+     * @since 1.0.0
+     */
     public void patch(UUID uuid, ActorDTO patch) throws IOException {
         ActorModel dbRes = repository.findById(uuid).orElseThrow(ItemNotFoundException::new);
 
@@ -99,6 +144,12 @@ public class ActorServiceImpl implements ActorService {
         repository.save(patchedModel);
     }
 
+    /**
+     * Method that delete an actor from the database
+     *
+     * @see ActorController#delete(UUID)
+     * @since 1.0.0
+     */
     public void deleteById(UUID uuid) {
         if (!repository.existsById(uuid)) throw new ItemNotFoundException();
 

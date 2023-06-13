@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
 
+/**
+ * A base auth controller interface with all required endpoints.
+ */
 public interface BaseAuthControllerInterface {
 
     @PostMapping(
@@ -21,8 +24,9 @@ public interface BaseAuthControllerInterface {
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
     @ApiResponse(responseCode = "201", description = "Created")
-    @ApiResponse(responseCode = "429", description = "Too Many Requests", content = @Content(schema = @Schema(hidden = true)))
+    @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(hidden = true)))
     @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true)))
+    @ApiResponse(responseCode = "429", description = "Too Many Requests", content = @Content(schema = @Schema(hidden = true)))
     ResponseEntity<UserDTO> register(@Valid @RequestBody UserRegistrationDTO user);
 
     @PostMapping(
@@ -31,13 +35,15 @@ public interface BaseAuthControllerInterface {
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
     @ApiResponse(responseCode = "200", description = "Successful")
-    @ApiResponse(responseCode = "429", description = "Too Many Requests", content = @Content(schema = @Schema(hidden = true)))
+    @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(hidden = true)))
     @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true)))
+    @ApiResponse(responseCode = "429", description = "Too Many Requests", content = @Content(schema = @Schema(hidden = true)))
     ResponseEntity<UserDTO> authenticate(@Valid @RequestBody UserAuthDTO userAuth);
 
     @PostMapping(value = "/delete", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiResponse(responseCode = "204", description = "No Content")
-    @ApiResponse(responseCode = "429", description = "Too Many Requests", content = @Content(schema = @Schema(hidden = true)))
+    @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(hidden = true)))
     @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true)))
+    @ApiResponse(responseCode = "429", description = "Too Many Requests", content = @Content(schema = @Schema(hidden = true)))
     ResponseEntity<Void> delete(@Valid @RequestBody UserAuthDTO userAuth);
 }

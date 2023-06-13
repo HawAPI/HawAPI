@@ -1,10 +1,28 @@
 package com.lucasjosino.hawapi.filters;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.lucasjosino.hawapi.controllers.api.v1.ActorController;
 import com.lucasjosino.hawapi.filters.base.BaseFilter;
+import com.lucasjosino.hawapi.models.ActorModel;
+import com.lucasjosino.hawapi.models.dto.ActorDTO;
+import com.lucasjosino.hawapi.repositories.ActorRepository;
+import com.lucasjosino.hawapi.repositories.specification.SpecificationBuilder;
+import com.lucasjosino.hawapi.services.ActorService;
 
 import java.time.LocalDate;
 
+/**
+ * Actor filter model
+ *
+ * @author Lucas Josino
+ * @see ActorModel
+ * @see ActorDTO
+ * @see ActorController
+ * @see ActorService
+ * @see ActorRepository
+ * @see SpecificationBuilder
+ * @since 1.0.0
+ */
 public class ActorFilter extends BaseFilter {
 
     @JsonProperty("first_name")

@@ -1,5 +1,6 @@
 package com.lucasjosino.hawapi.services.base;
 
+import com.lucasjosino.hawapi.cache.generator.FindAllKeyGenerator;
 import com.lucasjosino.hawapi.models.base.BaseDTO;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -12,6 +13,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Base service interface that provides methods for manipulating objects.
+ *
+ * @param <D> param that extends {@link BaseDTO}
+ * @author Lucas Josino
+ * @see Transactional
+ * @see Cacheable
+ * @see Pageable
+ * @see FindAllKeyGenerator
+ * @since 1.0.0
+ */
 public interface BaseService<D extends BaseDTO> {
 
     Page<UUID> findAllUUIDs(Pageable pageable);

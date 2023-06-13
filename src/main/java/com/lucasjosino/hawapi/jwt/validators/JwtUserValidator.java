@@ -6,7 +6,18 @@ import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2TokenValidatorResult;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtIssuerValidator;
 
+/**
+ * Validates the "username" and "email" claims in a {@link Jwt}, that is matches a configured value
+ *
+ * @author Lucas Josino
+ * @see Jwt
+ * @see JwtIssuerValidator
+ * @see JwtAudienceValidator
+ * @see OAuth2TokenValidator
+ * @since 1.0.0
+ */
 public class JwtUserValidator implements OAuth2TokenValidator<Jwt> {
 
     private final AuthRepository authRepository;
@@ -16,6 +27,11 @@ public class JwtUserValidator implements OAuth2TokenValidator<Jwt> {
         this.authRepository = authRepository;
     }
 
+    /**
+     * Validate the "username" and "email" claims using the provided parameters
+     *
+     * @param token - The token with values to validate
+     */
     @Override
     public OAuth2TokenValidatorResult validate(Jwt token) {
         String username = token.getClaim("username");

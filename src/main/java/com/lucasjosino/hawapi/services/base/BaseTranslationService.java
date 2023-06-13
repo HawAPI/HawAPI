@@ -4,12 +4,25 @@ import com.lucasjosino.hawapi.models.base.BaseDTO;
 import com.lucasjosino.hawapi.models.base.BaseTranslationDTO;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Base service interface that provides methods for manipulating translation objects.
+ *
+ * @param <D> param that extends {@link BaseDTO}
+ * @param <T> param that extends {@link BaseTranslationDTO}
+ * @author Lucas Josino
+ * @see Transactional
+ * @see Cacheable
+ * @see Pageable
+ * @see BaseService
+ * @since 1.0.0
+ */
 public interface BaseTranslationService<D extends BaseDTO, T extends BaseTranslationDTO> extends BaseService<D> {
 
     @Cacheable(value = "findAllTranslation")

@@ -1,5 +1,6 @@
 package com.lucasjosino.hawapi.services.impl.auth;
 
+import com.lucasjosino.hawapi.controllers.api.v1.auth.AuthController;
 import com.lucasjosino.hawapi.enums.auth.RoleType;
 import com.lucasjosino.hawapi.exceptions.auth.RoleBadRequestException;
 import com.lucasjosino.hawapi.exceptions.auth.UserConflictException;
@@ -22,6 +23,13 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Methods to handle auth
+ *
+ * @author Lucas Josino
+ * @see AuthController
+ * @since 1.0.0
+ */
 @Service
 public class AuthServiceImpl implements AuthService {
 
@@ -43,6 +51,12 @@ public class AuthServiceImpl implements AuthService {
         this.modelMapper = modelMapper;
     }
 
+    /**
+     * Method that crates a user on the database
+     *
+     * @see AuthController#register(UserRegistrationDTO)
+     * @since 1.0.0
+     */
     public UserDTO register(UserRegistrationDTO user) {
         if (authRepository.existsByUsername(user.getUsername())) {
             throw new UserConflictException("Username '" + user.getUsername() + "' already registered!");
@@ -91,6 +105,12 @@ public class AuthServiceImpl implements AuthService {
         }};
     }
 
+    /**
+     * Method that authenticate a user from the database
+     *
+     * @see AuthController#authenticate(UserAuthDTO)
+     * @since 1.0.0
+     */
     public UserDTO authenticate(UserAuthDTO userAuth) {
         UserModel dbUser = validateUser(userAuth);
 
@@ -114,6 +134,12 @@ public class AuthServiceImpl implements AuthService {
         }};
     }
 
+    /**
+     * Method that delete a user from the database
+     *
+     * @see AuthController#delete(UserAuthDTO)
+     * @since 1.0.0
+     */
     public void delete(UserAuthDTO userAuth) {
         UserModel dbUser = validateUser(userAuth);
 
@@ -129,6 +155,13 @@ public class AuthServiceImpl implements AuthService {
         authRepository.deleteById(dbUser.getUuid());
     }
 
+    /**
+     * Method to get current user role
+     *
+     * @return An {@link String} representing user role
+     * @see RoleType
+     * @since 1.0.0
+     */
     public String getRole() {
         Optional<? extends GrantedAuthority> firstAuthority = SecurityContextHolder.getContext()
                 .getAuthentication()
@@ -141,6 +174,14 @@ public class AuthServiceImpl implements AuthService {
         return JwtManager.ROLE_PREFIX + RoleType.ANONYMOUS.name();
     }
 
+    /**
+     * Method to validate user using its <strong>username</strong> and <strong>email</strong>
+     *
+     * @return An {@link UserModel} representing user
+     * @throws UserNotFoundException If no user was found
+     * @see AuthRepository#existsByUsernameAndEmail(String, String)
+     * @since 1.0.0
+     */
     private UserModel validateUser(UserAuthDTO userAuth) {
         return authRepository.findByUsernameAndEmail(userAuth.getUsername(), userAuth.getEmail())
                 .orElseThrow(() ->
@@ -148,6 +189,13 @@ public class AuthServiceImpl implements AuthService {
                 );
     }
 
+    /**
+     * Method to validate user password
+     *
+     * @throws UserUnauthorizedException If user is not authenticated/validated
+     * @see PasswordEncoder
+     * @since 1.0.0
+     */
     private void validatePassword(String userAuth, String dbUser) {
         if (userAuth != null && !userAuth.isEmpty() && dbUser != null && !dbUser.isEmpty()) {
             if (passwordEncoder.matches(userAuth, dbUser)) return;
@@ -156,6 +204,16 @@ public class AuthServiceImpl implements AuthService {
         throw new UserUnauthorizedException();
     }
 
+    /**
+     * Method to validate if user is authenticated with <strong>ADMIN</strong> role
+     *
+     * @return true if user is an ADMIN
+     * @throws UserUnauthorizedException If user is not authenticated/validated
+     * @see GrantedAuthority
+     * @see SecurityContextHolder
+     * @see RoleType
+     * @since 1.0.0
+     */
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private boolean hasAdminAuthorization() {
         Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext()
