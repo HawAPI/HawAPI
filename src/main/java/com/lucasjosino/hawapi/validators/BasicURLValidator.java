@@ -42,7 +42,7 @@ public class BasicURLValidator implements ConstraintValidator<BasicURL, String> 
 
         try {
             new URL(value).toURI();
-            return Pattern.compile("^(https(s)://)").matcher(value).find();
+            return Pattern.compile("^(http(s)://)").matcher(value).find();
         } catch (MalformedURLException | URISyntaxException e) {
             return false;
         }
