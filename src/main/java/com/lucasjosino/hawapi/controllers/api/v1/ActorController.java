@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -126,14 +127,8 @@ public class ActorController implements BaseControllerInterface<ActorDTO> {
      * @since 1.0.0
      */
     @Operation(summary = "Patch actor", security = @SecurityRequirement(name = "Bearer"))
-    public ResponseEntity<ActorDTO> patch(UUID uuid, ActorDTO patch) {
-        try {
-            service.patch(uuid, patch);
-        } catch (ItemNotFoundException notFound) {
-            throw notFound;
-        } catch (Exception ex) {
-            return ResponseEntity.internalServerError().build();
-        }
+    public ResponseEntity<ActorDTO> patch(UUID uuid, ActorDTO patch) throws IOException {
+        service.patch(uuid, patch);
         return ResponseEntity.ok(patch);
     }
 

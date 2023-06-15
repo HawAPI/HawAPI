@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -71,7 +72,7 @@ public interface BaseControllerInterface<D extends BaseDTO> {
     @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true)))
     @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))
     @ApiResponse(responseCode = "429", description = "Too Many Requests", content = @Content(schema = @Schema(hidden = true)))
-    ResponseEntity<D> patch(@PathVariable UUID uuid, @RequestBody D dto);
+    ResponseEntity<D> patch(@PathVariable UUID uuid, @RequestBody D dto) throws IOException;
 
     @DeleteMapping(value = "/{uuid}")
     @ApiResponse(responseCode = "204", description = "No Content")

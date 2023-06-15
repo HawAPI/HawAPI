@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -71,7 +72,7 @@ public interface BaseTranslationInterface<M extends BaseDTO, T extends BaseTrans
             @PathVariable UUID uuid,
             @PathVariable String language,
             @RequestBody T dto
-    );
+    ) throws IOException;
 
     @DeleteMapping(value = "/{uuid}/translations/{language}")
     @ApiResponse(responseCode = "204", description = "No Content")

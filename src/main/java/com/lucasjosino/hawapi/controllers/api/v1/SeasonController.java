@@ -23,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -193,19 +194,16 @@ public class SeasonController implements BaseTranslationInterface<SeasonDTO, Sea
      * @param patch An {@link SeasonDTO} with updated season fields
      * @return An {@link SeasonDTO} with the updated object
      * @throws ItemNotFoundException If no item was found
-     * @throws SaveConflictException If language already exist or uuid is invalid
      * @since 1.0.0
      */
     @Operation(summary = "Patch season", security = @SecurityRequirement(name = "Bearer"))
-    public ResponseEntity<SeasonDTO> patch(UUID uuid, SeasonDTO patch) {
-        try {
-            service.patch(uuid, patch);
-        } catch (ItemNotFoundException notFound) {
-            throw notFound;
-        } catch (Exception ex) {
-            return ResponseEntity.internalServerError().build();
-        }
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<SeasonDTO> patch(UUID uuid, SeasonDTO patch) throws IOException {
+        // All translation models will be queried with 'eager' type.
+        // If 'language' is not provided, query will return more than one result, resulting in an error.
+        patch.setLanguage(responseUtils.getDefaultLanguage());
+
+        service.patch(uuid, patch);
+        return ResponseEntity.ok(patch);
     }
 
     /**
@@ -213,26 +211,20 @@ public class SeasonController implements BaseTranslationInterface<SeasonDTO, Sea
      *
      * @param uuid     An {@link UUID} that represents a specific item
      * @param language An {@link String} that specify a language filter
-     * @param dto      An {@link SeasonTranslationDTO} with updated season fields
+     * @param patch    An {@link SeasonTranslationDTO} with updated season fields
      * @return An {@link SeasonTranslationDTO} with the updated object
      * @throws ItemNotFoundException If no item was found
-     * @throws SaveConflictException If language already exist or uuid is invalid
+     * @throws SaveConflictException If uuid is invalid
      * @since 1.0.0
      */
     @Operation(summary = "Patch season translation", security = @SecurityRequirement(name = "Bearer"))
     public ResponseEntity<SeasonTranslationDTO> patchTranslation(
             UUID uuid,
             String language,
-            SeasonTranslationDTO dto
-    ) {
-        try {
-            service.patchTranslation(uuid, language, dto);
-        } catch (ItemNotFoundException notFound) {
-            throw notFound;
-        } catch (Exception ex) {
-            return ResponseEntity.internalServerError().build();
-        }
-        return ResponseEntity.noContent().build();
+            SeasonTranslationDTO patch
+    ) throws IOException {
+        service.patchTranslation(uuid, language, patch);
+        return ResponseEntity.ok(patch);
     }
 
     /**

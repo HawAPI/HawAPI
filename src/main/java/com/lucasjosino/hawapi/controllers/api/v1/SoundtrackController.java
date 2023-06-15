@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -123,15 +124,9 @@ public class SoundtrackController implements BaseControllerInterface<SoundtrackD
      * @since 1.0.0
      */
     @PatchMapping("/{uuid}")
-    public ResponseEntity<SoundtrackDTO> patch(UUID uuid, SoundtrackDTO patch) {
-        try {
-            service.patch(uuid, patch);
-        } catch (ItemNotFoundException notFound) {
-            throw notFound;
-        } catch (Exception ex) {
-            return ResponseEntity.internalServerError().build();
-        }
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<SoundtrackDTO> patch(UUID uuid, SoundtrackDTO patch) throws IOException {
+        service.patch(uuid, patch);
+        return ResponseEntity.ok(patch);
     }
 
     /**

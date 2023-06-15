@@ -23,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -193,19 +194,16 @@ public class GameController implements BaseTranslationInterface<GameDTO, GameTra
      * @param patch An {@link GameDTO} with updated game fields
      * @return An {@link GameDTO} with the updated object
      * @throws ItemNotFoundException If no item was found
-     * @throws SaveConflictException If language already exist or uuid is invalid
      * @since 1.0.0
      */
     @Operation(summary = "Patch game", security = @SecurityRequirement(name = "Bearer"))
-    public ResponseEntity<GameDTO> patch(UUID uuid, GameDTO patch) {
-        try {
-            service.patch(uuid, patch);
-        } catch (ItemNotFoundException notFound) {
-            throw notFound;
-        } catch (Exception ex) {
-            return ResponseEntity.internalServerError().build();
-        }
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<GameDTO> patch(UUID uuid, GameDTO patch) throws IOException {
+        // All translation models will be queried with 'eager' type.
+        // If 'language' is not provided, query will return more than one result, resulting in an error.
+        patch.setLanguage(responseUtils.getDefaultLanguage());
+        
+        service.patch(uuid, patch);
+        return ResponseEntity.ok(patch);
     }
 
     /**
@@ -213,26 +211,20 @@ public class GameController implements BaseTranslationInterface<GameDTO, GameTra
      *
      * @param uuid     An {@link UUID} that represents a specific item
      * @param language An {@link String} that specify a language filter
-     * @param dto      An {@link GameTranslationDTO} with updated game fields
+     * @param patch    An {@link GameTranslationDTO} with updated game fields
      * @return An {@link GameTranslationDTO} with the updated object
      * @throws ItemNotFoundException If no item was found
-     * @throws SaveConflictException If language already exist or uuid is invalid
+     * @throws SaveConflictException If uuid is invalid
      * @since 1.0.0
      */
     @Operation(summary = "Patch game translation", security = @SecurityRequirement(name = "Bearer"))
     public ResponseEntity<GameTranslationDTO> patchTranslation(
             UUID uuid,
             String language,
-            GameTranslationDTO dto
-    ) {
-        try {
-            service.patchTranslation(uuid, language, dto);
-        } catch (ItemNotFoundException notFound) {
-            throw notFound;
-        } catch (Exception ex) {
-            return ResponseEntity.internalServerError().build();
-        }
-        return ResponseEntity.noContent().build();
+            GameTranslationDTO patch
+    ) throws IOException {
+        service.patchTranslation(uuid, language, patch);
+        return ResponseEntity.ok(patch);
     }
 
     /**

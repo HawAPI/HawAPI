@@ -23,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -177,7 +178,7 @@ public class EpisodeController implements BaseTranslationInterface<EpisodeDTO, E
      * @param dto An {@link EpisodeDTO} with all episode fields
      * @return An {@link EpisodeTranslationDTO} with the saved object
      * @throws BadRequestException   If dto validation fails
-     * @throws SaveConflictException If language already exist or uuid is invalid
+     * @throws SaveConflictException If uuid is invalid
      * @throws ItemNotFoundException If no item was found
      * @since 1.0.0
      */
@@ -193,19 +194,16 @@ public class EpisodeController implements BaseTranslationInterface<EpisodeDTO, E
      * @param patch An {@link EpisodeDTO} with updated episode fields
      * @return An {@link EpisodeDTO} with the updated object
      * @throws ItemNotFoundException If no item was found
-     * @throws SaveConflictException If language already exist or uuid is invalid
      * @since 1.0.0
      */
     @Operation(summary = "Patch episode", security = @SecurityRequirement(name = "Bearer"))
-    public ResponseEntity<EpisodeDTO> patch(UUID uuid, EpisodeDTO patch) {
-        try {
-            service.patch(uuid, patch);
-        } catch (ItemNotFoundException notFound) {
-            throw notFound;
-        } catch (Exception ex) {
-            return ResponseEntity.internalServerError().build();
-        }
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<EpisodeDTO> patch(UUID uuid, EpisodeDTO patch) throws IOException {
+        // All translation models will be queried with 'eager' type.
+        // If 'language' is not provided, query will return more than one result, resulting in an error.
+        patch.setLanguage(responseUtils.getDefaultLanguage());
+
+        service.patch(uuid, patch);
+        return ResponseEntity.ok(patch);
     }
 
     /**
@@ -213,7 +211,7 @@ public class EpisodeController implements BaseTranslationInterface<EpisodeDTO, E
      *
      * @param uuid     An {@link UUID} that represents a specific item
      * @param language An {@link String} that specify a language filter
-     * @param dto      An {@link EpisodeTranslationDTO} with updated episode fields
+     * @param patch    An {@link EpisodeTranslationDTO} with updated episode fields
      * @return An {@link EpisodeTranslationDTO} with the updated object
      * @throws ItemNotFoundException If no item was found
      * @throws SaveConflictException If language already exist or uuid is invalid
@@ -223,16 +221,10 @@ public class EpisodeController implements BaseTranslationInterface<EpisodeDTO, E
     public ResponseEntity<EpisodeTranslationDTO> patchTranslation(
             UUID uuid,
             String language,
-            EpisodeTranslationDTO dto
-    ) {
-        try {
-            service.patchTranslation(uuid, language, dto);
-        } catch (ItemNotFoundException notFound) {
-            throw notFound;
-        } catch (Exception ex) {
-            return ResponseEntity.internalServerError().build();
-        }
-        return ResponseEntity.noContent().build();
+            EpisodeTranslationDTO patch
+    ) throws IOException {
+        service.patchTranslation(uuid, language, patch);
+        return ResponseEntity.ok(patch);
     }
 
     /**

@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -126,15 +127,9 @@ public class CharacterController implements BaseControllerInterface<CharacterDTO
      * @since 1.0.0
      */
     @Operation(summary = "Patch character", security = @SecurityRequirement(name = "Bearer"))
-    public ResponseEntity<CharacterDTO> patch(UUID uuid, CharacterDTO patch) {
-        try {
-            service.patch(uuid, patch);
-        } catch (ItemNotFoundException notFound) {
-            throw notFound;
-        } catch (Exception ex) {
-            return ResponseEntity.internalServerError().build();
-        }
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<CharacterDTO> patch(UUID uuid, CharacterDTO patch) throws IOException {
+        service.patch(uuid, patch);
+        return ResponseEntity.ok(patch);
     }
 
     /**
