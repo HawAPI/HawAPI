@@ -22,10 +22,10 @@ RESET   := $(shell tput -Txterm sgr0)
 ## Application
 
 dev: docker-start ## Start docker database and run spring application
-	@./mvnw spring-boot:run -e -Dmaven.test.skip=true
+	@./mvnw spring-boot:run -e -Dmaven.test.skip=true -DskipTests
 
 run: clean ## Run the spring application
-	@./mvnw spring-boot:run -e -Dmaven.test.skip=true
+	@./mvnw spring-boot:run -e -Dmaven.test.skip=true -DskipTests
 
 get: ## Get all pom dependencies
 	@./mvnw dependency:resolve-plugins
@@ -47,7 +47,7 @@ compile: clean ## Compile the spring application
 
 build: test ## Build website, test and package the spring application
 	@./scripts/build-website.sh --clean-before
-	@./mvnw package -Dmaven.test.skip=true -Dspring.profiles.active=prod
+	@./mvnw package -Dmaven.test.skip=true -DskipTests -Dspring.profiles.active=prod
 
 verify: clean ## Verify the spring application
 	@./mvnw verify
