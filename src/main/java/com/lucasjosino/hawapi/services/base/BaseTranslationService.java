@@ -34,14 +34,14 @@ public interface BaseTranslationService<D extends BaseDTO, T extends BaseTransla
     T findTranslationBy(UUID uuid, String language);
 
     @Transactional
-    @CacheEvict(cacheNames = {"findAllTranslation", "findTranslationBy"}, allEntries = true)
+    @CacheEvict(cacheNames = {"findAllTranslation", "findTranslationBy", "findAll", "findBy"}, allEntries = true)
     T saveTranslation(UUID uuid, T dto);
 
     @Transactional
-    @CacheEvict(cacheNames = {"findAllTranslation", "findTranslationBy"}, allEntries = true)
+    @CacheEvict(cacheNames = {"findAllTranslation", "findTranslationBy", "findAll", "findBy"}, allEntries = true)
     void patchTranslation(UUID uuid, String language, T patch) throws IOException;
 
     @Transactional
-    @CacheEvict(cacheNames = {"findAllTranslation", "findTranslationBy"}, allEntries = true)
+    @CacheEvict(cacheNames = {"findAllTranslation", "findTranslationBy", "findAll", "findBy"}, allEntries = true)
     void deleteTranslation(UUID uuid, String language);
 }
