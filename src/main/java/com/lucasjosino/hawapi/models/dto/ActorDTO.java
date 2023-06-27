@@ -22,7 +22,7 @@ public class ActorDTO extends BaseDTO {
     @NotBlank(message = "Field 'last_name' is required")
     private String lastName;
 
-    @Size(max = 10, message = "Field 'nicknames' cannot exceed 10 names")
+    @Size(max = 10, message = "Field 'nicknames' cannot exceed 10 items")
     private List<String> nicknames;
 
     @PastOrPresent
@@ -43,7 +43,7 @@ public class ActorDTO extends BaseDTO {
 
     private List<String> seasons;
 
-    @Size(max = 10, message = "Field 'awards' cannot exceed 10 names")
+    @Size(max = 10, message = "Field 'awards' cannot exceed 10 items")
     private List<String> awards;
 
     @NotBlank(message = "Field 'character' is required")

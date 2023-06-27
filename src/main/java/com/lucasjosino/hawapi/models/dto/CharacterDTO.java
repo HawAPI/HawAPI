@@ -20,7 +20,7 @@ public class CharacterDTO extends BaseDTO {
     @NotBlank(message = "Field 'last_name' is required")
     private String lastName;
 
-    @Size(max = 10, message = "Field 'nicknames' cannot exceed 10 names")
+    @Size(max = 10, message = "Field 'nicknames' cannot exceed 10 items")
     private List<String> nicknames;
 
     @PastOrPresent
