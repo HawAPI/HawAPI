@@ -6,6 +6,7 @@ import com.lucasjosino.hawapi.validators.annotations.BasicURL;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
@@ -19,10 +20,11 @@ public class GameDTO extends BaseDTO {
     @NotBlank(message = "Field 'description' is required")
     private String description;
 
+    @PositiveOrZero
     private Integer playtime;
 
     @JsonProperty("age_rating")
-    private Integer ageRating;
+    private String ageRating;
 
     @Size(max = 5)
     @NotBlank(message = "Field 'language' is required")
@@ -30,17 +32,19 @@ public class GameDTO extends BaseDTO {
 
     private List<String> platforms;
 
-    private List<String> stores;
+    @Size(max = 10, message = "Field 'stores' cannot exceed 10 items")
+    private List<@BasicURL String> stores;
 
+    @Size(max = 10, message = "Field 'modes' cannot exceed 10 items")
     private List<String> modes;
 
-    @Size(max = 10, message = "Field 'genres' cannot exceed 10 names")
+    @Size(max = 10, message = "Field 'genres' cannot exceed 10 items")
     private List<String> genres;
 
-    @Size(max = 5, message = "Field 'publishers' cannot exceed 10 names")
+    @Size(max = 5, message = "Field 'publishers' cannot exceed 5 items")
     private List<String> publishers;
 
-    @Size(max = 10, message = "Field 'developers' cannot exceed 10 names")
+    @Size(max = 10, message = "Field 'developers' cannot exceed 10 items")
     private List<String> developers;
 
     @JsonProperty("release_date")
@@ -51,6 +55,7 @@ public class GameDTO extends BaseDTO {
     @BasicURL(message = "Field 'website' doesn't have a valid URL")
     private String website;
 
+    @Size(max = 15, message = "Field 'tags' cannot exceed 15 items")
     private List<String> tags;
 
     private List<String> languages;
@@ -85,11 +90,11 @@ public class GameDTO extends BaseDTO {
         this.playtime = playtime;
     }
 
-    public Integer getAgeRating() {
+    public String getAgeRating() {
         return ageRating;
     }
 
-    public void setAgeRating(Integer ageRating) {
+    public void setAgeRating(String ageRating) {
         this.ageRating = ageRating;
     }
 
