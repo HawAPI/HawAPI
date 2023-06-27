@@ -12,13 +12,23 @@ import java.util.List;
 @Table(name = "games")
 public class GameModel extends BaseModel {
 
-    @Type(type = "list-array")
-    @Column(columnDefinition = "varchar[]")
-    private List<String> platforms;
+    @Column
+    private Integer playtime;
+
+    @Column(name = "age_rating")
+    private String ageRating;
 
     @Type(type = "list-array")
     @Column(columnDefinition = "varchar[]")
-    private List<String> genres;
+    private List<String> stores;
+
+    @Type(type = "list-array")
+    @Column(columnDefinition = "varchar[]")
+    private List<String> modes;
+
+    @Type(type = "list-array")
+    @Column(columnDefinition = "varchar[]")
+    private List<String> platforms;
 
     @Type(type = "list-array")
     @Column(columnDefinition = "varchar[]")
@@ -28,18 +38,62 @@ public class GameModel extends BaseModel {
     @Column(columnDefinition = "varchar[]")
     private List<String> developers;
 
+    @Type(type = "list-array")
+    @Column(columnDefinition = "varchar[]")
+    private List<String> genres;
+
+    @Type(type = "list-array")
+    @Column(columnDefinition = "varchar[]")
+    private List<String> tags;
+
     @Column(nullable = false, name = "release_date")
     private LocalDate releaseDate;
 
     @Column(nullable = false)
-    private String url;
+    private String website;
+
+    @Type(type = "list-array")
+    @Column(columnDefinition = "varchar[]")
+    private List<String> languages;
 
     @Type(type = "list-array")
     @Column(columnDefinition = "text[]")
-    private List<String> languages;
+    private List<String> images;
 
     @OneToOne(mappedBy = "game", cascade = CascadeType.ALL)
     private GameTranslation translation;
+
+    public Integer getPlaytime() {
+        return playtime;
+    }
+
+    public void setPlaytime(Integer playtime) {
+        this.playtime = playtime;
+    }
+
+    public String getAgeRating() {
+        return ageRating;
+    }
+
+    public void setAgeRating(String ageRating) {
+        this.ageRating = ageRating;
+    }
+
+    public List<String> getStores() {
+        return stores;
+    }
+
+    public void setStores(List<String> stores) {
+        this.stores = stores;
+    }
+
+    public List<String> getModes() {
+        return modes;
+    }
+
+    public void setModes(List<String> modes) {
+        this.modes = modes;
+    }
 
     public List<String> getPlatforms() {
         return platforms;
@@ -47,14 +101,6 @@ public class GameModel extends BaseModel {
 
     public void setPlatforms(List<String> platforms) {
         this.platforms = platforms;
-    }
-
-    public List<String> getGenres() {
-        return genres;
-    }
-
-    public void setGenres(List<String> genres) {
-        this.genres = genres;
     }
 
     public List<String> getPublishers() {
@@ -73,6 +119,22 @@ public class GameModel extends BaseModel {
         this.developers = developers;
     }
 
+    public List<String> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(List<String> genres) {
+        this.genres = genres;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+
     public LocalDate getReleaseDate() {
         return releaseDate;
     }
@@ -81,12 +143,12 @@ public class GameModel extends BaseModel {
         this.releaseDate = releaseDate;
     }
 
-    public String getUrl() {
-        return url;
+    public String getWebsite() {
+        return website;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setWebsite(String website) {
+        this.website = website;
     }
 
     public List<String> getLanguages() {
@@ -95,6 +157,14 @@ public class GameModel extends BaseModel {
 
     public void setLanguages(List<String> languages) {
         this.languages = languages;
+    }
+
+    public List<String> getImages() {
+        return images;
+    }
+
+    public void setImages(List<String> images) {
+        this.images = images;
     }
 
     public GameTranslation getTranslation() {
@@ -108,13 +178,19 @@ public class GameModel extends BaseModel {
     @Override
     public String toString() {
         return "GameModel{" +
-                "platforms=" + platforms +
-                ", genres=" + genres +
+                "playtime=" + playtime +
+                ", ageRating='" + ageRating + '\'' +
+                ", stores=" + stores +
+                ", modes=" + modes +
+                ", platforms=" + platforms +
                 ", publishers=" + publishers +
                 ", developers=" + developers +
+                ", genres=" + genres +
+                ", tags=" + tags +
                 ", releaseDate=" + releaseDate +
-                ", url='" + url + '\'' +
+                ", website='" + website + '\'' +
                 ", languages=" + languages +
+                ", images=" + images +
                 ", translation=" + translation +
                 '}';
     }
