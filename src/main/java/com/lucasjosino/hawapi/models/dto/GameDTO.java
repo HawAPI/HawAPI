@@ -19,11 +19,20 @@ public class GameDTO extends BaseDTO {
     @NotBlank(message = "Field 'description' is required")
     private String description;
 
+    private Integer playtime;
+
+    @JsonProperty("age_rating")
+    private Integer ageRating;
+
     @Size(max = 5)
     @NotBlank(message = "Field 'language' is required")
     private String language;
 
     private List<String> platforms;
+
+    private List<String> stores;
+
+    private List<String> modes;
 
     @Size(max = 10, message = "Field 'genres' cannot exceed 10 names")
     private List<String> genres;
@@ -38,15 +47,19 @@ public class GameDTO extends BaseDTO {
     @NotNull(message = "Field 'release_date' is required")
     private LocalDate releaseDate;
 
-    @NotBlank(message = "Field 'url' is required")
-    @BasicURL(message = "Field 'url' doesn't have a valid URL")
-    private String url;
+    @NotBlank(message = "Field 'website' is required")
+    @BasicURL(message = "Field 'website' doesn't have a valid URL")
+    private String website;
+
+    private List<String> tags;
 
     private List<String> languages;
 
     @NotNull(message = "Field 'trailer' is required")
     @BasicURL(message = "Field 'trailer' doesn't have a valid URL")
     private String trailer;
+
+    private List<@BasicURL(image = true) String> images;
 
     public String getName() {
         return name;
@@ -64,6 +77,22 @@ public class GameDTO extends BaseDTO {
         this.description = description;
     }
 
+    public Integer getPlaytime() {
+        return playtime;
+    }
+
+    public void setPlaytime(Integer playtime) {
+        this.playtime = playtime;
+    }
+
+    public Integer getAgeRating() {
+        return ageRating;
+    }
+
+    public void setAgeRating(Integer ageRating) {
+        this.ageRating = ageRating;
+    }
+
     public String getLanguage() {
         return language;
     }
@@ -78,6 +107,22 @@ public class GameDTO extends BaseDTO {
 
     public void setPlatforms(List<String> platforms) {
         this.platforms = platforms;
+    }
+
+    public List<String> getStores() {
+        return stores;
+    }
+
+    public void setStores(List<String> stores) {
+        this.stores = stores;
+    }
+
+    public List<String> getModes() {
+        return modes;
+    }
+
+    public void setModes(List<String> modes) {
+        this.modes = modes;
     }
 
     public List<String> getGenres() {
@@ -112,12 +157,20 @@ public class GameDTO extends BaseDTO {
         this.releaseDate = releaseDate;
     }
 
-    public String getUrl() {
-        return url;
+    public String getWebsite() {
+        return website;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 
     public List<String> getLanguages() {
@@ -136,20 +189,34 @@ public class GameDTO extends BaseDTO {
         this.trailer = trailer;
     }
 
+    public List<String> getImages() {
+        return images;
+    }
+
+    public void setImages(List<String> images) {
+        this.images = images;
+    }
+
     @Override
     public String toString() {
         return "GameDTO{" +
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
+                ", playtime=" + playtime +
+                ", ageRating=" + ageRating +
                 ", language='" + language + '\'' +
                 ", platforms=" + platforms +
+                ", stores=" + stores +
+                ", modes=" + modes +
                 ", genres=" + genres +
                 ", publishers=" + publishers +
                 ", developers=" + developers +
                 ", releaseDate=" + releaseDate +
-                ", url='" + url + '\'' +
+                ", website='" + website + '\'' +
+                ", tags=" + tags +
                 ", languages=" + languages +
                 ", trailer='" + trailer + '\'' +
+                ", images=" + images +
                 '}';
     }
 }
