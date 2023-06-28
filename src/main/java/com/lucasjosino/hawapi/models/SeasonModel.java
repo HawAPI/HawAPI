@@ -49,7 +49,7 @@ public class SeasonModel extends BaseModel {
     private List<String> images;
 
     @Type(type = "list-array")
-    @Column(columnDefinition = "text[]")
+    @Column(columnDefinition = "varchar[]")
     private List<String> languages;
 
     @OneToOne(mappedBy = "season", cascade = CascadeType.ALL)

@@ -35,7 +35,7 @@ public class EpisodeModel extends BaseModel {
     private List<String> images;
 
     @Type(type = "list-array")
-    @Column(columnDefinition = "text[]")
+    @Column(columnDefinition = "varchar[]")
     private List<String> languages;
 
     @OneToOne(mappedBy = "episode", cascade = CascadeType.ALL)

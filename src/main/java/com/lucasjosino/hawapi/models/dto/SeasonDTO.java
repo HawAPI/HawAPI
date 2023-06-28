@@ -29,7 +29,7 @@ public class SeasonDTO extends BaseDTO {
     @NotNull(message = "Field 'duration_total' is required")
     private Integer durationTotal;
 
-    @Size(max = 10, message = "Field 'genres' cannot exceed 10 names")
+    @Size(max = 10, message = "Field 'genres' cannot exceed 10 items")
     private List<String> genres;
 
     @JsonProperty("season_num")
