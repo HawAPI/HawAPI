@@ -128,7 +128,7 @@ public class LocationServiceImpl implements LocationService {
     public LocationTranslationDTO findRandomTranslation(UUID uuid) {
         existsByIdOrThrow(uuid);
 
-        long count = utils.getCountOrThrow(repository.count());
+        long count = utils.getCountOrThrow(translationRepository.count());
         int index = random.nextInt((int) count);
 
         PageRequest singleAndRandomItem = PageRequest.of(index, 1);
