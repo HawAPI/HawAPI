@@ -124,7 +124,10 @@ public class SeasonController implements BaseTranslationInterface<SeasonDTO, Sea
      */
     @Operation(summary = "Get random season translation")
     public ResponseEntity<SeasonTranslationDTO> findRandomTranslation(UUID uuid) {
-        return ResponseEntity.ok(service.findRandomTranslation(uuid));
+        SeasonTranslationDTO translation = service.findRandomTranslation(uuid);
+        HttpHeaders headers = responseUtils.getHeaders(translation.getLanguage());
+
+        return ResponseEntity.ok().headers(headers).body(translation);
     }
 
     /**
@@ -155,7 +158,10 @@ public class SeasonController implements BaseTranslationInterface<SeasonDTO, Sea
      */
     @Operation(summary = "Get season translation")
     public ResponseEntity<SeasonTranslationDTO> findTranslationBy(UUID uuid, String language) {
-        return ResponseEntity.ok(service.findTranslationBy(uuid, language));
+        SeasonTranslationDTO translation = service.findTranslationBy(uuid, language);
+        HttpHeaders headers = responseUtils.getHeaders(translation.getLanguage());
+
+        return ResponseEntity.ok().headers(headers).body(translation);
     }
 
     /**
@@ -169,7 +175,10 @@ public class SeasonController implements BaseTranslationInterface<SeasonDTO, Sea
      */
     @Operation(summary = "Save season", security = @SecurityRequirement(name = "Bearer"))
     public ResponseEntity<SeasonDTO> save(SeasonDTO dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.save(dto));
+        SeasonDTO episode = service.save(dto);
+        HttpHeaders headers = responseUtils.getHeaders(episode.getLanguage());
+
+        return ResponseEntity.status(HttpStatus.CREATED).headers(headers).body(episode);
     }
 
     /**
@@ -184,7 +193,10 @@ public class SeasonController implements BaseTranslationInterface<SeasonDTO, Sea
      */
     @Operation(summary = "Save season translation", security = @SecurityRequirement(name = "Bearer"))
     public ResponseEntity<SeasonTranslationDTO> saveTranslation(UUID uuid, SeasonTranslationDTO dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.saveTranslation(uuid, dto));
+        SeasonTranslationDTO translation = service.saveTranslation(uuid, dto);
+        HttpHeaders headers = responseUtils.getHeaders(translation.getLanguage());
+
+        return ResponseEntity.status(HttpStatus.CREATED).headers(headers).body(translation);
     }
 
     /**
@@ -224,7 +236,9 @@ public class SeasonController implements BaseTranslationInterface<SeasonDTO, Sea
             SeasonTranslationDTO patch
     ) throws IOException {
         service.patchTranslation(uuid, language, patch);
-        return ResponseEntity.ok(patch);
+        HttpHeaders headers = responseUtils.getHeaders(language);
+
+        return ResponseEntity.ok().headers(headers).body(patch);
     }
 
     /**

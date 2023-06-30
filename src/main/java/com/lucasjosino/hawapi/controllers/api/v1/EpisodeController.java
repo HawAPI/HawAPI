@@ -124,7 +124,10 @@ public class EpisodeController implements BaseTranslationInterface<EpisodeDTO, E
      */
     @Operation(summary = "Get random episode translation")
     public ResponseEntity<EpisodeTranslationDTO> findRandomTranslation(UUID uuid) {
-        return ResponseEntity.ok(service.findRandomTranslation(uuid));
+        EpisodeTranslationDTO translation = service.findRandomTranslation(uuid);
+        HttpHeaders headers = responseUtils.getHeaders(translation.getLanguage());
+
+        return ResponseEntity.ok().headers(headers).body(translation);
     }
 
     /**
@@ -155,7 +158,10 @@ public class EpisodeController implements BaseTranslationInterface<EpisodeDTO, E
      */
     @Operation(summary = "Get episode translation")
     public ResponseEntity<EpisodeTranslationDTO> findTranslationBy(UUID uuid, String language) {
-        return ResponseEntity.ok(service.findTranslationBy(uuid, language));
+        EpisodeTranslationDTO translation = service.findTranslationBy(uuid, language);
+        HttpHeaders headers = responseUtils.getHeaders(translation.getLanguage());
+
+        return ResponseEntity.ok().headers(headers).body(translation);
     }
 
     /**
@@ -169,7 +175,10 @@ public class EpisodeController implements BaseTranslationInterface<EpisodeDTO, E
      */
     @Operation(summary = "Save episode", security = @SecurityRequirement(name = "Bearer"))
     public ResponseEntity<EpisodeDTO> save(EpisodeDTO dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.save(dto));
+        EpisodeDTO episode = service.save(dto);
+        HttpHeaders headers = responseUtils.getHeaders(episode.getLanguage());
+
+        return ResponseEntity.status(HttpStatus.CREATED).headers(headers).body(episode);
     }
 
     /**
@@ -184,7 +193,10 @@ public class EpisodeController implements BaseTranslationInterface<EpisodeDTO, E
      */
     @Operation(summary = "Save episode translation", security = @SecurityRequirement(name = "Bearer"))
     public ResponseEntity<EpisodeTranslationDTO> saveTranslation(UUID uuid, EpisodeTranslationDTO dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.saveTranslation(uuid, dto));
+        EpisodeTranslationDTO translation = service.saveTranslation(uuid, dto);
+        HttpHeaders headers = responseUtils.getHeaders(translation.getLanguage());
+
+        return ResponseEntity.status(HttpStatus.CREATED).headers(headers).body(translation);
     }
 
     /**
@@ -224,7 +236,9 @@ public class EpisodeController implements BaseTranslationInterface<EpisodeDTO, E
             EpisodeTranslationDTO patch
     ) throws IOException {
         service.patchTranslation(uuid, language, patch);
-        return ResponseEntity.ok(patch);
+        HttpHeaders headers = responseUtils.getHeaders(language);
+
+        return ResponseEntity.ok().headers(headers).body(patch);
     }
 
     /**
