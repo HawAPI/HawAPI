@@ -331,7 +331,7 @@ class GameControllerUnitTest {
     void shouldReturnGameTranslationByUUIDAndLanguage() throws Exception {
         when(service.findTranslationBy(any(UUID.class), nullable(String.class))).thenReturn(translation);
 
-        mockMvc.perform(get(URL + "/" + game.getUuid() + "/translations" + "/en-US"))
+        mockMvc.perform(get(URL + "/" + game.getUuid() + "/translations/en-US"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
@@ -359,7 +359,7 @@ class GameControllerUnitTest {
     void whenNoGameTranslationFoundShouldThrowItemNotFoundExceptionOnTranslationByUUIDAndLanguage() throws Exception {
         when(service.findTranslationBy(any(UUID.class), nullable(String.class))).thenThrow(ItemNotFoundException.class);
 
-        mockMvc.perform(get(URL + "/" + game.getUuid() + "/translations" + "/en-US"))
+        mockMvc.perform(get(URL + "/" + game.getUuid() + "/translations/en-US"))
                 .andDo(print())
                 .andExpect(status().isNotFound());
 
