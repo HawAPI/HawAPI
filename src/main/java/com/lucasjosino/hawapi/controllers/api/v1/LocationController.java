@@ -124,7 +124,10 @@ public class LocationController implements BaseTranslationInterface<LocationDTO,
      */
     @Operation(summary = "Get random location translation")
     public ResponseEntity<LocationTranslationDTO> findRandomTranslation(UUID uuid) {
-        return ResponseEntity.ok(service.findRandomTranslation(uuid));
+        LocationTranslationDTO translation = service.findRandomTranslation(uuid);
+        HttpHeaders headers = responseUtils.getHeaders(translation.getLanguage());
+
+        return ResponseEntity.ok().headers(headers).body(translation);
     }
 
     /**
@@ -155,7 +158,10 @@ public class LocationController implements BaseTranslationInterface<LocationDTO,
      */
     @Operation(summary = "Get location translation")
     public ResponseEntity<LocationTranslationDTO> findTranslationBy(UUID uuid, String language) {
-        return ResponseEntity.ok(service.findTranslationBy(uuid, language));
+        LocationTranslationDTO translation = service.findTranslationBy(uuid, language);
+        HttpHeaders headers = responseUtils.getHeaders(translation.getLanguage());
+
+        return ResponseEntity.ok().headers(headers).body(translation);
     }
 
     /**
@@ -169,7 +175,10 @@ public class LocationController implements BaseTranslationInterface<LocationDTO,
      */
     @Operation(summary = "Save location", security = @SecurityRequirement(name = "Bearer"))
     public ResponseEntity<LocationDTO> save(LocationDTO dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.save(dto));
+        LocationDTO episode = service.save(dto);
+        HttpHeaders headers = responseUtils.getHeaders(episode.getLanguage());
+
+        return ResponseEntity.status(HttpStatus.CREATED).headers(headers).body(episode);
     }
 
     /**
@@ -184,7 +193,10 @@ public class LocationController implements BaseTranslationInterface<LocationDTO,
      */
     @Operation(summary = "Save location translation", security = @SecurityRequirement(name = "Bearer"))
     public ResponseEntity<LocationTranslationDTO> saveTranslation(UUID uuid, LocationTranslationDTO dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.saveTranslation(uuid, dto));
+        LocationTranslationDTO translation = service.saveTranslation(uuid, dto);
+        HttpHeaders headers = responseUtils.getHeaders(translation.getLanguage());
+
+        return ResponseEntity.status(HttpStatus.CREATED).headers(headers).body(translation);
     }
 
     /**
@@ -224,7 +236,9 @@ public class LocationController implements BaseTranslationInterface<LocationDTO,
             LocationTranslationDTO patch
     ) throws IOException {
         service.patchTranslation(uuid, language, patch);
-        return ResponseEntity.ok(patch);
+        HttpHeaders headers = responseUtils.getHeaders(language);
+
+        return ResponseEntity.ok().headers(headers).body(patch);
     }
 
     /**

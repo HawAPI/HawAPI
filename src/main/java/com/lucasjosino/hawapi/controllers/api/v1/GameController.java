@@ -124,7 +124,10 @@ public class GameController implements BaseTranslationInterface<GameDTO, GameTra
      */
     @Operation(summary = "Get random game translation")
     public ResponseEntity<GameTranslationDTO> findRandomTranslation(UUID uuid) {
-        return ResponseEntity.ok(service.findRandomTranslation(uuid));
+        GameTranslationDTO translation = service.findRandomTranslation(uuid);
+        HttpHeaders headers = responseUtils.getHeaders(translation.getLanguage());
+
+        return ResponseEntity.ok().headers(headers).body(translation);
     }
 
     /**
@@ -155,7 +158,10 @@ public class GameController implements BaseTranslationInterface<GameDTO, GameTra
      */
     @Operation(summary = "Get game translation")
     public ResponseEntity<GameTranslationDTO> findTranslationBy(UUID uuid, String language) {
-        return ResponseEntity.ok(service.findTranslationBy(uuid, language));
+        GameTranslationDTO translation = service.findTranslationBy(uuid, language);
+        HttpHeaders headers = responseUtils.getHeaders(translation.getLanguage());
+
+        return ResponseEntity.ok().headers(headers).body(translation);
     }
 
     /**
@@ -169,7 +175,10 @@ public class GameController implements BaseTranslationInterface<GameDTO, GameTra
      */
     @Operation(summary = "Save game", security = @SecurityRequirement(name = "Bearer"))
     public ResponseEntity<GameDTO> save(GameDTO dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.save(dto));
+        GameDTO episode = service.save(dto);
+        HttpHeaders headers = responseUtils.getHeaders(episode.getLanguage());
+
+        return ResponseEntity.status(HttpStatus.CREATED).headers(headers).body(episode);
     }
 
     /**
@@ -184,7 +193,10 @@ public class GameController implements BaseTranslationInterface<GameDTO, GameTra
      */
     @Operation(summary = "Patch game", security = @SecurityRequirement(name = "Bearer"))
     public ResponseEntity<GameTranslationDTO> saveTranslation(UUID uuid, GameTranslationDTO dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.saveTranslation(uuid, dto));
+        GameTranslationDTO translation = service.saveTranslation(uuid, dto);
+        HttpHeaders headers = responseUtils.getHeaders(translation.getLanguage());
+
+        return ResponseEntity.status(HttpStatus.CREATED).headers(headers).body(translation);
     }
 
     /**
@@ -201,7 +213,7 @@ public class GameController implements BaseTranslationInterface<GameDTO, GameTra
         // All translation models will be queried with 'eager' type.
         // If 'language' is not provided, query will return more than one result, resulting in an error.
         patch.setLanguage(responseUtils.getDefaultLanguage());
-        
+
         service.patch(uuid, patch);
         return ResponseEntity.ok(patch);
     }
@@ -224,7 +236,9 @@ public class GameController implements BaseTranslationInterface<GameDTO, GameTra
             GameTranslationDTO patch
     ) throws IOException {
         service.patchTranslation(uuid, language, patch);
-        return ResponseEntity.ok(patch);
+        HttpHeaders headers = responseUtils.getHeaders(language);
+
+        return ResponseEntity.ok().headers(headers).body(patch);
     }
 
     /**
