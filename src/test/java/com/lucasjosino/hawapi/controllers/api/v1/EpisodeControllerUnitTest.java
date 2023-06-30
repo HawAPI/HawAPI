@@ -241,7 +241,7 @@ class EpisodeControllerUnitTest {
     void shouldReturnRandomEpisodeTranslation() throws Exception {
         when(service.findRandomTranslation(any(UUID.class))).thenReturn(translation);
 
-        mockMvc.perform(get(URL + "/" + episode.getUuid() + "/translations" + "/random"))
+        mockMvc.perform(get(URL + "/" + episode.getUuid() + "/translations/random"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
@@ -257,7 +257,7 @@ class EpisodeControllerUnitTest {
     void whenNoTranslationFoundShouldThrowItemNotFoundExceptionOnRandomEpisodeTranslation() throws Exception {
         when(service.findRandomTranslation(any(UUID.class))).thenThrow(ItemNotFoundException.class);
 
-        mockMvc.perform(get(URL + "/" + episode.getUuid() + "/translations" + "/random"))
+        mockMvc.perform(get(URL + "/" + episode.getUuid() + "/translations/random"))
                 .andDo(print())
                 .andExpect(status().isNotFound());
 

@@ -255,7 +255,7 @@ class SeasonControllerUnitTest {
     void shouldReturnRandomSeasonTranslation() throws Exception {
         when(service.findRandomTranslation(any(UUID.class))).thenReturn(translation);
 
-        mockMvc.perform(get(URL + "/" + season.getUuid() + "/translations" + "/random"))
+        mockMvc.perform(get(URL + "/" + season.getUuid() + "/translations/random"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
@@ -273,7 +273,7 @@ class SeasonControllerUnitTest {
     void whenNoTranslationFoundShouldThrowItemNotFoundExceptionOnRandomSeasonTranslation() throws Exception {
         when(service.findRandomTranslation(any(UUID.class))).thenThrow(ItemNotFoundException.class);
 
-        mockMvc.perform(get(URL + "/" + season.getUuid() + "/translations" + "/random"))
+        mockMvc.perform(get(URL + "/" + season.getUuid() + "/translations/random"))
                 .andDo(print())
                 .andExpect(status().isNotFound());
 
