@@ -254,7 +254,7 @@ class EpisodeControllerUnitTest {
     }
 
     @Test
-    void whenNoTranslationFoundShouldThrowItemNotFoundExceptionOnRandomEpisode() throws Exception {
+    void whenNoTranslationFoundShouldThrowItemNotFoundExceptionOnRandomEpisodeTranslation() throws Exception {
         when(service.findRandomTranslation(any(UUID.class))).thenThrow(ItemNotFoundException.class);
 
         mockMvc.perform(get(URL + "/" + episode.getUuid() + "/translations" + "/random"))
