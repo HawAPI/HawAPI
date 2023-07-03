@@ -21,9 +21,32 @@ import java.util.UUID;
 @Repository
 public interface ActorSocialRepository extends JpaRepository<ActorSocialModel, Integer> {
 
+    /**
+     * Method to get a single actor social
+     *
+     * @param actorUuid An {@link UUID} that represents a specific item
+     * @param social    An {@link String} that specify an actor social
+     * @return An {@link Optional} of {@link ActorSocialModel}
+     * @since 1.0.0
+     */
     Optional<ActorSocialModel> findByActorUuidAndSocial(UUID actorUuid, String social);
 
+    /**
+     * Method to check if an actor social exists
+     *
+     * @param actorUuid An {@link UUID} that represents a specific item
+     * @param social    An {@link String} that specify an actor social
+     * @return true if social exists
+     * @since 1.0.0
+     */
     boolean existsByActorUuidAndSocial(UUID actorUuid, String social);
 
+    /**
+     * Method to delete an actor social
+     *
+     * @param actorUuid An {@link UUID} that represents a specific item title
+     * @param social    An {@link String} that specify an actor social
+     * @since 1.0.0
+     */
     void deleteByActorUuidAndSocial(UUID actorUuid, String social);
 }
