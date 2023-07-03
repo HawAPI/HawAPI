@@ -169,11 +169,11 @@ public class ActorServiceImpl implements ActorService {
         dto.setUuid(uuid);
         dto.setHref(basePath + "/" + uuid);
 
+        ActorModel dtoToModel = modelMapper.map(dto, ActorModel.class);
         if (dto.getSocials() != null && !dto.getSocials().isEmpty()) {
-            dto.getSocials().forEach(actorSocial -> actorSocial.setActorUuid(uuid));
+            dtoToModel.getSocials().forEach(actorSocial -> actorSocial.setActorUuid(uuid));
         }
 
-        ActorModel dtoToModel = modelMapper.map(dto, ActorModel.class);
         ActorModel res = repository.save(dtoToModel);
 
         return modelMapper.map(res, ActorDTO.class);
