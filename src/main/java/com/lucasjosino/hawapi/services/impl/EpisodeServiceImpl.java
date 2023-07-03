@@ -279,6 +279,10 @@ public class EpisodeServiceImpl implements EpisodeService {
             throw new BadRequestException("Column 'language' is required");
         }
 
+        if (!repository.existsById(uuid)) {
+            throw new ItemNotFoundException("Item '" + uuid + "' doesn't exist!");
+        }
+
         if (translationRepository.existsByEpisodeUuidAndLanguage(uuid, language)) {
             throw new SaveConflictException("Language '" + language + "' already exist!");
         }

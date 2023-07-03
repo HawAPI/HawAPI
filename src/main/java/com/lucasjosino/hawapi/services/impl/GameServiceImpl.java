@@ -279,6 +279,10 @@ public class GameServiceImpl implements GameService {
             throw new BadRequestException("Column 'language' is required");
         }
 
+        if (!repository.existsById(uuid)) {
+            throw new ItemNotFoundException("Item '" + uuid + "' doesn't exist!");
+        }
+
         if (translationRepository.existsByGameUuidAndLanguage(uuid, language)) {
             throw new SaveConflictException("Language '" + language + "' already exist!");
         }
