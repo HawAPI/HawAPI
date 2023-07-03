@@ -154,7 +154,6 @@ class LocationControllerUnitTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(header().string("Content-Language", "pt-BR"))
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].name").value(translation.getName()))
                 .andExpect(jsonPath("$[0].description").value(translation.getDescription()))
@@ -196,7 +195,6 @@ class LocationControllerUnitTest {
                 .andExpect(header().string("X-Pagination-Page-Total", "0"))
                 .andExpect(header().string("X-Pagination-Item-Total", "0"))
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(header().string("Content-Language", "en-US"))
                 .andExpect(jsonPath("$", hasSize(0)));
 
         verify(service, times(1)).findAllUUIDs(any(Pageable.class));
@@ -229,6 +227,9 @@ class LocationControllerUnitTest {
 
     @Test
     void shouldReturnRandomLocationTranslation() throws Exception {
+        HttpHeaders headers = buildHeaders("en-US");
+
+        when(responseUtils.getHeaders(anyString())).thenReturn(headers);
         when(service.findRandomTranslation(any(UUID.class))).thenReturn(translation);
 
         mockMvc.perform(get(URL + "/" + location.getUuid() + "/translations/random"))
@@ -240,6 +241,7 @@ class LocationControllerUnitTest {
                 .andExpect(jsonPath("$.description").value(translation.getDescription()))
                 .andExpect(jsonPath("$.language").value(translation.getLanguage()));
 
+        verify(responseUtils, times(1)).getHeaders(anyString());
         verify(service, times(1)).findRandomTranslation(any(UUID.class));
     }
 
@@ -290,9 +292,12 @@ class LocationControllerUnitTest {
 
     @Test
     void shouldReturnLocationTranslationByUUIDAndLanguage() throws Exception {
+        HttpHeaders headers = buildHeaders("pt-BR");
+
+        when(responseUtils.getHeaders(anyString())).thenReturn(headers);
         when(service.findTranslationBy(any(UUID.class), nullable(String.class))).thenReturn(translation);
 
-        mockMvc.perform(get(URL + "/" + location.getUuid() + "/translations/en-US"))
+        mockMvc.perform(get(URL + "/" + location.getUuid() + "/translations/pt-BR"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
@@ -301,6 +306,7 @@ class LocationControllerUnitTest {
                 .andExpect(jsonPath("$.description").value(translation.getDescription()))
                 .andExpect(jsonPath("$.language").value(translation.getLanguage()));
 
+        verify(responseUtils, times(1)).getHeaders(anyString());
         verify(service, times(1)).findTranslationBy(any(UUID.class), nullable(String.class));
     }
 
@@ -355,6 +361,9 @@ class LocationControllerUnitTest {
 
     @Test
     void shouldSaveLocationTranslation() throws Exception {
+        HttpHeaders headers = buildHeaders("pt-BR");
+
+        when(responseUtils.getHeaders(anyString())).thenReturn(headers);
         when(service.saveTranslation(any(UUID.class), any(LocationTranslationDTO.class))).thenReturn(translation);
 
         mockMvc.perform(post(URL + "/" + location.getUuid() + "/translations")
@@ -370,6 +379,7 @@ class LocationControllerUnitTest {
                 .andExpect(jsonPath("$.description").value(translation.getDescription()))
                 .andExpect(jsonPath("$.language").value(translation.getLanguage()));
 
+        verify(responseUtils, times(1)).getHeaders(anyString());
         verify(service, times(1)).saveTranslation(any(UUID.class), any(LocationTranslationDTO.class));
     }
 
@@ -426,7 +436,6 @@ class LocationControllerUnitTest {
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(header().string("Content-Language", "pt-BR"))
                 .andExpect(jsonPath("$.code").value(HttpStatus.BAD_REQUEST.value()))
                 .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.getReasonPhrase()))
                 .andExpect(jsonPath("$.method").value(HttpMethod.POST.name()))
@@ -448,7 +457,6 @@ class LocationControllerUnitTest {
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(header().string("Content-Language", "pt-BR"))
                 .andExpect(jsonPath("$.code").value(HttpStatus.BAD_REQUEST.value()))
                 .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.getReasonPhrase()))
                 .andExpect(jsonPath("$.method").value(HttpMethod.POST.name()))
@@ -480,9 +488,11 @@ class LocationControllerUnitTest {
 
     @Test
     void shouldUpdateLocationTranslation() throws Exception {
+        HttpHeaders headers = buildHeaders("pt-BR");
         LocationTranslationDTO patch = new LocationTranslationDTO();
         patch.setName("Lorem");
 
+        when(responseUtils.getHeaders(anyString())).thenReturn(headers);
         doNothing().when(service).patchTranslation(any(UUID.class), anyString(), any(LocationTranslationDTO.class));
 
         mockMvc.perform(patch(URL + "/" + location.getUuid() + "/translations/en-US")
@@ -496,6 +506,7 @@ class LocationControllerUnitTest {
                 .andExpect(header().string("Content-Language", "pt-BR"))
                 .andExpect(jsonPath("$.name").value(String.valueOf(patch.getName())));
 
+        verify(responseUtils, times(1)).getHeaders(anyString());
         verify(service, times(1))
                 .patchTranslation(any(UUID.class), anyString(), any(LocationTranslationDTO.class));
     }

@@ -19,4 +19,10 @@ public class TestUtils {
             add("Content-Language", isNullOrEmpty(language) ? "en-US" : language);
         }};
     }
+
+    public static HttpHeaders buildHeaders(String language) {
+        return new HttpHeaders() {{
+            add("Content-Language", language);
+        }};
+    }
 }

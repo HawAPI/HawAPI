@@ -159,7 +159,6 @@ class EpisodeControllerUnitTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(header().string("Content-Language", "pt-BR"))
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].title").value(translation.getTitle()))
                 .andExpect(jsonPath("$[0].description").value(translation.getDescription()))
@@ -201,7 +200,6 @@ class EpisodeControllerUnitTest {
                 .andExpect(header().string("X-Pagination-Page-Total", "0"))
                 .andExpect(header().string("X-Pagination-Item-Total", "0"))
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(header().string("Content-Language", "en-US"))
                 .andExpect(jsonPath("$", hasSize(0)));
 
         verify(service, times(1)).findAllUUIDs(any(Pageable.class));
@@ -239,6 +237,9 @@ class EpisodeControllerUnitTest {
 
     @Test
     void shouldReturnRandomEpisodeTranslation() throws Exception {
+        HttpHeaders headers = buildHeaders("en-US");
+
+        when(responseUtils.getHeaders(anyString())).thenReturn(headers);
         when(service.findRandomTranslation(any(UUID.class))).thenReturn(translation);
 
         mockMvc.perform(get(URL + "/" + episode.getUuid() + "/translations/random"))
@@ -250,6 +251,7 @@ class EpisodeControllerUnitTest {
                 .andExpect(jsonPath("$.description").value(translation.getDescription()))
                 .andExpect(jsonPath("$.language").value(translation.getLanguage()));
 
+        verify(responseUtils, times(1)).getHeaders(anyString());
         verify(service, times(1)).findRandomTranslation(any(UUID.class));
     }
 
@@ -305,9 +307,12 @@ class EpisodeControllerUnitTest {
 
     @Test
     void shouldReturnEpisodeTranslationByUUIDAndLanguage() throws Exception {
+        HttpHeaders headers = buildHeaders("pt-BR");
+
+        when(responseUtils.getHeaders(anyString())).thenReturn(headers);
         when(service.findTranslationBy(any(UUID.class), nullable(String.class))).thenReturn(translation);
 
-        mockMvc.perform(get(URL + "/" + episode.getUuid() + "/translations/en-US"))
+        mockMvc.perform(get(URL + "/" + episode.getUuid() + "/translations/pt-BR"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
@@ -316,6 +321,7 @@ class EpisodeControllerUnitTest {
                 .andExpect(jsonPath("$.description").value(translation.getDescription()))
                 .andExpect(jsonPath("$.language").value(translation.getLanguage()));
 
+        verify(responseUtils, times(1)).getHeaders(anyString());
         verify(service, times(1)).findTranslationBy(any(UUID.class), nullable(String.class));
     }
 
@@ -375,6 +381,9 @@ class EpisodeControllerUnitTest {
 
     @Test
     void shouldSaveEpisodeTranslation() throws Exception {
+        HttpHeaders headers = buildHeaders("pt-BR");
+
+        when(responseUtils.getHeaders(anyString())).thenReturn(headers);
         when(service.saveTranslation(any(UUID.class), any(EpisodeTranslationDTO.class))).thenReturn(translation);
 
         mockMvc.perform(post(URL + "/" + episode.getUuid() + "/translations")
@@ -390,6 +399,7 @@ class EpisodeControllerUnitTest {
                 .andExpect(jsonPath("$.description").value(translation.getDescription()))
                 .andExpect(jsonPath("$.language").value(translation.getLanguage()));
 
+        verify(responseUtils, times(1)).getHeaders(anyString());
         verify(service, times(1)).saveTranslation(any(UUID.class), any(EpisodeTranslationDTO.class));
     }
 
@@ -446,7 +456,6 @@ class EpisodeControllerUnitTest {
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(header().string("Content-Language", "pt-BR"))
                 .andExpect(jsonPath("$.code").value(HttpStatus.BAD_REQUEST.value()))
                 .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.getReasonPhrase()))
                 .andExpect(jsonPath("$.method").value(HttpMethod.POST.name()))
@@ -468,7 +477,6 @@ class EpisodeControllerUnitTest {
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(header().string("Content-Language", "pt-BR"))
                 .andExpect(jsonPath("$.code").value(HttpStatus.BAD_REQUEST.value()))
                 .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.getReasonPhrase()))
                 .andExpect(jsonPath("$.method").value(HttpMethod.POST.name()))
@@ -500,9 +508,11 @@ class EpisodeControllerUnitTest {
 
     @Test
     void shouldUpdateEpisodeTranslation() throws Exception {
+        HttpHeaders headers = buildHeaders("pt-BR");
         EpisodeTranslationDTO patch = new EpisodeTranslationDTO();
         patch.setTitle("Lorem");
 
+        when(responseUtils.getHeaders(anyString())).thenReturn(headers);
         doNothing().when(service).patchTranslation(any(UUID.class), anyString(), any(EpisodeTranslationDTO.class));
 
         mockMvc.perform(patch(URL + "/" + episode.getUuid() + "/translations/en-US")
@@ -516,6 +526,7 @@ class EpisodeControllerUnitTest {
                 .andExpect(header().string("Content-Language", "pt-BR"))
                 .andExpect(jsonPath("$.title").value(String.valueOf(patch.getTitle())));
 
+        verify(responseUtils, times(1)).getHeaders(anyString());
         verify(service, times(1))
                 .patchTranslation(any(UUID.class), anyString(), any(EpisodeTranslationDTO.class));
     }

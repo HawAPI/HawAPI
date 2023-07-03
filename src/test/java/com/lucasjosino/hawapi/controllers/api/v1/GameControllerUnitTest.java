@@ -168,7 +168,6 @@ class GameControllerUnitTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(header().string("Content-Language", "pt-BR"))
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].name").value(translation.getName()))
                 .andExpect(jsonPath("$[0].description").value(translation.getDescription()))
@@ -210,7 +209,6 @@ class GameControllerUnitTest {
                 .andExpect(header().string("X-Pagination-Page-Total", "0"))
                 .andExpect(header().string("X-Pagination-Item-Total", "0"))
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(header().string("Content-Language", "en-US"))
                 .andExpect(jsonPath("$", hasSize(0)));
 
         verify(service, times(1)).findAllUUIDs(any(Pageable.class));
@@ -255,6 +253,9 @@ class GameControllerUnitTest {
 
     @Test
     void shouldReturnRandomGameTranslation() throws Exception {
+        HttpHeaders headers = buildHeaders("en-US");
+
+        when(responseUtils.getHeaders(anyString())).thenReturn(headers);
         when(service.findRandomTranslation(any(UUID.class))).thenReturn(translation);
 
         mockMvc.perform(get(URL + "/" + game.getUuid() + "/translations/random"))
@@ -267,6 +268,7 @@ class GameControllerUnitTest {
                 .andExpect(jsonPath("$.language").value(translation.getLanguage()))
                 .andExpect(jsonPath("$.trailer").value(translation.getTrailer()));
 
+        verify(responseUtils, times(1)).getHeaders(anyString());
         verify(service, times(1)).findRandomTranslation(any(UUID.class));
     }
 
@@ -329,9 +331,12 @@ class GameControllerUnitTest {
 
     @Test
     void shouldReturnGameTranslationByUUIDAndLanguage() throws Exception {
+        HttpHeaders headers = buildHeaders("pt-BR");
+
+        when(responseUtils.getHeaders(anyString())).thenReturn(headers);
         when(service.findTranslationBy(any(UUID.class), nullable(String.class))).thenReturn(translation);
 
-        mockMvc.perform(get(URL + "/" + game.getUuid() + "/translations/en-US"))
+        mockMvc.perform(get(URL + "/" + game.getUuid() + "/translations/pt-BR"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
@@ -341,6 +346,7 @@ class GameControllerUnitTest {
                 .andExpect(jsonPath("$.language").value(translation.getLanguage()))
                 .andExpect(jsonPath("$.trailer").value(translation.getTrailer()));
 
+        verify(responseUtils, times(1)).getHeaders(anyString());
         verify(service, times(1)).findTranslationBy(any(UUID.class), nullable(String.class));
     }
 
@@ -407,6 +413,9 @@ class GameControllerUnitTest {
 
     @Test
     void shouldSaveGameTranslation() throws Exception {
+        HttpHeaders headers = buildHeaders("pt-BR");
+
+        when(responseUtils.getHeaders(anyString())).thenReturn(headers);
         when(service.saveTranslation(any(UUID.class), any(GameTranslationDTO.class))).thenReturn(translation);
 
         mockMvc.perform(post(URL + "/" + game.getUuid() + "/translations")
@@ -423,6 +432,7 @@ class GameControllerUnitTest {
                 .andExpect(jsonPath("$.language").value(translation.getLanguage()))
                 .andExpect(jsonPath("$.trailer").value(translation.getTrailer()));
 
+        verify(responseUtils, times(1)).getHeaders(anyString());
         verify(service, times(1)).saveTranslation(any(UUID.class), any(GameTranslationDTO.class));
     }
 
@@ -479,7 +489,6 @@ class GameControllerUnitTest {
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(header().string("Content-Language", "pt-BR"))
                 .andExpect(jsonPath("$.code").value(HttpStatus.BAD_REQUEST.value()))
                 .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.getReasonPhrase()))
                 .andExpect(jsonPath("$.method").value(HttpMethod.POST.name()))
@@ -501,7 +510,6 @@ class GameControllerUnitTest {
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(header().string("Content-Language", "pt-BR"))
                 .andExpect(jsonPath("$.code").value(HttpStatus.BAD_REQUEST.value()))
                 .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.getReasonPhrase()))
                 .andExpect(jsonPath("$.method").value(HttpMethod.POST.name()))
@@ -533,9 +541,11 @@ class GameControllerUnitTest {
 
     @Test
     void shouldUpdateGameTranslation() throws Exception {
+        HttpHeaders headers = buildHeaders("pt-BR");
         GameTranslationDTO patch = new GameTranslationDTO();
         patch.setName("Lorem");
 
+        when(responseUtils.getHeaders(anyString())).thenReturn(headers);
         doNothing().when(service).patchTranslation(any(UUID.class), anyString(), any(GameTranslationDTO.class));
 
         mockMvc.perform(patch(URL + "/" + game.getUuid() + "/translations/en-US")
@@ -549,6 +559,7 @@ class GameControllerUnitTest {
                 .andExpect(header().string("Content-Language", "pt-BR"))
                 .andExpect(jsonPath("$.name").value(String.valueOf(patch.getName())));
 
+        verify(responseUtils, times(1)).getHeaders(anyString());
         verify(service, times(1))
                 .patchTranslation(any(UUID.class), anyString(), any(GameTranslationDTO.class));
     }
