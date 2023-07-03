@@ -1,7 +1,6 @@
 package com.lucasjosino.hawapi.models.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.lucasjosino.hawapi.models.ActorSocialModel;
 import com.lucasjosino.hawapi.models.base.BaseDTO;
 import com.lucasjosino.hawapi.validators.annotations.BasicURL;
 
@@ -49,7 +48,7 @@ public class ActorDTO extends BaseDTO {
     @NotBlank(message = "Field 'character' is required")
     private String character;
 
-    private Set<ActorSocialModel> socials;
+    private Set<ActorSocialDTO> socials;
 
     private List<@BasicURL(image = true) String> images;
 
@@ -133,11 +132,11 @@ public class ActorDTO extends BaseDTO {
         this.character = character;
     }
 
-    public Set<ActorSocialModel> getSocials() {
+    public Set<ActorSocialDTO> getSocials() {
         return socials;
     }
 
-    public void setSocials(Set<ActorSocialModel> socials) {
+    public void setSocials(Set<ActorSocialDTO> socials) {
         this.socials = socials;
     }
 
