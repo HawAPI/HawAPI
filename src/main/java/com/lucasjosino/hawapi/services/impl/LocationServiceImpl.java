@@ -278,6 +278,10 @@ public class LocationServiceImpl implements LocationService {
             throw new BadRequestException("Column 'language' is required");
         }
 
+        if (!repository.existsById(uuid)) {
+            throw new ItemNotFoundException("Item '" + uuid + "' doesn't exist!");
+        }
+
         if (translationRepository.existsByLocationUuidAndLanguage(uuid, language)) {
             throw new SaveConflictException("Language '" + language + "' already exist!");
         }
