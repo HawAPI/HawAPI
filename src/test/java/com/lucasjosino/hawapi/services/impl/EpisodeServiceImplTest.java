@@ -109,6 +109,7 @@ class EpisodeServiceImplTest {
         Pageable pageable = Pageable.ofSize(1);
         Page<UUID> res = service.findAllUUIDs(pageable);
 
+        assertFalse(res.isEmpty());
         assertEquals(uuids, res.getContent());
         assertEquals(pageable.getPageSize(), res.getTotalElements());
         verify(repository, times(1)).findAllUUIDs(any(Pageable.class));
@@ -126,7 +127,6 @@ class EpisodeServiceImplTest {
         Page<UUID> res = service.findAllUUIDs(pageable);
 
         assertTrue(res.isEmpty());
-        assertEquals(uuids, res.getContent());
         verify(repository, times(1)).findAllUUIDs(any(Pageable.class));
         verify(repository, times(1)).count();
     }
@@ -142,6 +142,9 @@ class EpisodeServiceImplTest {
 
         List<EpisodeDTO> res = service.findAll(new HashMap<>(), uuids);
 
+        assertFalse(res.isEmpty());
+        assertEquals(1, res.size());
+        assertEquals(episodeDTO, res.get(0));
         verify(repository, times(1)).findAll(Mockito.<Specification<EpisodeModel>>any());
         verify(modelMapper, times(1)).map(any(), any());
     }
@@ -172,6 +175,9 @@ class EpisodeServiceImplTest {
 
         List<EpisodeTranslationDTO> res = service.findAllTranslationsBy(episodeModel.getUuid());
 
+        assertFalse(res.isEmpty());
+        assertEquals(1, res.size());
+        assertEquals(translationDTO, res.get(0));
         verify(repository, times(1)).existsById(any(UUID.class));
         verify(translationRepository, times(1)).findAllByEpisodeUuid(any(UUID.class));
         verify(modelMapper, times(1)).map(anyList(), eq(EpisodeTranslationDTO[].class));
@@ -215,6 +221,8 @@ class EpisodeServiceImplTest {
 
         EpisodeDTO res = service.findRandom("en-US");
 
+        assertNotNull(res);
+        assertEquals(episodeDTO, res);
         verify(repository, times(1)).count();
         verify(utils, times(1)).getCountOrThrow(anyLong());
         verify(random, times(1)).nextInt(anyInt());
@@ -252,6 +260,8 @@ class EpisodeServiceImplTest {
 
         EpisodeTranslationDTO res = service.findRandomTranslation(episodeModel.getUuid());
 
+        assertNotNull(res);
+        assertEquals(returnData.get(0), res);
         verify(repository, times(1)).existsById(any(UUID.class));
         verify(translationRepository, times(1)).count();
         verify(utils, times(1)).getCountOrThrow(anyLong());
@@ -293,6 +303,8 @@ class EpisodeServiceImplTest {
 
         EpisodeDTO res = service.findBy(episodeModel.getUuid(), "en-US");
 
+        assertNotNull(res);
+        assertEquals(episodeDTO, res);
         verify(repository, times(1)).findByUuidAndTranslationLanguage(any(UUID.class), anyString());
         verify(modelMapper, times(1)).map(any(), any());
     }
@@ -317,6 +329,8 @@ class EpisodeServiceImplTest {
 
         EpisodeTranslationDTO res = service.findTranslationBy(episodeModel.getUuid(), "en-US");
 
+        assertNotNull(res);
+        assertEquals(returnData.get(0), res);
         verify(translationRepository, times(1))
                 .findByEpisodeUuidAndLanguage(any(UUID.class), anyString());
         verify(modelMapper, times(1)).map(any(), eq(EpisodeTranslationDTO.class));
@@ -344,6 +358,8 @@ class EpisodeServiceImplTest {
 
         EpisodeDTO res = service.save(episodeDTO);
 
+        assertNotNull(res);
+        assertEquals(episodeDTO, res);
         verify(repository, times(1)).existsById(any(UUID.class));
         verify(translationRepository, times(1))
                 .existsByEpisodeUuidAndLanguage(any(UUID.class), anyString());
@@ -386,6 +402,8 @@ class EpisodeServiceImplTest {
 
         EpisodeTranslationDTO res = service.saveTranslation(episodeModel.getUuid(), returnData.get(0));
 
+        assertNotNull(res);
+        assertEquals(returnData.get(0), res);
         verify(repository, times(1)).existsById(any(UUID.class));
         verify(modelMapper, times(1)).map(any(), eq(EpisodeTranslation.class));
         verify(translationRepository, times(1)).save(any(EpisodeTranslation.class));

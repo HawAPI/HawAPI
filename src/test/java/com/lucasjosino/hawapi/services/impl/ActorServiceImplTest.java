@@ -99,6 +99,7 @@ class ActorServiceImplTest {
         Pageable pageable = Pageable.ofSize(1);
         Page<UUID> res = service.findAllUUIDs(pageable);
 
+        assertFalse(res.isEmpty());
         assertEquals(uuids, res.getContent());
         assertEquals(pageable.getPageSize(), res.getTotalElements());
         verify(repository, times(1)).findAllUUIDs(any(Pageable.class));
@@ -116,7 +117,6 @@ class ActorServiceImplTest {
         Page<UUID> res = service.findAllUUIDs(pageable);
 
         assertTrue(res.isEmpty());
-        assertEquals(uuids, res.getContent());
         verify(repository, times(1)).findAllUUIDs(any(Pageable.class));
         verify(repository, times(1)).count();
     }
@@ -132,6 +132,9 @@ class ActorServiceImplTest {
 
         List<ActorDTO> res = service.findAll(new HashMap<>(), uuids);
 
+        assertFalse(res.isEmpty());
+        assertEquals(1, res.size());
+        assertEquals(actorDTO, res.get(0));
         verify(repository, times(1)).findAll(Mockito.<Specification<ActorModel>>any());
         verify(modelMapper, times(1)).map(any(), any());
     }
@@ -164,6 +167,9 @@ class ActorServiceImplTest {
 
         List<ActorSocialDTO> res = service.findAllSocials(actorModel.getUuid());
 
+        assertFalse(res.isEmpty());
+        assertEquals(1, res.size());
+        assertEquals(dataDTO.get(0), res.get(0));
         verify(repository, times(1)).existsById(any(UUID.class));
         verify(socialRepository, times(1)).findAll();
         verify(modelMapper, times(1)).map(anyList(), eq(ActorSocialDTO[].class));
@@ -206,6 +212,8 @@ class ActorServiceImplTest {
 
         ActorDTO res = service.findRandom("en-US");
 
+        assertNotNull(res);
+        assertEquals(actorDTO, res);
         verify(repository, times(1)).count();
         verify(utils, times(1)).getCountOrThrow(anyLong());
         verify(random, times(1)).nextInt(anyInt());
@@ -240,6 +248,8 @@ class ActorServiceImplTest {
 
         ActorSocialDTO res = service.findRandomSocial(actorModel.getUuid());
 
+        assertNotNull(res);
+        assertEquals(returnData.get(0), res);
         verify(repository, times(1)).existsById(any(UUID.class));
         verify(socialRepository, times(1)).count();
         verify(utils, times(1)).getCountOrThrow(anyLong());
@@ -277,6 +287,8 @@ class ActorServiceImplTest {
 
         ActorDTO res = service.findBy(actorModel.getUuid(), "en-US");
 
+        assertNotNull(res);
+        assertEquals(actorDTO, res);
         verify(repository, times(1)).findById(any(UUID.class));
         verify(modelMapper, times(1)).map(any(), any());
     }
@@ -295,13 +307,14 @@ class ActorServiceImplTest {
         List<ActorSocialModel> data = new ArrayList<>(actorModel.getSocials());
         List<ActorSocialDTO> returnData = new ArrayList<>(actorDTO.getSocials());
 
-        when(socialRepository.findByActorUuidAndSocial(any(UUID.class),
-                anyString()
-        )).thenReturn(Optional.of(data.get(0)));
+        when(socialRepository.findByActorUuidAndSocial(any(UUID.class), anyString()))
+                .thenReturn(Optional.of(data.get(0)));
         when(modelMapper.map(any(), eq(ActorSocialDTO.class))).thenReturn(returnData.get(0));
 
         ActorSocialDTO res = service.findSocialBy(actorModel.getUuid(), "Twitter");
 
+        assertNotNull(res);
+        assertEquals(returnData.get(0), res);
         verify(socialRepository, times(1)).findByActorUuidAndSocial(any(UUID.class), anyString());
         verify(modelMapper, times(1)).map(any(), eq(ActorSocialDTO.class));
     }
@@ -323,6 +336,8 @@ class ActorServiceImplTest {
 
         ActorDTO res = service.save(actorDTO);
 
+        assertNotNull(res);
+        assertEquals(actorDTO, res);
         verify(modelMapper, times(1)).map(any(), eq(ActorModel.class));
         verify(repository, times(1)).save(any(ActorModel.class));
         verify(modelMapper, times(1)).map(any(), eq(ActorDTO.class));
@@ -340,6 +355,8 @@ class ActorServiceImplTest {
 
         ActorSocialDTO res = service.saveSocial(actorModel.getUuid(), returnData.get(0));
 
+        assertNotNull(res);
+        assertEquals(returnData.get(0), res);
         verify(repository, times(1)).existsById(any(UUID.class));
         verify(modelMapper, times(1)).map(any(), eq(ActorSocialModel.class));
         verify(socialRepository, times(1)).save(any(ActorSocialModel.class));

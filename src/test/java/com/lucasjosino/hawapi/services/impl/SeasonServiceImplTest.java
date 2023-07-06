@@ -120,6 +120,7 @@ class SeasonServiceImplTest {
         Pageable pageable = Pageable.ofSize(1);
         Page<UUID> res = service.findAllUUIDs(pageable);
 
+        assertFalse(res.isEmpty());
         assertEquals(uuids, res.getContent());
         assertEquals(pageable.getPageSize(), res.getTotalElements());
         verify(repository, times(1)).findAllUUIDs(any(Pageable.class));
@@ -137,7 +138,6 @@ class SeasonServiceImplTest {
         Page<UUID> res = service.findAllUUIDs(pageable);
 
         assertTrue(res.isEmpty());
-        assertEquals(uuids, res.getContent());
         verify(repository, times(1)).findAllUUIDs(any(Pageable.class));
         verify(repository, times(1)).count();
     }
@@ -153,6 +153,9 @@ class SeasonServiceImplTest {
 
         List<SeasonDTO> res = service.findAll(new HashMap<>(), uuids);
 
+        assertFalse(res.isEmpty());
+        assertEquals(1, res.size());
+        assertEquals(seasonDTO, res.get(0));
         verify(repository, times(1)).findAll(Mockito.<Specification<SeasonModel>>any());
         verify(modelMapper, times(1)).map(any(), any());
     }
@@ -183,6 +186,9 @@ class SeasonServiceImplTest {
 
         List<SeasonTranslationDTO> res = service.findAllTranslationsBy(seasonModel.getUuid());
 
+        assertFalse(res.isEmpty());
+        assertEquals(1, res.size());
+        assertEquals(translationDTO, res.get(0));
         verify(repository, times(1)).existsById(any(UUID.class));
         verify(translationRepository, times(1)).findAllBySeasonUuid(any(UUID.class));
         verify(modelMapper, times(1)).map(anyList(), eq(SeasonTranslationDTO[].class));
@@ -226,6 +232,8 @@ class SeasonServiceImplTest {
 
         SeasonDTO res = service.findRandom("en-US");
 
+        assertNotNull(res);
+        assertEquals(seasonDTO, res);
         verify(repository, times(1)).count();
         verify(utils, times(1)).getCountOrThrow(anyLong());
         verify(random, times(1)).nextInt(anyInt());
@@ -263,6 +271,8 @@ class SeasonServiceImplTest {
 
         SeasonTranslationDTO res = service.findRandomTranslation(seasonModel.getUuid());
 
+        assertNotNull(res);
+        assertEquals(returnData.get(0), res);
         verify(repository, times(1)).existsById(any(UUID.class));
         verify(translationRepository, times(1)).count();
         verify(utils, times(1)).getCountOrThrow(anyLong());
@@ -304,6 +314,8 @@ class SeasonServiceImplTest {
 
         SeasonDTO res = service.findBy(seasonModel.getUuid(), "en-US");
 
+        assertNotNull(res);
+        assertEquals(seasonDTO, res);
         verify(repository, times(1)).findByUuidAndTranslationLanguage(any(UUID.class), anyString());
         verify(modelMapper, times(1)).map(any(), any());
     }
@@ -328,6 +340,8 @@ class SeasonServiceImplTest {
 
         SeasonTranslationDTO res = service.findTranslationBy(seasonModel.getUuid(), "en-US");
 
+        assertNotNull(res);
+        assertEquals(returnData.get(0), res);
         verify(translationRepository, times(1))
                 .findBySeasonUuidAndLanguage(any(UUID.class), anyString());
         verify(modelMapper, times(1)).map(any(), eq(SeasonTranslationDTO.class));
@@ -355,6 +369,8 @@ class SeasonServiceImplTest {
 
         SeasonDTO res = service.save(seasonDTO);
 
+        assertNotNull(res);
+        assertEquals(seasonDTO, res);
         verify(repository, times(1)).existsById(any(UUID.class));
         verify(translationRepository, times(1))
                 .existsBySeasonUuidAndLanguage(any(UUID.class), anyString());
@@ -397,6 +413,8 @@ class SeasonServiceImplTest {
 
         SeasonTranslationDTO res = service.saveTranslation(seasonModel.getUuid(), returnData.get(0));
 
+        assertNotNull(res);
+        assertEquals(returnData.get(0), res);
         verify(repository, times(1)).existsById(any(UUID.class));
         verify(modelMapper, times(1)).map(any(), eq(SeasonTranslation.class));
         verify(translationRepository, times(1)).save(any(SeasonTranslation.class));

@@ -104,6 +104,7 @@ class LocationServiceImplTest {
         Pageable pageable = Pageable.ofSize(1);
         Page<UUID> res = service.findAllUUIDs(pageable);
 
+        assertFalse(res.isEmpty());
         assertEquals(uuids, res.getContent());
         assertEquals(pageable.getPageSize(), res.getTotalElements());
         verify(repository, times(1)).findAllUUIDs(any(Pageable.class));
@@ -121,7 +122,6 @@ class LocationServiceImplTest {
         Page<UUID> res = service.findAllUUIDs(pageable);
 
         assertTrue(res.isEmpty());
-        assertEquals(uuids, res.getContent());
         verify(repository, times(1)).findAllUUIDs(any(Pageable.class));
         verify(repository, times(1)).count();
     }
@@ -137,6 +137,9 @@ class LocationServiceImplTest {
 
         List<LocationDTO> res = service.findAll(new HashMap<>(), uuids);
 
+        assertFalse(res.isEmpty());
+        assertEquals(1, res.size());
+        assertEquals(locationDTO, res.get(0));
         verify(repository, times(1)).findAll(Mockito.<Specification<LocationModel>>any());
         verify(modelMapper, times(1)).map(any(), any());
     }
@@ -167,6 +170,9 @@ class LocationServiceImplTest {
 
         List<LocationTranslationDTO> res = service.findAllTranslationsBy(locationModel.getUuid());
 
+        assertFalse(res.isEmpty());
+        assertEquals(1, res.size());
+        assertEquals(translationDTO, res.get(0));
         verify(repository, times(1)).existsById(any(UUID.class));
         verify(translationRepository, times(1)).findAllByLocationUuid(any(UUID.class));
         verify(modelMapper, times(1)).map(anyList(), eq(LocationTranslationDTO[].class));
@@ -210,6 +216,8 @@ class LocationServiceImplTest {
 
         LocationDTO res = service.findRandom("en-US");
 
+        assertNotNull(res);
+        assertEquals(locationDTO, res);
         verify(repository, times(1)).count();
         verify(utils, times(1)).getCountOrThrow(anyLong());
         verify(random, times(1)).nextInt(anyInt());
@@ -247,6 +255,8 @@ class LocationServiceImplTest {
 
         LocationTranslationDTO res = service.findRandomTranslation(locationModel.getUuid());
 
+        assertNotNull(res);
+        assertEquals(returnData.get(0), res);
         verify(repository, times(1)).existsById(any(UUID.class));
         verify(translationRepository, times(1)).count();
         verify(utils, times(1)).getCountOrThrow(anyLong());
@@ -288,6 +298,8 @@ class LocationServiceImplTest {
 
         LocationDTO res = service.findBy(locationModel.getUuid(), "en-US");
 
+        assertNotNull(res);
+        assertEquals(locationDTO, res);
         verify(repository, times(1)).findByUuidAndTranslationLanguage(any(UUID.class), anyString());
         verify(modelMapper, times(1)).map(any(), any());
     }
@@ -312,6 +324,8 @@ class LocationServiceImplTest {
 
         LocationTranslationDTO res = service.findTranslationBy(locationModel.getUuid(), "en-US");
 
+        assertNotNull(res);
+        assertEquals(returnData.get(0), res);
         verify(translationRepository, times(1))
                 .findByLocationUuidAndLanguage(any(UUID.class), anyString());
         verify(modelMapper, times(1)).map(any(), eq(LocationTranslationDTO.class));
@@ -339,6 +353,8 @@ class LocationServiceImplTest {
 
         LocationDTO res = service.save(locationDTO);
 
+        assertNotNull(res);
+        assertEquals(locationDTO, res);
         verify(repository, times(1)).existsById(any(UUID.class));
         verify(translationRepository, times(1))
                 .existsByLocationUuidAndLanguage(any(UUID.class), anyString());
@@ -381,6 +397,8 @@ class LocationServiceImplTest {
 
         LocationTranslationDTO res = service.saveTranslation(locationModel.getUuid(), returnData.get(0));
 
+        assertNotNull(res);
+        assertEquals(returnData.get(0), res);
         verify(repository, times(1)).existsById(any(UUID.class));
         verify(modelMapper, times(1)).map(any(), eq(LocationTranslation.class));
         verify(translationRepository, times(1)).save(any(LocationTranslation.class));

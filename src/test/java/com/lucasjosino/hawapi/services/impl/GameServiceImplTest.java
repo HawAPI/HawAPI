@@ -118,6 +118,7 @@ class GameServiceImplTest {
         Pageable pageable = Pageable.ofSize(1);
         Page<UUID> res = service.findAllUUIDs(pageable);
 
+        assertFalse(res.isEmpty());
         assertEquals(uuids, res.getContent());
         assertEquals(pageable.getPageSize(), res.getTotalElements());
         verify(repository, times(1)).findAllUUIDs(any(Pageable.class));
@@ -135,7 +136,6 @@ class GameServiceImplTest {
         Page<UUID> res = service.findAllUUIDs(pageable);
 
         assertTrue(res.isEmpty());
-        assertEquals(uuids, res.getContent());
         verify(repository, times(1)).findAllUUIDs(any(Pageable.class));
         verify(repository, times(1)).count();
     }
@@ -151,6 +151,9 @@ class GameServiceImplTest {
 
         List<GameDTO> res = service.findAll(new HashMap<>(), uuids);
 
+        assertFalse(res.isEmpty());
+        assertEquals(1, res.size());
+        assertEquals(gameDTO, res.get(0));
         verify(repository, times(1)).findAll(Mockito.<Specification<GameModel>>any());
         verify(modelMapper, times(1)).map(any(), any());
     }
@@ -181,6 +184,9 @@ class GameServiceImplTest {
 
         List<GameTranslationDTO> res = service.findAllTranslationsBy(gameModel.getUuid());
 
+        assertFalse(res.isEmpty());
+        assertEquals(1, res.size());
+        assertEquals(translationDTO, res.get(0));
         verify(repository, times(1)).existsById(any(UUID.class));
         verify(translationRepository, times(1)).findAllByGameUuid(any(UUID.class));
         verify(modelMapper, times(1)).map(anyList(), eq(GameTranslationDTO[].class));
@@ -224,6 +230,8 @@ class GameServiceImplTest {
 
         GameDTO res = service.findRandom("en-US");
 
+        assertNotNull(res);
+        assertEquals(gameDTO, res);
         verify(repository, times(1)).count();
         verify(utils, times(1)).getCountOrThrow(anyLong());
         verify(random, times(1)).nextInt(anyInt());
@@ -261,6 +269,8 @@ class GameServiceImplTest {
 
         GameTranslationDTO res = service.findRandomTranslation(gameModel.getUuid());
 
+        assertNotNull(res);
+        assertEquals(returnData.get(0), res);
         verify(repository, times(1)).existsById(any(UUID.class));
         verify(translationRepository, times(1)).count();
         verify(utils, times(1)).getCountOrThrow(anyLong());
@@ -302,6 +312,8 @@ class GameServiceImplTest {
 
         GameDTO res = service.findBy(gameModel.getUuid(), "en-US");
 
+        assertNotNull(res);
+        assertEquals(gameDTO, res);
         verify(repository, times(1)).findByUuidAndTranslationLanguage(any(UUID.class), anyString());
         verify(modelMapper, times(1)).map(any(), any());
     }
@@ -326,6 +338,8 @@ class GameServiceImplTest {
 
         GameTranslationDTO res = service.findTranslationBy(gameModel.getUuid(), "en-US");
 
+        assertNotNull(res);
+        assertEquals(returnData.get(0), res);
         verify(translationRepository, times(1))
                 .findByGameUuidAndLanguage(any(UUID.class), anyString());
         verify(modelMapper, times(1)).map(any(), eq(GameTranslationDTO.class));
@@ -353,6 +367,8 @@ class GameServiceImplTest {
 
         GameDTO res = service.save(gameDTO);
 
+        assertNotNull(res);
+        assertEquals(gameDTO, res);
         verify(repository, times(1)).existsById(any(UUID.class));
         verify(translationRepository, times(1))
                 .existsByGameUuidAndLanguage(any(UUID.class), anyString());
@@ -395,6 +411,8 @@ class GameServiceImplTest {
 
         GameTranslationDTO res = service.saveTranslation(gameModel.getUuid(), returnData.get(0));
 
+        assertNotNull(res);
+        assertEquals(returnData.get(0), res);
         verify(repository, times(1)).existsById(any(UUID.class));
         verify(modelMapper, times(1)).map(any(), eq(GameTranslation.class));
         verify(translationRepository, times(1)).save(any(GameTranslation.class));

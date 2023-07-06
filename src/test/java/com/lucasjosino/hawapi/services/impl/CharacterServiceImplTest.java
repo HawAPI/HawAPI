@@ -86,6 +86,7 @@ public class CharacterServiceImplTest {
         Pageable pageable = Pageable.ofSize(1);
         Page<UUID> res = service.findAllUUIDs(pageable);
 
+        assertFalse(res.isEmpty());
         assertEquals(uuids, res.getContent());
         assertEquals(pageable.getPageSize(), res.getTotalElements());
         verify(repository, times(1)).findAllUUIDs(any(Pageable.class));
@@ -103,7 +104,6 @@ public class CharacterServiceImplTest {
         Page<UUID> res = service.findAllUUIDs(pageable);
 
         assertTrue(res.isEmpty());
-        assertEquals(uuids, res.getContent());
         verify(repository, times(1)).findAllUUIDs(any(Pageable.class));
         verify(repository, times(1)).count();
     }
@@ -119,6 +119,9 @@ public class CharacterServiceImplTest {
 
         List<CharacterDTO> res = service.findAll(new HashMap<>(), uuids);
 
+        assertFalse(res.isEmpty());
+        assertEquals(1, res.size());
+        assertEquals(characterDTO, res.get(0));
         verify(repository, times(1)).findAll(Mockito.<Specification<CharacterModel>>any());
         verify(modelMapper, times(1)).map(any(), eq(CharacterDTO[].class));
     }
@@ -153,6 +156,8 @@ public class CharacterServiceImplTest {
 
         CharacterDTO res = service.findRandom("en-US");
 
+        assertNotNull(res);
+        assertEquals(characterDTO, res);
         verify(repository, times(1)).count();
         verify(utils, times(1)).getCountOrThrow(anyLong());
         verify(random, times(1)).nextInt(anyInt());
@@ -178,6 +183,8 @@ public class CharacterServiceImplTest {
 
         CharacterDTO res = service.findBy(characterModel.getUuid(), "en-US");
 
+        assertNotNull(res);
+        assertEquals(characterDTO, res);
         verify(repository, times(1)).findById(any(UUID.class));
         verify(modelMapper, times(1)).map(any(), any());
     }
@@ -199,6 +206,8 @@ public class CharacterServiceImplTest {
 
         CharacterDTO res = service.save(characterDTO);
 
+        assertNotNull(res);
+        assertEquals(characterDTO, res);
         verify(modelMapper, times(1)).map(any(), eq(CharacterModel.class));
         verify(repository, times(1)).save(any(CharacterModel.class));
         verify(modelMapper, times(1)).map(any(), eq(CharacterDTO.class));
