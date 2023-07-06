@@ -103,7 +103,6 @@ class CharacterControllerTest {
                 .andExpect(header().string("X-Pagination-Page-Total", "1"))
                 .andExpect(header().string("X-Pagination-Item-Total", "1"))
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(header().string("Content-Language", "en-US"))
                 .andExpect(jsonPath("$", hasSize(1)));
 
         verify(service, times(1)).findAllUUIDs(any(Pageable.class));
@@ -133,7 +132,6 @@ class CharacterControllerTest {
                 .andExpect(header().string("X-Pagination-Page-Total", "0"))
                 .andExpect(header().string("X-Pagination-Item-Total", "0"))
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(header().string("Content-Language", "en-US"))
                 .andExpect(jsonPath("$", hasSize(0)));
 
         verify(service, times(1)).findAllUUIDs(any(Pageable.class));

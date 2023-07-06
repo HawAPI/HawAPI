@@ -94,7 +94,7 @@ class LocationControllerTest {
                 Pageable.ofSize(1),
                 () -> 1
         );
-        HttpHeaders headers = buildHeaders(pageable, uuids, null);
+        HttpHeaders headers = buildHeaders(pageable, uuids, "en-US");
 
         when(service.findAllUUIDs(any(Pageable.class))).thenReturn(uuids);
         when(responseUtils.getHeaders(any(), any(Pageable.class), nullable(String.class))).thenReturn(headers);
