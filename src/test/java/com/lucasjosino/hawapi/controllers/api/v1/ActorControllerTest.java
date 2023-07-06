@@ -5,8 +5,8 @@ import com.lucasjosino.hawapi.configs.security.SecurityConfig;
 import com.lucasjosino.hawapi.controllers.advisor.ControllerAdvisor;
 import com.lucasjosino.hawapi.controllers.utils.ResponseUtils;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
-import com.lucasjosino.hawapi.models.dto.CharacterDTO;
-import com.lucasjosino.hawapi.services.impl.CharacterServiceImpl;
+import com.lucasjosino.hawapi.models.dto.ActorDTO;
+import com.lucasjosino.hawapi.services.impl.ActorServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,13 +40,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ActiveProfiles("test")
-@WebMvcTest(controllers = CharacterController.class)
-@ContextConfiguration(classes = {CharacterController.class, ControllerAdvisor.class, SecurityConfig.class})
-class CharacterControllerUnitTest {
+@WebMvcTest(controllers = ActorController.class)
+@ContextConfiguration(classes = {ActorController.class, ControllerAdvisor.class, SecurityConfig.class})
+class ActorControllerTest {
 
-    private static final String URL = "/api/v1/characters";
+    private static final String URL = "/api/v1/actors";
 
-    private CharacterDTO character;
+    private ActorDTO actor;
 
     @Autowired
     private MockMvc mockMvc;
@@ -55,7 +55,7 @@ class CharacterControllerUnitTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private CharacterServiceImpl service;
+    private ActorServiceImpl service;
 
     @MockBean
     private ResponseUtils responseUtils;
@@ -65,24 +65,24 @@ class CharacterControllerUnitTest {
 
     @BeforeEach
     void setUp() {
-        character = new CharacterDTO();
-        character.setUuid(UUID.randomUUID());
-        character.setHref(URL + "/" + character.getUuid());
-        character.setFirstName("Lorem");
-        character.setLastName("Ipsum");
-        character.setNicknames(Arrays.asList("lore", "locum"));
-        character.setBirthDate(LocalDate.now());
-        character.setDeathDate(LocalDate.now());
-        character.setGender((byte) 1);
-        character.setActor("/api/v1/actors/1");
-        character.setThumbnail("https://cdn.theproject.id/hawapi/image.jpg");
-        character.setSources(Arrays.asList("https://example.com", "https://example.com"));
-        character.setCreatedAt(LocalDateTime.now());
-        character.setUpdatedAt(LocalDateTime.now());
+        actor = new ActorDTO();
+        actor.setUuid(UUID.randomUUID());
+        actor.setHref(URL + "/" + actor.getUuid());
+        actor.setFirstName("Lorem");
+        actor.setLastName("Ipsum");
+        actor.setNationality("American");
+        actor.setSeasons(Arrays.asList("/api/v1/seasons/1", "/api/v1/seasons/2"));
+        actor.setGender((byte) 1);
+        actor.setBirthDate(LocalDate.now());
+        actor.setCharacter("/api/v1/characters/1");
+        actor.setThumbnail("https://cdn.theproject.id/hawapi/image.jpg");
+        actor.setSources(Arrays.asList("https://example.com", "https://example.com"));
+        actor.setCreatedAt(LocalDateTime.now());
+        actor.setUpdatedAt(LocalDateTime.now());
     }
 
     @Test
-    void shouldReturnAllCharacters() throws Exception {
+    void shouldReturnAllActors() throws Exception {
         Pageable pageable = Pageable.ofSize(1);
         List<UUID> res = Collections.singletonList(UUID.randomUUID());
         Page<UUID> uuids = PageableExecutionUtils.getPage(res,
@@ -93,7 +93,7 @@ class CharacterControllerUnitTest {
 
         when(service.findAllUUIDs(any(Pageable.class))).thenReturn(uuids);
         when(responseUtils.getHeaders(any(), any(Pageable.class), nullable(String.class))).thenReturn(headers);
-        when(service.findAll(anyMap(), anyList())).thenReturn(Collections.singletonList(character));
+        when(service.findAll(anyMap(), anyList())).thenReturn(Collections.singletonList(actor));
 
         mockMvc.perform(get(URL))
                 .andDo(print())
@@ -143,23 +143,23 @@ class CharacterControllerUnitTest {
 
 
     @Test
-    void shouldReturnRandomCharacter() throws Exception {
-        when(service.findRandom(nullable(String.class))).thenReturn(character);
+    void shouldReturnRandomActor() throws Exception {
+        when(service.findRandom(nullable(String.class))).thenReturn(actor);
 
         mockMvc.perform(get(URL + "/random"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.uuid").value(String.valueOf(character.getUuid())))
-                .andExpect(jsonPath("$.href").value(character.getHref()))
-                .andExpect(jsonPath("$.first_name").value(character.getFirstName()))
-                .andExpect(jsonPath("$.last_name").value(character.getLastName()))
-                .andExpect(jsonPath("$.nicknames").isNotEmpty())
-                .andExpect(jsonPath("$.birth_date").value(String.valueOf(character.getBirthDate())))
-                .andExpect(jsonPath("$.death_date").value(String.valueOf(character.getDeathDate())))
-                .andExpect(jsonPath("$.gender").value(String.valueOf(character.getGender())))
-                .andExpect(jsonPath("$.actor").value(character.getActor()))
-                .andExpect(jsonPath("$.thumbnail").value(character.getThumbnail()))
+                .andExpect(jsonPath("$.uuid").value(String.valueOf(actor.getUuid())))
+                .andExpect(jsonPath("$.href").value(actor.getHref()))
+                .andExpect(jsonPath("$.first_name").value(actor.getFirstName()))
+                .andExpect(jsonPath("$.last_name").value(actor.getLastName()))
+                .andExpect(jsonPath("$.nationality").value(actor.getNationality()))
+                .andExpect(jsonPath("$.seasons").isNotEmpty())
+                .andExpect(jsonPath("$.gender").value(String.valueOf(actor.getGender())))
+                .andExpect(jsonPath("$.birth_date").value(String.valueOf(actor.getBirthDate())))
+                .andExpect(jsonPath("$.character").value(actor.getCharacter()))
+                .andExpect(jsonPath("$.thumbnail").value(actor.getThumbnail()))
                 .andExpect(jsonPath("$.sources").isNotEmpty())
                 .andExpect(jsonPath("$.created_at").exists())
                 .andExpect(jsonPath("$.updated_at").exists());
@@ -168,7 +168,7 @@ class CharacterControllerUnitTest {
     }
 
     @Test
-    void whenNoCharacterFoundShouldThrowItemNotFoundExceptionOnRandomCharacter() throws Exception {
+    void whenNoActorFoundShouldThrowItemNotFoundExceptionOnRandomActor() throws Exception {
         when(service.findRandom(nullable(String.class))).thenThrow(ItemNotFoundException.class);
 
         mockMvc.perform(get(URL + "/random"))
@@ -179,23 +179,23 @@ class CharacterControllerUnitTest {
     }
 
     @Test
-    void shouldReturnCharacterByUUID() throws Exception {
-        when(service.findBy(any(UUID.class), nullable(String.class))).thenReturn(character);
+    void shouldReturnActorByUUID() throws Exception {
+        when(service.findBy(any(UUID.class), nullable(String.class))).thenReturn(actor);
 
-        mockMvc.perform(get(URL + "/" + character.getUuid()))
+        mockMvc.perform(get(URL + "/" + actor.getUuid()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.uuid").value(String.valueOf(character.getUuid())))
-                .andExpect(jsonPath("$.href").value(character.getHref()))
-                .andExpect(jsonPath("$.first_name").value(character.getFirstName()))
-                .andExpect(jsonPath("$.last_name").value(character.getLastName()))
-                .andExpect(jsonPath("$.nicknames").isNotEmpty())
-                .andExpect(jsonPath("$.birth_date").value(String.valueOf(character.getBirthDate())))
-                .andExpect(jsonPath("$.death_date").value(String.valueOf(character.getDeathDate())))
-                .andExpect(jsonPath("$.gender").value(String.valueOf(character.getGender())))
-                .andExpect(jsonPath("$.actor").value(character.getActor()))
-                .andExpect(jsonPath("$.thumbnail").value(character.getThumbnail()))
+                .andExpect(jsonPath("$.uuid").value(String.valueOf(actor.getUuid())))
+                .andExpect(jsonPath("$.href").value(actor.getHref()))
+                .andExpect(jsonPath("$.first_name").value(actor.getFirstName()))
+                .andExpect(jsonPath("$.last_name").value(actor.getLastName()))
+                .andExpect(jsonPath("$.nationality").value(actor.getNationality()))
+                .andExpect(jsonPath("$.seasons").isNotEmpty())
+                .andExpect(jsonPath("$.gender").value(String.valueOf(actor.getGender())))
+                .andExpect(jsonPath("$.birth_date").value(String.valueOf(actor.getBirthDate())))
+                .andExpect(jsonPath("$.character").value(actor.getCharacter()))
+                .andExpect(jsonPath("$.thumbnail").value(actor.getThumbnail()))
                 .andExpect(jsonPath("$.sources").isNotEmpty())
                 .andExpect(jsonPath("$.created_at").exists())
                 .andExpect(jsonPath("$.updated_at").exists());
@@ -204,10 +204,10 @@ class CharacterControllerUnitTest {
     }
 
     @Test
-    void whenNoCharacterFoundShouldThrowItemNotFoundExceptionOnCharacterByUUID() throws Exception {
+    void whenNoActorFoundShouldThrowItemNotFoundExceptionOnActorByUUID() throws Exception {
         when(service.findBy(any(UUID.class), nullable(String.class))).thenThrow(ItemNotFoundException.class);
 
-        mockMvc.perform(get(URL + "/" + character.getUuid()))
+        mockMvc.perform(get(URL + "/" + actor.getUuid()))
                 .andDo(print())
                 .andExpect(status().isNotFound());
 
@@ -215,62 +215,62 @@ class CharacterControllerUnitTest {
     }
 
     @Test
-    void shouldSaveCharacter() throws Exception {
-        when(service.save(any(CharacterDTO.class))).thenReturn(character);
+    void shouldSaveActor() throws Exception {
+        when(service.save(any(ActorDTO.class))).thenReturn(actor);
 
         mockMvc.perform(post(URL)
                         .with(user("admin").roles("ADMIN"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(character))
+                        .content(objectMapper.writeValueAsString(actor))
                 )
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.uuid").value(String.valueOf(character.getUuid())))
-                .andExpect(jsonPath("$.href").value(character.getHref()))
-                .andExpect(jsonPath("$.first_name").value(character.getFirstName()))
-                .andExpect(jsonPath("$.last_name").value(character.getLastName()))
-                .andExpect(jsonPath("$.nicknames").isNotEmpty())
-                .andExpect(jsonPath("$.birth_date").value(String.valueOf(character.getBirthDate())))
-                .andExpect(jsonPath("$.death_date").value(String.valueOf(character.getDeathDate())))
-                .andExpect(jsonPath("$.gender").value(String.valueOf(character.getGender())))
-                .andExpect(jsonPath("$.actor").value(character.getActor()))
-                .andExpect(jsonPath("$.thumbnail").value(character.getThumbnail()))
+                .andExpect(jsonPath("$.uuid").value(String.valueOf(actor.getUuid())))
+                .andExpect(jsonPath("$.href").value(actor.getHref()))
+                .andExpect(jsonPath("$.first_name").value(actor.getFirstName()))
+                .andExpect(jsonPath("$.last_name").value(actor.getLastName()))
+                .andExpect(jsonPath("$.nationality").value(actor.getNationality()))
+                .andExpect(jsonPath("$.seasons").isNotEmpty())
+                .andExpect(jsonPath("$.gender").value(String.valueOf(actor.getGender())))
+                .andExpect(jsonPath("$.birth_date").value(String.valueOf(actor.getBirthDate())))
+                .andExpect(jsonPath("$.character").value(actor.getCharacter()))
+                .andExpect(jsonPath("$.thumbnail").value(actor.getThumbnail()))
                 .andExpect(jsonPath("$.sources").isNotEmpty())
                 .andExpect(jsonPath("$.created_at").exists())
                 .andExpect(jsonPath("$.updated_at").exists());
 
-        verify(service, times(1)).save(any(CharacterDTO.class));
+        verify(service, times(1)).save(any(ActorDTO.class));
     }
 
     @Test
-    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnSaveCharacter() throws Exception {
+    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnSaveActor() throws Exception {
         mockMvc.perform(post(URL)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(character))
+                        .content(objectMapper.writeValueAsString(actor))
                 )
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnSaveCharacter() throws Exception {
+    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnSaveActor() throws Exception {
         mockMvc.perform(post(URL)
                         .with(user("dev").roles("DEV"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(character))
+                        .content(objectMapper.writeValueAsString(actor))
                 )
                 .andDo(print())
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    void whenFieldValidationFailsShouldReturnBadRequestExceptionOnSaveCharacter() throws Exception {
-        character.setFirstName(null);
+    void whenFieldValidationFailsShouldReturnBadRequestExceptionOnSaveActor() throws Exception {
+        actor.setFirstName(null);
         mockMvc.perform(post(URL)
                         .with(user("admin").roles("ADMIN"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(character))
+                        .content(objectMapper.writeValueAsString(actor))
                 )
                 .andDo(print())
                 .andExpect(status().isBadRequest())
@@ -284,13 +284,13 @@ class CharacterControllerUnitTest {
     }
 
     @Test
-    void shouldUpdateCharacter() throws Exception {
-        CharacterDTO patch = new CharacterDTO();
+    void shouldUpdateActor() throws Exception {
+        ActorDTO patch = new ActorDTO();
         patch.setGender((byte) 0);
 
-        doNothing().when(service).patch(any(UUID.class), any(CharacterDTO.class));
+        doNothing().when(service).patch(any(UUID.class), any(ActorDTO.class));
 
-        mockMvc.perform(patch(URL + "/" + character.getUuid())
+        mockMvc.perform(patch(URL + "/" + actor.getUuid())
                         .with(user("admin").roles("ADMIN"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(patch))
@@ -300,12 +300,12 @@ class CharacterControllerUnitTest {
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.gender").value(String.valueOf(patch.getGender())));
 
-        verify(service, times(1)).patch(any(UUID.class), any(CharacterDTO.class));
+        verify(service, times(1)).patch(any(UUID.class), any(ActorDTO.class));
     }
 
     @Test
-    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnUpdateCharacter() throws Exception {
-        mockMvc.perform(patch(URL + "/" + character.getUuid())
+    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnUpdateActor() throws Exception {
+        mockMvc.perform(patch(URL + "/" + actor.getUuid())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                 )
                 .andDo(print())
@@ -313,8 +313,8 @@ class CharacterControllerUnitTest {
     }
 
     @Test
-    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnUpdateCharacter() throws Exception {
-        mockMvc.perform(patch(URL + "/" + character.getUuid())
+    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnUpdateActor() throws Exception {
+        mockMvc.perform(patch(URL + "/" + actor.getUuid())
                         .with(user("dev").roles("DEV"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                 )
@@ -323,8 +323,8 @@ class CharacterControllerUnitTest {
     }
 
     @Test
-    void whenNoBodyShouldReturnBadRequestExceptionOnUpdateCharacter() throws Exception {
-        mockMvc.perform(patch(URL + "/" + character.getUuid())
+    void whenNoBodyShouldReturnBadRequestExceptionOnUpdateActor() throws Exception {
+        mockMvc.perform(patch(URL + "/" + actor.getUuid())
                         .with(user("admin").roles("ADMIN"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                 )
@@ -333,13 +333,13 @@ class CharacterControllerUnitTest {
     }
 
     @Test
-    void whenNoCharacterFoundShouldThrowItemNotFoundExceptionOnUpdateCharacter() throws Exception {
-        CharacterDTO patch = new CharacterDTO();
+    void whenNoActorFoundShouldThrowItemNotFoundExceptionOnUpdateActor() throws Exception {
+        ActorDTO patch = new ActorDTO();
         patch.setGender((byte) 0);
 
-        doThrow(ItemNotFoundException.class).when(service).patch(any(UUID.class), any(CharacterDTO.class));
+        doThrow(ItemNotFoundException.class).when(service).patch(any(UUID.class), any(ActorDTO.class));
 
-        mockMvc.perform(patch(URL + "/" + character.getUuid())
+        mockMvc.perform(patch(URL + "/" + actor.getUuid())
                         .with(user("admin").roles("ADMIN"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(patch))
@@ -347,14 +347,14 @@ class CharacterControllerUnitTest {
                 .andDo(print())
                 .andExpect(status().isNotFound());
 
-        verify(service, times(1)).patch(any(UUID.class), any(CharacterDTO.class));
+        verify(service, times(1)).patch(any(UUID.class), any(ActorDTO.class));
     }
 
     @Test
-    void shouldDeleteCharacter() throws Exception {
+    void shouldDeleteActor() throws Exception {
         doNothing().when(service).deleteById(any(UUID.class));
 
-        mockMvc.perform(delete(URL + "/" + character.getUuid())
+        mockMvc.perform(delete(URL + "/" + actor.getUuid())
                         .with(user("admin").roles("ADMIN"))
                 )
                 .andDo(print())
@@ -364,15 +364,15 @@ class CharacterControllerUnitTest {
     }
 
     @Test
-    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnDeleteCharacter() throws Exception {
-        mockMvc.perform(delete(URL + "/" + character.getUuid()))
+    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnDeleteActor() throws Exception {
+        mockMvc.perform(delete(URL + "/" + actor.getUuid()))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnDeleteCharacter() throws Exception {
-        mockMvc.perform(delete(URL + "/" + character.getUuid())
+    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnDeleteActor() throws Exception {
+        mockMvc.perform(delete(URL + "/" + actor.getUuid())
                         .with(user("dev").roles("DEV"))
                 )
                 .andDo(print())
@@ -380,10 +380,10 @@ class CharacterControllerUnitTest {
     }
 
     @Test
-    void whenNoCharacterFoundShouldThrowItemNotFoundExceptionOnUpdateCharacterOnDeleteCharacter() throws Exception {
+    void whenNoActorFoundShouldThrowItemNotFoundExceptionOnUpdateActorOnDeleteActor() throws Exception {
         doThrow(ItemNotFoundException.class).when(service).deleteById(any(UUID.class));
 
-        mockMvc.perform(delete(URL + "/" + character.getUuid())
+        mockMvc.perform(delete(URL + "/" + actor.getUuid())
                         .with(user("admin").roles("ADMIN"))
                 )
                 .andDo(print())

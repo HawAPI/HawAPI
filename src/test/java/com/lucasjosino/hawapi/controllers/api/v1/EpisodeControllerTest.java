@@ -5,9 +5,9 @@ import com.lucasjosino.hawapi.configs.security.SecurityConfig;
 import com.lucasjosino.hawapi.controllers.advisor.ControllerAdvisor;
 import com.lucasjosino.hawapi.controllers.utils.ResponseUtils;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
-import com.lucasjosino.hawapi.models.dto.LocationDTO;
-import com.lucasjosino.hawapi.models.dto.translation.LocationTranslationDTO;
-import com.lucasjosino.hawapi.services.impl.LocationServiceImpl;
+import com.lucasjosino.hawapi.models.dto.EpisodeDTO;
+import com.lucasjosino.hawapi.models.dto.translation.EpisodeTranslationDTO;
+import com.lucasjosino.hawapi.services.impl.EpisodeServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,15 +40,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ActiveProfiles("test")
-@WebMvcTest(controllers = LocationController.class)
-@ContextConfiguration(classes = {LocationController.class, ControllerAdvisor.class, SecurityConfig.class})
-class LocationControllerUnitTest {
+@WebMvcTest(controllers = EpisodeController.class)
+@ContextConfiguration(classes = {EpisodeController.class, ControllerAdvisor.class, SecurityConfig.class})
+class EpisodeControllerTest {
 
-    private static final String URL = "/api/v1/locations";
+    private static final String URL = "/api/v1/episodes";
 
-    private LocationDTO location;
+    private EpisodeDTO episode;
 
-    private LocationTranslationDTO translation;
+    private EpisodeTranslationDTO translation;
 
     @Autowired
     private MockMvc mockMvc;
@@ -57,7 +57,7 @@ class LocationControllerUnitTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private LocationServiceImpl service;
+    private EpisodeServiceImpl service;
 
     @MockBean
     private ResponseUtils responseUtils;
@@ -67,27 +67,32 @@ class LocationControllerUnitTest {
 
     @BeforeEach
     void setUp() {
-        location = new LocationDTO();
-        location.setUuid(UUID.randomUUID());
-        location.setHref(URL + "/" + location.getUuid());
-        location.setLanguages(Collections.singletonList("Lorem"));
-        location.setThumbnail("https://cdn.theproject.id/hawapi/image.jpg");
-        location.setImages(Arrays.asList("https://example.com/image.jpg", "https://example.com/image.jpg"));
-        location.setSources(Arrays.asList("https://example.com", "https://example.com"));
-        location.setCreatedAt(LocalDateTime.now());
-        location.setUpdatedAt(LocalDateTime.now());
-        location.setLanguage("en-US");
-        location.setName("Lorem Ipsum");
-        location.setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+        episode = new EpisodeDTO();
+        episode.setUuid(UUID.randomUUID());
+        episode.setHref(URL + "/" + episode.getUuid());
+        episode.setLanguages(Collections.singletonList("Lorem"));
+        episode.setDuration(12482342);
+        episode.setEpisodeNum((byte) 2);
+        episode.setNextEpisode("/api/v1/episodes/3");
+        episode.setPrevEpisode("/api/v1/episodes/1");
+        episode.setSeason("/api/v1/seasons/1");
+        episode.setThumbnail("https://cdn.theproject.id/hawapi/image.jpg");
+        episode.setImages(Arrays.asList("https://example.com/image.jpg", "https://example.com/image.jpg"));
+        episode.setSources(Arrays.asList("https://example.com", "https://example.com"));
+        episode.setCreatedAt(LocalDateTime.now());
+        episode.setUpdatedAt(LocalDateTime.now());
+        episode.setLanguage("en-US");
+        episode.setTitle("Lorem Ipsum");
+        episode.setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
 
-        translation = new LocationTranslationDTO();
+        translation = new EpisodeTranslationDTO();
         translation.setLanguage("en-US");
-        translation.setName("Lorem Ipsum");
+        translation.setTitle("Lorem Ipsum");
         translation.setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
     }
 
     @Test
-    void shouldReturnAllLocations() throws Exception {
+    void shouldReturnAllEpisodes() throws Exception {
         Pageable pageable = Pageable.ofSize(1);
         List<UUID> res = Collections.singletonList(UUID.randomUUID());
         Page<UUID> uuids = PageableExecutionUtils.getPage(res,
@@ -98,7 +103,7 @@ class LocationControllerUnitTest {
 
         when(service.findAllUUIDs(any(Pageable.class))).thenReturn(uuids);
         when(responseUtils.getHeaders(any(), any(Pageable.class), nullable(String.class))).thenReturn(headers);
-        when(service.findAll(anyMap(), anyList())).thenReturn(Collections.singletonList(location));
+        when(service.findAll(anyMap(), anyList())).thenReturn(Collections.singletonList(episode));
 
         mockMvc.perform(get(URL))
                 .andDo(print())
@@ -117,7 +122,7 @@ class LocationControllerUnitTest {
     }
 
     @Test
-    void shouldReturnAllLocationsWithPortugueseLanguage() throws Exception {
+    void shouldReturnAllEpisodesWithPortugueseLanguage() throws Exception {
         Pageable pageable = Pageable.ofSize(1);
         List<UUID> res = Collections.singletonList(UUID.randomUUID());
         Page<UUID> uuids = PageableExecutionUtils.getPage(res,
@@ -128,7 +133,7 @@ class LocationControllerUnitTest {
 
         when(service.findAllUUIDs(any(Pageable.class))).thenReturn(uuids);
         when(responseUtils.getHeaders(any(), any(Pageable.class), nullable(String.class))).thenReturn(headers);
-        when(service.findAll(anyMap(), anyList())).thenReturn(Collections.singletonList(location));
+        when(service.findAll(anyMap(), anyList())).thenReturn(Collections.singletonList(episode));
 
         mockMvc.perform(get(URL))
                 .andDo(print())
@@ -147,15 +152,15 @@ class LocationControllerUnitTest {
     }
 
     @Test
-    void shouldReturnAllLocationTranslations() throws Exception {
+    void shouldReturnAllEpisodeTranslations() throws Exception {
         when(service.findAllTranslationsBy(any(UUID.class))).thenReturn(Collections.singletonList(translation));
 
-        mockMvc.perform(get(URL + "/" + location.getUuid() + "/translations"))
+        mockMvc.perform(get(URL + "/" + episode.getUuid() + "/translations"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].name").value(translation.getName()))
+                .andExpect(jsonPath("$[0].title").value(translation.getTitle()))
                 .andExpect(jsonPath("$[0].description").value(translation.getDescription()))
                 .andExpect(jsonPath("$[0].language").value(translation.getLanguage()));
 
@@ -163,10 +168,10 @@ class LocationControllerUnitTest {
     }
 
     @Test
-    void whenNoLocationLanguageFoundShouldThrowItemNotFoundExceptionOnAllLocationsWithPortugueseLanguage() throws Exception {
+    void whenNoEpisodeLanguageFoundShouldThrowItemNotFoundExceptionOnAllEpisodesWithPortugueseLanguage() throws Exception {
         when(service.findBy(any(UUID.class), nullable(String.class))).thenThrow(ItemNotFoundException.class);
 
-        mockMvc.perform(get(URL + "/" + location.getUuid() + "?language=pt-BR"))
+        mockMvc.perform(get(URL + "/" + episode.getUuid() + "?language=pt-BR"))
                 .andDo(print())
                 .andExpect(status().isNotFound());
 
@@ -174,7 +179,7 @@ class LocationControllerUnitTest {
     }
 
     @Test
-    void whenNoUUIDIsFoundShouldReturnEmptyListOnAllLocations() throws Exception {
+    void whenNoUUIDIsFoundShouldReturnEmptyListOnAllEpisodes() throws Exception {
         Pageable pageable = Pageable.ofSize(1);
         List<UUID> res = Collections.emptyList();
         Page<UUID> uuids = PageableExecutionUtils.getPage(res,
@@ -203,20 +208,25 @@ class LocationControllerUnitTest {
     }
 
     @Test
-    void shouldReturnRandomLocation() throws Exception {
-        when(service.findRandom(nullable(String.class))).thenReturn(location);
+    void shouldReturnRandomEpisode() throws Exception {
+        when(service.findRandom(nullable(String.class))).thenReturn(episode);
 
         mockMvc.perform(get(URL + "/random"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.uuid").value(String.valueOf(location.getUuid())))
-                .andExpect(jsonPath("$.href").value(location.getHref()))
-                .andExpect(jsonPath("$.name").value(location.getName()))
-                .andExpect(jsonPath("$.description").value(location.getDescription()))
-                .andExpect(jsonPath("$.language").value(location.getLanguage()))
+                .andExpect(jsonPath("$.uuid").value(String.valueOf(episode.getUuid())))
+                .andExpect(jsonPath("$.href").value(episode.getHref()))
+                .andExpect(jsonPath("$.title").value(episode.getTitle()))
+                .andExpect(jsonPath("$.description").value(episode.getDescription()))
+                .andExpect(jsonPath("$.language").value(episode.getLanguage()))
                 .andExpect(jsonPath("$.languages").isNotEmpty())
-                .andExpect(jsonPath("$.thumbnail").value(location.getThumbnail()))
+                .andExpect(jsonPath("$.duration").value(String.valueOf(episode.getDuration())))
+                .andExpect(jsonPath("$.episode_num").value(String.valueOf(episode.getEpisodeNum())))
+                .andExpect(jsonPath("$.next_episode").value(episode.getNextEpisode()))
+                .andExpect(jsonPath("$.prev_episode").value(episode.getPrevEpisode()))
+                .andExpect(jsonPath("$.season").value(episode.getSeason()))
+                .andExpect(jsonPath("$.thumbnail").value(episode.getThumbnail()))
                 .andExpect(jsonPath("$.images").isNotEmpty())
                 .andExpect(jsonPath("$.sources").isNotEmpty())
                 .andExpect(jsonPath("$.created_at").exists())
@@ -226,18 +236,18 @@ class LocationControllerUnitTest {
     }
 
     @Test
-    void shouldReturnRandomLocationTranslation() throws Exception {
+    void shouldReturnRandomEpisodeTranslation() throws Exception {
         HttpHeaders headers = buildHeaders("en-US");
 
         when(responseUtils.getHeaders(anyString())).thenReturn(headers);
         when(service.findRandomTranslation(any(UUID.class))).thenReturn(translation);
 
-        mockMvc.perform(get(URL + "/" + location.getUuid() + "/translations/random"))
+        mockMvc.perform(get(URL + "/" + episode.getUuid() + "/translations/random"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(header().exists("Content-Language"))
-                .andExpect(jsonPath("$.name").value(translation.getName()))
+                .andExpect(jsonPath("$.title").value(translation.getTitle()))
                 .andExpect(jsonPath("$.description").value(translation.getDescription()))
                 .andExpect(jsonPath("$.language").value(translation.getLanguage()));
 
@@ -246,10 +256,10 @@ class LocationControllerUnitTest {
     }
 
     @Test
-    void whenNoTranslationFoundShouldThrowItemNotFoundExceptionOnRandomLocationTranslation() throws Exception {
+    void whenNoTranslationFoundShouldThrowItemNotFoundExceptionOnRandomEpisodeTranslation() throws Exception {
         when(service.findRandomTranslation(any(UUID.class))).thenThrow(ItemNotFoundException.class);
 
-        mockMvc.perform(get(URL + "/" + location.getUuid() + "/translations/random"))
+        mockMvc.perform(get(URL + "/" + episode.getUuid() + "/translations/random"))
                 .andDo(print())
                 .andExpect(status().isNotFound());
 
@@ -257,7 +267,7 @@ class LocationControllerUnitTest {
     }
 
     @Test
-    void whenNoLocationFoundShouldThrowItemNotFoundExceptionOnRandomLocation() throws Exception {
+    void whenNoEpisodeFoundShouldThrowItemNotFoundExceptionOnRandomEpisode() throws Exception {
         when(service.findRandom(nullable(String.class))).thenThrow(ItemNotFoundException.class);
 
         mockMvc.perform(get(URL + "/random"))
@@ -268,20 +278,25 @@ class LocationControllerUnitTest {
     }
 
     @Test
-    void shouldReturnLocationByUUID() throws Exception {
-        when(service.findBy(any(UUID.class), nullable(String.class))).thenReturn(location);
+    void shouldReturnEpisodeByUUID() throws Exception {
+        when(service.findBy(any(UUID.class), nullable(String.class))).thenReturn(episode);
 
-        mockMvc.perform(get(URL + "/" + location.getUuid()))
+        mockMvc.perform(get(URL + "/" + episode.getUuid()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.uuid").value(String.valueOf(location.getUuid())))
-                .andExpect(jsonPath("$.href").value(location.getHref()))
-                .andExpect(jsonPath("$.name").value(location.getName()))
-                .andExpect(jsonPath("$.description").value(location.getDescription()))
-                .andExpect(jsonPath("$.language").value(location.getLanguage()))
+                .andExpect(jsonPath("$.uuid").value(String.valueOf(episode.getUuid())))
+                .andExpect(jsonPath("$.href").value(episode.getHref()))
+                .andExpect(jsonPath("$.title").value(episode.getTitle()))
+                .andExpect(jsonPath("$.description").value(episode.getDescription()))
+                .andExpect(jsonPath("$.language").value(episode.getLanguage()))
                 .andExpect(jsonPath("$.languages").isNotEmpty())
-                .andExpect(jsonPath("$.thumbnail").value(location.getThumbnail()))
+                .andExpect(jsonPath("$.duration").value(String.valueOf(episode.getDuration())))
+                .andExpect(jsonPath("$.episode_num").value(String.valueOf(episode.getEpisodeNum())))
+                .andExpect(jsonPath("$.next_episode").value(episode.getNextEpisode()))
+                .andExpect(jsonPath("$.prev_episode").value(episode.getPrevEpisode()))
+                .andExpect(jsonPath("$.season").value(episode.getSeason()))
+                .andExpect(jsonPath("$.thumbnail").value(episode.getThumbnail()))
                 .andExpect(jsonPath("$.images").isNotEmpty())
                 .andExpect(jsonPath("$.sources").isNotEmpty())
                 .andExpect(jsonPath("$.created_at").exists())
@@ -291,18 +306,18 @@ class LocationControllerUnitTest {
     }
 
     @Test
-    void shouldReturnLocationTranslationByUUIDAndLanguage() throws Exception {
+    void shouldReturnEpisodeTranslationByUUIDAndLanguage() throws Exception {
         HttpHeaders headers = buildHeaders("pt-BR");
 
         when(responseUtils.getHeaders(anyString())).thenReturn(headers);
         when(service.findTranslationBy(any(UUID.class), nullable(String.class))).thenReturn(translation);
 
-        mockMvc.perform(get(URL + "/" + location.getUuid() + "/translations/pt-BR"))
+        mockMvc.perform(get(URL + "/" + episode.getUuid() + "/translations/pt-BR"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(header().string("Content-Language", "pt-BR"))
-                .andExpect(jsonPath("$.name").value(translation.getName()))
+                .andExpect(jsonPath("$.title").value(translation.getTitle()))
                 .andExpect(jsonPath("$.description").value(translation.getDescription()))
                 .andExpect(jsonPath("$.language").value(translation.getLanguage()));
 
@@ -311,10 +326,10 @@ class LocationControllerUnitTest {
     }
 
     @Test
-    void whenNoLocationFoundShouldThrowItemNotFoundExceptionOnLocationByUUID() throws Exception {
+    void whenNoEpisodeFoundShouldThrowItemNotFoundExceptionOnEpisodeByUUID() throws Exception {
         when(service.findBy(any(UUID.class), nullable(String.class))).thenThrow(ItemNotFoundException.class);
 
-        mockMvc.perform(get(URL + "/" + location.getUuid()))
+        mockMvc.perform(get(URL + "/" + episode.getUuid()))
                 .andDo(print())
                 .andExpect(status().isNotFound());
 
@@ -322,10 +337,10 @@ class LocationControllerUnitTest {
     }
 
     @Test
-    void whenNoLocationTranslationFoundShouldThrowItemNotFoundExceptionOnTranslationByUUIDAndLanguage() throws Exception {
+    void whenNoEpisodeTranslationFoundShouldThrowItemNotFoundExceptionOnTranslationByUUIDAndLanguage() throws Exception {
         when(service.findTranslationBy(any(UUID.class), nullable(String.class))).thenThrow(ItemNotFoundException.class);
 
-        mockMvc.perform(get(URL + "/" + location.getUuid() + "/translations/en-US"))
+        mockMvc.perform(get(URL + "/" + episode.getUuid() + "/translations/en-US"))
                 .andDo(print())
                 .andExpect(status().isNotFound());
 
@@ -333,40 +348,45 @@ class LocationControllerUnitTest {
     }
 
     @Test
-    void shouldSaveLocation() throws Exception {
-        when(service.save(any(LocationDTO.class))).thenReturn(location);
+    void shouldSaveEpisode() throws Exception {
+        when(service.save(any(EpisodeDTO.class))).thenReturn(episode);
 
         mockMvc.perform(post(URL)
                         .with(user("admin").roles("ADMIN"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(location))
+                        .content(objectMapper.writeValueAsString(episode))
                 )
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.uuid").value(String.valueOf(location.getUuid())))
-                .andExpect(jsonPath("$.href").value(location.getHref()))
-                .andExpect(jsonPath("$.name").value(location.getName()))
-                .andExpect(jsonPath("$.description").value(location.getDescription()))
-                .andExpect(jsonPath("$.language").value(location.getLanguage()))
+                .andExpect(jsonPath("$.uuid").value(String.valueOf(episode.getUuid())))
+                .andExpect(jsonPath("$.href").value(episode.getHref()))
+                .andExpect(jsonPath("$.title").value(episode.getTitle()))
+                .andExpect(jsonPath("$.description").value(episode.getDescription()))
+                .andExpect(jsonPath("$.language").value(episode.getLanguage()))
                 .andExpect(jsonPath("$.languages").isNotEmpty())
-                .andExpect(jsonPath("$.thumbnail").value(location.getThumbnail()))
+                .andExpect(jsonPath("$.duration").value(String.valueOf(episode.getDuration())))
+                .andExpect(jsonPath("$.episode_num").value(String.valueOf(episode.getEpisodeNum())))
+                .andExpect(jsonPath("$.next_episode").value(episode.getNextEpisode()))
+                .andExpect(jsonPath("$.prev_episode").value(episode.getPrevEpisode()))
+                .andExpect(jsonPath("$.season").value(episode.getSeason()))
+                .andExpect(jsonPath("$.thumbnail").value(episode.getThumbnail()))
                 .andExpect(jsonPath("$.images").isNotEmpty())
                 .andExpect(jsonPath("$.sources").isNotEmpty())
                 .andExpect(jsonPath("$.created_at").exists())
                 .andExpect(jsonPath("$.updated_at").exists());
 
-        verify(service, times(1)).save(any(LocationDTO.class));
+        verify(service, times(1)).save(any(EpisodeDTO.class));
     }
 
     @Test
-    void shouldSaveLocationTranslation() throws Exception {
+    void shouldSaveEpisodeTranslation() throws Exception {
         HttpHeaders headers = buildHeaders("pt-BR");
 
         when(responseUtils.getHeaders(anyString())).thenReturn(headers);
-        when(service.saveTranslation(any(UUID.class), any(LocationTranslationDTO.class))).thenReturn(translation);
+        when(service.saveTranslation(any(UUID.class), any(EpisodeTranslationDTO.class))).thenReturn(translation);
 
-        mockMvc.perform(post(URL + "/" + location.getUuid() + "/translations")
+        mockMvc.perform(post(URL + "/" + episode.getUuid() + "/translations")
                         .with(user("admin").roles("ADMIN"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(translation))
@@ -375,27 +395,27 @@ class LocationControllerUnitTest {
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(header().string("Content-Language", "pt-BR"))
-                .andExpect(jsonPath("$.name").value(translation.getName()))
+                .andExpect(jsonPath("$.title").value(translation.getTitle()))
                 .andExpect(jsonPath("$.description").value(translation.getDescription()))
                 .andExpect(jsonPath("$.language").value(translation.getLanguage()));
 
         verify(responseUtils, times(1)).getHeaders(anyString());
-        verify(service, times(1)).saveTranslation(any(UUID.class), any(LocationTranslationDTO.class));
+        verify(service, times(1)).saveTranslation(any(UUID.class), any(EpisodeTranslationDTO.class));
     }
 
     @Test
-    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnSaveLocation() throws Exception {
+    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnSaveEpisode() throws Exception {
         mockMvc.perform(post(URL)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(location))
+                        .content(objectMapper.writeValueAsString(episode))
                 )
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnSaveLocationTranslation() throws Exception {
-        mockMvc.perform(post(URL + "/" + location.getUuid() + "/translations")
+    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnSaveEpisodeTranslation() throws Exception {
+        mockMvc.perform(post(URL + "/" + episode.getUuid() + "/translations")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(translation))
                 )
@@ -404,19 +424,19 @@ class LocationControllerUnitTest {
     }
 
     @Test
-    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnSaveLocation() throws Exception {
+    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnSaveEpisode() throws Exception {
         mockMvc.perform(post(URL)
                         .with(user("dev").roles("DEV"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(location))
+                        .content(objectMapper.writeValueAsString(episode))
                 )
                 .andDo(print())
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnSaveLocationTranslation() throws Exception {
-        mockMvc.perform(post(URL + "/" + location.getUuid() + "/translations")
+    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnSaveEpisodeTranslation() throws Exception {
+        mockMvc.perform(post(URL + "/" + episode.getUuid() + "/translations")
                         .with(user("dev").roles("DEV"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(translation))
@@ -426,12 +446,12 @@ class LocationControllerUnitTest {
     }
 
     @Test
-    void whenFieldValidationFailsShouldReturnBadRequestExceptionOnSaveLocation() throws Exception {
-        location.setThumbnail("http://cdn.theproject.id/hawapi/image.jpg");
+    void whenFieldValidationFailsShouldReturnBadRequestExceptionOnSaveEpisode() throws Exception {
+        episode.setEpisodeNum(null);
         mockMvc.perform(post(URL)
                         .with(user("admin").roles("ADMIN"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(location))
+                        .content(objectMapper.writeValueAsString(episode))
                 )
                 .andDo(print())
                 .andExpect(status().isBadRequest())
@@ -439,16 +459,16 @@ class LocationControllerUnitTest {
                 .andExpect(jsonPath("$.code").value(HttpStatus.BAD_REQUEST.value()))
                 .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.getReasonPhrase()))
                 .andExpect(jsonPath("$.method").value(HttpMethod.POST.name()))
-                .andExpect(jsonPath("$.message").value("Field 'thumbnail' doesn't have a valid image URL"))
+                .andExpect(jsonPath("$.message").value("Field 'episode_num' is required"))
                 .andExpect(jsonPath("$.timestamps").exists())
                 .andExpect(jsonPath("$.url").value(URL));
     }
 
     @Test
-    void whenFieldValidationFailsShouldReturnBadRequestExceptionOnSaveLocationTranslation() throws Exception {
-        translation.setName(null);
+    void whenFieldValidationFailsShouldReturnBadRequestExceptionOnSaveEpisodeTranslation() throws Exception {
+        translation.setTitle(null);
 
-        String url = URL + "/" + location.getUuid() + "/translations";
+        String url = URL + "/" + episode.getUuid() + "/translations";
         mockMvc.perform(post(url)
                         .with(user("admin").roles("ADMIN"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -460,20 +480,20 @@ class LocationControllerUnitTest {
                 .andExpect(jsonPath("$.code").value(HttpStatus.BAD_REQUEST.value()))
                 .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.getReasonPhrase()))
                 .andExpect(jsonPath("$.method").value(HttpMethod.POST.name()))
-                .andExpect(jsonPath("$.message").value("Field 'name' is required"))
+                .andExpect(jsonPath("$.message").value("Field 'title' is required"))
                 .andExpect(jsonPath("$.timestamps").exists())
                 .andExpect(jsonPath("$.url").value(url));
     }
 
 
     @Test
-    void shouldUpdateLocation() throws Exception {
-        LocationDTO patch = new LocationDTO();
-        patch.setThumbnail("https://cdn.theproject.id/hawapi/image.jpg");
+    void shouldUpdateEpisode() throws Exception {
+        EpisodeDTO patch = new EpisodeDTO();
+        patch.setEpisodeNum((byte) 5);
 
-        doNothing().when(service).patch(any(UUID.class), any(LocationDTO.class));
+        doNothing().when(service).patch(any(UUID.class), any(EpisodeDTO.class));
 
-        mockMvc.perform(patch(URL + "/" + location.getUuid())
+        mockMvc.perform(patch(URL + "/" + episode.getUuid())
                         .with(user("admin").roles("ADMIN"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(patch))
@@ -481,21 +501,21 @@ class LocationControllerUnitTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.thumbnail").value(String.valueOf(patch.getThumbnail())));
+                .andExpect(jsonPath("$.episode_num").value(String.valueOf(patch.getEpisodeNum())));
 
-        verify(service, times(1)).patch(any(UUID.class), any(LocationDTO.class));
+        verify(service, times(1)).patch(any(UUID.class), any(EpisodeDTO.class));
     }
 
     @Test
-    void shouldUpdateLocationTranslation() throws Exception {
+    void shouldUpdateEpisodeTranslation() throws Exception {
         HttpHeaders headers = buildHeaders("pt-BR");
-        LocationTranslationDTO patch = new LocationTranslationDTO();
-        patch.setName("Lorem");
+        EpisodeTranslationDTO patch = new EpisodeTranslationDTO();
+        patch.setTitle("Lorem");
 
         when(responseUtils.getHeaders(anyString())).thenReturn(headers);
-        doNothing().when(service).patchTranslation(any(UUID.class), anyString(), any(LocationTranslationDTO.class));
+        doNothing().when(service).patchTranslation(any(UUID.class), anyString(), any(EpisodeTranslationDTO.class));
 
-        mockMvc.perform(patch(URL + "/" + location.getUuid() + "/translations/en-US")
+        mockMvc.perform(patch(URL + "/" + episode.getUuid() + "/translations/en-US")
                         .with(user("admin").roles("ADMIN"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(patch))
@@ -504,16 +524,16 @@ class LocationControllerUnitTest {
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(header().string("Content-Language", "pt-BR"))
-                .andExpect(jsonPath("$.name").value(String.valueOf(patch.getName())));
+                .andExpect(jsonPath("$.title").value(String.valueOf(patch.getTitle())));
 
         verify(responseUtils, times(1)).getHeaders(anyString());
         verify(service, times(1))
-                .patchTranslation(any(UUID.class), anyString(), any(LocationTranslationDTO.class));
+                .patchTranslation(any(UUID.class), anyString(), any(EpisodeTranslationDTO.class));
     }
 
     @Test
-    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnUpdateLocation() throws Exception {
-        mockMvc.perform(patch(URL + "/" + location.getUuid())
+    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnUpdateEpisode() throws Exception {
+        mockMvc.perform(patch(URL + "/" + episode.getUuid())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                 )
                 .andDo(print())
@@ -521,8 +541,8 @@ class LocationControllerUnitTest {
     }
 
     @Test
-    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnUpdateLocationTranslation() throws Exception {
-        mockMvc.perform(patch(URL + "/" + location.getUuid() + "/translations/en-US")
+    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnUpdateEpisodeTranslation() throws Exception {
+        mockMvc.perform(patch(URL + "/" + episode.getUuid() + "/translations/en-US")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                 )
                 .andDo(print())
@@ -530,8 +550,8 @@ class LocationControllerUnitTest {
     }
 
     @Test
-    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnUpdateLocation() throws Exception {
-        mockMvc.perform(patch(URL + "/" + location.getUuid())
+    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnUpdateEpisode() throws Exception {
+        mockMvc.perform(patch(URL + "/" + episode.getUuid())
                         .with(user("dev").roles("DEV"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                 )
@@ -540,8 +560,8 @@ class LocationControllerUnitTest {
     }
 
     @Test
-    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnUpdateLocationTranslation() throws Exception {
-        mockMvc.perform(patch(URL + "/" + location.getUuid() + "/translations/en-US")
+    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnUpdateEpisodeTranslation() throws Exception {
+        mockMvc.perform(patch(URL + "/" + episode.getUuid() + "/translations/en-US")
                         .with(user("dev").roles("DEV"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                 )
@@ -550,8 +570,8 @@ class LocationControllerUnitTest {
     }
 
     @Test
-    void whenFieldValidationFailsShouldReturnBadRequestExceptionOnUpdateLocation() throws Exception {
-        mockMvc.perform(patch(URL + "/" + location.getUuid())
+    void whenFieldValidationFailsShouldReturnBadRequestExceptionOnUpdateEpisode() throws Exception {
+        mockMvc.perform(patch(URL + "/" + episode.getUuid())
                         .with(user("admin").roles("ADMIN"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                 )
@@ -560,8 +580,8 @@ class LocationControllerUnitTest {
     }
 
     @Test
-    void whenNoBodyShouldReturnBadRequestExceptionOnUpdateLocationTranslation() throws Exception {
-        mockMvc.perform(patch(URL + "/" + location.getUuid() + "/translations/en-US")
+    void whenNoBodyShouldReturnBadRequestExceptionOnUpdateEpisodeTranslation() throws Exception {
+        mockMvc.perform(patch(URL + "/" + episode.getUuid() + "/translations/en-US")
                         .with(user("admin").roles("ADMIN"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                 )
@@ -570,13 +590,13 @@ class LocationControllerUnitTest {
     }
 
     @Test
-    void whenNoLocationFoundShouldThrowItemNotFoundExceptionOnUpdateLocation() throws Exception {
-        LocationDTO patch = new LocationDTO();
-        patch.setThumbnail("https://cdn.theproject.id/hawapi/image.jpg");
+    void whenNoEpisodeFoundShouldThrowItemNotFoundExceptionOnUpdateEpisode() throws Exception {
+        EpisodeDTO patch = new EpisodeDTO();
+        patch.setEpisodeNum((byte) 5);
 
-        doThrow(ItemNotFoundException.class).when(service).patch(any(UUID.class), any(LocationDTO.class));
+        doThrow(ItemNotFoundException.class).when(service).patch(any(UUID.class), any(EpisodeDTO.class));
 
-        mockMvc.perform(patch(URL + "/" + location.getUuid())
+        mockMvc.perform(patch(URL + "/" + episode.getUuid())
                         .with(user("admin").roles("ADMIN"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(patch))
@@ -584,20 +604,20 @@ class LocationControllerUnitTest {
                 .andDo(print())
                 .andExpect(status().isNotFound());
 
-        verify(service, times(1)).patch(any(UUID.class), any(LocationDTO.class));
+        verify(service, times(1)).patch(any(UUID.class), any(EpisodeDTO.class));
     }
 
     @Test
-    void whenNoLocationFoundShouldThrowItemNotFoundExceptionOnUpdateLocationTranslation() throws Exception {
-        LocationTranslationDTO patch = new LocationTranslationDTO();
-        patch.setName("Ipsum");
+    void whenNoEpisodeFoundShouldThrowItemNotFoundExceptionOnUpdateEpisodeTranslation() throws Exception {
+        EpisodeTranslationDTO patch = new EpisodeTranslationDTO();
+        patch.setTitle("Ipsum");
 
         doThrow(ItemNotFoundException.class).when(service).patchTranslation(any(UUID.class),
                 anyString(),
-                any(LocationTranslationDTO.class)
+                any(EpisodeTranslationDTO.class)
         );
 
-        mockMvc.perform(patch(URL + "/" + location.getUuid() + "/translations/en-US")
+        mockMvc.perform(patch(URL + "/" + episode.getUuid() + "/translations/en-US")
                         .with(user("admin").roles("ADMIN"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(patch))
@@ -607,15 +627,15 @@ class LocationControllerUnitTest {
 
         verify(service, times(1)).patchTranslation(any(UUID.class),
                 anyString(),
-                any(LocationTranslationDTO.class)
+                any(EpisodeTranslationDTO.class)
         );
     }
 
     @Test
-    void shouldDeleteLocation() throws Exception {
+    void shouldDeleteEpisode() throws Exception {
         doNothing().when(service).deleteById(any(UUID.class));
 
-        mockMvc.perform(delete(URL + "/" + location.getUuid())
+        mockMvc.perform(delete(URL + "/" + episode.getUuid())
                         .with(user("admin").roles("ADMIN"))
                 )
                 .andDo(print())
@@ -625,10 +645,10 @@ class LocationControllerUnitTest {
     }
 
     @Test
-    void shouldDeleteLocationTranslation() throws Exception {
+    void shouldDeleteEpisodeTranslation() throws Exception {
         doNothing().when(service).deleteTranslation(any(UUID.class), anyString());
 
-        mockMvc.perform(delete(URL + "/" + location.getUuid() + "/translations/en-US")
+        mockMvc.perform(delete(URL + "/" + episode.getUuid() + "/translations/en-US")
                         .with(user("admin").roles("ADMIN"))
                 )
                 .andDo(print())
@@ -638,22 +658,22 @@ class LocationControllerUnitTest {
     }
 
     @Test
-    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnDeleteLocation() throws Exception {
-        mockMvc.perform(delete(URL + "/" + location.getUuid()))
+    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnDeleteEpisode() throws Exception {
+        mockMvc.perform(delete(URL + "/" + episode.getUuid()))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnDeleteLocationTranslation() throws Exception {
-        mockMvc.perform(delete(URL + "/" + location.getUuid() + "/translations/en-US"))
+    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnDeleteEpisodeTranslation() throws Exception {
+        mockMvc.perform(delete(URL + "/" + episode.getUuid() + "/translations/en-US"))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnDeleteLocation() throws Exception {
-        mockMvc.perform(delete(URL + "/" + location.getUuid())
+    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnDeleteEpisode() throws Exception {
+        mockMvc.perform(delete(URL + "/" + episode.getUuid())
                         .with(user("dev").roles("DEV"))
                 )
                 .andDo(print())
@@ -661,8 +681,8 @@ class LocationControllerUnitTest {
     }
 
     @Test
-    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnDeleteLocationTranslation() throws Exception {
-        mockMvc.perform(delete(URL + "/" + location.getUuid() + "/translations/en-US")
+    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnDeleteEpisodeTranslation() throws Exception {
+        mockMvc.perform(delete(URL + "/" + episode.getUuid() + "/translations/en-US")
                         .with(user("dev").roles("DEV"))
                 )
                 .andDo(print())
@@ -670,10 +690,10 @@ class LocationControllerUnitTest {
     }
 
     @Test
-    void whenNoLocationFoundShouldThrowItemNotFoundExceptionOnUpdateLocationOnDeleteLocation() throws Exception {
+    void whenNoEpisodeFoundShouldThrowItemNotFoundExceptionOnUpdateEpisodeOnDeleteEpisode() throws Exception {
         doThrow(ItemNotFoundException.class).when(service).deleteById(any(UUID.class));
 
-        mockMvc.perform(delete(URL + "/" + location.getUuid())
+        mockMvc.perform(delete(URL + "/" + episode.getUuid())
                         .with(user("admin").roles("ADMIN"))
                 )
                 .andDo(print())
@@ -683,10 +703,10 @@ class LocationControllerUnitTest {
     }
 
     @Test
-    void whenNoLocationFoundShouldThrowItemNotFoundExceptionOnUpdateLocationOnDeleteLocationTranslation() throws Exception {
+    void whenNoEpisodeFoundShouldThrowItemNotFoundExceptionOnUpdateEpisodeOnDeleteEpisodeTranslation() throws Exception {
         doThrow(ItemNotFoundException.class).when(service).deleteTranslation(any(UUID.class), anyString());
 
-        mockMvc.perform(delete(URL + "/" + location.getUuid() + "/translations/en-US")
+        mockMvc.perform(delete(URL + "/" + episode.getUuid() + "/translations/en-US")
                         .with(user("admin").roles("ADMIN"))
                 )
                 .andDo(print())

@@ -5,9 +5,9 @@ import com.lucasjosino.hawapi.configs.security.SecurityConfig;
 import com.lucasjosino.hawapi.controllers.advisor.ControllerAdvisor;
 import com.lucasjosino.hawapi.controllers.utils.ResponseUtils;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
-import com.lucasjosino.hawapi.models.dto.SeasonDTO;
-import com.lucasjosino.hawapi.models.dto.translation.SeasonTranslationDTO;
-import com.lucasjosino.hawapi.services.impl.SeasonServiceImpl;
+import com.lucasjosino.hawapi.models.dto.GameDTO;
+import com.lucasjosino.hawapi.models.dto.translation.GameTranslationDTO;
+import com.lucasjosino.hawapi.services.impl.GameServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,15 +41,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ActiveProfiles("test")
-@WebMvcTest(controllers = SeasonController.class)
-@ContextConfiguration(classes = {SeasonController.class, ControllerAdvisor.class, SecurityConfig.class})
-class SeasonControllerUnitTest {
+@WebMvcTest(controllers = GameController.class)
+@ContextConfiguration(classes = {GameController.class, ControllerAdvisor.class, SecurityConfig.class})
+class GameControllerTest {
 
-    private static final String URL = "/api/v1/seasons";
+    private static final String URL = "/api/v1/games";
 
-    private SeasonDTO season;
+    private GameDTO game;
 
-    private SeasonTranslationDTO translation;
+    private GameTranslationDTO translation;
 
     @Autowired
     private MockMvc mockMvc;
@@ -58,7 +58,7 @@ class SeasonControllerUnitTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private SeasonServiceImpl service;
+    private GameServiceImpl service;
 
     @MockBean
     private ResponseUtils responseUtils;
@@ -68,39 +68,40 @@ class SeasonControllerUnitTest {
 
     @BeforeEach
     void setUp() {
-        season = new SeasonDTO();
-        season.setUuid(UUID.randomUUID());
-        season.setHref(URL + "/" + season.getUuid());
-        season.setLanguages(Collections.singletonList("Lorem"));
-        season.setDurationTotal(215398753);
-        season.setSeasonNum((byte) 2);
-        season.setReleaseDate(LocalDate.now());
-        season.setNextSeason("/api/v1/seasons/3");
-        season.setPrevSeason("/api/v1/seasons/1");
-        season.setEpisodes(Arrays.asList("/api/v1/episodes/1", "/api/v1/episodes/2", "/api/v1/episodes/3"));
-        season.setSoundtracks(Arrays.asList("/api/v1/soundtracks/1", "/api/v1/soundtracks/2", "/api/v1/soundtracks/3"));
-        season.setBudget(218459);
-        season.setThumbnail("https://cdn.theproject.id/hawapi/image.jpg");
-        season.setImages(Arrays.asList("https://example.com/image.jpg", "https://example.com/image.jpg"));
-        season.setSources(Arrays.asList("https://example.com", "https://example.com"));
-        season.setCreatedAt(LocalDateTime.now());
-        season.setUpdatedAt(LocalDateTime.now());
-        season.setLanguage("en-US");
-        season.setTitle("Lorem Ipsum");
-        season.setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
-        season.setGenres(Arrays.asList("gen1", "gen2", "gen3"));
-        season.setTrailers(Arrays.asList("https://youtube.com/watch?v=1", "https://youtube.com/watch?v=2"));
+        game = new GameDTO();
+        game.setUuid(UUID.randomUUID());
+        game.setHref(URL + "/" + game.getUuid());
+        game.setLanguages(Collections.singletonList("Lorem"));
+        game.setReleaseDate(LocalDate.now());
+        game.setWebsite("https://example.com");
+        game.setPlaytime(210574565);
+        game.setAgeRating("100+");
+        game.setStores(Arrays.asList("https://store.example.com", "https://store.example.com"));
+        game.setModes(Arrays.asList("Single Player", "Multi Player"));
+        game.setPublishers(Arrays.asList("Lorem", "Ipsum"));
+        game.setDevelopers(Arrays.asList("Lorem", "Ipsum"));
+        game.setPlatforms(Arrays.asList("Android", "iOS"));
+        game.setGenres(Arrays.asList("Lorem", "Ipsum"));
+        game.setTags(Arrays.asList("horror", "suspense"));
+        game.setThumbnail("https://cdn.theproject.id/hawapi/image.jpg");
+        game.setImages(Arrays.asList("https://example.com/image.jpg", "https://example.com/image.jpg"));
+        game.setSources(Arrays.asList("https://example.com", "https://example.com"));
+        game.setCreatedAt(LocalDateTime.now());
+        game.setUpdatedAt(LocalDateTime.now());
+        game.setLanguage("en-US");
+        game.setName("Lorem Ipsum");
+        game.setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+        game.setTrailer("https://youtube.com/watch?v=1");
 
-        translation = new SeasonTranslationDTO();
+        translation = new GameTranslationDTO();
         translation.setLanguage("en-US");
-        translation.setTitle("Lorem Ipsum");
+        translation.setName("Lorem Ipsum");
         translation.setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
-        translation.setGenres(Arrays.asList("gen1", "gen2", "gen3"));
-        translation.setTrailers(Arrays.asList("https://youtube.com/watch?v=1", "https://youtube.com/watch?v=2"));
+        translation.setTrailer("https://youtube.com/watch?v=1");
     }
 
     @Test
-    void shouldReturnAllSeasons() throws Exception {
+    void shouldReturnAllGames() throws Exception {
         Pageable pageable = Pageable.ofSize(1);
         List<UUID> res = Collections.singletonList(UUID.randomUUID());
         Page<UUID> uuids = PageableExecutionUtils.getPage(res,
@@ -111,7 +112,7 @@ class SeasonControllerUnitTest {
 
         when(service.findAllUUIDs(any(Pageable.class))).thenReturn(uuids);
         when(responseUtils.getHeaders(any(), any(Pageable.class), nullable(String.class))).thenReturn(headers);
-        when(service.findAll(anyMap(), anyList())).thenReturn(Collections.singletonList(season));
+        when(service.findAll(anyMap(), anyList())).thenReturn(Collections.singletonList(game));
 
         mockMvc.perform(get(URL))
                 .andDo(print())
@@ -130,7 +131,7 @@ class SeasonControllerUnitTest {
     }
 
     @Test
-    void shouldReturnAllSeasonsWithPortugueseLanguage() throws Exception {
+    void shouldReturnAllGamesWithPortugueseLanguage() throws Exception {
         Pageable pageable = Pageable.ofSize(1);
         List<UUID> res = Collections.singletonList(UUID.randomUUID());
         Page<UUID> uuids = PageableExecutionUtils.getPage(res,
@@ -141,7 +142,7 @@ class SeasonControllerUnitTest {
 
         when(service.findAllUUIDs(any(Pageable.class))).thenReturn(uuids);
         when(responseUtils.getHeaders(any(), any(Pageable.class), nullable(String.class))).thenReturn(headers);
-        when(service.findAll(anyMap(), anyList())).thenReturn(Collections.singletonList(season));
+        when(service.findAll(anyMap(), anyList())).thenReturn(Collections.singletonList(game));
 
         mockMvc.perform(get(URL))
                 .andDo(print())
@@ -160,28 +161,26 @@ class SeasonControllerUnitTest {
     }
 
     @Test
-    void shouldReturnAllSeasonTranslations() throws Exception {
+    void shouldReturnAllGameTranslations() throws Exception {
         when(service.findAllTranslationsBy(any(UUID.class))).thenReturn(Collections.singletonList(translation));
 
-        mockMvc.perform(get(URL + "/" + season.getUuid() + "/translations"))
+        mockMvc.perform(get(URL + "/" + game.getUuid() + "/translations"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].title").value(translation.getTitle()))
+                .andExpect(jsonPath("$[0].name").value(translation.getName()))
                 .andExpect(jsonPath("$[0].description").value(translation.getDescription()))
-                .andExpect(jsonPath("$[0].language").value(translation.getLanguage()))
-                .andExpect(jsonPath("$[0].genres").isNotEmpty())
-                .andExpect(jsonPath("$[0].trailers").isNotEmpty());
+                .andExpect(jsonPath("$[0].language").value(translation.getLanguage()));
 
         verify(service, times(1)).findAllTranslationsBy(any(UUID.class));
     }
 
     @Test
-    void whenNoSeasonLanguageFoundShouldThrowItemNotFoundExceptionOnAllSeasonsWithPortugueseLanguage() throws Exception {
+    void whenNoGameLanguageFoundShouldThrowItemNotFoundExceptionOnAllGamesWithPortugueseLanguage() throws Exception {
         when(service.findBy(any(UUID.class), nullable(String.class))).thenThrow(ItemNotFoundException.class);
 
-        mockMvc.perform(get(URL + "/" + season.getUuid() + "?language=pt-BR"))
+        mockMvc.perform(get(URL + "/" + game.getUuid() + "?language=pt-BR"))
                 .andDo(print())
                 .andExpect(status().isNotFound());
 
@@ -189,7 +188,7 @@ class SeasonControllerUnitTest {
     }
 
     @Test
-    void whenNoUUIDIsFoundShouldReturnEmptyListOnAllSeasons() throws Exception {
+    void whenNoUUIDIsFoundShouldReturnEmptyListOnAllGames() throws Exception {
         Pageable pageable = Pageable.ofSize(1);
         List<UUID> res = Collections.emptyList();
         Page<UUID> uuids = PageableExecutionUtils.getPage(res,
@@ -218,29 +217,32 @@ class SeasonControllerUnitTest {
     }
 
     @Test
-    void shouldReturnRandomSeason() throws Exception {
-        when(service.findRandom(nullable(String.class))).thenReturn(season);
+    void shouldReturnRandomGame() throws Exception {
+        when(service.findRandom(nullable(String.class))).thenReturn(game);
 
         mockMvc.perform(get(URL + "/random"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.uuid").value(String.valueOf(season.getUuid())))
-                .andExpect(jsonPath("$.href").value(season.getHref()))
-                .andExpect(jsonPath("$.title").value(season.getTitle()))
-                .andExpect(jsonPath("$.description").value(season.getDescription()))
-                .andExpect(jsonPath("$.genres").isNotEmpty())
-                .andExpect(jsonPath("$.trailers").isNotEmpty())
+                .andExpect(jsonPath("$.uuid").value(String.valueOf(game.getUuid())))
+                .andExpect(jsonPath("$.href").value(game.getHref()))
+                .andExpect(jsonPath("$.name").value(game.getName()))
+                .andExpect(jsonPath("$.description").value(game.getDescription()))
+                .andExpect(jsonPath("$.trailer").value(game.getTrailer()))
+                .andExpect(jsonPath("$.language").value(game.getLanguage()))
                 .andExpect(jsonPath("$.languages").isNotEmpty())
-                .andExpect(jsonPath("$.duration_total").value(String.valueOf(season.getDurationTotal())))
-                .andExpect(jsonPath("$.season_num").value(String.valueOf(season.getSeasonNum())))
-                .andExpect(jsonPath("$.release_date").value(String.valueOf(season.getReleaseDate())))
-                .andExpect(jsonPath("$.next_season").value(season.getNextSeason()))
-                .andExpect(jsonPath("$.prev_season").value(season.getPrevSeason()))
-                .andExpect(jsonPath("$.episodes").isNotEmpty())
-                .andExpect(jsonPath("$.soundtracks").isNotEmpty())
-                .andExpect(jsonPath("$.budget").value(String.valueOf(season.getBudget())))
-                .andExpect(jsonPath("$.thumbnail").value(season.getThumbnail()))
+                .andExpect(jsonPath("$.release_date").value(String.valueOf(game.getReleaseDate())))
+                .andExpect(jsonPath("$.website").value(game.getWebsite()))
+                .andExpect(jsonPath("$.playtime").value(String.valueOf(game.getPlaytime())))
+                .andExpect(jsonPath("$.age_rating").value(game.getAgeRating()))
+                .andExpect(jsonPath("$.stores").isNotEmpty())
+                .andExpect(jsonPath("$.modes").isNotEmpty())
+                .andExpect(jsonPath("$.publishers").isNotEmpty())
+                .andExpect(jsonPath("$.developers").isNotEmpty())
+                .andExpect(jsonPath("$.platforms").isNotEmpty())
+                .andExpect(jsonPath("$.genres").isNotEmpty())
+                .andExpect(jsonPath("$.tags").isNotEmpty())
+                .andExpect(jsonPath("$.thumbnail").value(game.getThumbnail()))
                 .andExpect(jsonPath("$.images").isNotEmpty())
                 .andExpect(jsonPath("$.sources").isNotEmpty())
                 .andExpect(jsonPath("$.created_at").exists())
@@ -250,32 +252,31 @@ class SeasonControllerUnitTest {
     }
 
     @Test
-    void shouldReturnRandomSeasonTranslation() throws Exception {
+    void shouldReturnRandomGameTranslation() throws Exception {
         HttpHeaders headers = buildHeaders("en-US");
 
         when(responseUtils.getHeaders(anyString())).thenReturn(headers);
         when(service.findRandomTranslation(any(UUID.class))).thenReturn(translation);
 
-        mockMvc.perform(get(URL + "/" + season.getUuid() + "/translations/random"))
+        mockMvc.perform(get(URL + "/" + game.getUuid() + "/translations/random"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(header().exists("Content-Language"))
-                .andExpect(jsonPath("$.title").value(translation.getTitle()))
+                .andExpect(jsonPath("$.name").value(translation.getName()))
                 .andExpect(jsonPath("$.description").value(translation.getDescription()))
                 .andExpect(jsonPath("$.language").value(translation.getLanguage()))
-                .andExpect(jsonPath("$.genres").isNotEmpty())
-                .andExpect(jsonPath("$.trailers").isNotEmpty());
+                .andExpect(jsonPath("$.trailer").value(translation.getTrailer()));
 
         verify(responseUtils, times(1)).getHeaders(anyString());
         verify(service, times(1)).findRandomTranslation(any(UUID.class));
     }
 
     @Test
-    void whenNoTranslationFoundShouldThrowItemNotFoundExceptionOnRandomSeasonTranslation() throws Exception {
+    void whenNoTranslationFoundShouldThrowItemNotFoundExceptionOnRandomGameTranslation() throws Exception {
         when(service.findRandomTranslation(any(UUID.class))).thenThrow(ItemNotFoundException.class);
 
-        mockMvc.perform(get(URL + "/" + season.getUuid() + "/translations/random"))
+        mockMvc.perform(get(URL + "/" + game.getUuid() + "/translations/random"))
                 .andDo(print())
                 .andExpect(status().isNotFound());
 
@@ -283,7 +284,7 @@ class SeasonControllerUnitTest {
     }
 
     @Test
-    void whenNoSeasonFoundShouldThrowItemNotFoundExceptionOnRandomSeason() throws Exception {
+    void whenNoGameFoundShouldThrowItemNotFoundExceptionOnRandomGame() throws Exception {
         when(service.findRandom(nullable(String.class))).thenThrow(ItemNotFoundException.class);
 
         mockMvc.perform(get(URL + "/random"))
@@ -294,29 +295,32 @@ class SeasonControllerUnitTest {
     }
 
     @Test
-    void shouldReturnSeasonByUUID() throws Exception {
-        when(service.findBy(any(UUID.class), nullable(String.class))).thenReturn(season);
+    void shouldReturnGameByUUID() throws Exception {
+        when(service.findBy(any(UUID.class), nullable(String.class))).thenReturn(game);
 
-        mockMvc.perform(get(URL + "/" + season.getUuid()))
+        mockMvc.perform(get(URL + "/" + game.getUuid()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.uuid").value(String.valueOf(season.getUuid())))
-                .andExpect(jsonPath("$.href").value(season.getHref()))
-                .andExpect(jsonPath("$.title").value(season.getTitle()))
-                .andExpect(jsonPath("$.description").value(season.getDescription()))
-                .andExpect(jsonPath("$.genres").isNotEmpty())
-                .andExpect(jsonPath("$.trailers").isNotEmpty())
+                .andExpect(jsonPath("$.uuid").value(String.valueOf(game.getUuid())))
+                .andExpect(jsonPath("$.href").value(game.getHref()))
+                .andExpect(jsonPath("$.name").value(game.getName()))
+                .andExpect(jsonPath("$.description").value(game.getDescription()))
+                .andExpect(jsonPath("$.trailer").value(game.getTrailer()))
+                .andExpect(jsonPath("$.language").value(game.getLanguage()))
                 .andExpect(jsonPath("$.languages").isNotEmpty())
-                .andExpect(jsonPath("$.duration_total").value(String.valueOf(season.getDurationTotal())))
-                .andExpect(jsonPath("$.season_num").value(String.valueOf(season.getSeasonNum())))
-                .andExpect(jsonPath("$.release_date").value(String.valueOf(season.getReleaseDate())))
-                .andExpect(jsonPath("$.next_season").value(season.getNextSeason()))
-                .andExpect(jsonPath("$.prev_season").value(season.getPrevSeason()))
-                .andExpect(jsonPath("$.episodes").isNotEmpty())
-                .andExpect(jsonPath("$.soundtracks").isNotEmpty())
-                .andExpect(jsonPath("$.budget").value(String.valueOf(season.getBudget())))
-                .andExpect(jsonPath("$.thumbnail").value(season.getThumbnail()))
+                .andExpect(jsonPath("$.release_date").value(String.valueOf(game.getReleaseDate())))
+                .andExpect(jsonPath("$.website").value(game.getWebsite()))
+                .andExpect(jsonPath("$.playtime").value(String.valueOf(game.getPlaytime())))
+                .andExpect(jsonPath("$.age_rating").value(game.getAgeRating()))
+                .andExpect(jsonPath("$.stores").isNotEmpty())
+                .andExpect(jsonPath("$.modes").isNotEmpty())
+                .andExpect(jsonPath("$.publishers").isNotEmpty())
+                .andExpect(jsonPath("$.developers").isNotEmpty())
+                .andExpect(jsonPath("$.platforms").isNotEmpty())
+                .andExpect(jsonPath("$.genres").isNotEmpty())
+                .andExpect(jsonPath("$.tags").isNotEmpty())
+                .andExpect(jsonPath("$.thumbnail").value(game.getThumbnail()))
                 .andExpect(jsonPath("$.images").isNotEmpty())
                 .andExpect(jsonPath("$.sources").isNotEmpty())
                 .andExpect(jsonPath("$.created_at").exists())
@@ -326,32 +330,31 @@ class SeasonControllerUnitTest {
     }
 
     @Test
-    void shouldReturnSeasonTranslationByUUIDAndLanguage() throws Exception {
+    void shouldReturnGameTranslationByUUIDAndLanguage() throws Exception {
         HttpHeaders headers = buildHeaders("pt-BR");
 
         when(responseUtils.getHeaders(anyString())).thenReturn(headers);
         when(service.findTranslationBy(any(UUID.class), nullable(String.class))).thenReturn(translation);
 
-        mockMvc.perform(get(URL + "/" + season.getUuid() + "/translations/pt-BR"))
+        mockMvc.perform(get(URL + "/" + game.getUuid() + "/translations/pt-BR"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(header().string("Content-Language", "pt-BR"))
-                .andExpect(jsonPath("$.title").value(translation.getTitle()))
+                .andExpect(jsonPath("$.name").value(translation.getName()))
                 .andExpect(jsonPath("$.description").value(translation.getDescription()))
                 .andExpect(jsonPath("$.language").value(translation.getLanguage()))
-                .andExpect(jsonPath("$.genres").isNotEmpty())
-                .andExpect(jsonPath("$.trailers").isNotEmpty());
+                .andExpect(jsonPath("$.trailer").value(translation.getTrailer()));
 
         verify(responseUtils, times(1)).getHeaders(anyString());
         verify(service, times(1)).findTranslationBy(any(UUID.class), nullable(String.class));
     }
 
     @Test
-    void whenNoSeasonFoundShouldThrowItemNotFoundExceptionOnSeasonByUUID() throws Exception {
+    void whenNoGameFoundShouldThrowItemNotFoundExceptionOnGameByUUID() throws Exception {
         when(service.findBy(any(UUID.class), nullable(String.class))).thenThrow(ItemNotFoundException.class);
 
-        mockMvc.perform(get(URL + "/" + season.getUuid()))
+        mockMvc.perform(get(URL + "/" + game.getUuid()))
                 .andDo(print())
                 .andExpect(status().isNotFound());
 
@@ -359,10 +362,10 @@ class SeasonControllerUnitTest {
     }
 
     @Test
-    void whenNoSeasonTranslationFoundShouldThrowItemNotFoundExceptionOnTranslationByUUIDAndLanguage() throws Exception {
+    void whenNoGameTranslationFoundShouldThrowItemNotFoundExceptionOnTranslationByUUIDAndLanguage() throws Exception {
         when(service.findTranslationBy(any(UUID.class), nullable(String.class))).thenThrow(ItemNotFoundException.class);
 
-        mockMvc.perform(get(URL + "/" + season.getUuid() + "/translations/en-US"))
+        mockMvc.perform(get(URL + "/" + game.getUuid() + "/translations/en-US"))
                 .andDo(print())
                 .andExpect(status().isNotFound());
 
@@ -370,49 +373,52 @@ class SeasonControllerUnitTest {
     }
 
     @Test
-    void shouldSaveSeason() throws Exception {
-        when(service.save(any(SeasonDTO.class))).thenReturn(season);
+    void shouldSaveGame() throws Exception {
+        when(service.save(any(GameDTO.class))).thenReturn(game);
 
         mockMvc.perform(post(URL)
                         .with(user("admin").roles("ADMIN"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(season))
+                        .content(objectMapper.writeValueAsString(game))
                 )
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.uuid").value(String.valueOf(season.getUuid())))
-                .andExpect(jsonPath("$.href").value(season.getHref()))
-                .andExpect(jsonPath("$.title").value(season.getTitle()))
-                .andExpect(jsonPath("$.description").value(season.getDescription()))
-                .andExpect(jsonPath("$.genres").isNotEmpty())
-                .andExpect(jsonPath("$.trailers").isNotEmpty())
+                .andExpect(jsonPath("$.uuid").value(String.valueOf(game.getUuid())))
+                .andExpect(jsonPath("$.href").value(game.getHref()))
+                .andExpect(jsonPath("$.name").value(game.getName()))
+                .andExpect(jsonPath("$.description").value(game.getDescription()))
+                .andExpect(jsonPath("$.trailer").value(game.getTrailer()))
+                .andExpect(jsonPath("$.language").value(game.getLanguage()))
                 .andExpect(jsonPath("$.languages").isNotEmpty())
-                .andExpect(jsonPath("$.duration_total").value(String.valueOf(season.getDurationTotal())))
-                .andExpect(jsonPath("$.season_num").value(String.valueOf(season.getSeasonNum())))
-                .andExpect(jsonPath("$.release_date").value(String.valueOf(season.getReleaseDate())))
-                .andExpect(jsonPath("$.next_season").value(season.getNextSeason()))
-                .andExpect(jsonPath("$.prev_season").value(season.getPrevSeason()))
-                .andExpect(jsonPath("$.episodes").isNotEmpty())
-                .andExpect(jsonPath("$.soundtracks").isNotEmpty())
-                .andExpect(jsonPath("$.budget").value(String.valueOf(season.getBudget())))
-                .andExpect(jsonPath("$.thumbnail").value(season.getThumbnail()))
+                .andExpect(jsonPath("$.release_date").value(String.valueOf(game.getReleaseDate())))
+                .andExpect(jsonPath("$.website").value(game.getWebsite()))
+                .andExpect(jsonPath("$.playtime").value(String.valueOf(game.getPlaytime())))
+                .andExpect(jsonPath("$.age_rating").value(game.getAgeRating()))
+                .andExpect(jsonPath("$.stores").isNotEmpty())
+                .andExpect(jsonPath("$.modes").isNotEmpty())
+                .andExpect(jsonPath("$.publishers").isNotEmpty())
+                .andExpect(jsonPath("$.developers").isNotEmpty())
+                .andExpect(jsonPath("$.platforms").isNotEmpty())
+                .andExpect(jsonPath("$.genres").isNotEmpty())
+                .andExpect(jsonPath("$.tags").isNotEmpty())
+                .andExpect(jsonPath("$.thumbnail").value(game.getThumbnail()))
                 .andExpect(jsonPath("$.images").isNotEmpty())
                 .andExpect(jsonPath("$.sources").isNotEmpty())
                 .andExpect(jsonPath("$.created_at").exists())
                 .andExpect(jsonPath("$.updated_at").exists());
 
-        verify(service, times(1)).save(any(SeasonDTO.class));
+        verify(service, times(1)).save(any(GameDTO.class));
     }
 
     @Test
-    void shouldSaveSeasonTranslation() throws Exception {
+    void shouldSaveGameTranslation() throws Exception {
         HttpHeaders headers = buildHeaders("pt-BR");
 
         when(responseUtils.getHeaders(anyString())).thenReturn(headers);
-        when(service.saveTranslation(any(UUID.class), any(SeasonTranslationDTO.class))).thenReturn(translation);
+        when(service.saveTranslation(any(UUID.class), any(GameTranslationDTO.class))).thenReturn(translation);
 
-        mockMvc.perform(post(URL + "/" + season.getUuid() + "/translations")
+        mockMvc.perform(post(URL + "/" + game.getUuid() + "/translations")
                         .with(user("admin").roles("ADMIN"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(translation))
@@ -421,29 +427,28 @@ class SeasonControllerUnitTest {
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(header().string("Content-Language", "pt-BR"))
-                .andExpect(jsonPath("$.title").value(translation.getTitle()))
+                .andExpect(jsonPath("$.name").value(translation.getName()))
                 .andExpect(jsonPath("$.description").value(translation.getDescription()))
                 .andExpect(jsonPath("$.language").value(translation.getLanguage()))
-                .andExpect(jsonPath("$.genres").isNotEmpty())
-                .andExpect(jsonPath("$.trailers").isNotEmpty());
+                .andExpect(jsonPath("$.trailer").value(translation.getTrailer()));
 
         verify(responseUtils, times(1)).getHeaders(anyString());
-        verify(service, times(1)).saveTranslation(any(UUID.class), any(SeasonTranslationDTO.class));
+        verify(service, times(1)).saveTranslation(any(UUID.class), any(GameTranslationDTO.class));
     }
 
     @Test
-    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnSaveSeason() throws Exception {
+    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnSaveGame() throws Exception {
         mockMvc.perform(post(URL)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(season))
+                        .content(objectMapper.writeValueAsString(game))
                 )
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnSaveSeasonTranslation() throws Exception {
-        mockMvc.perform(post(URL + "/" + season.getUuid() + "/translations")
+    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnSaveGameTranslation() throws Exception {
+        mockMvc.perform(post(URL + "/" + game.getUuid() + "/translations")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(translation))
                 )
@@ -452,19 +457,19 @@ class SeasonControllerUnitTest {
     }
 
     @Test
-    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnSaveSeason() throws Exception {
+    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnSaveGame() throws Exception {
         mockMvc.perform(post(URL)
                         .with(user("dev").roles("DEV"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(season))
+                        .content(objectMapper.writeValueAsString(game))
                 )
                 .andDo(print())
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnSaveSeasonTranslation() throws Exception {
-        mockMvc.perform(post(URL + "/" + season.getUuid() + "/translations")
+    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnSaveGameTranslation() throws Exception {
+        mockMvc.perform(post(URL + "/" + game.getUuid() + "/translations")
                         .with(user("dev").roles("DEV"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(translation))
@@ -474,12 +479,12 @@ class SeasonControllerUnitTest {
     }
 
     @Test
-    void whenFieldValidationFailsShouldReturnBadRequestExceptionOnSaveSeason() throws Exception {
-        season.setThumbnail("http://cdn.theproject.id/hawapi/image.jpg");
+    void whenFieldValidationFailsShouldReturnBadRequestExceptionOnSaveGame() throws Exception {
+        game.setReleaseDate(null);
         mockMvc.perform(post(URL)
                         .with(user("admin").roles("ADMIN"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(season))
+                        .content(objectMapper.writeValueAsString(game))
                 )
                 .andDo(print())
                 .andExpect(status().isBadRequest())
@@ -487,16 +492,16 @@ class SeasonControllerUnitTest {
                 .andExpect(jsonPath("$.code").value(HttpStatus.BAD_REQUEST.value()))
                 .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.getReasonPhrase()))
                 .andExpect(jsonPath("$.method").value(HttpMethod.POST.name()))
-                .andExpect(jsonPath("$.message").value("Field 'thumbnail' doesn't have a valid image URL"))
+                .andExpect(jsonPath("$.message").value("Field 'release_date' is required"))
                 .andExpect(jsonPath("$.timestamps").exists())
                 .andExpect(jsonPath("$.url").value(URL));
     }
 
     @Test
-    void whenFieldValidationFailsShouldReturnBadRequestExceptionOnSaveSeasonTranslation() throws Exception {
-        translation.setTitle(null);
+    void whenFieldValidationFailsShouldReturnBadRequestExceptionOnSaveGameTranslation() throws Exception {
+        translation.setName(null);
 
-        String url = URL + "/" + season.getUuid() + "/translations";
+        String url = URL + "/" + game.getUuid() + "/translations";
         mockMvc.perform(post(url)
                         .with(user("admin").roles("ADMIN"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -508,20 +513,20 @@ class SeasonControllerUnitTest {
                 .andExpect(jsonPath("$.code").value(HttpStatus.BAD_REQUEST.value()))
                 .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.getReasonPhrase()))
                 .andExpect(jsonPath("$.method").value(HttpMethod.POST.name()))
-                .andExpect(jsonPath("$.message").value("Field 'title' is required"))
+                .andExpect(jsonPath("$.message").value("Field 'name' is required"))
                 .andExpect(jsonPath("$.timestamps").exists())
                 .andExpect(jsonPath("$.url").value(url));
     }
 
 
     @Test
-    void shouldUpdateSeason() throws Exception {
-        SeasonDTO patch = new SeasonDTO();
-        patch.setThumbnail("https://cdn.theproject.id/hawapi/image.jpg");
+    void shouldUpdateGame() throws Exception {
+        GameDTO patch = new GameDTO();
+        patch.setReleaseDate(LocalDate.parse("2000-01-01"));
 
-        doNothing().when(service).patch(any(UUID.class), any(SeasonDTO.class));
+        doNothing().when(service).patch(any(UUID.class), any(GameDTO.class));
 
-        mockMvc.perform(patch(URL + "/" + season.getUuid())
+        mockMvc.perform(patch(URL + "/" + game.getUuid())
                         .with(user("admin").roles("ADMIN"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(patch))
@@ -529,21 +534,21 @@ class SeasonControllerUnitTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.thumbnail").value(String.valueOf(patch.getThumbnail())));
+                .andExpect(jsonPath("$.release_date").value(String.valueOf(patch.getReleaseDate())));
 
-        verify(service, times(1)).patch(any(UUID.class), any(SeasonDTO.class));
+        verify(service, times(1)).patch(any(UUID.class), any(GameDTO.class));
     }
 
     @Test
-    void shouldUpdateSeasonTranslation() throws Exception {
+    void shouldUpdateGameTranslation() throws Exception {
         HttpHeaders headers = buildHeaders("pt-BR");
-        SeasonTranslationDTO patch = new SeasonTranslationDTO();
-        patch.setTitle("Lorem");
+        GameTranslationDTO patch = new GameTranslationDTO();
+        patch.setName("Lorem");
 
         when(responseUtils.getHeaders(anyString())).thenReturn(headers);
-        doNothing().when(service).patchTranslation(any(UUID.class), anyString(), any(SeasonTranslationDTO.class));
+        doNothing().when(service).patchTranslation(any(UUID.class), anyString(), any(GameTranslationDTO.class));
 
-        mockMvc.perform(patch(URL + "/" + season.getUuid() + "/translations/en-US")
+        mockMvc.perform(patch(URL + "/" + game.getUuid() + "/translations/en-US")
                         .with(user("admin").roles("ADMIN"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(patch))
@@ -552,16 +557,16 @@ class SeasonControllerUnitTest {
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(header().string("Content-Language", "pt-BR"))
-                .andExpect(jsonPath("$.title").value(String.valueOf(patch.getTitle())));
+                .andExpect(jsonPath("$.name").value(String.valueOf(patch.getName())));
 
         verify(responseUtils, times(1)).getHeaders(anyString());
         verify(service, times(1))
-                .patchTranslation(any(UUID.class), anyString(), any(SeasonTranslationDTO.class));
+                .patchTranslation(any(UUID.class), anyString(), any(GameTranslationDTO.class));
     }
 
     @Test
-    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnUpdateSeason() throws Exception {
-        mockMvc.perform(patch(URL + "/" + season.getUuid())
+    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnUpdateGame() throws Exception {
+        mockMvc.perform(patch(URL + "/" + game.getUuid())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                 )
                 .andDo(print())
@@ -569,8 +574,8 @@ class SeasonControllerUnitTest {
     }
 
     @Test
-    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnUpdateSeasonTranslation() throws Exception {
-        mockMvc.perform(patch(URL + "/" + season.getUuid() + "/translations/en-US")
+    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnUpdateGameTranslation() throws Exception {
+        mockMvc.perform(patch(URL + "/" + game.getUuid() + "/translations/en-US")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                 )
                 .andDo(print())
@@ -578,8 +583,8 @@ class SeasonControllerUnitTest {
     }
 
     @Test
-    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnUpdateSeason() throws Exception {
-        mockMvc.perform(patch(URL + "/" + season.getUuid())
+    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnUpdateGame() throws Exception {
+        mockMvc.perform(patch(URL + "/" + game.getUuid())
                         .with(user("dev").roles("DEV"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                 )
@@ -588,8 +593,8 @@ class SeasonControllerUnitTest {
     }
 
     @Test
-    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnUpdateSeasonTranslation() throws Exception {
-        mockMvc.perform(patch(URL + "/" + season.getUuid() + "/translations/en-US")
+    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnUpdateGameTranslation() throws Exception {
+        mockMvc.perform(patch(URL + "/" + game.getUuid() + "/translations/en-US")
                         .with(user("dev").roles("DEV"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                 )
@@ -598,8 +603,8 @@ class SeasonControllerUnitTest {
     }
 
     @Test
-    void whenFieldValidationFailsShouldReturnBadRequestExceptionOnUpdateSeason() throws Exception {
-        mockMvc.perform(patch(URL + "/" + season.getUuid())
+    void whenFieldValidationFailsShouldReturnBadRequestExceptionOnUpdateGame() throws Exception {
+        mockMvc.perform(patch(URL + "/" + game.getUuid())
                         .with(user("admin").roles("ADMIN"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                 )
@@ -608,8 +613,8 @@ class SeasonControllerUnitTest {
     }
 
     @Test
-    void whenNoBodyShouldReturnBadRequestExceptionOnUpdateSeasonTranslation() throws Exception {
-        mockMvc.perform(patch(URL + "/" + season.getUuid() + "/translations/en-US")
+    void whenNoBodyShouldReturnBadRequestExceptionOnUpdateGameTranslation() throws Exception {
+        mockMvc.perform(patch(URL + "/" + game.getUuid() + "/translations/en-US")
                         .with(user("admin").roles("ADMIN"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                 )
@@ -618,13 +623,13 @@ class SeasonControllerUnitTest {
     }
 
     @Test
-    void whenNoSeasonFoundShouldThrowItemNotFoundExceptionOnUpdateSeason() throws Exception {
-        SeasonDTO patch = new SeasonDTO();
-        patch.setThumbnail("https://cdn.theproject.id/hawapi/image.jpg");
+    void whenNoGameFoundShouldThrowItemNotFoundExceptionOnUpdateGame() throws Exception {
+        GameDTO patch = new GameDTO();
+        patch.setReleaseDate(LocalDate.parse("2000-01-01"));
 
-        doThrow(ItemNotFoundException.class).when(service).patch(any(UUID.class), any(SeasonDTO.class));
+        doThrow(ItemNotFoundException.class).when(service).patch(any(UUID.class), any(GameDTO.class));
 
-        mockMvc.perform(patch(URL + "/" + season.getUuid())
+        mockMvc.perform(patch(URL + "/" + game.getUuid())
                         .with(user("admin").roles("ADMIN"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(patch))
@@ -632,20 +637,20 @@ class SeasonControllerUnitTest {
                 .andDo(print())
                 .andExpect(status().isNotFound());
 
-        verify(service, times(1)).patch(any(UUID.class), any(SeasonDTO.class));
+        verify(service, times(1)).patch(any(UUID.class), any(GameDTO.class));
     }
 
     @Test
-    void whenNoSeasonFoundShouldThrowItemNotFoundExceptionOnUpdateSeasonTranslation() throws Exception {
-        SeasonTranslationDTO patch = new SeasonTranslationDTO();
-        patch.setTitle("Ipsum");
+    void whenNoGameFoundShouldThrowItemNotFoundExceptionOnUpdateGameTranslation() throws Exception {
+        GameTranslationDTO patch = new GameTranslationDTO();
+        patch.setName("Ipsum");
 
         doThrow(ItemNotFoundException.class).when(service).patchTranslation(any(UUID.class),
                 anyString(),
-                any(SeasonTranslationDTO.class)
+                any(GameTranslationDTO.class)
         );
 
-        mockMvc.perform(patch(URL + "/" + season.getUuid() + "/translations/en-US")
+        mockMvc.perform(patch(URL + "/" + game.getUuid() + "/translations/en-US")
                         .with(user("admin").roles("ADMIN"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(patch))
@@ -655,15 +660,15 @@ class SeasonControllerUnitTest {
 
         verify(service, times(1)).patchTranslation(any(UUID.class),
                 anyString(),
-                any(SeasonTranslationDTO.class)
+                any(GameTranslationDTO.class)
         );
     }
 
     @Test
-    void shouldDeleteSeason() throws Exception {
+    void shouldDeleteGame() throws Exception {
         doNothing().when(service).deleteById(any(UUID.class));
 
-        mockMvc.perform(delete(URL + "/" + season.getUuid())
+        mockMvc.perform(delete(URL + "/" + game.getUuid())
                         .with(user("admin").roles("ADMIN"))
                 )
                 .andDo(print())
@@ -673,10 +678,10 @@ class SeasonControllerUnitTest {
     }
 
     @Test
-    void shouldDeleteSeasonTranslation() throws Exception {
+    void shouldDeleteGameTranslation() throws Exception {
         doNothing().when(service).deleteTranslation(any(UUID.class), anyString());
 
-        mockMvc.perform(delete(URL + "/" + season.getUuid() + "/translations/en-US")
+        mockMvc.perform(delete(URL + "/" + game.getUuid() + "/translations/en-US")
                         .with(user("admin").roles("ADMIN"))
                 )
                 .andDo(print())
@@ -686,22 +691,22 @@ class SeasonControllerUnitTest {
     }
 
     @Test
-    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnDeleteSeason() throws Exception {
-        mockMvc.perform(delete(URL + "/" + season.getUuid()))
+    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnDeleteGame() throws Exception {
+        mockMvc.perform(delete(URL + "/" + game.getUuid()))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnDeleteSeasonTranslation() throws Exception {
-        mockMvc.perform(delete(URL + "/" + season.getUuid() + "/translations/en-US"))
+    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnDeleteGameTranslation() throws Exception {
+        mockMvc.perform(delete(URL + "/" + game.getUuid() + "/translations/en-US"))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnDeleteSeason() throws Exception {
-        mockMvc.perform(delete(URL + "/" + season.getUuid())
+    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnDeleteGame() throws Exception {
+        mockMvc.perform(delete(URL + "/" + game.getUuid())
                         .with(user("dev").roles("DEV"))
                 )
                 .andDo(print())
@@ -709,8 +714,8 @@ class SeasonControllerUnitTest {
     }
 
     @Test
-    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnDeleteSeasonTranslation() throws Exception {
-        mockMvc.perform(delete(URL + "/" + season.getUuid() + "/translations/en-US")
+    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnDeleteGameTranslation() throws Exception {
+        mockMvc.perform(delete(URL + "/" + game.getUuid() + "/translations/en-US")
                         .with(user("dev").roles("DEV"))
                 )
                 .andDo(print())
@@ -718,10 +723,10 @@ class SeasonControllerUnitTest {
     }
 
     @Test
-    void whenNoSeasonFoundShouldThrowItemNotFoundExceptionOnUpdateSeasonOnDeleteSeason() throws Exception {
+    void whenNoGameFoundShouldThrowItemNotFoundExceptionOnUpdateGameOnDeleteGame() throws Exception {
         doThrow(ItemNotFoundException.class).when(service).deleteById(any(UUID.class));
 
-        mockMvc.perform(delete(URL + "/" + season.getUuid())
+        mockMvc.perform(delete(URL + "/" + game.getUuid())
                         .with(user("admin").roles("ADMIN"))
                 )
                 .andDo(print())
@@ -731,10 +736,10 @@ class SeasonControllerUnitTest {
     }
 
     @Test
-    void whenNoSeasonFoundShouldThrowItemNotFoundExceptionOnUpdateSeasonOnDeleteSeasonTranslation() throws Exception {
+    void whenNoGameFoundShouldThrowItemNotFoundExceptionOnUpdateGameOnDeleteGameTranslation() throws Exception {
         doThrow(ItemNotFoundException.class).when(service).deleteTranslation(any(UUID.class), anyString());
 
-        mockMvc.perform(delete(URL + "/" + season.getUuid() + "/translations/en-US")
+        mockMvc.perform(delete(URL + "/" + game.getUuid() + "/translations/en-US")
                         .with(user("admin").roles("ADMIN"))
                 )
                 .andDo(print())

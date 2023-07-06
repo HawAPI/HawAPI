@@ -5,8 +5,8 @@ import com.lucasjosino.hawapi.configs.security.SecurityConfig;
 import com.lucasjosino.hawapi.controllers.advisor.ControllerAdvisor;
 import com.lucasjosino.hawapi.controllers.utils.ResponseUtils;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
-import com.lucasjosino.hawapi.models.dto.ActorDTO;
-import com.lucasjosino.hawapi.services.impl.ActorServiceImpl;
+import com.lucasjosino.hawapi.models.dto.SoundtrackDTO;
+import com.lucasjosino.hawapi.services.impl.SoundtrackServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,13 +40,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ActiveProfiles("test")
-@WebMvcTest(controllers = ActorController.class)
-@ContextConfiguration(classes = {ActorController.class, ControllerAdvisor.class, SecurityConfig.class})
-class ActorControllerUnitTest {
+@WebMvcTest(controllers = SoundtrackController.class)
+@ContextConfiguration(classes = {SoundtrackController.class, ControllerAdvisor.class, SecurityConfig.class})
+class SoundtrackControllerTest {
 
-    private static final String URL = "/api/v1/actors";
+    private static final String URL = "/api/v1/soundtracks";
 
-    private ActorDTO actor;
+    private SoundtrackDTO soundtrack;
 
     @Autowired
     private MockMvc mockMvc;
@@ -55,7 +55,7 @@ class ActorControllerUnitTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private ActorServiceImpl service;
+    private SoundtrackServiceImpl service;
 
     @MockBean
     private ResponseUtils responseUtils;
@@ -65,24 +65,23 @@ class ActorControllerUnitTest {
 
     @BeforeEach
     void setUp() {
-        actor = new ActorDTO();
-        actor.setUuid(UUID.randomUUID());
-        actor.setHref(URL + "/" + actor.getUuid());
-        actor.setFirstName("Lorem");
-        actor.setLastName("Ipsum");
-        actor.setNationality("American");
-        actor.setSeasons(Arrays.asList("/api/v1/seasons/1", "/api/v1/seasons/2"));
-        actor.setGender((byte) 1);
-        actor.setBirthDate(LocalDate.now());
-        actor.setCharacter("/api/v1/characters/1");
-        actor.setThumbnail("https://cdn.theproject.id/hawapi/image.jpg");
-        actor.setSources(Arrays.asList("https://example.com", "https://example.com"));
-        actor.setCreatedAt(LocalDateTime.now());
-        actor.setUpdatedAt(LocalDateTime.now());
+        soundtrack = new SoundtrackDTO();
+        soundtrack.setUuid(UUID.randomUUID());
+        soundtrack.setHref(URL + "/" + soundtrack.getUuid());
+        soundtrack.setName("Lorem");
+        soundtrack.setArtist("Ipsum");
+        soundtrack.setAlbum("Lorem Ipsum");
+        soundtrack.setUrls(Arrays.asList("https://youtube.com/watch?v=1", "https://youtube.com/watch?v=2"));
+        soundtrack.setDuration(158351809);
+        soundtrack.setReleaseDate(LocalDate.now());
+        soundtrack.setThumbnail("https://cdn.theproject.id/hawapi/image.jpg");
+        soundtrack.setSources(Arrays.asList("https://example.com", "https://example.com"));
+        soundtrack.setCreatedAt(LocalDateTime.now());
+        soundtrack.setUpdatedAt(LocalDateTime.now());
     }
 
     @Test
-    void shouldReturnAllActors() throws Exception {
+    void shouldReturnAllSoundtracks() throws Exception {
         Pageable pageable = Pageable.ofSize(1);
         List<UUID> res = Collections.singletonList(UUID.randomUUID());
         Page<UUID> uuids = PageableExecutionUtils.getPage(res,
@@ -93,7 +92,7 @@ class ActorControllerUnitTest {
 
         when(service.findAllUUIDs(any(Pageable.class))).thenReturn(uuids);
         when(responseUtils.getHeaders(any(), any(Pageable.class), nullable(String.class))).thenReturn(headers);
-        when(service.findAll(anyMap(), anyList())).thenReturn(Collections.singletonList(actor));
+        when(service.findAll(anyMap(), anyList())).thenReturn(Collections.singletonList(soundtrack));
 
         mockMvc.perform(get(URL))
                 .andDo(print())
@@ -143,23 +142,22 @@ class ActorControllerUnitTest {
 
 
     @Test
-    void shouldReturnRandomActor() throws Exception {
-        when(service.findRandom(nullable(String.class))).thenReturn(actor);
+    void shouldReturnRandomSoundtrack() throws Exception {
+        when(service.findRandom(nullable(String.class))).thenReturn(soundtrack);
 
         mockMvc.perform(get(URL + "/random"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.uuid").value(String.valueOf(actor.getUuid())))
-                .andExpect(jsonPath("$.href").value(actor.getHref()))
-                .andExpect(jsonPath("$.first_name").value(actor.getFirstName()))
-                .andExpect(jsonPath("$.last_name").value(actor.getLastName()))
-                .andExpect(jsonPath("$.nationality").value(actor.getNationality()))
-                .andExpect(jsonPath("$.seasons").isNotEmpty())
-                .andExpect(jsonPath("$.gender").value(String.valueOf(actor.getGender())))
-                .andExpect(jsonPath("$.birth_date").value(String.valueOf(actor.getBirthDate())))
-                .andExpect(jsonPath("$.character").value(actor.getCharacter()))
-                .andExpect(jsonPath("$.thumbnail").value(actor.getThumbnail()))
+                .andExpect(jsonPath("$.uuid").value(String.valueOf(soundtrack.getUuid())))
+                .andExpect(jsonPath("$.href").value(soundtrack.getHref()))
+                .andExpect(jsonPath("$.name").value(soundtrack.getName()))
+                .andExpect(jsonPath("$.artist").value(soundtrack.getArtist()))
+                .andExpect(jsonPath("$.album").value(soundtrack.getAlbum()))
+                .andExpect(jsonPath("$.urls").isNotEmpty())
+                .andExpect(jsonPath("$.duration").value(String.valueOf(soundtrack.getDuration())))
+                .andExpect(jsonPath("$.release_date").value(String.valueOf(soundtrack.getReleaseDate())))
+                .andExpect(jsonPath("$.thumbnail").value(soundtrack.getThumbnail()))
                 .andExpect(jsonPath("$.sources").isNotEmpty())
                 .andExpect(jsonPath("$.created_at").exists())
                 .andExpect(jsonPath("$.updated_at").exists());
@@ -168,7 +166,7 @@ class ActorControllerUnitTest {
     }
 
     @Test
-    void whenNoActorFoundShouldThrowItemNotFoundExceptionOnRandomActor() throws Exception {
+    void whenNoSoundtrackFoundShouldThrowItemNotFoundExceptionOnRandomSoundtrack() throws Exception {
         when(service.findRandom(nullable(String.class))).thenThrow(ItemNotFoundException.class);
 
         mockMvc.perform(get(URL + "/random"))
@@ -179,23 +177,22 @@ class ActorControllerUnitTest {
     }
 
     @Test
-    void shouldReturnActorByUUID() throws Exception {
-        when(service.findBy(any(UUID.class), nullable(String.class))).thenReturn(actor);
+    void shouldReturnSoundtrackByUUID() throws Exception {
+        when(service.findBy(any(UUID.class), nullable(String.class))).thenReturn(soundtrack);
 
-        mockMvc.perform(get(URL + "/" + actor.getUuid()))
+        mockMvc.perform(get(URL + "/" + soundtrack.getUuid()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.uuid").value(String.valueOf(actor.getUuid())))
-                .andExpect(jsonPath("$.href").value(actor.getHref()))
-                .andExpect(jsonPath("$.first_name").value(actor.getFirstName()))
-                .andExpect(jsonPath("$.last_name").value(actor.getLastName()))
-                .andExpect(jsonPath("$.nationality").value(actor.getNationality()))
-                .andExpect(jsonPath("$.seasons").isNotEmpty())
-                .andExpect(jsonPath("$.gender").value(String.valueOf(actor.getGender())))
-                .andExpect(jsonPath("$.birth_date").value(String.valueOf(actor.getBirthDate())))
-                .andExpect(jsonPath("$.character").value(actor.getCharacter()))
-                .andExpect(jsonPath("$.thumbnail").value(actor.getThumbnail()))
+                .andExpect(jsonPath("$.uuid").value(String.valueOf(soundtrack.getUuid())))
+                .andExpect(jsonPath("$.href").value(soundtrack.getHref()))
+                .andExpect(jsonPath("$.name").value(soundtrack.getName()))
+                .andExpect(jsonPath("$.artist").value(soundtrack.getArtist()))
+                .andExpect(jsonPath("$.album").value(soundtrack.getAlbum()))
+                .andExpect(jsonPath("$.urls").isNotEmpty())
+                .andExpect(jsonPath("$.duration").value(String.valueOf(soundtrack.getDuration())))
+                .andExpect(jsonPath("$.release_date").value(String.valueOf(soundtrack.getReleaseDate())))
+                .andExpect(jsonPath("$.thumbnail").value(soundtrack.getThumbnail()))
                 .andExpect(jsonPath("$.sources").isNotEmpty())
                 .andExpect(jsonPath("$.created_at").exists())
                 .andExpect(jsonPath("$.updated_at").exists());
@@ -204,10 +201,10 @@ class ActorControllerUnitTest {
     }
 
     @Test
-    void whenNoActorFoundShouldThrowItemNotFoundExceptionOnActorByUUID() throws Exception {
+    void whenNoSoundtrackFoundShouldThrowItemNotFoundExceptionOnSoundtrackByUUID() throws Exception {
         when(service.findBy(any(UUID.class), nullable(String.class))).thenThrow(ItemNotFoundException.class);
 
-        mockMvc.perform(get(URL + "/" + actor.getUuid()))
+        mockMvc.perform(get(URL + "/" + soundtrack.getUuid()))
                 .andDo(print())
                 .andExpect(status().isNotFound());
 
@@ -215,62 +212,61 @@ class ActorControllerUnitTest {
     }
 
     @Test
-    void shouldSaveActor() throws Exception {
-        when(service.save(any(ActorDTO.class))).thenReturn(actor);
+    void shouldSaveSoundtrack() throws Exception {
+        when(service.save(any(SoundtrackDTO.class))).thenReturn(soundtrack);
 
         mockMvc.perform(post(URL)
                         .with(user("admin").roles("ADMIN"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(actor))
+                        .content(objectMapper.writeValueAsString(soundtrack))
                 )
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.uuid").value(String.valueOf(actor.getUuid())))
-                .andExpect(jsonPath("$.href").value(actor.getHref()))
-                .andExpect(jsonPath("$.first_name").value(actor.getFirstName()))
-                .andExpect(jsonPath("$.last_name").value(actor.getLastName()))
-                .andExpect(jsonPath("$.nationality").value(actor.getNationality()))
-                .andExpect(jsonPath("$.seasons").isNotEmpty())
-                .andExpect(jsonPath("$.gender").value(String.valueOf(actor.getGender())))
-                .andExpect(jsonPath("$.birth_date").value(String.valueOf(actor.getBirthDate())))
-                .andExpect(jsonPath("$.character").value(actor.getCharacter()))
-                .andExpect(jsonPath("$.thumbnail").value(actor.getThumbnail()))
+                .andExpect(jsonPath("$.uuid").value(String.valueOf(soundtrack.getUuid())))
+                .andExpect(jsonPath("$.href").value(soundtrack.getHref()))
+                .andExpect(jsonPath("$.name").value(soundtrack.getName()))
+                .andExpect(jsonPath("$.artist").value(soundtrack.getArtist()))
+                .andExpect(jsonPath("$.album").value(soundtrack.getAlbum()))
+                .andExpect(jsonPath("$.urls").isNotEmpty())
+                .andExpect(jsonPath("$.duration").value(String.valueOf(soundtrack.getDuration())))
+                .andExpect(jsonPath("$.release_date").value(String.valueOf(soundtrack.getReleaseDate())))
+                .andExpect(jsonPath("$.thumbnail").value(soundtrack.getThumbnail()))
                 .andExpect(jsonPath("$.sources").isNotEmpty())
                 .andExpect(jsonPath("$.created_at").exists())
                 .andExpect(jsonPath("$.updated_at").exists());
 
-        verify(service, times(1)).save(any(ActorDTO.class));
+        verify(service, times(1)).save(any(SoundtrackDTO.class));
     }
 
     @Test
-    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnSaveActor() throws Exception {
+    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnSaveSoundtrack() throws Exception {
         mockMvc.perform(post(URL)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(actor))
+                        .content(objectMapper.writeValueAsString(soundtrack))
                 )
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnSaveActor() throws Exception {
+    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnSaveSoundtrack() throws Exception {
         mockMvc.perform(post(URL)
                         .with(user("dev").roles("DEV"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(actor))
+                        .content(objectMapper.writeValueAsString(soundtrack))
                 )
                 .andDo(print())
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    void whenFieldValidationFailsShouldReturnBadRequestExceptionOnSaveActor() throws Exception {
-        actor.setFirstName(null);
+    void whenFieldValidationFailsShouldReturnBadRequestExceptionOnSaveSoundtrack() throws Exception {
+        soundtrack.setName(null);
         mockMvc.perform(post(URL)
                         .with(user("admin").roles("ADMIN"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(actor))
+                        .content(objectMapper.writeValueAsString(soundtrack))
                 )
                 .andDo(print())
                 .andExpect(status().isBadRequest())
@@ -278,19 +274,19 @@ class ActorControllerUnitTest {
                 .andExpect(jsonPath("$.code").value(HttpStatus.BAD_REQUEST.value()))
                 .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.getReasonPhrase()))
                 .andExpect(jsonPath("$.method").value(HttpMethod.POST.name()))
-                .andExpect(jsonPath("$.message").value("Field 'first_name' is required"))
+                .andExpect(jsonPath("$.message").value("Field 'name' is required"))
                 .andExpect(jsonPath("$.timestamps").exists())
                 .andExpect(jsonPath("$.url").value(URL));
     }
 
     @Test
-    void shouldUpdateActor() throws Exception {
-        ActorDTO patch = new ActorDTO();
-        patch.setGender((byte) 0);
+    void shouldUpdateSoundtrack() throws Exception {
+        SoundtrackDTO patch = new SoundtrackDTO();
+        patch.setDuration(1247149);
 
-        doNothing().when(service).patch(any(UUID.class), any(ActorDTO.class));
+        doNothing().when(service).patch(any(UUID.class), any(SoundtrackDTO.class));
 
-        mockMvc.perform(patch(URL + "/" + actor.getUuid())
+        mockMvc.perform(patch(URL + "/" + soundtrack.getUuid())
                         .with(user("admin").roles("ADMIN"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(patch))
@@ -298,14 +294,14 @@ class ActorControllerUnitTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.gender").value(String.valueOf(patch.getGender())));
+                .andExpect(jsonPath("$.duration").value(String.valueOf(patch.getDuration())));
 
-        verify(service, times(1)).patch(any(UUID.class), any(ActorDTO.class));
+        verify(service, times(1)).patch(any(UUID.class), any(SoundtrackDTO.class));
     }
 
     @Test
-    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnUpdateActor() throws Exception {
-        mockMvc.perform(patch(URL + "/" + actor.getUuid())
+    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnUpdateSoundtrack() throws Exception {
+        mockMvc.perform(patch(URL + "/" + soundtrack.getUuid())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                 )
                 .andDo(print())
@@ -313,8 +309,8 @@ class ActorControllerUnitTest {
     }
 
     @Test
-    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnUpdateActor() throws Exception {
-        mockMvc.perform(patch(URL + "/" + actor.getUuid())
+    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnUpdateSoundtrack() throws Exception {
+        mockMvc.perform(patch(URL + "/" + soundtrack.getUuid())
                         .with(user("dev").roles("DEV"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                 )
@@ -323,8 +319,8 @@ class ActorControllerUnitTest {
     }
 
     @Test
-    void whenNoBodyShouldReturnBadRequestExceptionOnUpdateActor() throws Exception {
-        mockMvc.perform(patch(URL + "/" + actor.getUuid())
+    void whenNoBodyShouldReturnBadRequestExceptionOnUpdateSoundtrack() throws Exception {
+        mockMvc.perform(patch(URL + "/" + soundtrack.getUuid())
                         .with(user("admin").roles("ADMIN"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                 )
@@ -333,13 +329,13 @@ class ActorControllerUnitTest {
     }
 
     @Test
-    void whenNoActorFoundShouldThrowItemNotFoundExceptionOnUpdateActor() throws Exception {
-        ActorDTO patch = new ActorDTO();
-        patch.setGender((byte) 0);
+    void whenNoSoundtrackFoundShouldThrowItemNotFoundExceptionOnUpdateSoundtrack() throws Exception {
+        SoundtrackDTO patch = new SoundtrackDTO();
+        patch.setDuration(1247149);
 
-        doThrow(ItemNotFoundException.class).when(service).patch(any(UUID.class), any(ActorDTO.class));
+        doThrow(ItemNotFoundException.class).when(service).patch(any(UUID.class), any(SoundtrackDTO.class));
 
-        mockMvc.perform(patch(URL + "/" + actor.getUuid())
+        mockMvc.perform(patch(URL + "/" + soundtrack.getUuid())
                         .with(user("admin").roles("ADMIN"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(patch))
@@ -347,14 +343,14 @@ class ActorControllerUnitTest {
                 .andDo(print())
                 .andExpect(status().isNotFound());
 
-        verify(service, times(1)).patch(any(UUID.class), any(ActorDTO.class));
+        verify(service, times(1)).patch(any(UUID.class), any(SoundtrackDTO.class));
     }
 
     @Test
-    void shouldDeleteActor() throws Exception {
+    void shouldDeleteSoundtrack() throws Exception {
         doNothing().when(service).deleteById(any(UUID.class));
 
-        mockMvc.perform(delete(URL + "/" + actor.getUuid())
+        mockMvc.perform(delete(URL + "/" + soundtrack.getUuid())
                         .with(user("admin").roles("ADMIN"))
                 )
                 .andDo(print())
@@ -364,15 +360,15 @@ class ActorControllerUnitTest {
     }
 
     @Test
-    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnDeleteActor() throws Exception {
-        mockMvc.perform(delete(URL + "/" + actor.getUuid()))
+    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnDeleteSoundtrack() throws Exception {
+        mockMvc.perform(delete(URL + "/" + soundtrack.getUuid()))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnDeleteActor() throws Exception {
-        mockMvc.perform(delete(URL + "/" + actor.getUuid())
+    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnDeleteSoundtrack() throws Exception {
+        mockMvc.perform(delete(URL + "/" + soundtrack.getUuid())
                         .with(user("dev").roles("DEV"))
                 )
                 .andDo(print())
@@ -380,10 +376,10 @@ class ActorControllerUnitTest {
     }
 
     @Test
-    void whenNoActorFoundShouldThrowItemNotFoundExceptionOnUpdateActorOnDeleteActor() throws Exception {
+    void whenNoSoundtrackFoundShouldThrowItemNotFoundExceptionOnUpdateSoundtrackOnDeleteSoundtrack() throws Exception {
         doThrow(ItemNotFoundException.class).when(service).deleteById(any(UUID.class));
 
-        mockMvc.perform(delete(URL + "/" + actor.getUuid())
+        mockMvc.perform(delete(URL + "/" + soundtrack.getUuid())
                         .with(user("admin").roles("ADMIN"))
                 )
                 .andDo(print())
