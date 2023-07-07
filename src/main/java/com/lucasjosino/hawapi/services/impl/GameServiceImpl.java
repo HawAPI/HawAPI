@@ -176,7 +176,7 @@ public class GameServiceImpl implements GameService {
         dto.setHref(basePath + "/" + uuid);
         dto.setLanguages(Collections.singletonList(dto.getLanguage()));
 
-        validateDTO(uuid, dto.getLanguage());
+        validateRequest(uuid, dto.getLanguage());
 
         GameModel dtoToModel = modelMapper.map(dto, GameModel.class);
         dtoToModel.getTranslation().setGameUuid(uuid);
@@ -193,7 +193,11 @@ public class GameServiceImpl implements GameService {
      * @since 1.0.0
      */
     public GameTranslationDTO saveTranslation(UUID uuid, GameTranslationDTO dto) {
-        validateDTO(uuid, dto.getLanguage());
+        if (!repository.existsById(uuid)) {
+            throw new ItemNotFoundException("Item '" + uuid + "' doesn't exist!");
+        }
+
+        validateRequest(uuid, dto.getLanguage());
 
         GameTranslation dtoToModel = modelMapper.map(dto, GameTranslation.class);
         dtoToModel.setGameUuid(uuid);
@@ -262,7 +266,7 @@ public class GameServiceImpl implements GameService {
     }
 
     /**
-     * Method to validate an DTO
+     * Method to validate an request
      * <ul>
      *     <li>Validate if language is valid</li>
      *     <li>Validate if field with same uuid and language already exists</li>
@@ -274,13 +278,9 @@ public class GameServiceImpl implements GameService {
      * @throws SaveConflictException If item already exists
      * @since 1.0.0
      */
-    private void validateDTO(UUID uuid, String language) {
+    private void validateRequest(UUID uuid, String language) {
         if (StringUtils.isNullOrEmpty(language)) {
             throw new BadRequestException("Column 'language' is required");
-        }
-
-        if (!repository.existsById(uuid)) {
-            throw new ItemNotFoundException("Item '" + uuid + "' doesn't exist!");
         }
 
         if (translationRepository.existsByGameUuidAndLanguage(uuid, language)) {
