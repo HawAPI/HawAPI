@@ -59,7 +59,7 @@ class GameTranslationRepositoryTest extends DatabaseContainerInitializer {
         translationModel = new GameTranslation();
         translationModel.setGameUuid(gameModel.getUuid());
         translationModel.setLanguage("en-US");
-        translationModel.setTitle("Lorem Ipsum");
+        translationModel.setName("Lorem Ipsum");
         translationModel.setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
         translationModel.setTrailer("https://youtube.com/watch?v=1");
 
@@ -86,7 +86,7 @@ class GameTranslationRepositoryTest extends DatabaseContainerInitializer {
 
         assertEquals(1, res.size());
         assertEquals(translationModel.getGameUuid(), first.getGameUuid());
-        assertEquals(translationModel.getTitle(), first.getTitle());
+        assertEquals(translationModel.getName(), first.getName());
         assertEquals(translationModel.getDescription(), first.getDescription());
         assertEquals(translationModel.getLanguage(), first.getLanguage());
     }
@@ -111,7 +111,7 @@ class GameTranslationRepositoryTest extends DatabaseContainerInitializer {
 
         assertEquals(1, res.getContent().size());
         assertEquals(translationModel.getGameUuid(), first.getGameUuid());
-        assertEquals(translationModel.getTitle(), first.getTitle());
+        assertEquals(translationModel.getName(), first.getName());
         assertEquals(translationModel.getDescription(), first.getDescription());
         assertEquals(translationModel.getLanguage(), first.getLanguage());
     }
@@ -136,7 +136,7 @@ class GameTranslationRepositoryTest extends DatabaseContainerInitializer {
 
         assertTrue(res.isPresent());
         assertEquals(translationModel.getGameUuid(), res.get().getGameUuid());
-        assertEquals(translationModel.getTitle(), res.get().getTitle());
+        assertEquals(translationModel.getName(), res.get().getName());
         assertEquals(translationModel.getDescription(), res.get().getDescription());
         assertEquals(translationModel.getLanguage(), res.get().getLanguage());
     }
@@ -174,7 +174,7 @@ class GameTranslationRepositoryTest extends DatabaseContainerInitializer {
     @Test
     void shouldReturnTrueOnExistsByTitleAndLanguage() {
         boolean res = translationRepository.existsByNameAndLanguage(
-                translationModel.getTitle(),
+                translationModel.getName(),
                 "en-US"
         );
 
@@ -184,7 +184,7 @@ class GameTranslationRepositoryTest extends DatabaseContainerInitializer {
     @Test
     void whenNoGameTranslationLanguageFoundShouldReturnFalseOnExistsByTitleAndLanguage() {
         boolean res = translationRepository.existsByNameAndLanguage(
-                translationModel.getTitle(),
+                translationModel.getName(),
                 "pt-BR"
         );
 

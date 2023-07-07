@@ -471,7 +471,7 @@ class GameServiceImplTest {
 
         when(translationRepository.findByGameUuidAndLanguage(any(UUID.class), anyString()))
                 .thenReturn(Optional.of(data.get(0)));
-        data.get(0).setTitle("Lorem Ipsum");
+        data.get(0).setName("Lorem Ipsum");
         when(utils.merge(any(GameTranslation.class), any(GameTranslationDTO.class))).thenReturn(data.get(0));
         when(translationRepository.save(any(GameTranslation.class))).thenReturn(data.get(0));
 
