@@ -176,7 +176,7 @@ public class EpisodeServiceImpl implements EpisodeService {
         dto.setHref(basePath + "/" + uuid);
         dto.setLanguages(Collections.singletonList(dto.getLanguage()));
 
-        validateDTO(uuid, dto.getLanguage());
+        validateRequest(uuid, dto.getLanguage());
 
         EpisodeModel dtoToModel = modelMapper.map(dto, EpisodeModel.class);
         dtoToModel.getTranslation().setEpisodeUuid(uuid);
@@ -193,7 +193,11 @@ public class EpisodeServiceImpl implements EpisodeService {
      * @since 1.0.0
      */
     public EpisodeTranslationDTO saveTranslation(UUID uuid, EpisodeTranslationDTO dto) {
-        validateDTO(uuid, dto.getLanguage());
+        if (!repository.existsById(uuid)) {
+            throw new ItemNotFoundException("Item '" + uuid + "' doesn't exist!");
+        }
+
+        validateRequest(uuid, dto.getLanguage());
 
         EpisodeTranslation dtoToModel = modelMapper.map(dto, EpisodeTranslation.class);
         dtoToModel.setEpisodeUuid(uuid);
@@ -262,7 +266,7 @@ public class EpisodeServiceImpl implements EpisodeService {
     }
 
     /**
-     * Method to validate an DTO
+     * Method to validate an request
      * <ul>
      *     <li>Validate if language is valid</li>
      *     <li>Validate if field with same uuid and language already exists</li>
@@ -274,13 +278,9 @@ public class EpisodeServiceImpl implements EpisodeService {
      * @throws SaveConflictException If item already exists
      * @since 1.0.0
      */
-    private void validateDTO(UUID uuid, String language) {
+    private void validateRequest(UUID uuid, String language) {
         if (StringUtils.isNullOrEmpty(language)) {
             throw new BadRequestException("Column 'language' is required");
-        }
-
-        if (!repository.existsById(uuid)) {
-            throw new ItemNotFoundException("Item '" + uuid + "' doesn't exist!");
         }
 
         if (translationRepository.existsByEpisodeUuidAndLanguage(uuid, language)) {

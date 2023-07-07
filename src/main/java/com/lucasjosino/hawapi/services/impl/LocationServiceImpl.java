@@ -175,7 +175,7 @@ public class LocationServiceImpl implements LocationService {
         dto.setHref(basePath + "/" + uuid);
         dto.setLanguages(Collections.singletonList(dto.getLanguage()));
 
-        validateDTO(uuid, dto.getLanguage());
+        validateRequest(uuid, dto.getLanguage());
 
         LocationModel dtoToModel = modelMapper.map(dto, LocationModel.class);
         dtoToModel.getTranslation().setLocationUuid(uuid);
@@ -192,7 +192,11 @@ public class LocationServiceImpl implements LocationService {
      * @since 1.0.0
      */
     public LocationTranslationDTO saveTranslation(UUID uuid, LocationTranslationDTO dto) {
-        validateDTO(uuid, dto.getLanguage());
+        if (!repository.existsById(uuid)) {
+            throw new ItemNotFoundException("Item '" + uuid + "' doesn't exist!");
+        }
+
+        validateRequest(uuid, dto.getLanguage());
 
         LocationTranslation dtoToModel = modelMapper.map(dto, LocationTranslation.class);
         dtoToModel.setLocationUuid(uuid);
@@ -261,7 +265,7 @@ public class LocationServiceImpl implements LocationService {
     }
 
     /**
-     * Method to validate an DTO
+     * Method to validate an request
      * <ul>
      *     <li>Validate if language is valid</li>
      *     <li>Validate if field with same uuid and language already exists</li>
@@ -273,13 +277,9 @@ public class LocationServiceImpl implements LocationService {
      * @throws SaveConflictException If item already exists
      * @since 1.0.0
      */
-    private void validateDTO(UUID uuid, String language) {
+    private void validateRequest(UUID uuid, String language) {
         if (StringUtils.isNullOrEmpty(language)) {
             throw new BadRequestException("Column 'language' is required");
-        }
-
-        if (!repository.existsById(uuid)) {
-            throw new ItemNotFoundException("Item '" + uuid + "' doesn't exist!");
         }
 
         if (translationRepository.existsByLocationUuidAndLanguage(uuid, language)) {
