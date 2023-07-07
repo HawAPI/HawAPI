@@ -16,7 +16,7 @@ abstract public class DatabaseContainerInitializer {
 
     private static final String DB_NAME_AND_VERSION = "postgres:15.1";
 
-    private static final String DB_ENTRY_POINT = "/docker-entrypoint-initdb.d/init.sql";
+    private static final String DB_ENTRY_POINT = "/docker-entrypoint-initdb.d/";
 
     private static final String SCHEMA_LOCATION = "schema.sql";
 
