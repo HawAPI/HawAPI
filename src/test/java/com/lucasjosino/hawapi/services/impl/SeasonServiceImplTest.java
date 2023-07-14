@@ -484,7 +484,6 @@ class SeasonServiceImplTest {
     void whenNoSeasonTranslationFoundShouldThrowItemNotFoundExceptionOnUpdateSeasonTranslation() {
         SeasonTranslationDTO patch = new SeasonTranslationDTO();
 
-        // TODO: Remove duplicate code
         when(translationRepository.findBySeasonUuidAndLanguage(any(UUID.class), anyString()))
                 .thenReturn(Optional.empty());
 

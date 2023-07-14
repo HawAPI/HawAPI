@@ -482,7 +482,6 @@ class GameServiceImplTest {
     void whenNoGameTranslationFoundShouldThrowItemNotFoundExceptionOnUpdateGameTranslation() {
         GameTranslationDTO patch = new GameTranslationDTO();
 
-        // TODO: Remove duplicate code
         when(translationRepository.findByGameUuidAndLanguage(any(UUID.class), anyString()))
                 .thenReturn(Optional.empty());
 

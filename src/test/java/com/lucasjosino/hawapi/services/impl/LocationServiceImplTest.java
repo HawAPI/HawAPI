@@ -468,7 +468,6 @@ class LocationServiceImplTest {
     void whenNoLocationTranslationFoundShouldThrowItemNotFoundExceptionOnUpdateLocationTranslation() {
         LocationTranslationDTO patch = new LocationTranslationDTO();
 
-        // TODO: Remove duplicate code
         when(translationRepository.findByLocationUuidAndLanguage(any(UUID.class), anyString()))
                 .thenReturn(Optional.empty());
 

@@ -473,7 +473,6 @@ class EpisodeServiceImplTest {
     void whenNoEpisodeTranslationFoundShouldThrowItemNotFoundExceptionOnUpdateEpisodeTranslation() {
         EpisodeTranslationDTO patch = new EpisodeTranslationDTO();
 
-        // TODO: Remove duplicate code
         when(translationRepository.findByEpisodeUuidAndLanguage(any(UUID.class), anyString()))
                 .thenReturn(Optional.empty());
 

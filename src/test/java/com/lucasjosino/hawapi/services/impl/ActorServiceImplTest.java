@@ -411,7 +411,6 @@ class ActorServiceImplTest {
         ActorSocialDTO patch = new ActorSocialDTO();
         patch.setSocial("Instagram");
 
-        when(socialRepository.existsByActorUuidAndSocial(any(UUID.class), anyString())).thenReturn(true);
         when(socialRepository.findByActorUuidAndSocial(any(UUID.class), anyString()))
                 .thenReturn(Optional.of(data.get(0)));
         when(modelMapper.map(any(), eq(ActorSocialModel.class))).thenReturn(data.get(0));
@@ -421,7 +420,6 @@ class ActorServiceImplTest {
 
         service.patchSocial(actorModel.getUuid(), "Twitter", patch);
 
-        verify(socialRepository, times(1)).existsByActorUuidAndSocial(any(UUID.class), anyString());
         verify(socialRepository, times(1)).findByActorUuidAndSocial(any(UUID.class), anyString());
         verify(modelMapper, times(1)).map(any(), eq(ActorSocialModel.class));
         verify(utils, times(1)).merge(any(ActorSocialModel.class), any(ActorSocialDTO.class));
@@ -432,8 +430,6 @@ class ActorServiceImplTest {
     void whenNoActorSocialFoundShouldThrowItemNotFoundExceptionOnUpdateActorSocial() {
         ActorSocialDTO patch = new ActorSocialDTO();
 
-        // TODO: Remove duplicate code
-        when(socialRepository.existsByActorUuidAndSocial(any(UUID.class), anyString())).thenReturn(true);
         when(socialRepository.findByActorUuidAndSocial(any(UUID.class), anyString())).thenReturn(Optional.empty());
 
         assertThrows(ItemNotFoundException.class, () -> service.patchSocial(actorModel.getUuid(), "Twitter", patch));
