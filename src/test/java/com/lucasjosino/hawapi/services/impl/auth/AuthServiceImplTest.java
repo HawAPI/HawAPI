@@ -71,8 +71,8 @@ class AuthServiceImplTest {
     void shouldRegisterUser() {
         UserModel userModel = mapper.map(user, UserModel.class);
         UserRegistrationDTO registration = mapper.map(user, UserRegistrationDTO.class);
-        registration.setPassword("MY_SUPER_SECURE_PASSWORD");
-        userModel.setPassword("MY_SUPER_SECURE_PASSWORD");
+        registration.setPassword("MY_SUPER_SECRET_PASSWORD");
+        userModel.setPassword("MY_SUPER_SECRET_PASSWORD");
 
         when(repository.existsByUsername(anyString())).thenReturn(false);
         when(repository.existsByEmail(anyString())).thenReturn(false);
@@ -102,8 +102,8 @@ class AuthServiceImplTest {
         UserModel userModel = mapper.map(user, UserModel.class);
         UserRegistrationDTO registration = mapper.map(user, UserRegistrationDTO.class);
         registration.setRole(null);
-        registration.setPassword("MY_SUPER_SECURE_PASSWORD");
-        userModel.setPassword("MY_SUPER_SECURE_PASSWORD");
+        registration.setPassword("MY_SUPER_SECRET_PASSWORD");
+        userModel.setPassword("MY_SUPER_SECRET_PASSWORD");
 
         when(repository.existsByUsername(anyString())).thenReturn(false);
         when(repository.existsByEmail(anyString())).thenReturn(false);
@@ -133,8 +133,8 @@ class AuthServiceImplTest {
         UserModel userModel = mapper.map(user, UserModel.class);
         UserRegistrationDTO registration = mapper.map(user, UserRegistrationDTO.class);
         registration.setRole("ANY_OTHER_ROLE");
-        registration.setPassword("MY_SUPER_SECURE_PASSWORD");
-        userModel.setPassword("MY_SUPER_SECURE_PASSWORD");
+        registration.setPassword("MY_SUPER_SECRET_PASSWORD");
+        userModel.setPassword("MY_SUPER_SECRET_PASSWORD");
 
         when(repository.existsByUsername(anyString())).thenReturn(false);
         when(repository.existsByEmail(anyString())).thenReturn(false);
@@ -151,8 +151,8 @@ class AuthServiceImplTest {
         UserModel userModel = mapper.map(user, UserModel.class);
         UserRegistrationDTO registration = mapper.map(user, UserRegistrationDTO.class);
         registration.setRole("ADMIN");
-        registration.setPassword("MY_SUPER_SECURE_PASSWORD");
-        userModel.setPassword("MY_SUPER_SECURE_PASSWORD");
+        registration.setPassword("MY_SUPER_SECRET_PASSWORD");
+        userModel.setPassword("MY_SUPER_SECRET_PASSWORD");
 
         when(repository.existsByUsername(anyString())).thenReturn(false);
         when(repository.existsByEmail(anyString())).thenReturn(false);
@@ -183,8 +183,8 @@ class AuthServiceImplTest {
         UserModel userModel = mapper.map(user, UserModel.class);
         UserRegistrationDTO registration = mapper.map(user, UserRegistrationDTO.class);
         registration.setRole("ADMIN");
-        registration.setPassword("MY_SUPER_SECURE_PASSWORD");
-        userModel.setPassword("MY_SUPER_SECURE_PASSWORD");
+        registration.setPassword("MY_SUPER_SECRET_PASSWORD");
+        userModel.setPassword("MY_SUPER_SECRET_PASSWORD");
 
         when(repository.existsByUsername(anyString())).thenReturn(false);
         when(repository.existsByEmail(anyString())).thenReturn(false);
@@ -201,8 +201,8 @@ class AuthServiceImplTest {
         UserModel userModel = mapper.map(user, UserModel.class);
         UserRegistrationDTO registration = mapper.map(user, UserRegistrationDTO.class);
         registration.setRole("DEV");
-        registration.setPassword("MY_SUPER_SECURE_PASSWORD");
-        userModel.setPassword("MY_SUPER_SECURE_PASSWORD");
+        registration.setPassword("MY_SUPER_SECRET_PASSWORD");
+        userModel.setPassword("MY_SUPER_SECRET_PASSWORD");
 
         when(repository.existsByUsername(anyString())).thenReturn(false);
         when(repository.existsByEmail(anyString())).thenReturn(false);
@@ -216,7 +216,7 @@ class AuthServiceImplTest {
     @Test
     void whenUserExistsByUsernameShouldThrowUserConflictExceptionOnRegisterUser() {
         UserRegistrationDTO registration = mapper.map(user, UserRegistrationDTO.class);
-        registration.setPassword("MY_SUPER_SECURE_PASSWORD");
+        registration.setPassword("MY_SUPER_SECRET_PASSWORD");
 
         when(repository.existsByUsername(anyString())).thenReturn(true);
 
@@ -228,7 +228,7 @@ class AuthServiceImplTest {
     @Test
     void whenUserExistsByEmailShouldThrowUserConflictExceptionOnRegisterUser() {
         UserRegistrationDTO registration = mapper.map(user, UserRegistrationDTO.class);
-        registration.setPassword("MY_SUPER_SECURE_PASSWORD");
+        registration.setPassword("MY_SUPER_SECRET_PASSWORD");
 
         when(repository.existsByUsername(anyString())).thenReturn(false);
         when(repository.existsByEmail(anyString())).thenReturn(true);
@@ -243,8 +243,8 @@ class AuthServiceImplTest {
     void shouldAuthenticateUser() {
         UserModel userModel = mapper.map(user, UserModel.class);
         UserAuthDTO authentication = mapper.map(user, UserAuthDTO.class);
-        userModel.setPassword("MY_SUPER_SECURE_PASSWORD");
-        authentication.setPassword("MY_SUPER_SECURE_PASSWORD");
+        userModel.setPassword("MY_SUPER_SECRET_PASSWORD");
+        authentication.setPassword("MY_SUPER_SECRET_PASSWORD");
 
         when(repository.findByUsernameAndEmail(anyString(), anyString())).thenReturn(Optional.of(userModel));
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
@@ -268,8 +268,8 @@ class AuthServiceImplTest {
     void whenNoUserFoundShouldThrowUserNotFoundExceptionOnAuthenticateUser() {
         UserModel userModel = mapper.map(user, UserModel.class);
         UserAuthDTO authentication = mapper.map(user, UserAuthDTO.class);
-        userModel.setPassword("MY_SUPER_SECURE_PASSWORD");
-        authentication.setPassword("MY_SUPER_SECURE_PASSWORD");
+        userModel.setPassword("MY_SUPER_SECRET_PASSWORD");
+        authentication.setPassword("MY_SUPER_SECRET_PASSWORD");
 
         when(repository.findByUsernameAndEmail(anyString(), anyString())).thenReturn(Optional.empty());
 
@@ -297,7 +297,7 @@ class AuthServiceImplTest {
     void whenWrongPasswordIsProvidedWithoutAdminAuthenticationShouldThrowUserUnauthorizedExceptionOnAuthenticateUser() {
         UserModel userModel = mapper.map(user, UserModel.class);
         UserAuthDTO authentication = mapper.map(user, UserAuthDTO.class);
-        userModel.setPassword("MY_SUPER_SECURE_PASSWORD");
+        userModel.setPassword("MY_SUPER_SECRET_PASSWORD");
         authentication.setPassword("ANY_OTHER_PASSWORD");
 
         when(repository.findByUsernameAndEmail(anyString(), anyString())).thenReturn(Optional.of(userModel));
@@ -313,8 +313,8 @@ class AuthServiceImplTest {
         UserModel userModel = mapper.map(user, UserModel.class);
         UserAuthDTO authentication = mapper.map(user, UserAuthDTO.class);
         userModel.setUuid(UUID.randomUUID());
-        userModel.setPassword("MY_SUPER_SECURE_PASSWORD");
-        authentication.setPassword("MY_SUPER_SECURE_PASSWORD");
+        userModel.setPassword("MY_SUPER_SECRET_PASSWORD");
+        authentication.setPassword("MY_SUPER_SECRET_PASSWORD");
 
         when(repository.findByUsernameAndEmail(anyString(), anyString())).thenReturn(Optional.of(userModel));
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
@@ -331,8 +331,8 @@ class AuthServiceImplTest {
     void whenNoUserFoundShouldThrowUserNotFoundExceptionOnDeleteUser() {
         UserModel userModel = mapper.map(user, UserModel.class);
         UserAuthDTO authentication = mapper.map(user, UserAuthDTO.class);
-        userModel.setPassword("MY_SUPER_SECURE_PASSWORD");
-        authentication.setPassword("MY_SUPER_SECURE_PASSWORD");
+        userModel.setPassword("MY_SUPER_SECRET_PASSWORD");
+        authentication.setPassword("MY_SUPER_SECRET_PASSWORD");
 
         when(repository.findByUsernameAndEmail(anyString(), anyString())).thenReturn(Optional.empty());
 
@@ -360,7 +360,7 @@ class AuthServiceImplTest {
     void whenWrongPasswordIsProvidedWithoutAdminAuthenticationShouldThrowUserUnauthorizedExceptionOnDeleteUser() {
         UserModel userModel = mapper.map(user, UserModel.class);
         UserAuthDTO authentication = mapper.map(user, UserAuthDTO.class);
-        userModel.setPassword("MY_SUPER_SECURE_PASSWORD");
+        userModel.setPassword("MY_SUPER_SECRET_PASSWORD");
         authentication.setPassword("ANY_OTHER_PASSWORD");
 
         when(repository.findByUsernameAndEmail(anyString(), anyString())).thenReturn(Optional.of(userModel));

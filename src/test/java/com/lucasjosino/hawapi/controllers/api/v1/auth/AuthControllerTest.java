@@ -72,7 +72,7 @@ class AuthControllerTest {
     @Test
     void shouldRegisterUser() throws Exception {
         UserRegistrationDTO registration = mapper.map(user, UserRegistrationDTO.class);
-        registration.setPassword("MY_SUPER_SECURE_PASSWORD");
+        registration.setPassword("MY_SUPER_SECRET_PASSWORD");
 
         when(service.register(any(UserRegistrationDTO.class))).thenReturn(user);
 
@@ -94,7 +94,7 @@ class AuthControllerTest {
     @Test
     void whenRegistrationIsDisableShouldThrowUserUnauthorizedExceptionOnRegisterUser() throws Exception {
         UserRegistrationDTO registration = mapper.map(user, UserRegistrationDTO.class);
-        registration.setPassword("MY_SUPER_SECURE_PASSWORD");
+        registration.setPassword("MY_SUPER_SECRET_PASSWORD");
 
         // Overwrite 'registrationIsEnable' value
         controller.setRegistrationIsEnable(false);
@@ -136,7 +136,7 @@ class AuthControllerTest {
     @Test
     void whenRoleFieldValidationFailsShouldThrowBadRequestExceptionOnRegisterUser() throws Exception {
         UserRegistrationDTO registration = mapper.map(user, UserRegistrationDTO.class);
-        registration.setPassword("MY_SUPER_SECURE_PASSWORD");
+        registration.setPassword("MY_SUPER_SECRET_PASSWORD");
         registration.setRole("SUPER_ADMIN");
 
         mockMvc.perform(post(URL + "/register")
@@ -158,7 +158,7 @@ class AuthControllerTest {
     @Test
     void shouldAuthenticateUser() throws Exception {
         UserAuthDTO authentication = mapper.map(user, UserAuthDTO.class);
-        authentication.setPassword("MY_SUPER_SECURE_PASSWORD");
+        authentication.setPassword("MY_SUPER_SECRET_PASSWORD");
 
         when(service.authenticate(any(UserAuthDTO.class))).thenReturn(user);
 
@@ -194,7 +194,7 @@ class AuthControllerTest {
     @Test
     void shouldDeleteUser() throws Exception {
         UserAuthDTO deletion = mapper.map(user, UserAuthDTO.class);
-        deletion.setPassword("MY_SUPER_SECURE_PASSWORD");
+        deletion.setPassword("MY_SUPER_SECRET_PASSWORD");
 
         doNothing().when(service).delete(any(UserAuthDTO.class));
 
