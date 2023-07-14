@@ -68,11 +68,13 @@ public class ActorController implements BaseControllerInterface<ActorDTO>, Socia
      */
     @Operation(summary = "Get all actors")
     public ResponseEntity<List<ActorDTO>> findAll(Map<String, String> filters, Pageable pageable) {
-        Page<UUID> uuids = service.findAllUUIDs(pageable);
+        long count = service.getCount();
+        Page<UUID> uuids = service.findAllUUIDs(pageable, count);
         HttpHeaders headers = responseUtils.getHeaders(
                 uuids,
                 pageable,
-                null
+                null,
+                count
         );
 
         if (uuids.isEmpty()) ResponseEntity.ok().headers(headers).body(Collections.emptyList());

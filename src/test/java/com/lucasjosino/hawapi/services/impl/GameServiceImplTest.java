@@ -113,16 +113,14 @@ class GameServiceImplTest {
         List<UUID> uuids = Collections.singletonList(UUID.randomUUID());
 
         when(repository.findAllUUIDs(any(Pageable.class))).thenReturn(uuids);
-        when(repository.count()).thenReturn((long) uuids.size());
 
         Pageable pageable = Pageable.ofSize(1);
-        Page<UUID> res = service.findAllUUIDs(pageable);
+        Page<UUID> res = service.findAllUUIDs(pageable, uuids.size());
 
         assertFalse(res.isEmpty());
         assertEquals(uuids, res.getContent());
         assertEquals(pageable.getPageSize(), res.getTotalElements());
         verify(repository, times(1)).findAllUUIDs(any(Pageable.class));
-        verify(repository, times(1)).count();
     }
 
     @Test
@@ -130,14 +128,12 @@ class GameServiceImplTest {
         List<UUID> uuids = Collections.emptyList();
 
         when(repository.findAllUUIDs(any(Pageable.class))).thenReturn(uuids);
-        when(repository.count()).thenReturn((long) 0);
 
         Pageable pageable = Pageable.ofSize(1);
-        Page<UUID> res = service.findAllUUIDs(pageable);
+        Page<UUID> res = service.findAllUUIDs(pageable, 0);
 
         assertTrue(res.isEmpty());
         verify(repository, times(1)).findAllUUIDs(any(Pageable.class));
-        verify(repository, times(1)).count();
     }
 
     @Test

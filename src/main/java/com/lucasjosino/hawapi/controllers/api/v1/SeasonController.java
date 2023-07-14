@@ -73,11 +73,13 @@ public class SeasonController implements BaseTranslationInterface<SeasonDTO, Sea
     public ResponseEntity<List<SeasonDTO>> findAll(Map<String, String> filters, Pageable pageable) {
         filters.putIfAbsent("language", responseUtils.getDefaultLanguage());
 
-        Page<UUID> uuids = service.findAllUUIDs(pageable);
+        long count = service.getCount();
+        Page<UUID> uuids = service.findAllUUIDs(pageable, count);
         HttpHeaders headers = responseUtils.getHeaders(
                 uuids,
                 pageable,
-                filters.get("language")
+                filters.get("language"),
+                count
         );
 
         if (uuids.isEmpty()) ResponseEntity.ok().headers(headers).body(Collections.emptyList());

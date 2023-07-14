@@ -23,12 +23,17 @@ public class ResponseUtils {
         this.languageUtils = languageUtils;
     }
 
-    public <T extends BaseModel> HttpHeaders getHeaders(Page<UUID> modelPage, Pageable pageable, String language) {
+    public <T extends BaseModel> HttpHeaders getHeaders(
+            Page<UUID> modelPage,
+            Pageable pageable,
+            String language,
+            long totalCount
+    ) {
         HttpHeaders headers = new HttpHeaders() {{
             add("X-Pagination-Page-Index", String.valueOf(pageable.getPageNumber() + 1));
             add("X-Pagination-Page-Size", String.valueOf(pageable.getPageSize()));
             add("X-Pagination-Page-Total", String.valueOf(modelPage.getTotalPages()));
-            add("X-Pagination-Item-Total", String.valueOf(modelPage.getContent().size()));
+            add("X-Pagination-Item-Total", String.valueOf(totalCount));
         }};
 
         if (!isNullOrEmpty(language)) headers.add("Content-Language", language);

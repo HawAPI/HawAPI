@@ -67,15 +67,24 @@ public class LocationServiceImpl implements LocationService {
     }
 
     /**
+     * Method that the count of all locations
+     *
+     * @return The count of all locations
+     * @since 1.0.0
+     */
+    public long getCount() {
+        return repository.count();
+    }
+
+    /**
      * Method that get all location uuids filtering with {@link Pageable}
      *
      * @param pageable An {@link Page} with pageable params. Can be null
      * @return A {@link Page} of {@link UUID} or empty
      * @since 1.0.0
      */
-    public Page<UUID> findAllUUIDs(Pageable pageable) {
+    public Page<UUID> findAllUUIDs(Pageable pageable, long count) {
         List<UUID> res = repository.findAllUUIDs(pageable);
-        long count = repository.count();
         return PageableExecutionUtils.getPage(res, pageable, () -> count);
     }
 
