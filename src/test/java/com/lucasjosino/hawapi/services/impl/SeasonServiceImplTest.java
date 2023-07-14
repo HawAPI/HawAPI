@@ -361,7 +361,6 @@ class SeasonServiceImplTest {
 
     @Test
     void shouldSaveSeason() {
-        when(repository.existsById(any(UUID.class))).thenReturn(true);
         when(translationRepository.existsBySeasonUuidAndLanguage(any(UUID.class), anyString())).thenReturn(false);
         when(modelMapper.map(any(), eq(SeasonModel.class))).thenReturn(seasonModel);
         when(repository.save(any(SeasonModel.class))).thenReturn(seasonModel);
@@ -371,7 +370,6 @@ class SeasonServiceImplTest {
 
         assertNotNull(res);
         assertEquals(seasonDTO, res);
-        verify(repository, times(1)).existsById(any(UUID.class));
         verify(translationRepository, times(1))
                 .existsBySeasonUuidAndLanguage(any(UUID.class), anyString());
         verify(modelMapper, times(1)).map(any(), eq(SeasonModel.class));
@@ -392,12 +390,10 @@ class SeasonServiceImplTest {
         SeasonDTO newSeason = new SeasonDTO();
         newSeason.setLanguage("en-US");
 
-        when(repository.existsById(any(UUID.class))).thenReturn(true);
         when(translationRepository.existsBySeasonUuidAndLanguage(any(UUID.class), anyString())).thenReturn(true);
 
         assertThrows(SaveConflictException.class, () -> service.save(newSeason));
 
-        verify(repository, times(1)).existsById(any(UUID.class));
         verify(translationRepository, times(1)).existsBySeasonUuidAndLanguage(any(UUID.class), anyString());
     }
 

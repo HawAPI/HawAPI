@@ -345,7 +345,6 @@ class LocationServiceImplTest {
 
     @Test
     void shouldSaveLocation() {
-        when(repository.existsById(any(UUID.class))).thenReturn(true);
         when(translationRepository.existsByLocationUuidAndLanguage(any(UUID.class), anyString())).thenReturn(false);
         when(modelMapper.map(any(), eq(LocationModel.class))).thenReturn(locationModel);
         when(repository.save(any(LocationModel.class))).thenReturn(locationModel);
@@ -355,7 +354,6 @@ class LocationServiceImplTest {
 
         assertNotNull(res);
         assertEquals(locationDTO, res);
-        verify(repository, times(1)).existsById(any(UUID.class));
         verify(translationRepository, times(1))
                 .existsByLocationUuidAndLanguage(any(UUID.class), anyString());
         verify(modelMapper, times(1)).map(any(), eq(LocationModel.class));
@@ -376,12 +374,10 @@ class LocationServiceImplTest {
         LocationDTO newLocation = new LocationDTO();
         newLocation.setLanguage("en-US");
 
-        when(repository.existsById(any(UUID.class))).thenReturn(true);
         when(translationRepository.existsByLocationUuidAndLanguage(any(UUID.class), anyString())).thenReturn(true);
 
         assertThrows(SaveConflictException.class, () -> service.save(newLocation));
 
-        verify(repository, times(1)).existsById(any(UUID.class));
         verify(translationRepository, times(1)).existsByLocationUuidAndLanguage(any(UUID.class), anyString());
     }
 

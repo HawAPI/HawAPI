@@ -359,7 +359,6 @@ class GameServiceImplTest {
 
     @Test
     void shouldSaveGame() {
-        when(repository.existsById(any(UUID.class))).thenReturn(true);
         when(translationRepository.existsByGameUuidAndLanguage(any(UUID.class), anyString())).thenReturn(false);
         when(modelMapper.map(any(), eq(GameModel.class))).thenReturn(gameModel);
         when(repository.save(any(GameModel.class))).thenReturn(gameModel);
@@ -369,7 +368,6 @@ class GameServiceImplTest {
 
         assertNotNull(res);
         assertEquals(gameDTO, res);
-        verify(repository, times(1)).existsById(any(UUID.class));
         verify(translationRepository, times(1))
                 .existsByGameUuidAndLanguage(any(UUID.class), anyString());
         verify(modelMapper, times(1)).map(any(), eq(GameModel.class));
@@ -390,12 +388,10 @@ class GameServiceImplTest {
         GameDTO newGame = new GameDTO();
         newGame.setLanguage("en-US");
 
-        when(repository.existsById(any(UUID.class))).thenReturn(true);
         when(translationRepository.existsByGameUuidAndLanguage(any(UUID.class), anyString())).thenReturn(true);
 
         assertThrows(SaveConflictException.class, () -> service.save(newGame));
 
-        verify(repository, times(1)).existsById(any(UUID.class));
         verify(translationRepository, times(1)).existsByGameUuidAndLanguage(any(UUID.class), anyString());
     }
 

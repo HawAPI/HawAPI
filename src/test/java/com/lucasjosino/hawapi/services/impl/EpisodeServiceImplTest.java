@@ -350,7 +350,6 @@ class EpisodeServiceImplTest {
 
     @Test
     void shouldSaveEpisode() {
-        when(repository.existsById(any(UUID.class))).thenReturn(true);
         when(translationRepository.existsByEpisodeUuidAndLanguage(any(UUID.class), anyString())).thenReturn(false);
         when(modelMapper.map(any(), eq(EpisodeModel.class))).thenReturn(episodeModel);
         when(repository.save(any(EpisodeModel.class))).thenReturn(episodeModel);
@@ -360,7 +359,6 @@ class EpisodeServiceImplTest {
 
         assertNotNull(res);
         assertEquals(episodeDTO, res);
-        verify(repository, times(1)).existsById(any(UUID.class));
         verify(translationRepository, times(1))
                 .existsByEpisodeUuidAndLanguage(any(UUID.class), anyString());
         verify(modelMapper, times(1)).map(any(), eq(EpisodeModel.class));
@@ -381,12 +379,10 @@ class EpisodeServiceImplTest {
         EpisodeDTO newEpisode = new EpisodeDTO();
         newEpisode.setLanguage("en-US");
 
-        when(repository.existsById(any(UUID.class))).thenReturn(true);
         when(translationRepository.existsByEpisodeUuidAndLanguage(any(UUID.class), anyString())).thenReturn(true);
 
         assertThrows(SaveConflictException.class, () -> service.save(newEpisode));
 
-        verify(repository, times(1)).existsById(any(UUID.class));
         verify(translationRepository, times(1)).existsByEpisodeUuidAndLanguage(any(UUID.class), anyString());
     }
 
