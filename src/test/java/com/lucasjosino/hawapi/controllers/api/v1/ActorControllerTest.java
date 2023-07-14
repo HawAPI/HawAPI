@@ -6,6 +6,7 @@ import com.lucasjosino.hawapi.controllers.advisor.ControllerAdvisor;
 import com.lucasjosino.hawapi.controllers.utils.ResponseUtils;
 import com.lucasjosino.hawapi.exceptions.ItemNotFoundException;
 import com.lucasjosino.hawapi.models.dto.ActorDTO;
+import com.lucasjosino.hawapi.models.dto.ActorSocialDTO;
 import com.lucasjosino.hawapi.services.impl.ActorServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,6 +49,8 @@ class ActorControllerTest {
 
     private ActorDTO actor;
 
+    private ActorSocialDTO actorSocial;
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -79,6 +82,11 @@ class ActorControllerTest {
         actor.setSources(Arrays.asList("https://example.com", "https://example.com"));
         actor.setCreatedAt(LocalDateTime.now());
         actor.setUpdatedAt(LocalDateTime.now());
+
+        actorSocial = new ActorSocialDTO();
+        actorSocial.setSocial("Lorem");
+        actorSocial.setHandle("john_doe");
+        actorSocial.setUrl("https://lorem.com/@john_doe");
     }
 
     @Test
@@ -139,6 +147,48 @@ class ActorControllerTest {
         verify(service, times(1)).findAll(anyMap(), anyList());
     }
 
+    @Test
+    void shouldReturnAllActorSocials() throws Exception {
+        when(service.findAllSocials(any(UUID.class))).thenReturn(Collections.singletonList(actorSocial));
+
+        mockMvc.perform(get(URL + "/" + actor.getUuid() + "/socials"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$", hasSize(1)));
+
+        verify(service, times(1)).findAllSocials(any(UUID.class));
+    }
+
+    @Test
+    void whenNoSocialFoundShouldReturnEmptyListOnReturnAllActorSocial() throws Exception {
+        when(service.findAllSocials(any(UUID.class))).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(get(URL + "/" + actor.getUuid() + "/socials"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$", hasSize(0)));
+
+        verify(service, times(1)).findAllSocials(any(UUID.class));
+    }
+
+    @Test
+    void whenNoActorFoundShouldThrowItemNotFoundExceptionOnReturnAllActorSocials() throws Exception {
+        when(service.findAllSocials(any(UUID.class))).thenThrow(ItemNotFoundException.class);
+
+        mockMvc.perform(get(URL + "/" + actor.getUuid() + "/socials"))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.code").value(HttpStatus.NOT_FOUND.value()))
+                .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.getReasonPhrase()))
+                .andExpect(jsonPath("$.method").value(HttpMethod.GET.name()))
+                .andExpect(jsonPath("$.timestamps").exists())
+                .andExpect(jsonPath("$.url").value(URL + "/" + actor.getUuid() + "/socials"));
+
+        verify(service, times(1)).findAllSocials(any(UUID.class));
+    }
 
     @Test
     void shouldReturnRandomActor() throws Exception {
@@ -177,6 +227,55 @@ class ActorControllerTest {
     }
 
     @Test
+    void shouldReturnRandomActorSocial() throws Exception {
+        when(service.findRandomSocial(any(UUID.class))).thenReturn(actorSocial);
+
+        mockMvc.perform(get(URL + "/" + actor.getUuid() + "/socials/random"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.social").value(actorSocial.getSocial()))
+                .andExpect(jsonPath("$.handle").value((actorSocial.getHandle())))
+                .andExpect(jsonPath("$.url").value(actorSocial.getUrl()));
+
+        verify(service, times(1)).findRandomSocial(any(UUID.class));
+    }
+
+    @Test
+    void whenNoActorFoundShouldThrowItemNotFoundExceptionOnReturnRandomActorSocial() throws Exception {
+        when(service.findRandomSocial(any(UUID.class))).thenThrow(ItemNotFoundException.class);
+
+        mockMvc.perform(get(URL + "/" + actor.getUuid() + "/socials/random"))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.code").value(HttpStatus.NOT_FOUND.value()))
+                .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.getReasonPhrase()))
+                .andExpect(jsonPath("$.method").value(HttpMethod.GET.name()))
+                .andExpect(jsonPath("$.timestamps").exists())
+                .andExpect(jsonPath("$.url").value(URL + "/" + actor.getUuid() + "/socials/random"));
+
+        verify(service, times(1)).findRandomSocial(any(UUID.class));
+    }
+
+    @Test
+    void whenNoActorSocialFoundShouldThrowItemNotFoundExceptionOnReturnRandomActorSocial() throws Exception {
+        when(service.findRandomSocial(any(UUID.class))).thenThrow(ItemNotFoundException.class);
+
+        mockMvc.perform(get(URL + "/" + actor.getUuid() + "/socials/random"))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.code").value(HttpStatus.NOT_FOUND.value()))
+                .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.getReasonPhrase()))
+                .andExpect(jsonPath("$.method").value(HttpMethod.GET.name()))
+                .andExpect(jsonPath("$.timestamps").exists())
+                .andExpect(jsonPath("$.url").value(URL + "/" + actor.getUuid() + "/socials/random"));
+
+        verify(service, times(1)).findRandomSocial(any(UUID.class));
+    }
+
+    @Test
     void shouldReturnActorByUUID() throws Exception {
         when(service.findBy(any(UUID.class), nullable(String.class))).thenReturn(actor);
 
@@ -210,6 +309,38 @@ class ActorControllerTest {
                 .andExpect(status().isNotFound());
 
         verify(service, times(1)).findBy(any(UUID.class), nullable(String.class));
+    }
+
+    @Test
+    void shouldReturnActorSocialById() throws Exception {
+        when(service.findSocialBy(any(UUID.class), anyString())).thenReturn(actorSocial);
+
+        mockMvc.perform(get(URL + "/" + actor.getUuid() + "/socials/Lorem"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.social").value(actorSocial.getSocial()))
+                .andExpect(jsonPath("$.handle").value((actorSocial.getHandle())))
+                .andExpect(jsonPath("$.url").value(actorSocial.getUrl()));
+
+        verify(service, times(1)).findSocialBy(any(UUID.class), anyString());
+    }
+
+    @Test
+    void whenNoActorSocialFoundShouldThrowItemNotFoundExceptionOnReturnActorSocialById() throws Exception {
+        when(service.findSocialBy(any(UUID.class), nullable(String.class))).thenThrow(ItemNotFoundException.class);
+
+        mockMvc.perform(get(URL + "/" + actor.getUuid() + "/socials/Lorem"))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.code").value(HttpStatus.NOT_FOUND.value()))
+                .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.getReasonPhrase()))
+                .andExpect(jsonPath("$.method").value(HttpMethod.GET.name()))
+                .andExpect(jsonPath("$.timestamps").exists())
+                .andExpect(jsonPath("$.url").value(URL + "/" + actor.getUuid() + "/socials/Lorem"));
+
+        verify(service, times(1)).findSocialBy(any(UUID.class), nullable(String.class));
     }
 
     @Test
@@ -282,6 +413,46 @@ class ActorControllerTest {
     }
 
     @Test
+    void shouldSaveActorSocial() throws Exception {
+        when(service.saveSocial(any(UUID.class), any(ActorSocialDTO.class))).thenReturn(actorSocial);
+
+        mockMvc.perform(post(URL + "/" + actor.getUuid() + "/socials")
+                        .with(user("admin").roles("ADMIN"))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(actorSocial))
+                )
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.social").value(actorSocial.getSocial()))
+                .andExpect(jsonPath("$.handle").value((actorSocial.getHandle())))
+                .andExpect(jsonPath("$.url").value(actorSocial.getUrl()));
+
+        verify(service, times(1)).saveSocial(any(UUID.class), any(ActorSocialDTO.class));
+    }
+
+    @Test
+    void whenNoActorFoundShouldThrowItemNotFoundExceptionOnSaveActorSocial() throws Exception {
+        when(service.saveSocial(any(UUID.class), any(ActorSocialDTO.class))).thenThrow(ItemNotFoundException.class);
+
+        mockMvc.perform(post(URL + "/" + actor.getUuid() + "/socials")
+                        .with(user("admin").roles("ADMIN"))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(actorSocial))
+                )
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.code").value(HttpStatus.NOT_FOUND.value()))
+                .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.getReasonPhrase()))
+                .andExpect(jsonPath("$.method").value(HttpMethod.POST.name()))
+                .andExpect(jsonPath("$.timestamps").exists())
+                .andExpect(jsonPath("$.url").value(URL + "/" + actor.getUuid() + "/socials"));
+
+        verify(service, times(1)).saveSocial(any(UUID.class), any(ActorSocialDTO.class));
+    }
+
+    @Test
     void shouldUpdateActor() throws Exception {
         ActorDTO patch = new ActorDTO();
         patch.setGender((byte) 0);
@@ -349,6 +520,82 @@ class ActorControllerTest {
     }
 
     @Test
+    void shouldUpdateActorSocial() throws Exception {
+        ActorSocialDTO patch = new ActorSocialDTO();
+        patch.setSocial("Ipsum");
+
+        doNothing().when(service).patchSocial(any(UUID.class), anyString(), any(ActorSocialDTO.class));
+
+        mockMvc.perform(patch(URL + "/" + actor.getUuid() + "/socials/Lorem")
+                        .with(user("admin").roles("ADMIN"))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(patch))
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.social").value(patch.getSocial()));
+
+        verify(service, times(1)).patchSocial(any(UUID.class), anyString(), any(ActorSocialDTO.class));
+    }
+
+    @Test
+    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnUpdateActorSocial() throws Exception {
+        mockMvc.perform(patch(URL + "/" + actor.getUuid() + "/socials/Lorem")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                )
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnUpdateActorSocial() throws Exception {
+        mockMvc.perform(patch(URL + "/" + actor.getUuid())
+                        .with(user("dev").roles("DEV"))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                )
+                .andDo(print())
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void whenNoBodyShouldReturnBadRequestExceptionOnUpdateActorSocial() throws Exception {
+        mockMvc.perform(patch(URL + "/" + actor.getUuid())
+                        .with(user("admin").roles("ADMIN"))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                )
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void whenNoActorSocialFoundShouldThrowItemNotFoundExceptionOnUpdateActorSocial() throws Exception {
+        ActorSocialDTO patch = new ActorSocialDTO();
+        patch.setSocial("Ipsum");
+
+        doThrow(ItemNotFoundException.class).when(service).patchSocial(any(UUID.class),
+                anyString(),
+                any(ActorSocialDTO.class)
+        );
+
+        mockMvc.perform(patch(URL + "/" + actor.getUuid() + "/socials/Lorem")
+                        .with(user("admin").roles("ADMIN"))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(patch))
+                )
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.code").value(HttpStatus.NOT_FOUND.value()))
+                .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.getReasonPhrase()))
+                .andExpect(jsonPath("$.method").value(HttpMethod.PATCH.name()))
+                .andExpect(jsonPath("$.timestamps").exists())
+                .andExpect(jsonPath("$.url").value(URL + "/" + actor.getUuid() + "/socials/Lorem"));
+
+        verify(service, times(1)).patchSocial(any(UUID.class), anyString(), any(ActorSocialDTO.class));
+    }
+
+    @Test
     void shouldDeleteActor() throws Exception {
         doNothing().when(service).deleteById(any(UUID.class));
 
@@ -388,5 +635,47 @@ class ActorControllerTest {
                 .andExpect(status().isNotFound());
 
         verify(service, times(1)).deleteById(any(UUID.class));
+    }
+
+    @Test
+    void shouldDeleteActorSocial() throws Exception {
+        doNothing().when(service).deleteSocial(any(UUID.class), anyString());
+
+        mockMvc.perform(delete(URL + "/" + actor.getUuid() + "/socials/Lorem")
+                        .with(user("admin").roles("ADMIN"))
+                )
+                .andDo(print())
+                .andExpect(status().isNoContent());
+
+        verify(service, times(1)).deleteSocial(any(UUID.class), anyString());
+    }
+
+    @Test
+    void whenNoAuthenticationIsProvidedShouldReturnUnauthorizedExceptionOnDeleteActorSocial() throws Exception {
+        mockMvc.perform(delete(URL + "/" + actor.getUuid() + "/socials/Lorem"))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void whenInvalidAuthenticationIsProvidedShouldReturnForbiddenExceptionOnDeleteActorSocial() throws Exception {
+        mockMvc.perform(delete(URL + "/" + actor.getUuid() + "/socials/Lorem")
+                        .with(user("dev").roles("DEV"))
+                )
+                .andDo(print())
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void whenNoActorFoundShouldThrowItemNotFoundExceptionOnUpdateActorOnDeleteActorSocial() throws Exception {
+        doThrow(ItemNotFoundException.class).when(service).deleteSocial(any(UUID.class), anyString());
+
+        mockMvc.perform(delete(URL + "/" + actor.getUuid() + "/socials/Lorem")
+                        .with(user("admin").roles("ADMIN"))
+                )
+                .andDo(print())
+                .andExpect(status().isNotFound());
+
+        verify(service, times(1)).deleteSocial(any(UUID.class), anyString());
     }
 }
