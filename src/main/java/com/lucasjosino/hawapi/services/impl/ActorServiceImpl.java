@@ -221,10 +221,6 @@ public class ActorServiceImpl implements ActorService {
      * @since 1.0.0
      */
     public void patchSocial(UUID uuid, String name, ActorSocialDTO patch) throws IOException {
-        if (!socialRepository.existsByActorUuidAndSocial(uuid, name)) {
-            throw new ItemNotFoundException("Item '" + uuid + "' and name '" + name + "'doesn't exist!");
-        }
-
         ActorSocialModel dbRes = socialRepository.findByActorUuidAndSocial(uuid, name)
                 .orElseThrow(ItemNotFoundException::new);
 
