@@ -26,6 +26,8 @@ import java.util.UUID;
  */
 public interface BaseService<D extends BaseDTO> {
 
+    long getCount();
+
     Page<UUID> findAllUUIDs(Pageable pageable, long count);
 
     @Cacheable(value = "findAll", keyGenerator = "findAllKeyGenerator")
