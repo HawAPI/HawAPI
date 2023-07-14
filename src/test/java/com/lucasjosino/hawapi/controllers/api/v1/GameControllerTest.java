@@ -110,8 +110,9 @@ class GameControllerTest {
         );
         HttpHeaders headers = buildHeaders(pageable, uuids, "en-US");
 
-        when(service.findAllUUIDs(any(Pageable.class))).thenReturn(uuids);
-        when(responseUtils.getHeaders(any(), any(Pageable.class), nullable(String.class))).thenReturn(headers);
+        when(service.findAllUUIDs(any(Pageable.class), anyLong())).thenReturn(uuids);
+        when(responseUtils.getHeaders(any(), any(Pageable.class), nullable(String.class), anyLong()))
+                .thenReturn(headers);
         when(service.findAll(anyMap(), anyList())).thenReturn(Collections.singletonList(game));
 
         mockMvc.perform(get(URL))
@@ -125,8 +126,13 @@ class GameControllerTest {
                 .andExpect(header().string("Content-Language", "en-US"))
                 .andExpect(jsonPath("$", hasSize(1)));
 
-        verify(service, times(1)).findAllUUIDs(any(Pageable.class));
-        verify(responseUtils, times(1)).getHeaders(any(), any(Pageable.class), nullable(String.class));
+        verify(service, times(1)).findAllUUIDs(any(Pageable.class), anyLong());
+        verify(responseUtils, times(1)).getHeaders(
+                any(),
+                any(Pageable.class),
+                nullable(String.class),
+                anyLong()
+        );
         verify(service, times(1)).findAll(anyMap(), anyList());
     }
 
@@ -140,8 +146,9 @@ class GameControllerTest {
         );
         HttpHeaders headers = buildHeaders(pageable, uuids, "pt-BR");
 
-        when(service.findAllUUIDs(any(Pageable.class))).thenReturn(uuids);
-        when(responseUtils.getHeaders(any(), any(Pageable.class), nullable(String.class))).thenReturn(headers);
+        when(service.findAllUUIDs(any(Pageable.class), anyLong())).thenReturn(uuids);
+        when(responseUtils.getHeaders(any(), any(Pageable.class), nullable(String.class), anyLong()))
+                .thenReturn(headers);
         when(service.findAll(anyMap(), anyList())).thenReturn(Collections.singletonList(game));
 
         mockMvc.perform(get(URL))
@@ -155,8 +162,13 @@ class GameControllerTest {
                 .andExpect(header().string("Content-Language", "pt-BR"))
                 .andExpect(jsonPath("$", hasSize(1)));
 
-        verify(service, times(1)).findAllUUIDs(any(Pageable.class));
-        verify(responseUtils, times(1)).getHeaders(any(), any(Pageable.class), nullable(String.class));
+        verify(service, times(1)).findAllUUIDs(any(Pageable.class), anyLong());
+        verify(responseUtils, times(1)).getHeaders(
+                any(),
+                any(Pageable.class),
+                nullable(String.class),
+                anyLong()
+        );
         verify(service, times(1)).findAll(anyMap(), anyList());
     }
 
@@ -197,8 +209,9 @@ class GameControllerTest {
         );
         HttpHeaders headers = buildHeaders(pageable, uuids, null);
 
-        when(service.findAllUUIDs(any(Pageable.class))).thenReturn(uuids);
-        when(responseUtils.getHeaders(any(), any(Pageable.class), nullable(String.class))).thenReturn(headers);
+        when(service.findAllUUIDs(any(Pageable.class), anyLong())).thenReturn(uuids);
+        when(responseUtils.getHeaders(any(), any(Pageable.class), nullable(String.class), anyLong()))
+                .thenReturn(headers);
         when(service.findAll(anyMap(), anyList())).thenReturn(Collections.emptyList());
 
         mockMvc.perform(get(URL))
@@ -211,8 +224,13 @@ class GameControllerTest {
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$", hasSize(0)));
 
-        verify(service, times(1)).findAllUUIDs(any(Pageable.class));
-        verify(responseUtils, times(1)).getHeaders(any(), any(Pageable.class), nullable(String.class));
+        verify(service, times(1)).findAllUUIDs(any(Pageable.class), anyLong());
+        verify(responseUtils, times(1)).getHeaders(
+                any(),
+                any(Pageable.class),
+                nullable(String.class),
+                anyLong()
+        );
         verify(service, times(1)).findAll(anyMap(), anyList());
     }
 
