@@ -76,7 +76,7 @@ class SeasonTranslationRepositoryTest extends DatabaseContainerInitializer {
     private void deleteAndFlushRepositories() {
         entityManager.clear();
         entityManager.flush();
-        translationRepository.deleteAll();
+        repository.deleteAll();
         translationRepository.deleteAll();
     }
 
