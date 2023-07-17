@@ -103,7 +103,7 @@ cd .hawapi/website/ || exit 1
 
 ## Yarn install into website and docs
 cd ./docs && yarn install
-yarn install
+cd ../ && yarn install
 
 ## Build website and docs
 echo
