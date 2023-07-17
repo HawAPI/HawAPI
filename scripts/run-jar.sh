@@ -21,7 +21,7 @@ function ask_for_build {
 
     if $skip_tests; then
         ./scripts/build-website.sh --clean-before
-        ./mvnw package -Dmaven.test.skip=true
+        ./mvnw package -Dmaven.test.skip=true -DskipTests
     else
         make build
     fi
