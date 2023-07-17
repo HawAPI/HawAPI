@@ -1,0 +1,45 @@
+# Workflow ref: https://github.com/wesleyegberto/gh-actions-java/blob/master/.github/workflows/build-test-deploy.yml
+# Docker ref: https://dev.to/saulsilver/docker-stop-all-processes-on-github-actions-533j
+name: "Java Unit/Integration testing"
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  testing:
+    # Ignore drafts
+    if: github.event.pull_request.draft == false
+    name: Java Unit/Integration testing
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v2
+        with:
+          java-version: 8
+          distribution: 'corretto'
+
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Maven Test
+        run: mvn test
+
+      # After tests, shutdown all created docker processes
+      - name: Shutdown all docker processes
+        run: ./.github/workflows/scripts/shutdown-docker.sh
+
+      - name: Publish Test Report
+        if: success() || failure()
+        uses: scacap/action-surefire-report@v1
