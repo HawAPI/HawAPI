@@ -101,23 +101,12 @@ fi
 echo "${cyan}[$0] ${green}Building the website..."
 cd .hawapi/website/ || exit 1
 
-## Retype is required to build the docs
-cd ./docs || exit 1
-echo "${cyan}[$0] ${red}<Retype> command not found!"
-echo "${cyan}[$0] ${green}Installing retype (LOCALLY)..."
+# Yarn install into website and docs
+cd ./docs && yarn install
 yarn install
-yarn add retypeapp --dev
-cd ../
-
-if ! [ -d "./node_modules" ]; then
-    echo "${cyan}[$0] ${green}Directory './node_modules' not found! Running 'yarn'!"
-    echo
-    yarn
-    echo
-fi
 
 echo
-yarn build-all
+yarn build:all
 echo
 
 # Website and Docs adaptation
