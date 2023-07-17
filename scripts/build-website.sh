@@ -63,39 +63,12 @@ echo "${cyan}[$0] ${green}Checking prerequisites for building website..."
 echo
 
 ## Check all requisites
-if ! type npm; then
-    echo "${cyan}[$0] ${red}<npm> command not found!"
+
+if ! type yarn; then
+    ## Yarn is required. Ask to install (LOCALLY)
+    echo "${cyan}[$0] ${red}<Yarn> command not found!"
+    echo "${cyan}[$0] ${green}Install yarn to build the website"
     exit 1
-else
-    if ! type yarn; then
-        ## Yarn is required. Ask to install (GLOBALLY)
-        echo "${cyan}[$0] ${red}<Yarn> command not found!"
-        echo "${cyan}[$0] ${green}Install yarn? (GLOBALLY) (Y/n)"
-        read -n1 -s -r yarn_response
-        
-        if ! echo "$yarn_response" | grep '^[Yy]\?$'; then
-            echo 'No'
-            exit 1
-        fi
-
-        echo "${cyan}[$0] ${green}Installing yarn..."
-        npm install --global yarn
-    fi
-fi
-
-if ! type retype; then
-    ## Retype is required. Ask to install
-    echo "${cyan}[$0] ${red}<Retype> command not found!"
-    echo "${cyan}[$0] ${green}Install retype? (GLOBALLY) (Y/n)"
-    read -n1 -s -r retype_response
-    
-    if ! echo "$retype_response" | grep '^[Yy]\?$'; then
-        echo 'No'
-        exit 1
-    fi
-
-    echo "${cyan}[$0] ${green}Installing retype..."
-    yarn global add retypeapp
 fi
 
 echo
@@ -127,6 +100,14 @@ fi
 
 echo "${cyan}[$0] ${green}Building the website..."
 cd .hawapi/website/ || exit 1
+
+## Retype is required to build the docs
+cd ./docs || exit 1
+echo "${cyan}[$0] ${red}<Retype> command not found!"
+echo "${cyan}[$0] ${green}Installing retype (LOCALLY)..."
+yarn install
+yarn add retypeapp --dev
+cd ../
 
 if ! [ -d "./node_modules" ]; then
     echo "${cyan}[$0] ${green}Directory './node_modules' not found! Running 'yarn'!"
