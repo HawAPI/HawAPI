@@ -8,5 +8,5 @@ WORKDIR /app
 
 COPY target/hawapi-*.jar hawapi.jar
 
-EXPOSE 8080
+EXPOSE 8080:8080
 ENTRYPOINT ["java","-jar","hawapi.jar", "--spring.profiles.active=prod"]
