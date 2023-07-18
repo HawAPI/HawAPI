@@ -33,21 +33,27 @@ get: ## Get all pom dependencies
 javadoc: ## Generate javadoc files
 	@./mvnw javadoc:javadoc
 
-test: test-setup ## Run ALL tests of the spring application
+test: ## Run ALL tests of the spring application
 	@./mvnw test
 
-test-unit: test-setup ## Run ONLY unit tests of the spring application
-	@./mvnw -Dtest="*UnitTest" test
+test-unit: ## Run ONLY unit tests of the spring application
+	@./mvnw -Dtest="!*IntegrationTest" test
 
-test-int: test-setup ## Run ONLY integration tests of the spring application
-	@./mvnw -Dtest="*IntTest" test
+test-int: ## Run ONLY integration tests of the spring application
+	@./mvnw -Dtest="*IntegrationTest" test
 
 compile: clean ## Compile the spring application
 	@./mvnw compile
 
-build: test ## Build website, test and package the spring application
+build: clean ## Build website, test and package the spring application
 	@./scripts/build-website.sh --clean-before
-	@./mvnw package -Dmaven.test.skip=true -DskipTests -Dspring.profiles.active=prod
+	@./mvnw javadoc:javadoc
+	@./mvnw package --file pom.xml
+
+build-wot: clean ## Build website without test and package the spring application
+	@./scripts/build-website.sh --clean-before
+	@./mvnw javadoc:javadoc
+	@./mvnw package --file pom.xml -Dmaven.test.skip=true -DskipTests
 
 verify: clean ## Verify the spring application
 	@./mvnw verify
@@ -96,10 +102,6 @@ docker-prune: ## Delete local docker volumes.
 	@docker volume prune
 
 ## Help
-
-test-setup: clean ## Setup for tests
-	@./mvnw process-test-resources || true
-	@cp --remove-destination ./docker/postgres/init/schema.sql ./target/test-classes/schema.sql
 
 config: ## Show all configuration (Docker, database, etc...)
 	@echo
