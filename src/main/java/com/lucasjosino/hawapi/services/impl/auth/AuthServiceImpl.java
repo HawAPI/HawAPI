@@ -70,10 +70,6 @@ public class AuthServiceImpl implements AuthService {
                 throw new RoleBadRequestException("Role '" + user.getRole() + "' is not valid!");
             }
 
-            if (user.getRole().equalsIgnoreCase(RoleType.ANONYMOUS.name())) {
-                throw new RoleBadRequestException("Role 'ANONYMOUS' doesn't require registration");
-            }
-
             boolean requireAdmin = user.getRole().equalsIgnoreCase(RoleType.DEV.name())
                     || user.getRole().equalsIgnoreCase(RoleType.MAINTAINER.name())
                     || user.getRole().equalsIgnoreCase(RoleType.ADMIN.name());
