@@ -129,7 +129,7 @@ public class AuthServiceImpl implements AuthService {
             setEmail(dbUser.getEmail());
             setRole(dbUser.getRole());
             setToken(token);
-            // TODO: Add token type
+            setTokenType("Bearer");
             setCreatedAt(dbUser.getCreatedAt());
             setUpdatedAt(dbUser.getUpdatedAt());
         }};
