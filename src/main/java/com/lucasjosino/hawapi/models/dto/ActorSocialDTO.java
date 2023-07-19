@@ -3,8 +3,9 @@ package com.lucasjosino.hawapi.models.dto;
 import com.lucasjosino.hawapi.validators.annotations.BasicURL;
 
 import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
 
-public class ActorSocialDTO {
+public class ActorSocialDTO implements Serializable {
 
     @NotBlank(message = "Field 'social' is required")
     private String social;

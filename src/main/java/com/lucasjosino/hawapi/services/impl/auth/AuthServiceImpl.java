@@ -70,10 +70,11 @@ public class AuthServiceImpl implements AuthService {
                 throw new RoleBadRequestException("Role '" + user.getRole() + "' is not valid!");
             }
 
-            boolean isDevOrAdmin = user.getRole().equalsIgnoreCase(RoleType.DEV.name()) ||
-                    user.getRole().equalsIgnoreCase(RoleType.ADMIN.name());
+            boolean requireAdmin = user.getRole().equalsIgnoreCase(RoleType.DEV.name())
+                    || user.getRole().equalsIgnoreCase(RoleType.MAINTAINER.name())
+                    || user.getRole().equalsIgnoreCase(RoleType.ADMIN.name());
 
-            if (isDevOrAdmin && !hasAdminAuthorization()) {
+            if (requireAdmin && !hasAdminAuthorization()) {
                 throw new UserUnauthorizedException(
                         "Only user with ADMIN role can create users with role:'" + user.getRole() + "'"
                 );
@@ -128,7 +129,7 @@ public class AuthServiceImpl implements AuthService {
             setEmail(dbUser.getEmail());
             setRole(dbUser.getRole());
             setToken(token);
-            // TODO: Add token type
+            setTokenType("Bearer");
             setCreatedAt(dbUser.getCreatedAt());
             setUpdatedAt(dbUser.getUpdatedAt());
         }};
@@ -238,6 +239,7 @@ public class AuthServiceImpl implements AuthService {
         ANONYMOUS,
         BASIC,
         DEV,
+        MAINTAINER,
         ADMIN;
 
         /**

@@ -33,8 +33,8 @@ public class UserDTO {
 
     @Size(max = 15)
     @Pattern(
-            regexp = "^(BASIC|DEV|ADMIN)$",
-            message = "For the account type only the values BASIC, DEV, or ADMIN are accepted."
+            regexp = "^(BASIC|DEV|ADMIN|MAINTAINER)$",
+            message = "For the account type only the values BASIC, DEV, MAINTAINER or ADMIN are accepted."
     )
     private String role;
 

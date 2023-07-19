@@ -54,9 +54,9 @@ public class SecurityConfig {
                         .antMatchers(HttpMethod.POST, "/api/v1/auth/**").permitAll()
                         // API
                         .antMatchers(HttpMethod.GET, "/api/**").permitAll()
-                        .antMatchers(HttpMethod.PATCH, "/api/**").hasRole("ADMIN")
-                        .antMatchers(HttpMethod.POST, "/api/**").hasRole("ADMIN")
-                        .antMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN")
+                        .antMatchers(HttpMethod.PATCH, "/api/**").hasAnyRole("ADMIN", "MAINTAINER")
+                        .antMatchers(HttpMethod.POST, "/api/**").hasAnyRole("ADMIN", "MAINTAINER")
+                        .antMatchers(HttpMethod.DELETE, "/api/**").hasAnyRole("ADMIN", "MAINTAINER")
                         // Others endpoints
                         .anyRequest().permitAll()
                 )

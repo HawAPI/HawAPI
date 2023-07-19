@@ -178,6 +178,24 @@ class AuthServiceImplTest {
     }
 
     @Test
+    @WithMockUser(username = "maintainer", roles = "MAINTAINER")
+    void whenAdminRoleIsProvidedWithMaintainerAuthenticationShouldThrowUserUnauthorizedExceptionOnRegisterUser() {
+        UserModel userModel = mapper.map(user, UserModel.class);
+        UserRegistrationDTO registration = mapper.map(user, UserRegistrationDTO.class);
+        registration.setRole("ADMIN");
+        registration.setPassword("MY_SUPER_SECRET_PASSWORD");
+        userModel.setPassword("MY_SUPER_SECRET_PASSWORD");
+
+        when(repository.existsByUsername(anyString())).thenReturn(false);
+        when(repository.existsByEmail(anyString())).thenReturn(false);
+
+        assertThrows(UserUnauthorizedException.class, () -> service.register(registration));
+
+        verify(repository, times(1)).existsByUsername(anyString());
+        verify(repository, times(1)).existsByEmail(anyString());
+    }
+
+    @Test
     @WithMockUser(username = "anonymous", roles = "ANONYMOUS")
     void whenAdminRoleIsProvidedWithoutAuthenticationShouldThrowUserUnauthorizedExceptionOnRegisterUser() {
         UserModel userModel = mapper.map(user, UserModel.class);
@@ -293,6 +311,21 @@ class AuthServiceImplTest {
     }
 
     @Test
+    @WithMockUser(username = "maintainer", roles = "MAINTAINER")
+    void whenWrongPasswordIsProvidedWithMaintainerAuthenticationShouldThrowUserUnauthorizedExceptionOnAuthenticateUser() {
+        UserModel userModel = mapper.map(user, UserModel.class);
+        UserAuthDTO authentication = mapper.map(user, UserAuthDTO.class);
+        userModel.setPassword("MY_SUPER_SECRET_PASSWORD");
+        authentication.setPassword("ANY_OTHER_PASSWORD");
+
+        when(repository.findByUsernameAndEmail(anyString(), anyString())).thenReturn(Optional.of(userModel));
+
+        assertThrows(UserUnauthorizedException.class, () -> service.authenticate(authentication));
+
+        verify(repository, times(1)).findByUsernameAndEmail(anyString(), anyString());
+    }
+
+    @Test
     @WithMockUser(username = "anonymous", roles = "ANONYMOUS")
     void whenWrongPasswordIsProvidedWithoutAdminAuthenticationShouldThrowUserUnauthorizedExceptionOnAuthenticateUser() {
         UserModel userModel = mapper.map(user, UserModel.class);
@@ -356,6 +389,20 @@ class AuthServiceImplTest {
     }
 
     @Test
+    @WithMockUser(username = "maintainer", roles = "MAINTAINER")
+    void whenWrongPasswordIsProvidedWithMaintainerAuthenticationShouldThrowUserUnauthorizedExceptionOnDeleteUser() {
+        UserModel userModel = mapper.map(user, UserModel.class);
+        UserAuthDTO authentication = mapper.map(user, UserAuthDTO.class);
+        authentication.setPassword("ANY_OTHER_PASSWORD");
+
+        when(repository.findByUsernameAndEmail(anyString(), anyString())).thenReturn(Optional.of(userModel));
+
+        assertThrows(UserUnauthorizedException.class, () -> service.delete(authentication));
+
+        verify(repository, times(1)).findByUsernameAndEmail(anyString(), anyString());
+    }
+
+    @Test
     @WithMockUser(username = "anonymous", roles = "ANONYMOUS")
     void whenWrongPasswordIsProvidedWithoutAdminAuthenticationShouldThrowUserUnauthorizedExceptionOnDeleteUser() {
         UserModel userModel = mapper.map(user, UserModel.class);
@@ -371,14 +418,6 @@ class AuthServiceImplTest {
     }
 
     @Test
-    @WithMockUser(username = "basic", roles = "BASIC")
-    void shouldReturnCurrentUserRoleWithBasicAuthentication() {
-        String res = service.getRole();
-
-        assertEquals("ROLE_BASIC", res);
-    }
-
-    @Test
     @WithMockUser(username = "anonymous", roles = "ANONYMOUS")
     void shouldReturnCurrentUserRoleWithAnonymousAuthentication() {
         String res = service.getRole();
@@ -387,10 +426,26 @@ class AuthServiceImplTest {
     }
 
     @Test
+    @WithMockUser(username = "basic", roles = "BASIC")
+    void shouldReturnCurrentUserRoleWithBasicAuthentication() {
+        String res = service.getRole();
+
+        assertEquals("ROLE_BASIC", res);
+    }
+
+    @Test
     @WithMockUser(username = "dev", roles = "DEV")
     void shouldReturnCurrentUserRoleWithDevAuthentication() {
         String res = service.getRole();
 
         assertEquals("ROLE_DEV", res);
+    }
+
+    @Test
+    @WithMockUser(username = "maintainer", roles = "MAINTAINER")
+    void shouldReturnCurrentUserRoleWithMaintainerAuthentication() {
+        String res = service.getRole();
+
+        assertEquals("ROLE_MAINTAINER", res);
     }
 }
