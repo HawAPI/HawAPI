@@ -149,8 +149,11 @@ class AuthControllerTest {
                 .andExpect(jsonPath("$.code").value(HttpStatus.BAD_REQUEST.value()))
                 .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.getReasonPhrase()))
                 .andExpect(jsonPath("$.method").value(HttpMethod.POST.name()))
-                .andExpect(jsonPath("$.message").value(
-                        "For the account type only the values BASIC, DEV, or ADMIN are accepted."))
+                .andExpect(jsonPath("$.message")
+                        .value(
+                                "For the account type only the values BASIC, DEV, MAINTAINER or ADMIN are accepted."
+                        )
+                )
                 .andExpect(jsonPath("$.timestamps").exists())
                 .andExpect(jsonPath("$.url").value(URL + "/register"));
     }
