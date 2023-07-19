@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Setup
+
       - uses: actions/checkout@v2
 
       - name: Setup JDK 8
@@ -36,20 +37,21 @@ jobs:
           cache: 'yarn'
 
       # Build
-      - name: Build website
-        run: ./scripts/build-website.sh --clean-before
 
-      - name: Maven Package
-        run: mvn package -Dmaven.test.skip=true -DskipTests --file pom.xml
+      ## Build website, docs, javadoc and the project (Without tests)
+      - name: Build project
+        run: make build-wot
 
+      ## Push to GHCR (GitHub Container Registry)
       - name: Docker build
         run: docker build --rm=false -t ghcr.io/${{ github.action_repository }}:${{ github.ref_name }} .
 
       # Publish
-      - name: GitHub (CR) login
+
+      - name: GitHub (GHCR) login
         run: echo $GHCR_TOKEN | docker login ghcr.io -u LucJosin --password-stdin
 
-      - name: GitHub (CR) push
+      - name: GitHub (GHCR) push
         run: docker push ghcr.io/${{ github.action_repository }}:${{ github.ref_name }}
 
       - name: Install and configure the Koyeb CLI
@@ -59,5 +61,6 @@ jobs:
           github_token: "${{ secrets.GITHUB_TOKEN }}"
 
       # Release
+
       - name: Deploy to Koyeb
-        run: koyeb service redeploy hawapi/<SERVICE_NAME>
+        run: koyeb service redeploy hawapi/hawapi
