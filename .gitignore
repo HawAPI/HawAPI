@@ -35,7 +35,10 @@ build/
 .vscode/
 
 ### RSA Keys ###
-*.pem
+src/main/resources/keys/**
+## Fake keys
+!src/main/resources/keys/privateRSAKey.pem
+!src/main/resources/keys/publicRSAKey.pem
 
 ### Project
 .hawapi/

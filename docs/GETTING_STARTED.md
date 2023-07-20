@@ -205,7 +205,7 @@ To use the values on a production mode set these arguments before running the ja
 - [...] -DSPRING_DATASOURCE_URL=<...>
 
 > **Note** \
-> Alternatively, set both values on the system environment
+> Alternatively, set all values on the system environment
 
 ### Website/Docs
 
@@ -277,16 +277,13 @@ Different set up methods are required
 
 #### Dev/Test Profiles
 
-After generating the keys, copy the content to a file on:
+By default, two RSA keys (public/private) are located at:
 
-> /src/main/resources/keys/
+- /src/main/resources/keys/privateRSAKey.pem
+- /src/main/resources/keys/publicRSAKey.pem
 
-E.g:
-
-- privateRSAKey.pem
-    - [privateRSAKey.pem.example](../src/main/resources/keys/privateRSAKey.pem.example)
-- publicRSAKey.pem
-    - [publicRSAKey.pem.example](../src/main/resources/keys/publicRSAKey.pem.example)
+> **Warning** \
+> Don't se this keys on production mode. **See below**
 
 #### Prod (Production) Profile
 

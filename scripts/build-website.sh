@@ -62,40 +62,13 @@ echo "${cyan}[$0] ${green}See all requisites: https://github.com/HawAPI/HawAPI/b
 echo "${cyan}[$0] ${green}Checking prerequisites for building website..."
 echo
 
-## Check all requisites
-if ! type npm; then
-    echo "${cyan}[$0] ${red}<npm> command not found!"
+# Check all requisites
+
+if ! type yarn; then
+    ## Yarn is required. Ask to install (LOCALLY)
+    echo "${cyan}[$0] ${red}<Yarn> command not found!"
+    echo "${cyan}[$0] ${green}Install yarn to build the website"
     exit 1
-else
-    if ! type yarn; then
-        ## Yarn is required. Ask to install (GLOBALLY)
-        echo "${cyan}[$0] ${red}<Yarn> command not found!"
-        echo "${cyan}[$0] ${green}Install yarn? (GLOBALLY) (Y/n)"
-        read -n1 -s -r yarn_response
-        
-        if ! echo "$yarn_response" | grep '^[Yy]\?$'; then
-            echo 'No'
-            exit 1
-        fi
-
-        echo "${cyan}[$0] ${green}Installing yarn..."
-        npm install --global yarn
-    fi
-fi
-
-if ! type retype; then
-    ## Retype is required. Ask to install
-    echo "${cyan}[$0] ${red}<Retype> command not found!"
-    echo "${cyan}[$0] ${green}Install retype? (GLOBALLY) (Y/n)"
-    read -n1 -s -r retype_response
-    
-    if ! echo "$retype_response" | grep '^[Yy]\?$'; then
-        echo 'No'
-        exit 1
-    fi
-
-    echo "${cyan}[$0] ${green}Installing retype..."
-    yarn global add retypeapp
 fi
 
 echo
@@ -128,61 +101,32 @@ fi
 echo "${cyan}[$0] ${green}Building the website..."
 cd .hawapi/website/ || exit 1
 
-if ! [ -d "./node_modules" ]; then
-    echo "${cyan}[$0] ${green}Directory './node_modules' not found! Running 'yarn'!"
-    echo
-    yarn
-    echo
-fi
+## Yarn install into website and docs
+cd ./docs && yarn install
+cd ../ && yarn install
 
+## Build website and docs
 echo
-yarn build-all
+yarn build:all
 echo
-
-# Website and Docs adaptation
-
-echo "${cyan}[$0] ${green}Starting website/docs adaptation..."
-echo
-
-echo "${cyan}[$0] ${green}Removing '.nojekyll' file"
-rm -rf ./build/docs/.nojekyll
-
-## Try to unzip and modify the 'sitemap.xml.gz' file.
-if ! type gunzip; then
-    ## If command 'gunzip' don't exist. Just remove the file.
-    echo "${cyan}[$0] ${green}<gunzip> command not found! Removing 'sitemap.xml.gz' file"
-    rm -rf ./build/docs/sitemap.xml.gz
-else
-    echo "${cyan}[$0] ${green}Unzipping 'sitemap.xml.gz' file"
-    gunzip ./build/docs/sitemap.xml.gz
-    echo "${cyan}[$0] ${green}Replacing '.id/' with '.id/docs/'"
-    echo "${cyan}[$0] ${green}Moving 'sitemap.xml.gz' file to './build/sitemap-1.xml'"
-    sed 's#.id/#.id/docs/#' ./build/docs/sitemap.xml > ./build/sitemap-1.xml
-
-    echo "${cyan}[$0] ${green}Adding 'https://hawapi.theproject.id/sitemap-1.xml' to './build/docs/robots.txt'"
-    echo 'Sitemap: https://hawapi.theproject.id/sitemap-1.xml' >> ./build/docs/robots.txt
-fi
-
-echo "${cyan}[$0] ${green}Moving 'robots.txt' to './build/robots.txt'"
-sed 's/sitemap.xml.gz/sitemap-0.xml/' ./build/docs/robots.txt > ./build/robots.txt
-rm -rf ./build/docs/robots.txt
-rm -rf ./build/sitemap-index.xml
 
 # Finalization
 
-if [ -d "../../src/main/resources/static/" ]; then
+## Spring root
+cd ../../
+
+if [ -d "./src/main/resources/static/" ]; then
     echo "${cyan}[$0] ${green}Found files inside 'resources/static/'! Deleting all..."
-    rm -rf ../../src/main/resources/static/*
+    rm -rf ./src/main/resources/static/*
 fi
 
-if ! [ -d "../../src/main/resources/static/" ]; then
-    mkdir -p ../../src/main/resources/static/
+if ! [ -d "./src/main/resources/static/" ]; then
+    mkdir -p ./src/main/resources/static/
 fi
 
-echo "${cyan}[$0] ${green}Moving files from './build/' to 'resources/static/'"
-mv ./build/* ../../src/main/resources/static/
+echo "${cyan}[$0] ${green}Moving files from '.hawapi/website/build/' to 'resources/static/'"
+mv .hawapi/website/build/* ./src/main/resources/static/
 
 # Clean
 
-cd ../..
 ./scripts/clean-website.sh "$@"

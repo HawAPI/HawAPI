@@ -61,11 +61,6 @@ verify: clean ## Verify the spring application
 clean: ## Clear the spring application
 	@./mvnw clean
 
-## Build
-
-jar-run: ## Run the compiled application (target/hawapi-*.jar)
-	@./scripts/run-jar.sh
-
 ## Website
 
 website-build: ## Build the website
