@@ -29,10 +29,6 @@ jobs:
       - name: Maven Test
         run: mvn test
 
-      # After tests, shutdown all created docker processes
-      - name: Shutdown all docker processes
-        run: ./.github/workflows/scripts/shutdown-docker.sh
-
       - name: Publish Test Report
         if: success() || failure()
         uses: scacap/action-surefire-report@v1
