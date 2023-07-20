@@ -43,6 +43,7 @@ via JSON and allows developers to create **desktop**, **web** and **mobile** app
     - [Database](./docs/GETTING_STARTED.md#database)
     - [Website/Docs](./docs/GETTING_STARTED.md#websitedocs)
     - [Application](./docs/GETTING_STARTED.md#application)
+    - [RSA](./docs/GETTING_STARTED.md#rsa-rivestshamiradleman)
 - [Tests](./docs/GETTING_STARTED.md#tests)
     - [Unit Tests](./docs/GETTING_STARTED.md#unit-tests)
     - [Integration Tests](./docs/GETTING_STARTED.md#integration-tests)
@@ -50,31 +51,17 @@ via JSON and allows developers to create **desktop**, **web** and **mobile** app
     - [Makefile](./docs/GETTING_STARTED.md#makefile)
     - [Shell/Bash](./docs/GETTING_STARTED.md#shellbash)
 
-#### Links
-
-- [Website](https://hawapi.theproject.id)
-    - [Docs](https://hawapi.theproject.id/docs/)
-    - [SDK's](https://hawapi.theproject.id/docs/sdks/)
-    - [About](https://hawapi.theproject.id/docs/about/)
-
-#### Git
-
-- [Home](https://github.com/HawAPI)
-    - [Website](https://github.com/HawAPI/website)
-    - [Data](https://github.com/HawAPI/api-data)
-    - [Docs](https://github.com/HawAPI/docs)
-
 ## Internationalization Support
 
 | Scope       | en-US | pt-BR |
 |:------------|:-----:|:-----:|
-| Actors      |  --   |  No   |
-| Characters  |  --   |  No   |
-| Episodes    |  Yes  |  No   |
-| Games       |  Yes  |  No   |
-| Locations   |  Yes  |  No   |
-| Seasons     |  Yes  |  No   |
-| Soundtracks |  --   |  No   |
+| Actors      |  --   |  --   |
+| Characters  |  --   |  --   |
+| Episodes    |  Yes  |  Yes  |
+| Games       |  Yes  |  Yes  |
+| Locations   |  Yes  |  Yes  |
+| Seasons     |  Yes  |  Yes  |
+| Soundtracks |  --   |  --   |
 
 ## Contributing
 
