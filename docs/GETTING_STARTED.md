@@ -51,9 +51,6 @@
     │   │               │   ├── interfaces
     │   │               │   └── utils
     │   │               ├── core
-    │   │               ├── enums
-    │   │               │   ├── auth
-    │   │               │   └── specification
     │   │               ├── exceptions
     │   │               │   ├── auth
     │   │               │   └── specification
@@ -68,9 +65,9 @@
     │   │               │   │   ├── auth
     │   │               │   │   └── translation
     │   │               │   ├── http
+    │   │               │   ├── properties
     │   │               │   ├── translations
     │   │               │   └── user
-    │   │               ├── properties
     │   │               ├── repositories
     │   │               │   ├── auth
     │   │               │   ├── base
@@ -94,13 +91,18 @@
         │           └── hawapi
         │               ├── configs
         │               │   └── initializer
+        │               ├── controllers
+        │               │   └── api
+        │               │       └── v1
+        │               │           └── auth
         │               ├── integration
         │               │   └── auth
-        │               ├── unit
-        │               │   ├── controllers
-        │               │   │   └── auth
-        │               │   ├── repositories
-        │               │   └── services
+        │               ├── repositories
+        │               │   ├── auth
+        │               │   └── translation
+        │               ├── services
+        │               │   └── impl
+        │               │       └── auth
         │               └── utils
         └── resources
 ```
@@ -114,8 +116,13 @@
 - Docker for [Database](../docker/docker-compose.yml)
 - Java 8 (1.8) for [Application](../src/main/java/com/lucasjosino/hawapi/HawAPIApplication.java)
 - Npm/Yarn
-    - [Astro (v2.5.X)](https://astro.build/) for [website](https://github.com/HawAPI/website) generation
-    - [Retype (v3.X.X)](https://retype.com/) for [docs](https://github.com/HawAPI/website) generation
+    - [Astro (v2.X.X)](https://astro.build/) for [website](https://github.com/HawAPI/website) generation
+    - [Retype (v3.X.X)](https://retype.com/) for [docs](https://github.com/HawAPI/docs) generation
+
+The HawAPI project build **WILL NOT** run when:
+
+- **No** Public/Private RSA keys were found
+- Database **IS NOT** accepting connections
 
 ### Optional
 
@@ -175,6 +182,8 @@ git clone https://github.com/HawAPI/HawAPI.git
 > The application will not run if the database is not active. \
 > Check out the [#Docker](#docker) section before.
 
+#### Dev/Test Profiles
+
 - Docker CLI
 
 ```
@@ -186,6 +195,17 @@ docker compose -f ./docker/docker-compose.yml start postgres
 ```
 make docker-start
 ```
+
+#### Prod (Production) Profile
+
+To use the values on a production mode set these arguments before running the jar file:
+
+- [...] -DSPRING_DATASOURCE_USERNAME=<...>
+- [...] -DSPRING_DATASOURCE_PASSWORD=<...>
+- [...] -DSPRING_DATASOURCE_URL=<...>
+
+> **Note** \
+> Alternatively, set both values on the system environment
 
 ### Website/Docs
 
@@ -238,6 +258,46 @@ The result should be:
 Pong
 ```
 
+## RSA (Rivest–Shamir–Adleman)
+
+> “RSA (Rivest–Shamir–Adleman) is a public-key cryptosystem,
+> one of the oldest, that is widely used for secure data transmission.”
+>
+> _[See more](https://en.wikipedia.org/wiki/RSA_(cryptosystem))_
+
+The HawAPI project build will not run without both Private/Public keys
+
+- [How to set up on: Ubuntu](https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys-on-ubuntu-20-04)
+- [How to set up on: Windows](https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_keymanagement#user-key-generation)
+- [How to set up on: Linux/MacOS](https://help.dreamhost.com/hc/en-us/articles/216499537-How-to-configure-passwordless-login-in-Mac-OS-X-and-Linux)
+
+### Location
+
+Different set up methods are required
+
+#### Dev/Test Profiles
+
+After generating the keys, copy the content to a file on:
+
+> /src/main/resources/keys/
+
+E.g:
+
+- privateRSAKey.pem
+    - [privateRSAKey.pem.example](../src/main/resources/keys/privateRSAKey.pem.example)
+- publicRSAKey.pem
+    - [publicRSAKey.pem.example](../src/main/resources/keys/publicRSAKey.pem.example)
+
+#### Prod (Production) Profile
+
+To use the keys on a production mode set these arguments before running the jar file:
+
+- [...] -DRSA_PRIVATE_KEY=<...>
+- [...] -DRSA_PUBLIC_KEY=<...>
+
+> **Note** \
+> Alternatively, set both values on the system environment
+
 ## Tests
 
 The application include both: Integration and Unit tests
@@ -275,7 +335,7 @@ To run **Unit** tests
 - Maven
 
 ```
-./mvnw -Dtest="*UnitTest" test
+./mvnw -Dtest="!*IntegrationTest" test
 ```
 
 - Makefile
@@ -291,7 +351,7 @@ To run **Integration** tests
 - Maven
 
 ```
-./mvnw -Dtest="*IntTest" test
+./mvnw -Dtest="*IntegrationTest" test
 ```
 
 - Makefile
@@ -325,10 +385,9 @@ Targets:
     test-int                 Run ONLY integration tests of the spring application
     compile                  Compile the spring application
     build                    Build website, test and package the spring application
+    build-wot                Build website without test and package the spring application
     verify                   Verify the spring application
     clean                    Clear the spring application
-  Build
-    jar-run                  Run the compiled application (target/hawapi-*.jar)
   Website
     website-build            Build the website
     website-clean            Remove '.hawapi/' and 'resources/static/'
@@ -376,17 +435,4 @@ Usage: ./scripts/clean-website.sh [option...]
    -D, --clean-downloads        Remove '.downloads/' directory
    -S, --clean-static           Remove 'resources/static/' directory
    -A, --clean-all              Remove all directories related with website build
-```
-
-#### Run Jar
-
-```
-./scripts/run-jar.sh --help
-```
-
-```
-Usage: ./scripts/run-jar.sh [option...]
-
-   -S, --skip-tests         Skip tests when building the application
-   -N, --no-clean           Don't remove 'target/' directory before building
 ```
