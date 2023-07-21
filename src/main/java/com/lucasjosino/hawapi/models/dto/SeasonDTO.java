@@ -41,9 +41,11 @@ public class SeasonDTO extends BaseDTO {
     @NotNull(message = "Field 'release_date' is required")
     private LocalDate releaseDate;
 
+    @Size(max = 255)
     @JsonProperty("next_season")
     private String nextSeason;
 
+    @Size(max = 255)
     @JsonProperty("prev_season")
     private String prevSeason;
 

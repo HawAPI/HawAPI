@@ -31,12 +31,10 @@ public class EpisodeDTO extends BaseDTO {
 
     @Size(max = 255)
     @JsonProperty("next_episode")
-    @NotBlank(message = "Field 'next_episode' is required")
     private String nextEpisode;
 
     @Size(max = 255)
     @JsonProperty("prev_episode")
-    @NotBlank(message = "Field 'prev_episode' is required")
     private String prevEpisode;
 
     @Size(max = 255)
