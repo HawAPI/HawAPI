@@ -223,7 +223,8 @@ public class SeasonServiceImpl implements SeasonService {
      * @since 1.0.0
      */
     public void patch(UUID uuid, SeasonDTO patch) throws IOException {
-        SeasonModel dbRes = repository.findById(uuid).orElseThrow(ItemNotFoundException::new);
+        SeasonModel dbRes = repository.findByUuidAndTranslationLanguage(uuid, patch.getLanguage())
+                .orElseThrow(ItemNotFoundException::new);
 
         SeasonModel dtoToModel = modelMapper.map(dbRes, SeasonModel.class);
         SeasonModel patchedModel = utils.merge(dtoToModel, patch);

@@ -223,7 +223,8 @@ public class GameServiceImpl implements GameService {
      * @since 1.0.0
      */
     public void patch(UUID uuid, GameDTO patch) throws IOException {
-        GameModel dbRes = repository.findById(uuid).orElseThrow(ItemNotFoundException::new);
+        GameModel dbRes = repository.findByUuidAndTranslationLanguage(uuid, patch.getLanguage())
+                .orElseThrow(ItemNotFoundException::new);
 
         GameModel dtoToModel = modelMapper.map(dbRes, GameModel.class);
         GameModel patchedModel = utils.merge(dtoToModel, patch);

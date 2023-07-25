@@ -223,7 +223,8 @@ public class EpisodeServiceImpl implements EpisodeService {
      * @since 1.0.0
      */
     public void patch(UUID uuid, EpisodeDTO patch) throws IOException {
-        EpisodeModel dbRes = repository.findById(uuid).orElseThrow(ItemNotFoundException::new);
+        EpisodeModel dbRes = repository.findByUuidAndTranslationLanguage(uuid, patch.getLanguage())
+                .orElseThrow(ItemNotFoundException::new);
 
         EpisodeModel dtoToModel = modelMapper.map(dbRes, EpisodeModel.class);
         EpisodeModel patchedModel = utils.merge(dtoToModel, patch);

@@ -222,7 +222,8 @@ public class LocationServiceImpl implements LocationService {
      * @since 1.0.0
      */
     public void patch(UUID uuid, LocationDTO patch) throws IOException {
-        LocationModel dbRes = repository.findById(uuid).orElseThrow(ItemNotFoundException::new);
+        LocationModel dbRes = repository.findByUuidAndTranslationLanguage(uuid, patch.getLanguage())
+                .orElseThrow(ItemNotFoundException::new);
 
         LocationModel dtoToModel = modelMapper.map(dbRes, LocationModel.class);
         LocationModel patchedModel = utils.merge(dtoToModel, patch);
