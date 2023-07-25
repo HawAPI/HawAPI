@@ -429,16 +429,18 @@ class GameServiceImplTest {
         GameDTO patch = new GameDTO();
         patch.setUuid(gameModel.getUuid());
         patch.setHref("/api/v1/" + gameModel.getUuid());
+        patch.setLanguage("en-US");
         gameModel.setHref("/api/v1/" + gameModel.getUuid());
 
-        when(repository.findById(any(UUID.class))).thenReturn(Optional.ofNullable(gameModel));
+        when(repository.findByUuidAndTranslationLanguage(any(UUID.class), anyString()))
+                .thenReturn(Optional.ofNullable(gameModel));
         when(modelMapper.map(any(), eq(GameModel.class))).thenReturn(gameModel);
         when(utils.merge(any(GameModel.class), any(GameDTO.class))).thenReturn(gameModel);
         when(repository.save(any(GameModel.class))).thenReturn(gameModel);
 
         service.patch(gameModel.getUuid(), patch);
 
-        verify(repository, times(1)).findById(any(UUID.class));
+        verify(repository, times(1)).findByUuidAndTranslationLanguage(any(UUID.class), anyString());
         verify(modelMapper, times(1)).map(any(), any());
         verify(utils, times(1)).merge(any(GameModel.class), any(GameDTO.class));
         verify(repository, times(1)).save(any(GameModel.class));
@@ -448,11 +450,12 @@ class GameServiceImplTest {
     void whenNoGameFoundShouldThrowItemNotFoundExceptionOnUpdateGame() {
         GameDTO patch = new GameDTO();
 
-        when(repository.findById(any(UUID.class))).thenReturn(Optional.empty());
+        when(repository.findByUuidAndTranslationLanguage(any(UUID.class), anyString())).thenReturn(Optional.empty());
 
         assertThrows(ItemNotFoundException.class, () -> service.patch(gameModel.getUuid(), patch));
 
-        verify(repository, times(1)).findById(any(UUID.class));
+        verify(repository, times(1))
+                .findByUuidAndTranslationLanguage(any(UUID.class), nullable(String.class));
     }
 
     @Test

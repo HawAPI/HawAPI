@@ -420,16 +420,18 @@ class EpisodeServiceImplTest {
         EpisodeDTO patch = new EpisodeDTO();
         patch.setUuid(episodeModel.getUuid());
         patch.setHref("/api/v1/" + episodeModel.getUuid());
+        patch.setLanguage("en-US");
         episodeModel.setHref("/api/v1/" + episodeModel.getUuid());
 
-        when(repository.findById(any(UUID.class))).thenReturn(Optional.ofNullable(episodeModel));
+        when(repository.findByUuidAndTranslationLanguage(any(UUID.class), anyString()))
+                .thenReturn(Optional.ofNullable(episodeModel));
         when(modelMapper.map(any(), eq(EpisodeModel.class))).thenReturn(episodeModel);
         when(utils.merge(any(EpisodeModel.class), any(EpisodeDTO.class))).thenReturn(episodeModel);
         when(repository.save(any(EpisodeModel.class))).thenReturn(episodeModel);
 
         service.patch(episodeModel.getUuid(), patch);
 
-        verify(repository, times(1)).findById(any(UUID.class));
+        verify(repository, times(1)).findByUuidAndTranslationLanguage(any(UUID.class), anyString());
         verify(modelMapper, times(1)).map(any(), any());
         verify(utils, times(1)).merge(any(EpisodeModel.class), any(EpisodeDTO.class));
         verify(repository, times(1)).save(any(EpisodeModel.class));
@@ -439,11 +441,12 @@ class EpisodeServiceImplTest {
     void whenNoEpisodeFoundShouldThrowItemNotFoundExceptionOnUpdateEpisode() {
         EpisodeDTO patch = new EpisodeDTO();
 
-        when(repository.findById(any(UUID.class))).thenReturn(Optional.empty());
+        when(repository.findByUuidAndTranslationLanguage(any(UUID.class), anyString())).thenReturn(Optional.empty());
 
         assertThrows(ItemNotFoundException.class, () -> service.patch(episodeModel.getUuid(), patch));
 
-        verify(repository, times(1)).findById(any(UUID.class));
+        verify(repository, times(1))
+                .findByUuidAndTranslationLanguage(any(UUID.class), nullable(String.class));
     }
 
     @Test

@@ -431,16 +431,18 @@ class SeasonServiceImplTest {
         SeasonDTO patch = new SeasonDTO();
         patch.setUuid(seasonModel.getUuid());
         patch.setHref("/api/v1/" + seasonModel.getUuid());
+        patch.setLanguage("en-US");
         seasonModel.setHref("/api/v1/" + seasonModel.getUuid());
 
-        when(repository.findById(any(UUID.class))).thenReturn(Optional.ofNullable(seasonModel));
+        when(repository.findByUuidAndTranslationLanguage(any(UUID.class), anyString()))
+                .thenReturn(Optional.ofNullable(seasonModel));
         when(modelMapper.map(any(), eq(SeasonModel.class))).thenReturn(seasonModel);
         when(utils.merge(any(SeasonModel.class), any(SeasonDTO.class))).thenReturn(seasonModel);
         when(repository.save(any(SeasonModel.class))).thenReturn(seasonModel);
 
         service.patch(seasonModel.getUuid(), patch);
 
-        verify(repository, times(1)).findById(any(UUID.class));
+        verify(repository, times(1)).findByUuidAndTranslationLanguage(any(UUID.class), anyString());
         verify(modelMapper, times(1)).map(any(), any());
         verify(utils, times(1)).merge(any(SeasonModel.class), any(SeasonDTO.class));
         verify(repository, times(1)).save(any(SeasonModel.class));
@@ -450,11 +452,12 @@ class SeasonServiceImplTest {
     void whenNoSeasonFoundShouldThrowItemNotFoundExceptionOnUpdateSeason() {
         SeasonDTO patch = new SeasonDTO();
 
-        when(repository.findById(any(UUID.class))).thenReturn(Optional.empty());
+        when(repository.findByUuidAndTranslationLanguage(any(UUID.class), anyString())).thenReturn(Optional.empty());
 
         assertThrows(ItemNotFoundException.class, () -> service.patch(seasonModel.getUuid(), patch));
 
-        verify(repository, times(1)).findById(any(UUID.class));
+        verify(repository, times(1))
+                .findByUuidAndTranslationLanguage(any(UUID.class), nullable(String.class));
     }
 
     @Test

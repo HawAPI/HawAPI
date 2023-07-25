@@ -415,16 +415,18 @@ class LocationServiceImplTest {
         LocationDTO patch = new LocationDTO();
         patch.setUuid(locationModel.getUuid());
         patch.setHref("/api/v1/" + locationModel.getUuid());
+        patch.setLanguage("en-US");
         locationModel.setHref("/api/v1/" + locationModel.getUuid());
 
-        when(repository.findById(any(UUID.class))).thenReturn(Optional.ofNullable(locationModel));
+        when(repository.findByUuidAndTranslationLanguage(any(UUID.class), anyString()))
+                .thenReturn(Optional.ofNullable(locationModel));
         when(modelMapper.map(any(), eq(LocationModel.class))).thenReturn(locationModel);
         when(utils.merge(any(LocationModel.class), any(LocationDTO.class))).thenReturn(locationModel);
         when(repository.save(any(LocationModel.class))).thenReturn(locationModel);
 
         service.patch(locationModel.getUuid(), patch);
 
-        verify(repository, times(1)).findById(any(UUID.class));
+        verify(repository, times(1)).findByUuidAndTranslationLanguage(any(UUID.class), anyString());
         verify(modelMapper, times(1)).map(any(), any());
         verify(utils, times(1)).merge(any(LocationModel.class), any(LocationDTO.class));
         verify(repository, times(1)).save(any(LocationModel.class));
@@ -434,11 +436,12 @@ class LocationServiceImplTest {
     void whenNoLocationFoundShouldThrowItemNotFoundExceptionOnUpdateLocation() {
         LocationDTO patch = new LocationDTO();
 
-        when(repository.findById(any(UUID.class))).thenReturn(Optional.empty());
+        when(repository.findByUuidAndTranslationLanguage(any(UUID.class), anyString())).thenReturn(Optional.empty());
 
         assertThrows(ItemNotFoundException.class, () -> service.patch(locationModel.getUuid(), patch));
 
-        verify(repository, times(1)).findById(any(UUID.class));
+        verify(repository, times(1))
+                .findByUuidAndTranslationLanguage(any(UUID.class), nullable(String.class));
     }
 
     @Test
