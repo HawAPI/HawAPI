@@ -17,7 +17,7 @@ public class SeasonTranslationDTO extends BaseTranslationDTO {
     @NotBlank(message = "Field 'description' is required")
     private String description;
 
-    @NotEmpty(message = "Input movie list cannot be empty.")
+    @NotEmpty(message = "Field 'genres' cannot be empty.")
     private List<String> genres;
 
     private List<@BasicURL(message = "Field 'trailers' doesn't have valid URLs") String> trailers;
