@@ -12,7 +12,7 @@ import java.util.List;
 
 public class SoundtrackDTO extends BaseDTO {
 
-    @Size(max = 5)
+    @Size(max = 255)
     @NotBlank(message = "Field 'name' is required")
     private String name;
 
