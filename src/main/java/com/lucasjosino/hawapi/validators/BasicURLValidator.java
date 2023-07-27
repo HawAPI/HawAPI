@@ -38,7 +38,7 @@ public class BasicURLValidator implements ConstraintValidator<BasicURL, String> 
     public boolean isValid(String value, ConstraintValidatorContext context) {
         if (isSecure && !value.startsWith("https://")) return false;
 
-        if (isImage) return Pattern.compile(".(jpg|png|jpeg)$").matcher(value).find();
+        if (isImage) return Pattern.compile(".(jpg|png|jpeg|webp)$").matcher(value).find();
 
         try {
             new URL(value).toURI();
