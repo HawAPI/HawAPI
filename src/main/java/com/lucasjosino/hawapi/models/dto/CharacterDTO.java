@@ -25,12 +25,10 @@ public class CharacterDTO extends BaseDTO {
 
     @PastOrPresent
     @JsonProperty("birth_date")
-    @NotNull(message = "Field 'birth_date' is required")
     private LocalDate birthDate;
 
     @PastOrPresent
     @JsonProperty("death_date")
-    @NotNull(message = "Field 'death_date' is required")
     private LocalDate deathDate;
 
     @NotNull(message = "Field 'gender' is required")
