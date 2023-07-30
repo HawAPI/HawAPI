@@ -8,6 +8,15 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Interface that implements the Overview Repository, with JPA CRUD methods.
+ *
+ * @author Lucas josino
+ * @see JpaRepository
+ * @see EntityGraph
+ * @see OverviewModel
+ * @since 1.0.0
+ */
 @Repository
 public interface OverviewRepository extends JpaRepository<OverviewModel, UUID> {
 
