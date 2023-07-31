@@ -3,6 +3,7 @@ package com.lucasjosino.hawapi.repositories;
 import com.lucasjosino.hawapi.models.OverviewModel;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -29,4 +30,15 @@ public interface OverviewRepository extends JpaRepository<OverviewModel, UUID> {
      */
     @EntityGraph(attributePaths = "translation")
     Optional<OverviewModel> findByTranslationLanguage(String language);
+
+    /**
+     * Method to get first {@link UUID} value from {@link OverviewModel}
+     * <p>
+     * OBS: Native Query
+     *
+     * @return A single and unique {@link OverviewModel} {@link UUID}
+     * @since 1.0.0
+     */
+    @Query(value = "SELECT CAST(uuid AS VARCHAR) FROM overviews LIMIT 1", nativeQuery = true)
+    Optional<String> findUUID();
 }

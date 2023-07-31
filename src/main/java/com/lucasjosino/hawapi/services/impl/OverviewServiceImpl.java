@@ -119,13 +119,12 @@ public class OverviewServiceImpl implements OverviewService {
      * @since 1.0.0
      */
     public OverviewTranslationDTO saveOverviewTranslation(String defaultLanguage, OverviewTranslationDTO dto) {
-        OverviewModel dbRes = repository.findByTranslationLanguage(defaultLanguage)
-                .orElseThrow(ItemNotFoundException::new);
+        String dbRes = repository.findUUID().orElseThrow(ItemNotFoundException::new);
 
         validateRequest(dto.getLanguage());
 
         OverviewTranslation dtoToModel = modelMapper.map(dto, OverviewTranslation.class);
-        dtoToModel.setOverviewUuid(dbRes.getUuid());
+        dtoToModel.setOverviewUuid(UUID.fromString(dbRes));
 
         OverviewTranslation res = translationRepository.save(dtoToModel);
 
@@ -172,8 +171,6 @@ public class OverviewServiceImpl implements OverviewService {
      * @since 1.0.0
      */
     public void deleteOverview() {
-        if (repository.count() == 0) throw new ItemNotFoundException("No overview found!");
-
         translationRepository.deleteAll();
         repository.deleteAll();
     }
