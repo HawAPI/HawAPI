@@ -382,7 +382,7 @@ class SeasonServiceImplTest {
     }
 
     @Test
-    void whenTranslationAlreadyFoundShouldThrowSaveConflictExceptionOnSaveSeason() {
+    void whenTranslationAlreadyExistsShouldThrowSaveConflictExceptionOnSaveSeason() {
         SeasonDTO newSeason = new SeasonDTO();
         newSeason.setLanguage("en-US");
 

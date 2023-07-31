@@ -366,7 +366,7 @@ class LocationServiceImplTest {
     }
 
     @Test
-    void whenTranslationAlreadyFoundShouldThrowSaveConflictExceptionOnSaveLocation() {
+    void whenTranslationAlreadyExistsShouldThrowSaveConflictExceptionOnSaveLocation() {
         LocationDTO newLocation = new LocationDTO();
         newLocation.setLanguage("en-US");
 

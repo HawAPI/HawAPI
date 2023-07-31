@@ -185,7 +185,7 @@ class OverviewServiceImplTest {
     }
 
     @Test
-    void whenTranslationAlreadyFoundShouldThrowSaveConflictExceptionOnSaveOverview() {
+    void whenTranslationAlreadyExistsShouldThrowSaveConflictExceptionOnSaveOverview() {
         OverviewDTO newOverview = new OverviewDTO();
         newOverview.setLanguage("en-US");
 
@@ -229,9 +229,8 @@ class OverviewServiceImplTest {
         verify(repository, times(1)).findUUID();
     }
 
-    // TODO: Replace 'AlreadyFound' with 'AlreadyExists'
     @Test
-    void whenTranslationAlreadyFoundShouldThrowSaveConflictExceptionOnSaveOverviewTranslation() {
+    void whenTranslationAlreadyExistsShouldThrowSaveConflictExceptionOnSaveOverviewTranslation() {
         OverviewTranslationDTO newOverview = new OverviewTranslationDTO();
         newOverview.setLanguage("en-US");
 

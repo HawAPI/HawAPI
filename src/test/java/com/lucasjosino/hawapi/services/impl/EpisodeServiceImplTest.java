@@ -371,7 +371,7 @@ class EpisodeServiceImplTest {
     }
 
     @Test
-    void whenTranslationAlreadyFoundShouldThrowSaveConflictExceptionOnSaveEpisode() {
+    void whenTranslationAlreadyExistsShouldThrowSaveConflictExceptionOnSaveEpisode() {
         EpisodeDTO newEpisode = new EpisodeDTO();
         newEpisode.setLanguage("en-US");
 

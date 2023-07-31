@@ -380,7 +380,7 @@ class GameServiceImplTest {
     }
 
     @Test
-    void whenTranslationAlreadyFoundShouldThrowSaveConflictExceptionOnSaveGame() {
+    void whenTranslationAlreadyExistsShouldThrowSaveConflictExceptionOnSaveGame() {
         GameDTO newGame = new GameDTO();
         newGame.setLanguage("en-US");
 
