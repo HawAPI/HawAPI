@@ -11,25 +11,12 @@ import java.util.List;
 @Table(name = "overviews")
 public class OverviewModel extends BaseModel {
 
-    @Column
-    private String thumbnail;
-
     @Type(type = "list-array")
     @Column(columnDefinition = "varchar[]")
     private List<String> creators;
 
     @OneToOne(mappedBy = "overview", cascade = CascadeType.ALL)
     private OverviewTranslation translation;
-
-    @Override
-    public String getThumbnail() {
-        return thumbnail;
-    }
-
-    @Override
-    public void setThumbnail(String thumbnail) {
-        this.thumbnail = thumbnail;
-    }
 
     public List<String> getCreators() {
         return creators;
@@ -50,8 +37,7 @@ public class OverviewModel extends BaseModel {
     @Override
     public String toString() {
         return "OverviewModel{" +
-                "thumbnail='" + thumbnail + '\'' +
-                ", creators=" + creators +
+                "creators=" + creators +
                 ", translation=" + translation +
                 '}';
     }
