@@ -2,16 +2,24 @@ package com.lucasjosino.hawapi.models.dto;
 
 import com.lucasjosino.hawapi.models.base.BaseDTO;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 public class OverviewDTO extends BaseDTO {
 
+    @Size(max = 255)
+    @NotBlank(message = "Field 'title' is required")
     private String title;
 
+    @NotBlank(message = "Field 'description' is required")
     private String description;
 
+    @Size(max = 5)
+    @NotBlank(message = "Field 'language' is required")
     private String language;
 
+    @Size(max = 10, message = "Field 'creators' cannot exceed 10 items")
     private List<String> creators;
 
     public String getTitle() {
