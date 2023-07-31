@@ -2,9 +2,9 @@ package com.lucasjosino.hawapi.repositories.translation;
 
 import com.lucasjosino.hawapi.models.translations.OverviewTranslation;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Interface that implements the Overview Translation Repository, with JPA CRUD methods.
@@ -14,7 +14,8 @@ import java.util.UUID;
  * @see OverviewTranslation
  * @since 1.0.0
  */
-public interface OverviewTranslationRepository extends JpaRepository<OverviewTranslation, UUID> {
+@Repository
+public interface OverviewTranslationRepository extends JpaRepository<OverviewTranslation, Integer> {
 
     /**
      * Method to get a single overview translations by language.
