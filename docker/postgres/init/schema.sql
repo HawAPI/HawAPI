@@ -248,7 +248,6 @@ CREATE TABLE IF NOT EXISTS games (
     publishers      VARCHAR(50) ARRAY,
     developers      VARCHAR(50) ARRAY,
     platforms       VARCHAR(50) ARRAY,
-    genres          VARCHAR(50) ARRAY,
     tags            VARCHAR(50) ARRAY,
     thumbnail       TEXT,
     images          TEXT ARRAY,
@@ -264,6 +263,7 @@ CREATE TABLE IF NOT EXISTS games_translations (
     language        VARCHAR(5) NOT NULL DEFAULT 'en-US',
     name            VARCHAR(255) NOT NULL,
     description     TEXT NOT NULL,
+    genres          VARCHAR(50) ARRAY,
     trailer         TEXT NOT NULL,
     CONSTRAINT fk_game_uuid
           FOREIGN KEY(game_uuid)

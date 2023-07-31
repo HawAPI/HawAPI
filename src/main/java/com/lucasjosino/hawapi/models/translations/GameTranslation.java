@@ -5,8 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lucasjosino.hawapi.models.GameModel;
 import com.lucasjosino.hawapi.models.base.BaseTranslation;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -23,6 +25,10 @@ public class GameTranslation extends BaseTranslation {
 
     @Column
     private String description;
+
+    @Type(type = "list-array")
+    @Column(columnDefinition = "varchar[]")
+    private List<String> genres;
 
     @Column
     private String trailer;
@@ -56,6 +62,14 @@ public class GameTranslation extends BaseTranslation {
         this.description = description;
     }
 
+    public List<String> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(List<String> genres) {
+        this.genres = genres;
+    }
+
     public String getTrailer() {
         return trailer;
     }
@@ -78,6 +92,7 @@ public class GameTranslation extends BaseTranslation {
                 "gameUuid=" + gameUuid +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
+                ", genres=" + genres +
                 ", trailer='" + trailer + '\'' +
                 ", game=" + game +
                 '}';

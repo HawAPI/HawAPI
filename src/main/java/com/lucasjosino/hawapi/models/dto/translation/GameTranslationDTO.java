@@ -5,6 +5,7 @@ import com.lucasjosino.hawapi.validators.annotations.BasicURL;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 public class GameTranslationDTO extends BaseTranslationDTO {
 
@@ -14,6 +15,9 @@ public class GameTranslationDTO extends BaseTranslationDTO {
 
     @NotBlank(message = "Field 'description' is required")
     private String description;
+
+    @Size(max = 10, message = "Field 'genres' cannot exceed 10 items")
+    private List<String> genres;
 
     @NotBlank(message = "Field 'trailer' is required")
     @BasicURL(message = "Field 'trailer' doesn't have a valid URL")
@@ -35,6 +39,14 @@ public class GameTranslationDTO extends BaseTranslationDTO {
         this.description = description;
     }
 
+    public List<String> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(List<String> genres) {
+        this.genres = genres;
+    }
+
     public String getTrailer() {
         return trailer;
     }
@@ -48,6 +60,7 @@ public class GameTranslationDTO extends BaseTranslationDTO {
         return "GameTranslationDTO{" +
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
+                ", genres=" + genres +
                 ", trailer='" + trailer + '\'' +
                 '}';
     }

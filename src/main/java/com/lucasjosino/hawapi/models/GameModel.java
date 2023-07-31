@@ -40,10 +40,6 @@ public class GameModel extends BaseModel {
 
     @Type(type = "list-array")
     @Column(columnDefinition = "varchar[]")
-    private List<String> genres;
-
-    @Type(type = "list-array")
-    @Column(columnDefinition = "varchar[]")
     private List<String> tags;
 
     @Column(nullable = false, name = "release_date")
@@ -119,14 +115,6 @@ public class GameModel extends BaseModel {
         this.developers = developers;
     }
 
-    public List<String> getGenres() {
-        return genres;
-    }
-
-    public void setGenres(List<String> genres) {
-        this.genres = genres;
-    }
-
     public List<String> getTags() {
         return tags;
     }
@@ -185,7 +173,6 @@ public class GameModel extends BaseModel {
                 ", platforms=" + platforms +
                 ", publishers=" + publishers +
                 ", developers=" + developers +
-                ", genres=" + genres +
                 ", tags=" + tags +
                 ", releaseDate=" + releaseDate +
                 ", website='" + website + '\'' +
