@@ -5,11 +5,11 @@
 -- Trigger to update column 'updated_at' every time some column is updated.
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
-BEGIN
-    NEW.updated_at = now();
-    RETURN NEW;
-END;
-$$ language 'plpgsql';
+    BEGIN
+        NEW.updated_at = now();
+        RETURN NEW;
+    END;
+$$ language plpgsql;
 
 -- Trigger to update column 'updated_at' every time some column from 'translations' table is updated.
 CREATE OR REPLACE FUNCTION handle_child_update()
@@ -39,8 +39,33 @@ CREATE TABLE IF NOT EXISTS users (
     updated_at      TIMESTAMP NOT NULL DEFAULT now()
 );
 
+-- Overviews
+CREATE TABLE IF NOT EXISTS overviews (
+    id              INTEGER GENERATED ALWAYS AS IDENTITY,
+    uuid            UUID PRIMARY KEY UNIQUE NOT NULL,
+    href            VARCHAR(100) NOT NULL,
+    thumbnail       TEXT,
+    creators        VARCHAR(30) ARRAY,
+    sources         TEXT ARRAY,
+    created_at      TIMESTAMP NOT NULL DEFAULT now(),
+    updated_at      TIMESTAMP NOT NULL DEFAULT now()
+);
+
+-- Overviews translations
+CREATE TABLE IF NOT EXISTS overviews_translations (
+    id              INTEGER PRIMARY KEY UNIQUE GENERATED ALWAYS AS IDENTITY,
+    overview_uuid   UUID NOT NULL,
+    language        VARCHAR(5) NOT NULL DEFAULT 'en-US',
+    title           VARCHAR(255) NOT NULL,
+    description     TEXT NOT NULL,
+    CONSTRAINT fk_overview_uuid
+          FOREIGN KEY(overview_uuid)
+          REFERENCES overviews(uuid)
+          ON UPDATE CASCADE
+          ON DELETE CASCADE
+);
+
 -- Characters
--- Gender ref: ISO/IEC 5218
 CREATE TABLE IF NOT EXISTS characters (
     id              INTEGER GENERATED ALWAYS AS IDENTITY,
     uuid            UUID PRIMARY KEY UNIQUE NOT NULL,
@@ -253,6 +278,12 @@ CREATE TABLE IF NOT EXISTS games_translations (
 
 -- # Set triggers to update column 'updated_at' every time some column is updated.
 
+-- Overviews
+CREATE TRIGGER handle_overviews_updated_at_column BEFORE
+    UPDATE ON overviews
+    FOR EACH ROW
+EXECUTE PROCEDURE update_updated_at_column();
+
 -- Users
 CREATE TRIGGER handle_users_updated_at_column BEFORE
     UPDATE ON users
@@ -303,7 +334,11 @@ EXECUTE PROCEDURE update_updated_at_column();
 
 -- # Set triggers to update column 'updated_at' every time some column from '[*].translations' is updated.
 
--- Actors
+-- Overviews
+CREATE TRIGGER handle_overviews_child_update AFTER UPDATE ON overviews_translations
+  FOR EACH ROW EXECUTE PROCEDURE handle_child_update ('overviews', 'overview_uuid');
+
+-- Actors (Socials)
 CREATE TRIGGER handle_actors_child_update AFTER UPDATE ON actors_socials
   FOR EACH ROW EXECUTE PROCEDURE handle_child_update ('actors', 'actor_uuid');
 
