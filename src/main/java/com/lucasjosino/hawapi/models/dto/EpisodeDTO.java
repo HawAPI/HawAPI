@@ -43,8 +43,6 @@ public class EpisodeDTO extends BaseDTO {
 
     private List<@BasicURL(image = true) String> images;
 
-    private List<String> languages;
-
     public String getTitle() {
         return title;
     }
@@ -117,14 +115,6 @@ public class EpisodeDTO extends BaseDTO {
         this.images = images;
     }
 
-    public List<String> getLanguages() {
-        return languages;
-    }
-
-    public void setLanguages(List<String> languages) {
-        this.languages = languages;
-    }
-
     @Override
     public String toString() {
         return "EpisodeDTO{" +
@@ -137,7 +127,6 @@ public class EpisodeDTO extends BaseDTO {
                 ", prevEpisode='" + prevEpisode + '\'' +
                 ", season='" + season + '\'' +
                 ", images=" + images +
-                ", languages=" + languages +
                 '}';
     }
 }

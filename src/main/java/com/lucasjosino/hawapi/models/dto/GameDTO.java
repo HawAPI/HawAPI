@@ -58,8 +58,6 @@ public class GameDTO extends BaseDTO {
     @Size(max = 15, message = "Field 'tags' cannot exceed 15 items")
     private List<String> tags;
 
-    private List<String> languages;
-
     @NotNull(message = "Field 'trailer' is required")
     @BasicURL(message = "Field 'trailer' doesn't have a valid URL")
     private String trailer;
@@ -178,14 +176,6 @@ public class GameDTO extends BaseDTO {
         this.tags = tags;
     }
 
-    public List<String> getLanguages() {
-        return languages;
-    }
-
-    public void setLanguages(List<String> languages) {
-        this.languages = languages;
-    }
-
     public String getTrailer() {
         return trailer;
     }
@@ -219,7 +209,6 @@ public class GameDTO extends BaseDTO {
                 ", releaseDate=" + releaseDate +
                 ", website='" + website + '\'' +
                 ", tags=" + tags +
-                ", languages=" + languages +
                 ", trailer='" + trailer + '\'' +
                 ", images=" + images +
                 '}';

@@ -48,10 +48,6 @@ public class SeasonModel extends BaseModel {
     @Column(columnDefinition = "text[]")
     private List<String> images;
 
-    @Type(type = "list-array")
-    @Column(columnDefinition = "varchar[]")
-    private List<String> languages;
-
     @OneToOne(mappedBy = "season", cascade = CascadeType.ALL)
     private SeasonTranslation translation;
 
@@ -127,14 +123,6 @@ public class SeasonModel extends BaseModel {
         this.images = images;
     }
 
-    public List<String> getLanguages() {
-        return languages;
-    }
-
-    public void setLanguages(List<String> languages) {
-        this.languages = languages;
-    }
-
     public SeasonTranslation getTranslation() {
         return translation;
     }
@@ -155,7 +143,6 @@ public class SeasonModel extends BaseModel {
                 ", soundtracks=" + soundtracks +
                 ", budget=" + budget +
                 ", images=" + images +
-                ", languages=" + languages +
                 ", translation=" + translation +
                 '}';
     }
