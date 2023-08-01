@@ -71,7 +71,6 @@ class GameControllerTest {
         game = new GameDTO();
         game.setUuid(UUID.randomUUID());
         game.setHref(URL + "/" + game.getUuid());
-        game.setLanguages(Collections.singletonList("Lorem"));
         game.setReleaseDate(LocalDate.now());
         game.setWebsite("https://example.com");
         game.setPlaytime(210574565);
@@ -248,7 +247,6 @@ class GameControllerTest {
                 .andExpect(jsonPath("$.description").value(game.getDescription()))
                 .andExpect(jsonPath("$.trailer").value(game.getTrailer()))
                 .andExpect(jsonPath("$.language").value(game.getLanguage()))
-                .andExpect(jsonPath("$.languages").isNotEmpty())
                 .andExpect(jsonPath("$.release_date").value(String.valueOf(game.getReleaseDate())))
                 .andExpect(jsonPath("$.website").value(game.getWebsite()))
                 .andExpect(jsonPath("$.playtime").value(String.valueOf(game.getPlaytime())))
@@ -326,7 +324,6 @@ class GameControllerTest {
                 .andExpect(jsonPath("$.description").value(game.getDescription()))
                 .andExpect(jsonPath("$.trailer").value(game.getTrailer()))
                 .andExpect(jsonPath("$.language").value(game.getLanguage()))
-                .andExpect(jsonPath("$.languages").isNotEmpty())
                 .andExpect(jsonPath("$.release_date").value(String.valueOf(game.getReleaseDate())))
                 .andExpect(jsonPath("$.website").value(game.getWebsite()))
                 .andExpect(jsonPath("$.playtime").value(String.valueOf(game.getPlaytime())))
@@ -408,7 +405,6 @@ class GameControllerTest {
                 .andExpect(jsonPath("$.description").value(game.getDescription()))
                 .andExpect(jsonPath("$.trailer").value(game.getTrailer()))
                 .andExpect(jsonPath("$.language").value(game.getLanguage()))
-                .andExpect(jsonPath("$.languages").isNotEmpty())
                 .andExpect(jsonPath("$.release_date").value(String.valueOf(game.getReleaseDate())))
                 .andExpect(jsonPath("$.website").value(game.getWebsite()))
                 .andExpect(jsonPath("$.playtime").value(String.valueOf(game.getPlaytime())))

@@ -73,7 +73,6 @@ class SeasonServiceImplTest {
         seasonDTO = new SeasonDTO();
         seasonDTO.setUuid(UUID.randomUUID());
         seasonDTO.setHref("/api/v1/seasons/" + seasonDTO.getUuid());
-        seasonDTO.setLanguages(Collections.singletonList("Lorem"));
         seasonDTO.setDurationTotal(215398753);
         seasonDTO.setSeasonNum((byte) 2);
         seasonDTO.setReleaseDate(LocalDate.now());

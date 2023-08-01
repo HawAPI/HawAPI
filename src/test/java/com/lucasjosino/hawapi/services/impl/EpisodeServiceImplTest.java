@@ -72,7 +72,6 @@ class EpisodeServiceImplTest {
         episodeDTO = new EpisodeDTO();
         episodeDTO.setUuid(UUID.randomUUID());
         episodeDTO.setHref("/api/v1/episodes/" + episodeDTO.getUuid());
-        episodeDTO.setLanguages(Collections.singletonList("Lorem"));
         episodeDTO.setDuration(12482342);
         episodeDTO.setEpisodeNum((byte) 2);
         episodeDTO.setNextEpisode("/api/v1/episodes/3");

@@ -71,7 +71,6 @@ class SeasonControllerTest {
         season = new SeasonDTO();
         season.setUuid(UUID.randomUUID());
         season.setHref(URL + "/" + season.getUuid());
-        season.setLanguages(Collections.singletonList("Lorem"));
         season.setDurationTotal(215398753);
         season.setSeasonNum((byte) 2);
         season.setReleaseDate(LocalDate.now());
@@ -249,7 +248,6 @@ class SeasonControllerTest {
                 .andExpect(jsonPath("$.description").value(season.getDescription()))
                 .andExpect(jsonPath("$.genres").isNotEmpty())
                 .andExpect(jsonPath("$.trailers").isNotEmpty())
-                .andExpect(jsonPath("$.languages").isNotEmpty())
                 .andExpect(jsonPath("$.duration_total").value(String.valueOf(season.getDurationTotal())))
                 .andExpect(jsonPath("$.season_num").value(String.valueOf(season.getSeasonNum())))
                 .andExpect(jsonPath("$.release_date").value(String.valueOf(season.getReleaseDate())))
@@ -325,7 +323,6 @@ class SeasonControllerTest {
                 .andExpect(jsonPath("$.description").value(season.getDescription()))
                 .andExpect(jsonPath("$.genres").isNotEmpty())
                 .andExpect(jsonPath("$.trailers").isNotEmpty())
-                .andExpect(jsonPath("$.languages").isNotEmpty())
                 .andExpect(jsonPath("$.duration_total").value(String.valueOf(season.getDurationTotal())))
                 .andExpect(jsonPath("$.season_num").value(String.valueOf(season.getSeasonNum())))
                 .andExpect(jsonPath("$.release_date").value(String.valueOf(season.getReleaseDate())))
@@ -405,7 +402,6 @@ class SeasonControllerTest {
                 .andExpect(jsonPath("$.description").value(season.getDescription()))
                 .andExpect(jsonPath("$.genres").isNotEmpty())
                 .andExpect(jsonPath("$.trailers").isNotEmpty())
-                .andExpect(jsonPath("$.languages").isNotEmpty())
                 .andExpect(jsonPath("$.duration_total").value(String.valueOf(season.getDurationTotal())))
                 .andExpect(jsonPath("$.season_num").value(String.valueOf(season.getSeasonNum())))
                 .andExpect(jsonPath("$.release_date").value(String.valueOf(season.getReleaseDate())))

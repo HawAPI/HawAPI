@@ -72,7 +72,6 @@ class LocationServiceImplTest {
         locationDTO = new LocationDTO();
         locationDTO.setUuid(UUID.randomUUID());
         locationDTO.setHref("/api/v1/locations/" + locationDTO.getUuid());
-        locationDTO.setLanguages(Collections.singletonList("Lorem"));
         locationDTO.setThumbnail("https://cdn.theproject.id/hawapi/image.jpg");
         locationDTO.setImages(Arrays.asList("https://example.com/image.jpg", "https://example.com/image.jpg"));
         locationDTO.setSources(Arrays.asList("https://example.com", "https://example.com"));

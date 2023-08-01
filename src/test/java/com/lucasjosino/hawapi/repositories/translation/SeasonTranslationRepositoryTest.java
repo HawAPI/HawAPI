@@ -15,7 +15,10 @@ import org.springframework.data.domain.PageRequest;
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -38,7 +41,6 @@ class SeasonTranslationRepositoryTest extends DatabaseContainerInitializer {
         SeasonModel seasonModel = new SeasonModel();
         seasonModel.setUuid(UUID.randomUUID());
         seasonModel.setHref("/api/v1/seasons/" + seasonModel.getUuid());
-        seasonModel.setLanguages(Collections.singletonList("Lorem"));
         seasonModel.setDurationTotal(215398753);
         seasonModel.setSeasonNum((byte) 2);
         seasonModel.setReleaseDate(LocalDate.now());

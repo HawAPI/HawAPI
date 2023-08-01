@@ -21,7 +21,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -58,7 +57,6 @@ class EpisodeIntegrationTest extends DatabaseContainerInitializer {
         episodeDTO = new EpisodeDTO();
         episodeDTO.setUuid(UUID.randomUUID());
         episodeDTO.setHref(URL + "/" + episodeDTO.getUuid());
-        episodeDTO.setLanguages(Collections.singletonList("Lorem"));
         episodeDTO.setDuration(12482342);
         episodeDTO.setEpisodeNum((byte) 2);
         episodeDTO.setNextEpisode("/api/v1/episodes/3");
@@ -166,7 +164,6 @@ class EpisodeIntegrationTest extends DatabaseContainerInitializer {
                 .andExpect(jsonPath("$.title").value(episodeDTO.getTitle()))
                 .andExpect(jsonPath("$.description").value(episodeDTO.getDescription()))
                 .andExpect(jsonPath("$.language").value(episodeDTO.getLanguage()))
-                .andExpect(jsonPath("$.languages").isNotEmpty())
                 .andExpect(jsonPath("$.duration").value(String.valueOf(episodeDTO.getDuration())))
                 .andExpect(jsonPath("$.episode_num").value(String.valueOf(episodeDTO.getEpisodeNum())))
                 .andExpect(jsonPath("$.next_episode").value(episodeDTO.getNextEpisode()))
@@ -220,7 +217,6 @@ class EpisodeIntegrationTest extends DatabaseContainerInitializer {
                 .andExpect(jsonPath("$.title").value(episodeDTO.getTitle()))
                 .andExpect(jsonPath("$.description").value(episodeDTO.getDescription()))
                 .andExpect(jsonPath("$.language").value(episodeDTO.getLanguage()))
-                .andExpect(jsonPath("$.languages").isNotEmpty())
                 .andExpect(jsonPath("$.duration").value(String.valueOf(episodeDTO.getDuration())))
                 .andExpect(jsonPath("$.episode_num").value(String.valueOf(episodeDTO.getEpisodeNum())))
                 .andExpect(jsonPath("$.next_episode").value(episodeDTO.getNextEpisode()))
@@ -278,7 +274,6 @@ class EpisodeIntegrationTest extends DatabaseContainerInitializer {
                 .andExpect(jsonPath("$.title").value(episodeDTO.getTitle()))
                 .andExpect(jsonPath("$.description").value(episodeDTO.getDescription()))
                 .andExpect(jsonPath("$.language").value(episodeDTO.getLanguage()))
-                .andExpect(jsonPath("$.languages").isNotEmpty())
                 .andExpect(jsonPath("$.duration").value(String.valueOf(episodeDTO.getDuration())))
                 .andExpect(jsonPath("$.episode_num").value(String.valueOf(episodeDTO.getEpisodeNum())))
                 .andExpect(jsonPath("$.next_episode").value(episodeDTO.getNextEpisode()))

@@ -70,7 +70,6 @@ class EpisodeControllerTest {
         episode = new EpisodeDTO();
         episode.setUuid(UUID.randomUUID());
         episode.setHref(URL + "/" + episode.getUuid());
-        episode.setLanguages(Collections.singletonList("Lorem"));
         episode.setDuration(12482342);
         episode.setEpisodeNum((byte) 2);
         episode.setNextEpisode("/api/v1/episodes/3");
@@ -238,7 +237,6 @@ class EpisodeControllerTest {
                 .andExpect(jsonPath("$.title").value(episode.getTitle()))
                 .andExpect(jsonPath("$.description").value(episode.getDescription()))
                 .andExpect(jsonPath("$.language").value(episode.getLanguage()))
-                .andExpect(jsonPath("$.languages").isNotEmpty())
                 .andExpect(jsonPath("$.duration").value(String.valueOf(episode.getDuration())))
                 .andExpect(jsonPath("$.episode_num").value(String.valueOf(episode.getEpisodeNum())))
                 .andExpect(jsonPath("$.next_episode").value(episode.getNextEpisode()))
@@ -308,7 +306,6 @@ class EpisodeControllerTest {
                 .andExpect(jsonPath("$.title").value(episode.getTitle()))
                 .andExpect(jsonPath("$.description").value(episode.getDescription()))
                 .andExpect(jsonPath("$.language").value(episode.getLanguage()))
-                .andExpect(jsonPath("$.languages").isNotEmpty())
                 .andExpect(jsonPath("$.duration").value(String.valueOf(episode.getDuration())))
                 .andExpect(jsonPath("$.episode_num").value(String.valueOf(episode.getEpisodeNum())))
                 .andExpect(jsonPath("$.next_episode").value(episode.getNextEpisode()))
@@ -382,7 +379,6 @@ class EpisodeControllerTest {
                 .andExpect(jsonPath("$.title").value(episode.getTitle()))
                 .andExpect(jsonPath("$.description").value(episode.getDescription()))
                 .andExpect(jsonPath("$.language").value(episode.getLanguage()))
-                .andExpect(jsonPath("$.languages").isNotEmpty())
                 .andExpect(jsonPath("$.duration").value(String.valueOf(episode.getDuration())))
                 .andExpect(jsonPath("$.episode_num").value(String.valueOf(episode.getEpisodeNum())))
                 .andExpect(jsonPath("$.next_episode").value(episode.getNextEpisode()))

@@ -15,7 +15,10 @@ import org.springframework.data.domain.PageRequest;
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -38,7 +41,6 @@ class GameTranslationRepositoryTest extends DatabaseContainerInitializer {
         GameModel gameModel = new GameModel();
         gameModel.setUuid(UUID.randomUUID());
         gameModel.setHref("/api/v1/games/" + gameModel.getUuid());
-        gameModel.setLanguages(Collections.singletonList("Lorem"));
         gameModel.setReleaseDate(LocalDate.now());
         gameModel.setWebsite("https://example.com");
         gameModel.setPlaytime(210574565);

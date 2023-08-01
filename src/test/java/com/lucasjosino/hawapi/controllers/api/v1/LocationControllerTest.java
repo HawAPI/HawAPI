@@ -70,7 +70,6 @@ class LocationControllerTest {
         location = new LocationDTO();
         location.setUuid(UUID.randomUUID());
         location.setHref(URL + "/" + location.getUuid());
-        location.setLanguages(Collections.singletonList("Lorem"));
         location.setThumbnail("https://cdn.theproject.id/hawapi/image.jpg");
         location.setImages(Arrays.asList("https://example.com/image.jpg", "https://example.com/image.jpg"));
         location.setSources(Arrays.asList("https://example.com", "https://example.com"));
@@ -233,7 +232,6 @@ class LocationControllerTest {
                 .andExpect(jsonPath("$.name").value(location.getName()))
                 .andExpect(jsonPath("$.description").value(location.getDescription()))
                 .andExpect(jsonPath("$.language").value(location.getLanguage()))
-                .andExpect(jsonPath("$.languages").isNotEmpty())
                 .andExpect(jsonPath("$.thumbnail").value(location.getThumbnail()))
                 .andExpect(jsonPath("$.images").isNotEmpty())
                 .andExpect(jsonPath("$.sources").isNotEmpty())
@@ -298,7 +296,6 @@ class LocationControllerTest {
                 .andExpect(jsonPath("$.name").value(location.getName()))
                 .andExpect(jsonPath("$.description").value(location.getDescription()))
                 .andExpect(jsonPath("$.language").value(location.getLanguage()))
-                .andExpect(jsonPath("$.languages").isNotEmpty())
                 .andExpect(jsonPath("$.thumbnail").value(location.getThumbnail()))
                 .andExpect(jsonPath("$.images").isNotEmpty())
                 .andExpect(jsonPath("$.sources").isNotEmpty())
@@ -367,7 +364,6 @@ class LocationControllerTest {
                 .andExpect(jsonPath("$.name").value(location.getName()))
                 .andExpect(jsonPath("$.description").value(location.getDescription()))
                 .andExpect(jsonPath("$.language").value(location.getLanguage()))
-                .andExpect(jsonPath("$.languages").isNotEmpty())
                 .andExpect(jsonPath("$.thumbnail").value(location.getThumbnail()))
                 .andExpect(jsonPath("$.images").isNotEmpty())
                 .andExpect(jsonPath("$.sources").isNotEmpty())

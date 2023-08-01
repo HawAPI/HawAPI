@@ -14,7 +14,10 @@ import org.springframework.data.domain.PageRequest;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -37,7 +40,6 @@ class EpisodeTranslationRepositoryTest extends DatabaseContainerInitializer {
         EpisodeModel episodeModel = new EpisodeModel();
         episodeModel.setUuid(UUID.randomUUID());
         episodeModel.setHref("/api/v1/episodes/" + episodeModel.getUuid());
-        episodeModel.setLanguages(Collections.singletonList("Lorem"));
         episodeModel.setDuration(12482342);
         episodeModel.setEpisodeNum((byte) 2);
         episodeModel.setNextEpisode("/api/v1/episodes/3");

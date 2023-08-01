@@ -22,7 +22,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -59,7 +58,6 @@ class GameIntegrationTest extends DatabaseContainerInitializer {
         gameDTO = new GameDTO();
         gameDTO.setUuid(UUID.randomUUID());
         gameDTO.setHref(URL + "/" + gameDTO.getUuid());
-        gameDTO.setLanguages(Collections.singletonList("Lorem"));
         gameDTO.setReleaseDate(LocalDate.now());
         gameDTO.setWebsite("https://example.com");
         gameDTO.setPlaytime(210574565);
@@ -177,7 +175,6 @@ class GameIntegrationTest extends DatabaseContainerInitializer {
                 .andExpect(jsonPath("$.description").value(gameDTO.getDescription()))
                 .andExpect(jsonPath("$.trailer").value(gameDTO.getTrailer()))
                 .andExpect(jsonPath("$.language").value(gameDTO.getLanguage()))
-                .andExpect(jsonPath("$.languages").isNotEmpty())
                 .andExpect(jsonPath("$.release_date").value(String.valueOf(gameDTO.getReleaseDate())))
                 .andExpect(jsonPath("$.website").value(gameDTO.getWebsite()))
                 .andExpect(jsonPath("$.playtime").value(String.valueOf(gameDTO.getPlaytime())))
@@ -238,7 +235,6 @@ class GameIntegrationTest extends DatabaseContainerInitializer {
                 .andExpect(jsonPath("$.description").value(gameDTO.getDescription()))
                 .andExpect(jsonPath("$.trailer").value(gameDTO.getTrailer()))
                 .andExpect(jsonPath("$.language").value(gameDTO.getLanguage()))
-                .andExpect(jsonPath("$.languages").isNotEmpty())
                 .andExpect(jsonPath("$.release_date").value(String.valueOf(gameDTO.getReleaseDate())))
                 .andExpect(jsonPath("$.website").value(gameDTO.getWebsite()))
                 .andExpect(jsonPath("$.playtime").value(String.valueOf(gameDTO.getPlaytime())))
@@ -303,7 +299,6 @@ class GameIntegrationTest extends DatabaseContainerInitializer {
                 .andExpect(jsonPath("$.description").value(gameDTO.getDescription()))
                 .andExpect(jsonPath("$.trailer").value(gameDTO.getTrailer()))
                 .andExpect(jsonPath("$.language").value(gameDTO.getLanguage()))
-                .andExpect(jsonPath("$.languages").isNotEmpty())
                 .andExpect(jsonPath("$.release_date").value(String.valueOf(gameDTO.getReleaseDate())))
                 .andExpect(jsonPath("$.website").value(gameDTO.getWebsite()))
                 .andExpect(jsonPath("$.playtime").value(String.valueOf(gameDTO.getPlaytime())))

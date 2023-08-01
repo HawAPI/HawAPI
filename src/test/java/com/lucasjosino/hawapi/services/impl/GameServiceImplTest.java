@@ -73,7 +73,6 @@ class GameServiceImplTest {
         gameDTO = new GameDTO();
         gameDTO.setUuid(UUID.randomUUID());
         gameDTO.setHref("/api/v1/games/" + gameDTO.getUuid());
-        gameDTO.setLanguages(Collections.singletonList("Lorem"));
         gameDTO.setReleaseDate(LocalDate.now());
         gameDTO.setWebsite("https://example.com");
         gameDTO.setPlaytime(210574565);
