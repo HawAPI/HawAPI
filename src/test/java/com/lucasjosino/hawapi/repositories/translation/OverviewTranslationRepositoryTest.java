@@ -35,6 +35,7 @@ public class OverviewTranslationRepositoryTest extends DatabaseContainerInitiali
         overview.setUuid(UUID.randomUUID());
         overview.setHref("/api/v1/overview/" + overview.getUuid());
         overview.setCreators(Collections.singletonList("Lorem"));
+        overview.setLanguages(Collections.singletonList("en-US"));
         overview.setThumbnail("https://cdn.theproject.id/hawapi/image.jpg");
         overview.setSources(Arrays.asList("https://example.com", "https://example.com"));
         overview.setCreatedAt(LocalDateTime.now());
