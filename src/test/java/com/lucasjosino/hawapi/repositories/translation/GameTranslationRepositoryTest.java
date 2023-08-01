@@ -48,7 +48,6 @@ class GameTranslationRepositoryTest extends DatabaseContainerInitializer {
         gameModel.setPublishers(Arrays.asList("Lorem", "Ipsum"));
         gameModel.setDevelopers(Arrays.asList("Lorem", "Ipsum"));
         gameModel.setPlatforms(Arrays.asList("Android", "iOS"));
-        gameModel.setGenres(Arrays.asList("Lorem", "Ipsum"));
         gameModel.setTags(Arrays.asList("horror", "suspense"));
         gameModel.setThumbnail("https://cdn.theproject.id/hawapi/image.jpg");
         gameModel.setImages(Arrays.asList("https://example.com/image.jpg", "https://example.com/image.jpg"));
@@ -62,6 +61,7 @@ class GameTranslationRepositoryTest extends DatabaseContainerInitializer {
         translationModel.setName("Lorem Ipsum");
         translationModel.setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
         translationModel.setTrailer("https://youtube.com/watch?v=1");
+        translationModel.setGenres(Arrays.asList("Lorem", "Ipsum"));
 
         entityManager.persist(gameModel);
         entityManager.persist(translationModel);
