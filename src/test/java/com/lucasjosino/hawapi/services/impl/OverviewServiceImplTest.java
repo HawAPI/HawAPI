@@ -63,6 +63,7 @@ class OverviewServiceImplTest {
         overviewDTO.setUuid(UUID.randomUUID());
         overviewDTO.setHref("/api/v1/overview/" + overviewDTO.getUuid());
         overviewDTO.setCreators(Collections.singletonList("Lorem"));
+        overviewDTO.setLanguages(Collections.singletonList("en-US"));
         overviewDTO.setThumbnail("https://cdn.theproject.id/hawapi/image.jpg");
         overviewDTO.setSources(Arrays.asList("https://example.com", "https://example.com"));
         overviewDTO.setCreatedAt(LocalDateTime.now());

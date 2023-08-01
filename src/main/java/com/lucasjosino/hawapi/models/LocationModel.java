@@ -15,10 +15,6 @@ public class LocationModel extends BaseModel {
     @Column(columnDefinition = "text[]")
     private List<String> images;
 
-    @Type(type = "list-array")
-    @Column(columnDefinition = "varchar[]")
-    private List<String> languages;
-
     @OneToOne(mappedBy = "location", cascade = CascadeType.ALL)
     private LocationTranslation translation;
 
@@ -28,14 +24,6 @@ public class LocationModel extends BaseModel {
 
     public void setImages(List<String> images) {
         this.images = images;
-    }
-
-    public List<String> getLanguages() {
-        return languages;
-    }
-
-    public void setLanguages(List<String> languages) {
-        this.languages = languages;
     }
 
     public LocationTranslation getTranslation() {
@@ -50,7 +38,6 @@ public class LocationModel extends BaseModel {
     public String toString() {
         return "LocationModel{" +
                 "images=" + images +
-                ", languages=" + languages +
                 ", translation=" + translation +
                 '}';
     }

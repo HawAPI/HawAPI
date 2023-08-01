@@ -64,6 +64,7 @@ public class OverviewIntegrationTest extends DatabaseContainerInitializer {
         overview.setUuid(UUID.randomUUID());
         overview.setHref("/api/v1/overview/" + overview.getUuid());
         overview.setCreators(Collections.singletonList("Lorem"));
+        overview.setLanguages(Collections.singletonList("en-US"));
         overview.setThumbnail("https://cdn.theproject.id/hawapi/image.jpg");
         overview.setSources(Arrays.asList("https://example.com", "https://example.com"));
         overview.setCreatedAt(LocalDateTime.now());
@@ -126,6 +127,7 @@ public class OverviewIntegrationTest extends DatabaseContainerInitializer {
                 .andExpect(jsonPath("$.thumbnail").value(overview.getThumbnail()))
                 .andExpect(jsonPath("$.language").value(overview.getLanguage()))
                 .andExpect(jsonPath("$.creators").isNotEmpty())
+                .andExpect(jsonPath("$.languages").isNotEmpty())
                 .andExpect(jsonPath("$.sources").isNotEmpty())
                 .andExpect(jsonPath("$.created_at").exists())
                 .andExpect(jsonPath("$.updated_at").exists());
@@ -144,6 +146,7 @@ public class OverviewIntegrationTest extends DatabaseContainerInitializer {
                 .andExpect(jsonPath("$.thumbnail").value(overview.getThumbnail()))
                 .andExpect(jsonPath("$.language").value(overview.getLanguage()))
                 .andExpect(jsonPath("$.creators").isNotEmpty())
+                .andExpect(jsonPath("$.languages").isNotEmpty())
                 .andExpect(jsonPath("$.sources").isNotEmpty())
                 .andExpect(jsonPath("$.created_at").exists())
                 .andExpect(jsonPath("$.updated_at").exists());
@@ -211,6 +214,7 @@ public class OverviewIntegrationTest extends DatabaseContainerInitializer {
                 .andExpect(jsonPath("$.thumbnail").value(overview.getThumbnail()))
                 .andExpect(jsonPath("$.language").value(overview.getLanguage()))
                 .andExpect(jsonPath("$.creators").isNotEmpty())
+                .andExpect(jsonPath("$.languages").isNotEmpty())
                 .andExpect(jsonPath("$.sources").isNotEmpty())
                 .andExpect(jsonPath("$.created_at").exists())
                 .andExpect(jsonPath("$.updated_at").exists());

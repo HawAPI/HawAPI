@@ -22,8 +22,6 @@ public class LocationDTO extends BaseDTO {
 
     private List<@BasicURL(image = true) String> images;
 
-    private List<String> languages;
-
     public String getName() {
         return name;
     }
@@ -56,14 +54,6 @@ public class LocationDTO extends BaseDTO {
         this.images = images;
     }
 
-    public List<String> getLanguages() {
-        return languages;
-    }
-
-    public void setLanguages(List<String> languages) {
-        this.languages = languages;
-    }
-
     @Override
     public String toString() {
         return "LocationDTO{" +
@@ -71,7 +61,6 @@ public class LocationDTO extends BaseDTO {
                 ", description='" + description + '\'' +
                 ", language='" + language + '\'' +
                 ", images=" + images +
-                ", languages=" + languages +
                 '}';
     }
 }

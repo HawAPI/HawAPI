@@ -49,10 +49,6 @@ public class GameModel extends BaseModel {
     private String website;
 
     @Type(type = "list-array")
-    @Column(columnDefinition = "varchar[]")
-    private List<String> languages;
-
-    @Type(type = "list-array")
     @Column(columnDefinition = "text[]")
     private List<String> images;
 
@@ -139,14 +135,6 @@ public class GameModel extends BaseModel {
         this.website = website;
     }
 
-    public List<String> getLanguages() {
-        return languages;
-    }
-
-    public void setLanguages(List<String> languages) {
-        this.languages = languages;
-    }
-
     public List<String> getImages() {
         return images;
     }
@@ -176,7 +164,6 @@ public class GameModel extends BaseModel {
                 ", tags=" + tags +
                 ", releaseDate=" + releaseDate +
                 ", website='" + website + '\'' +
-                ", languages=" + languages +
                 ", images=" + images +
                 ", translation=" + translation +
                 '}';

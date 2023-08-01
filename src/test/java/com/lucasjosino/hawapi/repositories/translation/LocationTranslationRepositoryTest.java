@@ -14,7 +14,10 @@ import org.springframework.data.domain.PageRequest;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -37,7 +40,6 @@ class LocationTranslationRepositoryTest extends DatabaseContainerInitializer {
         LocationModel locationModel = new LocationModel();
         locationModel.setUuid(UUID.randomUUID());
         locationModel.setHref("/api/v1/locations/" + locationModel.getUuid());
-        locationModel.setLanguages(Collections.singletonList("Lorem"));
         locationModel.setThumbnail("https://cdn.theproject.id/hawapi/image.jpg");
         locationModel.setImages(Arrays.asList("https://example.com/image.jpg", "https://example.com/image.jpg"));
         locationModel.setSources(Arrays.asList("https://example.com", "https://example.com"));

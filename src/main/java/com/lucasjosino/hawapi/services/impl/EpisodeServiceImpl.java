@@ -183,7 +183,6 @@ public class EpisodeServiceImpl implements EpisodeService {
         UUID uuid = UUID.randomUUID();
         dto.setUuid(uuid);
         dto.setHref(basePath + "/" + uuid);
-        dto.setLanguages(Collections.singletonList(dto.getLanguage()));
 
         validateRequest(uuid, dto.getLanguage());
 

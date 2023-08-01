@@ -21,7 +21,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -58,7 +57,6 @@ class LocationIntegrationTest extends DatabaseContainerInitializer {
         locationDTO = new LocationDTO();
         locationDTO.setUuid(UUID.randomUUID());
         locationDTO.setHref(URL + "/" + locationDTO.getUuid());
-        locationDTO.setLanguages(Collections.singletonList("Lorem"));
         locationDTO.setThumbnail("https://cdn.theproject.id/hawapi/image.jpg");
         locationDTO.setImages(Arrays.asList("https://example.com/image.jpg", "https://example.com/image.jpg"));
         locationDTO.setSources(Arrays.asList("https://example.com", "https://example.com"));
@@ -161,7 +159,6 @@ class LocationIntegrationTest extends DatabaseContainerInitializer {
                 .andExpect(jsonPath("$.name").value(locationDTO.getName()))
                 .andExpect(jsonPath("$.description").value(locationDTO.getDescription()))
                 .andExpect(jsonPath("$.language").value(locationDTO.getLanguage()))
-                .andExpect(jsonPath("$.languages").isNotEmpty())
                 .andExpect(jsonPath("$.thumbnail").value(locationDTO.getThumbnail()))
                 .andExpect(jsonPath("$.images").isNotEmpty())
                 .andExpect(jsonPath("$.sources").isNotEmpty())
@@ -210,7 +207,6 @@ class LocationIntegrationTest extends DatabaseContainerInitializer {
                 .andExpect(jsonPath("$.name").value(locationDTO.getName()))
                 .andExpect(jsonPath("$.description").value(locationDTO.getDescription()))
                 .andExpect(jsonPath("$.language").value(locationDTO.getLanguage()))
-                .andExpect(jsonPath("$.languages").isNotEmpty())
                 .andExpect(jsonPath("$.thumbnail").value(locationDTO.getThumbnail()))
                 .andExpect(jsonPath("$.images").isNotEmpty())
                 .andExpect(jsonPath("$.sources").isNotEmpty())
@@ -263,7 +259,6 @@ class LocationIntegrationTest extends DatabaseContainerInitializer {
                 .andExpect(jsonPath("$.name").value(locationDTO.getName()))
                 .andExpect(jsonPath("$.description").value(locationDTO.getDescription()))
                 .andExpect(jsonPath("$.language").value(locationDTO.getLanguage()))
-                .andExpect(jsonPath("$.languages").isNotEmpty())
                 .andExpect(jsonPath("$.thumbnail").value(locationDTO.getThumbnail()))
                 .andExpect(jsonPath("$.images").isNotEmpty())
                 .andExpect(jsonPath("$.sources").isNotEmpty())

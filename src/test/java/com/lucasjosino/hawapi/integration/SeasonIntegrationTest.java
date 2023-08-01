@@ -22,7 +22,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -59,7 +58,6 @@ class SeasonIntegrationTest extends DatabaseContainerInitializer {
         seasonDTO = new SeasonDTO();
         seasonDTO.setUuid(UUID.randomUUID());
         seasonDTO.setHref(URL + "/" + seasonDTO.getUuid());
-        seasonDTO.setLanguages(Collections.singletonList("Lorem"));
         seasonDTO.setDurationTotal(215398753);
         seasonDTO.setSeasonNum((byte) 2);
         seasonDTO.setReleaseDate(LocalDate.now());
@@ -177,7 +175,6 @@ class SeasonIntegrationTest extends DatabaseContainerInitializer {
                 .andExpect(jsonPath("$.title").value(seasonDTO.getTitle()))
                 .andExpect(jsonPath("$.description").value(seasonDTO.getDescription()))
                 .andExpect(jsonPath("$.language").value(seasonDTO.getLanguage()))
-                .andExpect(jsonPath("$.languages").isNotEmpty())
                 .andExpect(jsonPath("$.thumbnail").value(seasonDTO.getThumbnail()))
                 .andExpect(jsonPath("$.images").isNotEmpty())
                 .andExpect(jsonPath("$.sources").isNotEmpty())
@@ -226,7 +223,6 @@ class SeasonIntegrationTest extends DatabaseContainerInitializer {
                 .andExpect(jsonPath("$.title").value(seasonDTO.getTitle()))
                 .andExpect(jsonPath("$.description").value(seasonDTO.getDescription()))
                 .andExpect(jsonPath("$.language").value(seasonDTO.getLanguage()))
-                .andExpect(jsonPath("$.languages").isNotEmpty())
                 .andExpect(jsonPath("$.thumbnail").value(seasonDTO.getThumbnail()))
                 .andExpect(jsonPath("$.images").isNotEmpty())
                 .andExpect(jsonPath("$.sources").isNotEmpty())
@@ -279,7 +275,6 @@ class SeasonIntegrationTest extends DatabaseContainerInitializer {
                 .andExpect(jsonPath("$.title").value(seasonDTO.getTitle()))
                 .andExpect(jsonPath("$.description").value(seasonDTO.getDescription()))
                 .andExpect(jsonPath("$.language").value(seasonDTO.getLanguage()))
-                .andExpect(jsonPath("$.languages").isNotEmpty())
                 .andExpect(jsonPath("$.thumbnail").value(seasonDTO.getThumbnail()))
                 .andExpect(jsonPath("$.images").isNotEmpty())
                 .andExpect(jsonPath("$.sources").isNotEmpty())
