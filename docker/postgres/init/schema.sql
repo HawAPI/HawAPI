@@ -45,6 +45,7 @@ CREATE TABLE IF NOT EXISTS overviews (
     uuid            UUID PRIMARY KEY UNIQUE NOT NULL,
     href            VARCHAR(100) NOT NULL,
     thumbnail       TEXT,
+    languages       VARCHAR(5) ARRAY NOT NULL,
     creators        VARCHAR(30) ARRAY,
     sources         TEXT ARRAY,
     created_at      TIMESTAMP NOT NULL DEFAULT now(),

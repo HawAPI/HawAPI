@@ -13,10 +13,22 @@ public class OverviewModel extends BaseModel {
 
     @Type(type = "list-array")
     @Column(columnDefinition = "varchar[]")
+    private List<String> languages;
+
+    @Type(type = "list-array")
+    @Column(columnDefinition = "varchar[]")
     private List<String> creators;
 
     @OneToOne(mappedBy = "overview", cascade = CascadeType.ALL)
     private OverviewTranslation translation;
+
+    public List<String> getLanguages() {
+        return languages;
+    }
+
+    public void setLanguages(List<String> languages) {
+        this.languages = languages;
+    }
 
     public List<String> getCreators() {
         return creators;
@@ -37,7 +49,8 @@ public class OverviewModel extends BaseModel {
     @Override
     public String toString() {
         return "OverviewModel{" +
-                "creators=" + creators +
+                "languages=" + languages +
+                ", creators=" + creators +
                 ", translation=" + translation +
                 '}';
     }
