@@ -69,7 +69,6 @@ class GameIntegrationTest extends DatabaseContainerInitializer {
         gameDTO.setPublishers(Arrays.asList("Lorem", "Ipsum"));
         gameDTO.setDevelopers(Arrays.asList("Lorem", "Ipsum"));
         gameDTO.setPlatforms(Arrays.asList("Android", "iOS"));
-        gameDTO.setGenres(Arrays.asList("Lorem", "Ipsum"));
         gameDTO.setTags(Arrays.asList("horror", "suspense"));
         gameDTO.setThumbnail("https://cdn.theproject.id/hawapi/image.jpg");
         gameDTO.setImages(Arrays.asList("https://example.com/image.jpg", "https://example.com/image.jpg"));
@@ -80,12 +79,14 @@ class GameIntegrationTest extends DatabaseContainerInitializer {
         gameDTO.setName("Lorem Ipsum");
         gameDTO.setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
         gameDTO.setTrailer("https://youtube.com/watch?v=1");
+        gameDTO.setGenres(Arrays.asList("Lorem", "Ipsum"));
 
         translationDTO = new GameTranslationDTO();
         translationDTO.setLanguage("en-US");
         translationDTO.setName("Lorem Ipsum");
         translationDTO.setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
         translationDTO.setTrailer("https://youtube.com/watch?v=1");
+        translationDTO.setGenres(Arrays.asList("Lorem", "Ipsum"));
 
         GameModel gameModel = mapper.map(gameDTO, GameModel.class);
         repository.save(gameModel);
