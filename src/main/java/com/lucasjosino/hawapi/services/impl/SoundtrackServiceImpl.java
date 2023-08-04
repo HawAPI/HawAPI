@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -58,25 +57,14 @@ public class SoundtrackServiceImpl implements SoundtrackService {
     }
 
     /**
-     * Method that the count of all soundtracks
-     *
-     * @return The count of all soundtracks
-     * @since 1.0.0
-     */
-    public long getCount() {
-        return repository.count();
-    }
-
-    /**
      * Method that get all soundtrack uuids filtering with {@link Pageable}
      *
      * @param pageable An {@link Page} with pageable params. Can be null
      * @return A {@link Page} of {@link UUID} or empty
      * @since 1.0.0
      */
-    public Page<UUID> findAllUUIDs(Pageable pageable, long count) {
-        List<UUID> res = repository.findAllUUIDs(pageable);
-        return PageableExecutionUtils.getPage(res, pageable, () -> count);
+    public Page<UUID> findAllUUIDs(Map<String, String> filters, Pageable pageable) {
+        return repository.findAllUUIDs(pageable);
     }
 
     /**
@@ -85,8 +73,8 @@ public class SoundtrackServiceImpl implements SoundtrackService {
      * @see SoundtrackController#findAll(Map, Pageable)
      * @since 1.0.0
      */
-    public List<SoundtrackDTO> findAll(Map<String, String> filters, List<UUID> uuids) {
-        List<SoundtrackModel> res = repository.findAll(spec.with(filters, SoundtrackFilter.class, uuids));
+    public List<SoundtrackDTO> findAll(Map<String, String> filters, Page<UUID> uuids) {
+        List<SoundtrackModel> res = repository.findAll(spec.with(filters, SoundtrackFilter.class, uuids.getContent()));
         return Arrays.asList(modelMapper.map(res, SoundtrackDTO[].class));
     }
 

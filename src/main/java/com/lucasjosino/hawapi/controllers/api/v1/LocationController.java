@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -71,20 +70,12 @@ public class LocationController implements BaseTranslationInterface<LocationDTO,
      */
     @Operation(summary = "Get all locations")
     public ResponseEntity<List<LocationDTO>> findAll(Map<String, String> filters, Pageable pageable) {
-        filters.putIfAbsent("language", responseUtils.getDefaultLanguage());
+        pageable = responseUtils.validateSort(pageable);
 
-        long count = service.getCount();
-        Page<UUID> uuids = service.findAllUUIDs(pageable, count);
-        HttpHeaders headers = responseUtils.getHeaders(
-                uuids,
-                pageable,
-                filters.get("language"),
-                count
-        );
+        Page<UUID> uuids = service.findAllUUIDs(filters, pageable);
+        List<LocationDTO> res = service.findAll(filters, uuids);
+        HttpHeaders headers = responseUtils.getHeaders(uuids, null);
 
-        if (uuids.isEmpty()) ResponseEntity.ok().headers(headers).body(Collections.emptyList());
-
-        List<LocationDTO> res = service.findAll(filters, uuids.getContent());
         return ResponseEntity.ok().headers(headers).body(res);
     }
 
