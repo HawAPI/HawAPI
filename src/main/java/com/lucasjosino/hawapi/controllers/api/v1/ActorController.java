@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -33,7 +32,7 @@ import java.util.UUID;
  * Endpoints for managing actors
  *
  * @author Lucas Josino
- * @see <a href="https://hawapi.theproject.id/docs/api/actors">HawAPI#Characters</a>
+ * @see <a href="https://hawapi.theproject.id/docs/api/actors">HawAPI#Actors</a>
  * @since 1.0.0
  */
 @RestController
@@ -68,18 +67,12 @@ public class ActorController implements BaseControllerInterface<ActorDTO>, Socia
      */
     @Operation(summary = "Get all actors")
     public ResponseEntity<List<ActorDTO>> findAll(Map<String, String> filters, Pageable pageable) {
-        long count = service.getCount();
-        Page<UUID> uuids = service.findAllUUIDs(pageable, count);
-        HttpHeaders headers = responseUtils.getHeaders(
-                uuids,
-                pageable,
-                null,
-                count
-        );
+        pageable = responseUtils.validateSort(pageable);
 
-        if (uuids.isEmpty()) ResponseEntity.ok().headers(headers).body(Collections.emptyList());
+        Page<UUID> uuids = service.findAllUUIDs(filters, pageable);
+        List<ActorDTO> res = service.findAll(filters, uuids);
+        HttpHeaders headers = responseUtils.getHeaders(uuids, null);
 
-        List<ActorDTO> res = service.findAll(filters, uuids.getContent());
         return ResponseEntity.ok().headers(headers).body(res);
     }
 
