@@ -25,6 +25,17 @@ import java.util.UUID;
 @SuppressWarnings("NullableProblems")
 public interface ActorRepository extends BaseJpaRepository<ActorModel, UUID> {
 
+    /**
+     * Method to get all actors in list by sort
+     *
+     * @param ys   An {@link Iterable} of {@link UUID}. Cannot be empty
+     * @param sort An {@link Sort}. Cannot be null
+     * @return An {@link List} of {@link ActorModel} or empty
+     * @since 1.0.0
+     */
+    @EntityGraph(attributePaths = {"socials"})
+    List<ActorModel> findAllByUuidIn(Iterable<UUID> ys, Sort sort);
+
     @Override
     @EntityGraph(attributePaths = {"socials"})
     List<ActorModel> findAll();
