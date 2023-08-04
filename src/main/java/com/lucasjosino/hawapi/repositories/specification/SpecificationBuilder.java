@@ -156,13 +156,14 @@ public class SpecificationBuilder<T extends BaseModel> implements Specification<
         //
         // Ref¹: https://github.com/HawAPI/HawAPI/issues/46
         // Ref²: https://stackoverflow.com/a/62782899
-        CriteriaBuilder.In<UUID> uuidsIn = builder.in(root.get("uuid"));
-        uuids.forEach(uuidsIn::value);
+        if (uuids != null && !uuids.isEmpty()) {
+            CriteriaBuilder.In<UUID> uuidsIn = builder.in(root.get("uuid"));
+            uuids.forEach(uuidsIn::value);
 
-        log.debug("Items count: {}", uuids.size());
-        predicates.add(uuidsIn);
+            log.debug("Items count: {}", uuids.size());
+            predicates.add(uuidsIn);
+        }
 
-        params.clear();
         return builder.and(predicates.toArray(new Predicate[0]));
     }
 
