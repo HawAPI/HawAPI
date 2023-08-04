@@ -26,12 +26,10 @@ import java.util.UUID;
  */
 public interface BaseService<D extends BaseDTO> {
 
-    long getCount();
-
-    Page<UUID> findAllUUIDs(Pageable pageable, long count);
+    Page<UUID> findAllUUIDs(Map<String, String> filters, Pageable pageable);
 
     @Cacheable(value = "findAll", keyGenerator = "findAllKeyGenerator")
-    List<D> findAll(Map<String, String> filters, List<UUID> uuids);
+    List<D> findAll(Map<String, String> filters, Page<UUID> uuids);
 
     D findRandom(String language);
 
