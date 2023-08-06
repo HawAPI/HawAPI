@@ -2,6 +2,7 @@ package com.lucasjosino.hawapi.repositories;
 
 import com.lucasjosino.hawapi.models.EpisodeModel;
 import com.lucasjosino.hawapi.repositories.base.BaseJpaRepository;
+import com.lucasjosino.hawapi.repositories.base.BaseTranslationJpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -24,7 +25,7 @@ import java.util.UUID;
  */
 @Repository
 @SuppressWarnings("NullableProblems")
-public interface EpisodeRepository extends BaseJpaRepository<EpisodeModel, UUID> {
+public interface EpisodeRepository extends BaseJpaRepository<EpisodeModel, UUID>, BaseTranslationJpaRepository<EpisodeModel> {
 
     @Override
     @EntityGraph(attributePaths = "translation")
