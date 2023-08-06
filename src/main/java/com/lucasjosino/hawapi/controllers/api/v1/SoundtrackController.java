@@ -65,7 +65,7 @@ public class SoundtrackController implements BaseControllerInterface<SoundtrackD
         pageable = responseUtils.validateSort(pageable);
 
         Page<UUID> uuids = service.findAllUUIDs(filters, pageable);
-        List<SoundtrackDTO> res = service.findAll(filters, uuids);
+        List<SoundtrackDTO> res = service.findAll(uuids);
         HttpHeaders headers = responseUtils.getHeaders(uuids, null);
 
         return ResponseEntity.ok().headers(headers).body(res);

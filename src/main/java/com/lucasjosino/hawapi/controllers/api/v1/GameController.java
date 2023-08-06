@@ -70,10 +70,11 @@ public class GameController implements BaseTranslationInterface<GameDTO, GameTra
      */
     @Operation(summary = "Get all games")
     public ResponseEntity<List<GameDTO>> findAll(Map<String, String> filters, Pageable pageable) {
+        filters.putIfAbsent("language", responseUtils.getDefaultLanguage());
         pageable = responseUtils.validateSort(pageable);
 
         Page<UUID> uuids = service.findAllUUIDs(filters, pageable);
-        List<GameDTO> res = service.findAll(filters, uuids);
+        List<GameDTO> res = service.findAll(filters.get("language"), uuids);
         HttpHeaders headers = responseUtils.getHeaders(uuids, null);
 
         return ResponseEntity.ok().headers(headers).body(res);

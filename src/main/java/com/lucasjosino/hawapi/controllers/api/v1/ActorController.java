@@ -70,7 +70,7 @@ public class ActorController implements BaseControllerInterface<ActorDTO>, Socia
         pageable = responseUtils.validateSort(pageable);
 
         Page<UUID> uuids = service.findAllUUIDs(filters, pageable);
-        List<ActorDTO> res = service.findAll(filters, uuids);
+        List<ActorDTO> res = service.findAll(uuids);
         HttpHeaders headers = responseUtils.getHeaders(uuids, null);
 
         return ResponseEntity.ok().headers(headers).body(res);

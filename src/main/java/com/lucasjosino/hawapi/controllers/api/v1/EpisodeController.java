@@ -70,10 +70,11 @@ public class EpisodeController implements BaseTranslationInterface<EpisodeDTO, E
      */
     @Operation(summary = "Get all episodes")
     public ResponseEntity<List<EpisodeDTO>> findAll(Map<String, String> filters, Pageable pageable) {
+        filters.putIfAbsent("language", responseUtils.getDefaultLanguage());
         pageable = responseUtils.validateSort(pageable);
 
         Page<UUID> uuids = service.findAllUUIDs(filters, pageable);
-        List<EpisodeDTO> res = service.findAll(filters, uuids);
+        List<EpisodeDTO> res = service.findAll(filters.get("language"), uuids);
         HttpHeaders headers = responseUtils.getHeaders(uuids, null);
 
         return ResponseEntity.ok().headers(headers).body(res);

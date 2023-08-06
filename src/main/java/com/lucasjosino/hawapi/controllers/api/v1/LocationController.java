@@ -70,10 +70,11 @@ public class LocationController implements BaseTranslationInterface<LocationDTO,
      */
     @Operation(summary = "Get all locations")
     public ResponseEntity<List<LocationDTO>> findAll(Map<String, String> filters, Pageable pageable) {
+        filters.putIfAbsent("language", responseUtils.getDefaultLanguage());
         pageable = responseUtils.validateSort(pageable);
 
         Page<UUID> uuids = service.findAllUUIDs(filters, pageable);
-        List<LocationDTO> res = service.findAll(filters, uuids);
+        List<LocationDTO> res = service.findAll(filters.get("language"), uuids);
         HttpHeaders headers = responseUtils.getHeaders(uuids, null);
 
         return ResponseEntity.ok().headers(headers).body(res);

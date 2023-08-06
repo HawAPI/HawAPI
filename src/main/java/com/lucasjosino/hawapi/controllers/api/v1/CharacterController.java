@@ -68,7 +68,7 @@ public class CharacterController implements BaseControllerInterface<CharacterDTO
         pageable = responseUtils.validateSort(pageable);
 
         Page<UUID> uuids = service.findAllUUIDs(filters, pageable);
-        List<CharacterDTO> res = service.findAll(filters, uuids);
+        List<CharacterDTO> res = service.findAll(uuids);
         HttpHeaders headers = responseUtils.getHeaders(uuids, null);
 
         return ResponseEntity.ok().headers(headers).body(res);

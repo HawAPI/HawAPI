@@ -70,10 +70,11 @@ public class SeasonController implements BaseTranslationInterface<SeasonDTO, Sea
      */
     @Operation(summary = "Get all seasons")
     public ResponseEntity<List<SeasonDTO>> findAll(Map<String, String> filters, Pageable pageable) {
+        filters.putIfAbsent("language", responseUtils.getDefaultLanguage());
         pageable = responseUtils.validateSort(pageable);
 
         Page<UUID> uuids = service.findAllUUIDs(filters, pageable);
-        List<SeasonDTO> res = service.findAll(filters, uuids);
+        List<SeasonDTO> res = service.findAll(filters.get("language"), uuids);
         HttpHeaders headers = responseUtils.getHeaders(uuids, null);
 
         return ResponseEntity.ok().headers(headers).body(res);
