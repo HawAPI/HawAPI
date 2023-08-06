@@ -23,7 +23,7 @@ import static com.lucasjosino.hawapi.core.StringUtils.isNullOrEmpty;
 @Component
 public class ResponseUtils {
 
-    private static final Sort defaultSort = Sort.by("uuid").ascending();
+    private static final Sort defaultSort = Sort.by("createdAt").ascending();
 
     private final LanguageUtils languageUtils;
 
