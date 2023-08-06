@@ -29,7 +29,7 @@ public interface BaseService<D extends BaseDTO> {
     Page<UUID> findAllUUIDs(Map<String, String> filters, Pageable pageable);
 
     @Cacheable(value = "findAll", keyGenerator = "findAllKeyGenerator")
-    List<D> findAll(Map<String, String> filters, Page<UUID> uuids);
+    List<D> findAll(Page<UUID> uuids) throws NoSuchMethodException;
 
     D findRandom(String language);
 
