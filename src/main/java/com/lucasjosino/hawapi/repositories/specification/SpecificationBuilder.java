@@ -35,8 +35,6 @@ public class SpecificationBuilder<T extends BaseModel> implements Specification<
 
     private Class<? extends BaseFilter> fClass;
 
-    private List<UUID> uuids;
-
     public SpecificationBuilder() {}
 
     /**
@@ -55,7 +53,6 @@ public class SpecificationBuilder<T extends BaseModel> implements Specification<
     ) {
         this.params = params;
         this.fClass = fClass;
-        this.uuids = uuids;
         return this;
     }
 
@@ -147,21 +144,6 @@ public class SpecificationBuilder<T extends BaseModel> implements Specification<
             String message = "Something went wrong while trying to build specification";
             log.error(message + ": {}", exception.getMessage());
             throw new InternalServerErrorException(message, exception);
-        }
-
-        // Hibernate will block the usage of pagination (page and size) when using join.
-        //
-        // To avoid this, first select all ids(uuids) using the 'filter' pageable(page, size, sort) and then
-        // add a 'where in (...)' filter.
-        //
-        // Ref¹: https://github.com/HawAPI/HawAPI/issues/46
-        // Ref²: https://stackoverflow.com/a/62782899
-        if (uuids != null && !uuids.isEmpty()) {
-            CriteriaBuilder.In<UUID> uuidsIn = builder.in(root.get("uuid"));
-            uuids.forEach(uuidsIn::value);
-
-            log.debug("Items count: {}", uuids.size());
-            predicates.add(uuidsIn);
         }
 
         return builder.and(predicates.toArray(new Predicate[0]));
