@@ -4,6 +4,7 @@ import com.lucasjosino.hawapi.models.base.BaseDTO;
 import com.lucasjosino.hawapi.models.base.BaseTranslationDTO;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,14 @@ import java.util.UUID;
  * @since 1.0.0
  */
 public interface BaseTranslationService<D extends BaseDTO, T extends BaseTranslationDTO> extends BaseService<D> {
+
+    @Override
+    default List<D> findAll(Page<UUID> uuids) throws NoSuchMethodException {
+        throw new NoSuchMethodException();
+    }
+
+    @Cacheable(value = "findAll", keyGenerator = "findAllKeyGenerator")
+    List<D> findAll(String language, Page<UUID> uuids);
 
     @Cacheable(value = "findAllTranslation")
     List<T> findAllTranslationsBy(UUID uuid);
