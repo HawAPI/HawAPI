@@ -57,14 +57,15 @@ public class CharacterServiceImpl implements CharacterService {
     }
 
     /**
-     * Method that get all character uuids filtering with {@link Pageable}
+     * Method that get all character uuids with filters and {@link Pageable}
      *
+     * @param filters  An {@link Map} with all filter params. Can be empty
      * @param pageable An {@link Page} with pageable params. Can be null
      * @return A {@link Page} of {@link UUID} or empty
      * @since 1.0.0
      */
     public Page<UUID> findAllUUIDs(Map<String, String> filters, Pageable pageable) {
-        return repository.findAllUUIDs(pageable);
+        return repository.findAllUUIDs(spec.with(filters, CharacterFilter.class, Collections.emptyList()), pageable);
     }
 
     /**
@@ -73,8 +74,8 @@ public class CharacterServiceImpl implements CharacterService {
      * @see CharacterController#findAll(Map, Pageable)
      * @since 1.0.0
      */
-    public List<CharacterDTO> findAll(Map<String, String> filters, Page<UUID> uuids) {
-        List<CharacterModel> res = repository.findAll(spec.with(filters, CharacterFilter.class, uuids.getContent()));
+    public List<CharacterDTO> findAll(Page<UUID> uuids) {
+        List<CharacterModel> res = repository.findAllByUuidIn(uuids.getContent(), uuids.getSort());
         return Arrays.asList(modelMapper.map(res, CharacterDTO[].class));
     }
 

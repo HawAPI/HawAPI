@@ -18,16 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.repository.query.QueryUtils;
-import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import java.io.IOException;
 import java.util.*;
 
@@ -51,8 +43,6 @@ public class ActorServiceImpl implements ActorService {
 
     private final ModelMapper modelMapper;
 
-    private final EntityManager entityManager;
-
     private final ActorRepository repository;
 
     private final ActorSocialRepository socialRepository;
@@ -64,7 +54,6 @@ public class ActorServiceImpl implements ActorService {
             ServiceUtils utils,
             OpenAPIProperty config,
             ModelMapper modelMapper,
-            EntityManager entityManager,
             ActorSocialRepository socialRepository
     ) {
         this.random = random;
@@ -72,37 +61,20 @@ public class ActorServiceImpl implements ActorService {
         this.repository = repository;
         this.modelMapper = modelMapper;
         this.basePath = config.getApiBaseUrl() + "/actors";
-        this.entityManager = entityManager;
         this.socialRepository = socialRepository;
     }
 
     /**
-     * Method that get all actor uuids with {@link ActorFilter} and {@link Pageable}
+     * Method that get all actor uuids with filters and {@link Pageable}
      *
-     * @param filters  A Map ({@link ActorFilter}) with filter params. Can be empty
+     * @param filters  An {@link Map} with all filter params. Can be empty
      * @param pageable An {@link Page} with pageable params. Can be null
      * @return A {@link Page} of {@link UUID} or empty
      * @since 1.0.0
      */
     @Override
     public Page<UUID> findAllUUIDs(Map<String, String> filters, Pageable pageable) {
-        Specification<ActorModel> localSpec = spec.with(filters, ActorFilter.class, Collections.emptyList());
-        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-
-        CriteriaQuery<UUID> query = builder.createQuery(UUID.class);
-        CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
-        Root<ActorModel> root = query.from(ActorModel.class);
-
-        query.select(root.get("uuid"));
-        query.where(localSpec.toPredicate(root, query, builder));
-        query.orderBy(QueryUtils.toOrders(pageable.getSort(), root, builder));
-
-        TypedQuery<UUID> futureRes = entityManager.createQuery(query);
-        futureRes.setFirstResult((int) pageable.getOffset());
-        futureRes.setMaxResults(pageable.getPageSize());
-
-        long count = repository.count(localSpec);
-        return PageableExecutionUtils.getPage(futureRes.getResultList(), pageable, () -> count);
+        return repository.findAllUUIDs(spec.with(filters, ActorFilter.class, Collections.emptyList()), pageable);
     }
 
     /**
@@ -112,7 +84,7 @@ public class ActorServiceImpl implements ActorService {
      * @since 1.0.0
      */
     @Override
-    public List<ActorDTO> findAll(Map<String, String> filters, Page<UUID> uuids) {
+    public List<ActorDTO> findAll(Page<UUID> uuids) {
         List<ActorModel> res = repository.findAllByUuidIn(uuids.getContent(), uuids.getSort());
         return Arrays.asList(modelMapper.map(res, ActorDTO[].class));
     }

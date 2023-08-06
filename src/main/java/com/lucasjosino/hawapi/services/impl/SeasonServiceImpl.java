@@ -67,14 +67,15 @@ public class SeasonServiceImpl implements SeasonService {
     }
 
     /**
-     * Method that get all season uuids filtering with {@link Pageable}
+     * Method that get all season uuids with filters and {@link Pageable}
      *
+     * @param filters  An {@link Map} with all filter params. Can be empty
      * @param pageable An {@link Page} with pageable params. Can be null
      * @return A {@link Page} of {@link UUID} or empty
      * @since 1.0.0
      */
     public Page<UUID> findAllUUIDs(Map<String, String> filters, Pageable pageable) {
-        return repository.findAllUUIDs(pageable);
+        return repository.findAllUUIDs(spec.with(filters, SeasonFilter.class, Collections.emptyList()), pageable);
     }
 
     /**
@@ -83,8 +84,12 @@ public class SeasonServiceImpl implements SeasonService {
      * @see SeasonController#findAll(Map, Pageable)
      * @since 1.0.0
      */
-    public List<SeasonDTO> findAll(Map<String, String> filters, Page<UUID> uuids) {
-        List<SeasonModel> res = repository.findAll(spec.with(filters, SeasonFilter.class, uuids.getContent()));
+    public List<SeasonDTO> findAll(String language, Page<UUID> uuids) {
+        List<SeasonModel> res = repository.findAllByTranslationLanguageAndUuidIn(
+                language,
+                uuids.getContent(),
+                uuids.getSort()
+        );
         return Arrays.asList(modelMapper.map(res, SeasonDTO[].class));
     }
 
