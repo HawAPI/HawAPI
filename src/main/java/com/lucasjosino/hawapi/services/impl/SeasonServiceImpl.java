@@ -75,7 +75,7 @@ public class SeasonServiceImpl implements SeasonService {
      * @since 1.0.0
      */
     public Page<UUID> findAllUUIDs(Map<String, String> filters, Pageable pageable) {
-        return repository.findAllUUIDs(spec.with(filters, SeasonFilter.class, Collections.emptyList()), pageable);
+        return repository.findAllUUIDs(spec.with(filters, SeasonFilter.class), pageable);
     }
 
     /**

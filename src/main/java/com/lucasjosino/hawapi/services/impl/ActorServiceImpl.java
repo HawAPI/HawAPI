@@ -74,7 +74,7 @@ public class ActorServiceImpl implements ActorService {
      */
     @Override
     public Page<UUID> findAllUUIDs(Map<String, String> filters, Pageable pageable) {
-        return repository.findAllUUIDs(spec.with(filters, ActorFilter.class, Collections.emptyList()), pageable);
+        return repository.findAllUUIDs(spec.with(filters, ActorFilter.class), pageable);
     }
 
     /**

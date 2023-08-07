@@ -75,7 +75,7 @@ public class EpisodeServiceImpl implements EpisodeService {
      * @since 1.0.0
      */
     public Page<UUID> findAllUUIDs(Map<String, String> filters, Pageable pageable) {
-        return repository.findAllUUIDs(spec.with(filters, EpisodeFilter.class, Collections.emptyList()), pageable);
+        return repository.findAllUUIDs(spec.with(filters, EpisodeFilter.class), pageable);
     }
 
     /**

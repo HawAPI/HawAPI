@@ -74,7 +74,7 @@ public class LocationServiceImpl implements LocationService {
      * @since 1.0.0
      */
     public Page<UUID> findAllUUIDs(Map<String, String> filters, Pageable pageable) {
-        return repository.findAllUUIDs(spec.with(filters, LocationFilter.class, Collections.emptyList()), pageable);
+        return repository.findAllUUIDs(spec.with(filters, LocationFilter.class), pageable);
     }
 
     /**
