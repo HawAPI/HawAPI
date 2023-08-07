@@ -75,7 +75,7 @@ public class GameController implements BaseTranslationInterface<GameDTO, GameTra
 
         Page<UUID> uuids = service.findAllUUIDs(filters, pageable);
         List<GameDTO> res = service.findAll(filters.get("language"), uuids);
-        HttpHeaders headers = responseUtils.getHeaders(uuids, null);
+        HttpHeaders headers = responseUtils.getHeaders(uuids, filters.get("language"));
 
         return ResponseEntity.ok().headers(headers).body(res);
     }

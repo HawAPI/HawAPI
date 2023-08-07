@@ -75,7 +75,7 @@ public class LocationController implements BaseTranslationInterface<LocationDTO,
 
         Page<UUID> uuids = service.findAllUUIDs(filters, pageable);
         List<LocationDTO> res = service.findAll(filters.get("language"), uuids);
-        HttpHeaders headers = responseUtils.getHeaders(uuids, null);
+        HttpHeaders headers = responseUtils.getHeaders(uuids, filters.get("language"));
 
         return ResponseEntity.ok().headers(headers).body(res);
     }

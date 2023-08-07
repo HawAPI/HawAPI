@@ -75,7 +75,7 @@ public class EpisodeController implements BaseTranslationInterface<EpisodeDTO, E
 
         Page<UUID> uuids = service.findAllUUIDs(filters, pageable);
         List<EpisodeDTO> res = service.findAll(filters.get("language"), uuids);
-        HttpHeaders headers = responseUtils.getHeaders(uuids, null);
+        HttpHeaders headers = responseUtils.getHeaders(uuids, filters.get("language"));
 
         return ResponseEntity.ok().headers(headers).body(res);
     }

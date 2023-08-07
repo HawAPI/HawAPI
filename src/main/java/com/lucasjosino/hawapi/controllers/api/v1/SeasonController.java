@@ -75,7 +75,7 @@ public class SeasonController implements BaseTranslationInterface<SeasonDTO, Sea
 
         Page<UUID> uuids = service.findAllUUIDs(filters, pageable);
         List<SeasonDTO> res = service.findAll(filters.get("language"), uuids);
-        HttpHeaders headers = responseUtils.getHeaders(uuids, null);
+        HttpHeaders headers = responseUtils.getHeaders(uuids, filters.get("language"));
 
         return ResponseEntity.ok().headers(headers).body(res);
     }
