@@ -31,7 +31,7 @@ public interface BaseTranslationService<D extends BaseDTO, T extends BaseTransla
         throw new NoSuchMethodException();
     }
 
-    @Cacheable(value = "findAll", keyGenerator = "findAllKeyGenerator")
+    @Cacheable(value = "findAll", key = "{ #root.targetClass, #root.methodName, #p0, #p1.getPageable() }")
     List<D> findAll(String language, Page<UUID> uuids);
 
     @Cacheable(value = "findAllTranslation")

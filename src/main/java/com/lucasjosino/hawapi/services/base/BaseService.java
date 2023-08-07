@@ -26,9 +26,10 @@ import java.util.UUID;
  */
 public interface BaseService<D extends BaseDTO> {
 
+    @Cacheable(value = "findAll")
     Page<UUID> findAllUUIDs(Map<String, String> filters, Pageable pageable);
 
-    @Cacheable(value = "findAll", keyGenerator = "findAllKeyGenerator")
+    @Cacheable(value = "findAll", key = "{ #root.targetClass, #root.methodName, #p0.getPageable() }")
     List<D> findAll(Page<UUID> uuids) throws NoSuchMethodException;
 
     D findRandom(String language);
