@@ -1,6 +1,5 @@
 package com.lucasjosino.hawapi.services.base;
 
-import com.lucasjosino.hawapi.cache.generator.FindAllKeyGenerator;
 import com.lucasjosino.hawapi.models.base.BaseDTO;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -21,7 +20,6 @@ import java.util.UUID;
  * @see Transactional
  * @see Cacheable
  * @see Pageable
- * @see FindAllKeyGenerator
  * @since 1.0.0
  */
 public interface BaseService<D extends BaseDTO> {
