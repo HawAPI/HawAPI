@@ -21,6 +21,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -108,64 +109,50 @@ class GameServiceImplTest {
     }
 
     @Test
-    void shouldReturnAllGameUUIDs() {
-        List<UUID> uuids = Collections.singletonList(UUID.randomUUID());
-
-        when(repository.findAllUUIDs(any(Pageable.class))).thenReturn(uuids);
-
-        Pageable pageable = Pageable.ofSize(1);
-        Page<UUID> res = service.findAllUUIDs(pageable, uuids.size());
-
-        assertFalse(res.isEmpty());
-        assertEquals(uuids, res.getContent());
-        assertEquals(pageable.getPageSize(), res.getTotalElements());
-        verify(repository, times(1)).findAllUUIDs(any(Pageable.class));
-    }
-
-    @Test
-    void whenNoUUIDIsFoundShouldReturnEmptyListOnReturnAllGameUUIDs() {
-        List<UUID> uuids = Collections.emptyList();
-
-        when(repository.findAllUUIDs(any(Pageable.class))).thenReturn(uuids);
-
-        Pageable pageable = Pageable.ofSize(1);
-        Page<UUID> res = service.findAllUUIDs(pageable, 0);
-
-        assertTrue(res.isEmpty());
-        verify(repository, times(1)).findAllUUIDs(any(Pageable.class));
-    }
-
-    @Test
     void shouldReturnAllGames() {
-        List<UUID> uuids = Collections.singletonList(gameModel.getUuid());
+        Pageable pageable = Pageable.ofSize(1);
+        Page<UUID> uuids = PageableExecutionUtils.getPage(
+                Collections.singletonList(gameModel.getUuid()),
+                pageable,
+                () -> 1
+        );
         List<GameModel> data = Collections.singletonList(gameModel);
         GameDTO[] returnData = {gameDTO};
 
-        when(repository.findAll(Mockito.<Specification<GameModel>>any())).thenReturn(data);
+        when(repository.findAllByTranslationLanguageAndUuidIn(anyString(), any(), any(Sort.class)))
+                .thenReturn(data);
         when(modelMapper.map(any(), any())).thenReturn(returnData);
 
-        List<GameDTO> res = service.findAll(new HashMap<>(), uuids);
+        List<GameDTO> res = service.findAll("en-US", uuids);
 
         assertFalse(res.isEmpty());
         assertEquals(1, res.size());
         assertEquals(gameDTO, res.get(0));
-        verify(repository, times(1)).findAll(Mockito.<Specification<GameModel>>any());
+        verify(repository, times(1))
+                .findAllByTranslationLanguageAndUuidIn(anyString(), any(), any(Sort.class));
         verify(modelMapper, times(1)).map(any(), any());
     }
 
     @Test
     void whenNoUUIDIsFoundShouldReturnEmptyListOnReturnAllGames() {
-        List<UUID> uuids = Collections.emptyList();
+        Pageable pageable = Pageable.ofSize(1);
+        Page<UUID> uuids = PageableExecutionUtils.getPage(
+                Collections.emptyList(),
+                pageable,
+                () -> 0
+        );
         List<GameModel> data = Collections.emptyList();
         GameDTO[] returnData = {};
 
-        when(repository.findAll(Mockito.<Specification<GameModel>>any())).thenReturn(data);
+        when(repository.findAllByTranslationLanguageAndUuidIn(anyString(), any(), any(Sort.class)))
+                .thenReturn(data);
         when(modelMapper.map(any(), eq(GameDTO[].class))).thenReturn(returnData);
 
-        List<GameDTO> res = service.findAll(new HashMap<>(), uuids);
+        List<GameDTO> res = service.findAll("en-US", uuids);
 
         assertTrue(res.isEmpty());
-        verify(repository, times(1)).findAll(Mockito.<Specification<GameModel>>any());
+        verify(repository, times(1))
+                .findAllByTranslationLanguageAndUuidIn(anyString(), any(), any(Sort.class));
         verify(modelMapper, times(1)).map(any(), eq(GameDTO[].class));
     }
 

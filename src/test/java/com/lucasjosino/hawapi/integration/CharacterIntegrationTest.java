@@ -77,7 +77,7 @@ public class CharacterIntegrationTest extends DatabaseContainerInitializer {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string("X-Pagination-Page-Index", "1"))
-                .andExpect(header().string("X-Pagination-Page-Size", "10"))
+                .andExpect(header().string("X-Pagination-Page-Size", "1"))
                 .andExpect(header().string("X-Pagination-Page-Total", "1"))
                 .andExpect(header().string("X-Pagination-Item-Total", "1"))
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
@@ -92,7 +92,7 @@ public class CharacterIntegrationTest extends DatabaseContainerInitializer {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string("X-Pagination-Page-Index", "1"))
-                .andExpect(header().string("X-Pagination-Page-Size", "10"))
+                .andExpect(header().string("X-Pagination-Page-Size", "0"))
                 .andExpect(header().string("X-Pagination-Page-Total", "0"))
                 .andExpect(header().string("X-Pagination-Item-Total", "0"))
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
@@ -315,7 +315,7 @@ public class CharacterIntegrationTest extends DatabaseContainerInitializer {
     @Test
     void whenNoCharacterFoundShouldThrowItemNotFoundExceptionOnUpdateCharacterOnDeleteCharacter() throws Exception {
         repository.deleteAll();
-        
+
         mockMvc.perform(delete(URL + "/" + characterDTO.getUuid())
                         .with(user("admin").roles("ADMIN"))
                 )
