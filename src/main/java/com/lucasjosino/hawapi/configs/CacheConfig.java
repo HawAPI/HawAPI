@@ -1,9 +1,11 @@
 package com.lucasjosino.hawapi.configs;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
+import org.springframework.cache.support.NoOpCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -19,7 +21,10 @@ import java.util.concurrent.TimeUnit;
 public class CacheConfig extends CachingConfigurerSupport {
 
     @Bean
-    public CacheManager cacheManager() {
+    public CacheManager cacheManager(@Value("${spring.cache.type}") String cacheType) {
+        // Disable cache
+        if (cacheType.equalsIgnoreCase("none")) return new NoOpCacheManager();
+
         CaffeineCacheManager cacheManager = new CaffeineCacheManager();
         cacheManager.setCaffeine(defaultCache());
         return cacheManager;
