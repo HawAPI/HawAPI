@@ -102,17 +102,19 @@ class GameControllerTest {
     @Test
     void shouldReturnAllGames() throws Exception {
         Pageable pageable = Pageable.ofSize(1);
-        List<UUID> res = Collections.singletonList(UUID.randomUUID());
-        Page<UUID> uuids = PageableExecutionUtils.getPage(res,
-                Pageable.ofSize(1),
+        List<GameDTO> res = Collections.singletonList(game);
+        Page<UUID> uuids = PageableExecutionUtils.getPage(
+                Collections.singletonList(game.getUuid()),
+                pageable,
                 () -> 1
         );
-        HttpHeaders headers = buildHeaders(pageable, uuids, "en-US");
+        HttpHeaders headers = buildHeaders(uuids, "en-US");
 
-        when(service.findAllUUIDs(any(Pageable.class), anyLong())).thenReturn(uuids);
-        when(responseUtils.getHeaders(any(), any(Pageable.class), nullable(String.class), anyLong()))
-                .thenReturn(headers);
-        when(service.findAll(anyMap(), anyList())).thenReturn(Collections.singletonList(game));
+        when(responseUtils.getDefaultLanguage()).thenReturn("en-US");
+        when(responseUtils.validateSort(any(Pageable.class))).thenReturn(pageable);
+        when(service.findAllUUIDs(anyMap(), any(Pageable.class))).thenReturn(uuids);
+        when(service.findAll(anyString(), any())).thenReturn(res);
+        when(responseUtils.getHeaders(any(), nullable(String.class))).thenReturn(headers);
 
         mockMvc.perform(get(URL))
                 .andDo(print())
@@ -125,32 +127,30 @@ class GameControllerTest {
                 .andExpect(header().string("Content-Language", "en-US"))
                 .andExpect(jsonPath("$", hasSize(1)));
 
-        verify(service, times(1)).findAllUUIDs(any(Pageable.class), anyLong());
-        verify(responseUtils, times(1)).getHeaders(
-                any(),
-                any(Pageable.class),
-                nullable(String.class),
-                anyLong()
-        );
-        verify(service, times(1)).findAll(anyMap(), anyList());
+        verify(responseUtils, times(1)).getDefaultLanguage();
+        verify(responseUtils, times(1)).validateSort(any(Pageable.class));
+        verify(service, times(1)).findAllUUIDs(anyMap(), any(Pageable.class));
+        verify(service, times(1)).findAll(anyString(), any());
+        verify(responseUtils, times(1)).getHeaders(any(), nullable(String.class));
     }
 
     @Test
     void shouldReturnAllGamesWithPortugueseLanguage() throws Exception {
         Pageable pageable = Pageable.ofSize(1);
-        List<UUID> res = Collections.singletonList(UUID.randomUUID());
-        Page<UUID> uuids = PageableExecutionUtils.getPage(res,
-                Pageable.ofSize(1),
+        List<GameDTO> res = Collections.singletonList(game);
+        Page<UUID> uuids = PageableExecutionUtils.getPage(
+                Collections.singletonList(game.getUuid()),
+                pageable,
                 () -> 1
         );
-        HttpHeaders headers = buildHeaders(pageable, uuids, "pt-BR");
+        HttpHeaders headers = buildHeaders(uuids, "pt-BR");
 
-        when(service.findAllUUIDs(any(Pageable.class), anyLong())).thenReturn(uuids);
-        when(responseUtils.getHeaders(any(), any(Pageable.class), nullable(String.class), anyLong()))
-                .thenReturn(headers);
-        when(service.findAll(anyMap(), anyList())).thenReturn(Collections.singletonList(game));
+        when(responseUtils.validateSort(any(Pageable.class))).thenReturn(pageable);
+        when(service.findAllUUIDs(anyMap(), any(Pageable.class))).thenReturn(uuids);
+        when(service.findAll(anyString(), any())).thenReturn(res);
+        when(responseUtils.getHeaders(any(), nullable(String.class))).thenReturn(headers);
 
-        mockMvc.perform(get(URL))
+        mockMvc.perform(get(URL + "?language=pt-BR"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string("X-Pagination-Page-Index", "1"))
@@ -161,14 +161,10 @@ class GameControllerTest {
                 .andExpect(header().string("Content-Language", "pt-BR"))
                 .andExpect(jsonPath("$", hasSize(1)));
 
-        verify(service, times(1)).findAllUUIDs(any(Pageable.class), anyLong());
-        verify(responseUtils, times(1)).getHeaders(
-                any(),
-                any(Pageable.class),
-                nullable(String.class),
-                anyLong()
-        );
-        verify(service, times(1)).findAll(anyMap(), anyList());
+        verify(responseUtils, times(1)).validateSort(any(Pageable.class));
+        verify(service, times(1)).findAllUUIDs(anyMap(), any(Pageable.class));
+        verify(service, times(1)).findAll(anyString(), any());
+        verify(responseUtils, times(1)).getHeaders(any(), nullable(String.class));
     }
 
     @Test
@@ -201,36 +197,35 @@ class GameControllerTest {
     @Test
     void whenNoUUIDIsFoundShouldReturnEmptyListOnAllGames() throws Exception {
         Pageable pageable = Pageable.ofSize(1);
-        List<UUID> res = Collections.emptyList();
-        Page<UUID> uuids = PageableExecutionUtils.getPage(res,
-                Pageable.ofSize(1),
+        List<GameDTO> res = Collections.emptyList();
+        Page<UUID> uuids = PageableExecutionUtils.getPage(
+                Collections.emptyList(),
+                pageable,
                 () -> 0
         );
-        HttpHeaders headers = buildHeaders(pageable, uuids, null);
+        HttpHeaders headers = buildHeaders(uuids, "en-US");
 
-        when(service.findAllUUIDs(any(Pageable.class), anyLong())).thenReturn(uuids);
-        when(responseUtils.getHeaders(any(), any(Pageable.class), nullable(String.class), anyLong()))
-                .thenReturn(headers);
-        when(service.findAll(anyMap(), anyList())).thenReturn(Collections.emptyList());
+        when(responseUtils.getDefaultLanguage()).thenReturn("en-US");
+        when(responseUtils.validateSort(any(Pageable.class))).thenReturn(pageable);
+        when(service.findAllUUIDs(anyMap(), any(Pageable.class))).thenReturn(uuids);
+        when(service.findAll(anyString(), any())).thenReturn(res);
+        when(responseUtils.getHeaders(any(), nullable(String.class))).thenReturn(headers);
 
         mockMvc.perform(get(URL))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string("X-Pagination-Page-Index", "1"))
-                .andExpect(header().string("X-Pagination-Page-Size", "1"))
+                .andExpect(header().string("X-Pagination-Page-Size", "0"))
                 .andExpect(header().string("X-Pagination-Page-Total", "0"))
                 .andExpect(header().string("X-Pagination-Item-Total", "0"))
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$", hasSize(0)));
 
-        verify(service, times(1)).findAllUUIDs(any(Pageable.class), anyLong());
-        verify(responseUtils, times(1)).getHeaders(
-                any(),
-                any(Pageable.class),
-                nullable(String.class),
-                anyLong()
-        );
-        verify(service, times(1)).findAll(anyMap(), anyList());
+        verify(responseUtils, times(1)).getDefaultLanguage();
+        verify(responseUtils, times(1)).validateSort(any(Pageable.class));
+        verify(service, times(1)).findAllUUIDs(anyMap(), any(Pageable.class));
+        verify(service, times(1)).findAll(anyString(), any());
+        verify(responseUtils, times(1)).getHeaders(any(), nullable(String.class));
     }
 
     @Test

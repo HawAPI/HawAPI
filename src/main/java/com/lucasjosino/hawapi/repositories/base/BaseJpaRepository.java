@@ -1,35 +1,34 @@
 package com.lucasjosino.hawapi.repositories.base;
 
 import com.lucasjosino.hawapi.models.base.BaseModel;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.NoRepositoryBean;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * A base JPA Repository interface with all common methods.
  *
- * @param <T> An object that extends {@link BaseModel}
- * @param <Y> An object that represents the entity id
+ * @param <T>  An object that extends {@link BaseModel}
+ * @param <ID> An object that represents the entity id
  * @author Lucas Josino
- * @see JpaSpecificationExecutor
  * @see JpaRepository
+ * @see BaseRepository
+ * @see JpaSpecificationExecutor
  * @since 1.0.0
  */
 @NoRepositoryBean
-public interface BaseJpaRepository<T extends BaseModel, Y> extends JpaRepository<T, Y>, JpaSpecificationExecutor<T> {
+public interface BaseJpaRepository<T extends BaseModel, ID> extends JpaRepository<T, ID>, JpaSpecificationExecutor<T>, BaseRepository<T, ID> {
 
     /**
-     * Method to get all items filtering with {@link Pageable}
+     * Method to get all items in list by sort
      *
-     * @param pageable Cannot be null
-     * @return An {@link List} of {@link UUID}
+     * @param ys   An {@link Iterable} of {@link ID}. Cannot be empty
+     * @param sort An {@link Sort}. Cannot be null
+     * @return An {@link List} of {@link T} or empty
      * @since 1.0.0
      */
-    @Query("SELECT uuid from #{#entityName}")
-    List<UUID> findAllUUIDs(Pageable pageable);
+    List<T> findAllByUuidIn(Iterable<ID> ys, Sort sort);
 }

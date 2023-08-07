@@ -21,6 +21,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -99,64 +100,50 @@ class EpisodeServiceImplTest {
     }
 
     @Test
-    void shouldReturnAllEpisodeUUIDs() {
-        List<UUID> uuids = Collections.singletonList(UUID.randomUUID());
-
-        when(repository.findAllUUIDs(any(Pageable.class))).thenReturn(uuids);
-
-        Pageable pageable = Pageable.ofSize(1);
-        Page<UUID> res = service.findAllUUIDs(pageable, uuids.size());
-
-        assertFalse(res.isEmpty());
-        assertEquals(uuids, res.getContent());
-        assertEquals(pageable.getPageSize(), res.getTotalElements());
-        verify(repository, times(1)).findAllUUIDs(any(Pageable.class));
-    }
-
-    @Test
-    void whenNoUUIDIsFoundShouldReturnEmptyListOnReturnAllEpisodeUUIDs() {
-        List<UUID> uuids = Collections.emptyList();
-
-        when(repository.findAllUUIDs(any(Pageable.class))).thenReturn(uuids);
-
-        Pageable pageable = Pageable.ofSize(1);
-        Page<UUID> res = service.findAllUUIDs(pageable, 0);
-
-        assertTrue(res.isEmpty());
-        verify(repository, times(1)).findAllUUIDs(any(Pageable.class));
-    }
-
-    @Test
     void shouldReturnAllEpisodes() {
-        List<UUID> uuids = Collections.singletonList(episodeModel.getUuid());
+        Pageable pageable = Pageable.ofSize(1);
+        Page<UUID> uuids = PageableExecutionUtils.getPage(
+                Collections.singletonList(episodeModel.getUuid()),
+                pageable,
+                () -> 1
+        );
         List<EpisodeModel> data = Collections.singletonList(episodeModel);
         EpisodeDTO[] returnData = {episodeDTO};
 
-        when(repository.findAll(Mockito.<Specification<EpisodeModel>>any())).thenReturn(data);
+        when(repository.findAllByTranslationLanguageAndUuidIn(anyString(), any(), any(Sort.class)))
+                .thenReturn(data);
         when(modelMapper.map(any(), any())).thenReturn(returnData);
 
-        List<EpisodeDTO> res = service.findAll(new HashMap<>(), uuids);
+        List<EpisodeDTO> res = service.findAll("en-US", uuids);
 
         assertFalse(res.isEmpty());
         assertEquals(1, res.size());
         assertEquals(episodeDTO, res.get(0));
-        verify(repository, times(1)).findAll(Mockito.<Specification<EpisodeModel>>any());
+        verify(repository, times(1))
+                .findAllByTranslationLanguageAndUuidIn(anyString(), any(), any(Sort.class));
         verify(modelMapper, times(1)).map(any(), any());
     }
 
     @Test
     void whenNoUUIDIsFoundShouldReturnEmptyListOnReturnAllEpisodes() {
-        List<UUID> uuids = Collections.emptyList();
+        Pageable pageable = Pageable.ofSize(1);
+        Page<UUID> uuids = PageableExecutionUtils.getPage(
+                Collections.emptyList(),
+                pageable,
+                () -> 0
+        );
         List<EpisodeModel> data = Collections.emptyList();
         EpisodeDTO[] returnData = {};
 
-        when(repository.findAll(Mockito.<Specification<EpisodeModel>>any())).thenReturn(data);
+        when(repository.findAllByTranslationLanguageAndUuidIn(anyString(), any(), any(Sort.class)))
+                .thenReturn(data);
         when(modelMapper.map(any(), eq(EpisodeDTO[].class))).thenReturn(returnData);
 
-        List<EpisodeDTO> res = service.findAll(new HashMap<>(), uuids);
+        List<EpisodeDTO> res = service.findAll("en-US", uuids);
 
         assertTrue(res.isEmpty());
-        verify(repository, times(1)).findAll(Mockito.<Specification<EpisodeModel>>any());
+        verify(repository, times(1))
+                .findAllByTranslationLanguageAndUuidIn(anyString(), any(), any(Sort.class));
         verify(modelMapper, times(1)).map(any(), eq(EpisodeDTO[].class));
     }
 

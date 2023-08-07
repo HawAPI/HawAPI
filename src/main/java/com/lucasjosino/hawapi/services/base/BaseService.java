@@ -1,6 +1,5 @@
 package com.lucasjosino.hawapi.services.base;
 
-import com.lucasjosino.hawapi.cache.generator.FindAllKeyGenerator;
 import com.lucasjosino.hawapi.models.base.BaseDTO;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -21,17 +20,15 @@ import java.util.UUID;
  * @see Transactional
  * @see Cacheable
  * @see Pageable
- * @see FindAllKeyGenerator
  * @since 1.0.0
  */
 public interface BaseService<D extends BaseDTO> {
 
-    long getCount();
+    @Cacheable(value = "findAll")
+    Page<UUID> findAllUUIDs(Map<String, String> filters, Pageable pageable);
 
-    Page<UUID> findAllUUIDs(Pageable pageable, long count);
-
-    @Cacheable(value = "findAll", keyGenerator = "findAllKeyGenerator")
-    List<D> findAll(Map<String, String> filters, List<UUID> uuids);
+    @Cacheable(value = "findAll", key = "{ #root.targetClass, #root.methodName, #p0.getPageable() }")
+    List<D> findAll(Page<UUID> uuids) throws NoSuchMethodException;
 
     D findRandom(String language);
 

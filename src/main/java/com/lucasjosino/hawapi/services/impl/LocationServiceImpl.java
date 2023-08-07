@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -67,25 +66,15 @@ public class LocationServiceImpl implements LocationService {
     }
 
     /**
-     * Method that the count of all locations
+     * Method that get all location uuids with filters and {@link Pageable}
      *
-     * @return The count of all locations
-     * @since 1.0.0
-     */
-    public long getCount() {
-        return repository.count();
-    }
-
-    /**
-     * Method that get all location uuids filtering with {@link Pageable}
-     *
+     * @param filters  An {@link Map} with all filter params. Can be empty
      * @param pageable An {@link Page} with pageable params. Can be null
      * @return A {@link Page} of {@link UUID} or empty
      * @since 1.0.0
      */
-    public Page<UUID> findAllUUIDs(Pageable pageable, long count) {
-        List<UUID> res = repository.findAllUUIDs(pageable);
-        return PageableExecutionUtils.getPage(res, pageable, () -> count);
+    public Page<UUID> findAllUUIDs(Map<String, String> filters, Pageable pageable) {
+        return repository.findAllUUIDs(spec.with(filters, LocationFilter.class), pageable);
     }
 
     /**
@@ -94,8 +83,12 @@ public class LocationServiceImpl implements LocationService {
      * @see LocationController#findAll(Map, Pageable)
      * @since 1.0.0
      */
-    public List<LocationDTO> findAll(Map<String, String> filters, List<UUID> uuids) {
-        List<LocationModel> res = repository.findAll(spec.with(filters, LocationFilter.class, uuids));
+    public List<LocationDTO> findAll(String language, Page<UUID> uuids) {
+        List<LocationModel> res = repository.findAllByTranslationLanguageAndUuidIn(
+                language,
+                uuids.getContent(),
+                uuids.getSort()
+        );
         return Arrays.asList(modelMapper.map(res, LocationDTO[].class));
     }
 

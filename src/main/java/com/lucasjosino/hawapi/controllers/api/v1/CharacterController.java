@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -66,18 +65,12 @@ public class CharacterController implements BaseControllerInterface<CharacterDTO
      */
     @Operation(summary = "Get all characters")
     public ResponseEntity<List<CharacterDTO>> findAll(Map<String, String> filters, Pageable pageable) {
-        long count = service.getCount();
-        Page<UUID> uuids = service.findAllUUIDs(pageable, count);
-        HttpHeaders headers = responseUtils.getHeaders(
-                uuids,
-                pageable,
-                null,
-                count
-        );
+        pageable = responseUtils.validateSort(pageable);
 
-        if (uuids.isEmpty()) ResponseEntity.ok().headers(headers).body(Collections.emptyList());
+        Page<UUID> uuids = service.findAllUUIDs(filters, pageable);
+        List<CharacterDTO> res = service.findAll(uuids);
+        HttpHeaders headers = responseUtils.getHeaders(uuids, null);
 
-        List<CharacterDTO> res = service.findAll(filters, uuids.getContent());
         return ResponseEntity.ok().headers(headers).body(res);
     }
 

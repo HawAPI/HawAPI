@@ -1,11 +1,11 @@
 package com.lucasjosino.hawapi.configs;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
-import com.lucasjosino.hawapi.cache.generator.FindAllKeyGenerator;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
-import org.springframework.cache.interceptor.KeyGenerator;
+import org.springframework.cache.support.NoOpCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,12 +21,10 @@ import java.util.concurrent.TimeUnit;
 public class CacheConfig extends CachingConfigurerSupport {
 
     @Bean
-    public KeyGenerator findAllKeyGenerator() {
-        return new FindAllKeyGenerator();
-    }
+    public CacheManager cacheManager(@Value("${spring.cache.type}") String cacheType) {
+        // Disable cache
+        if (cacheType.equalsIgnoreCase("none")) return new NoOpCacheManager();
 
-    @Bean
-    public CacheManager cacheManager() {
         CaffeineCacheManager cacheManager = new CaffeineCacheManager();
         cacheManager.setCaffeine(defaultCache());
         return cacheManager;

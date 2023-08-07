@@ -19,7 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -63,18 +62,12 @@ public class SoundtrackController implements BaseControllerInterface<SoundtrackD
      */
     @GetMapping
     public ResponseEntity<List<SoundtrackDTO>> findAll(Map<String, String> filters, Pageable pageable) {
-        long count = service.getCount();
-        Page<UUID> uuids = service.findAllUUIDs(pageable, count);
-        HttpHeaders headers = responseUtils.getHeaders(
-                uuids,
-                pageable,
-                null,
-                count
-        );
+        pageable = responseUtils.validateSort(pageable);
 
-        if (uuids.isEmpty()) ResponseEntity.ok().headers(headers).body(Collections.emptyList());
+        Page<UUID> uuids = service.findAllUUIDs(filters, pageable);
+        List<SoundtrackDTO> res = service.findAll(uuids);
+        HttpHeaders headers = responseUtils.getHeaders(uuids, null);
 
-        List<SoundtrackDTO> res = service.findAll(filters, uuids.getContent());
         return ResponseEntity.ok().headers(headers).body(res);
     }
 

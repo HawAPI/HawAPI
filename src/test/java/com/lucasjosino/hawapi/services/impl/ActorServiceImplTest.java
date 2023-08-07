@@ -14,12 +14,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -90,64 +89,46 @@ class ActorServiceImplTest {
     }
 
     @Test
-    void shouldReturnAllActorUUIDs() {
-        List<UUID> uuids = Collections.singletonList(UUID.randomUUID());
-
-        when(repository.findAllUUIDs(any(Pageable.class))).thenReturn(uuids);
-
-        Pageable pageable = Pageable.ofSize(1);
-        Page<UUID> res = service.findAllUUIDs(pageable, uuids.size());
-
-        assertFalse(res.isEmpty());
-        assertEquals(uuids, res.getContent());
-        assertEquals(pageable.getPageSize(), res.getTotalElements());
-        verify(repository, times(1)).findAllUUIDs(any(Pageable.class));
-    }
-
-    @Test
-    void whenNoUUIDIsFoundShouldReturnEmptyListOnReturnAllActorUUIDs() {
-        List<UUID> uuids = Collections.emptyList();
-
-        when(repository.findAllUUIDs(any(Pageable.class))).thenReturn(uuids);
-
-        Pageable pageable = Pageable.ofSize(1);
-        Page<UUID> res = service.findAllUUIDs(pageable, 0);
-
-        assertTrue(res.isEmpty());
-        verify(repository, times(1)).findAllUUIDs(any(Pageable.class));
-    }
-
-    @Test
     void shouldReturnAllActors() {
-        List<UUID> uuids = Collections.singletonList(actorModel.getUuid());
+        Pageable pageable = Pageable.ofSize(1);
+        Page<UUID> uuids = PageableExecutionUtils.getPage(
+                Collections.singletonList(actorModel.getUuid()),
+                pageable,
+                () -> 1
+        );
         List<ActorModel> data = Collections.singletonList(actorModel);
         ActorDTO[] returnData = {actorDTO};
 
-        when(repository.findAll(Mockito.<Specification<ActorModel>>any())).thenReturn(data);
+        when(repository.findAllByUuidIn(any(), any(Sort.class))).thenReturn(data);
         when(modelMapper.map(any(), any())).thenReturn(returnData);
 
-        List<ActorDTO> res = service.findAll(new HashMap<>(), uuids);
+        List<ActorDTO> res = service.findAll(uuids);
 
         assertFalse(res.isEmpty());
         assertEquals(1, res.size());
         assertEquals(actorDTO, res.get(0));
-        verify(repository, times(1)).findAll(Mockito.<Specification<ActorModel>>any());
+        verify(repository, times(1)).findAllByUuidIn(any(), any(Sort.class));
         verify(modelMapper, times(1)).map(any(), any());
     }
 
     @Test
     void whenNoUUIDIsFoundShouldReturnEmptyListOnReturnAllActors() {
-        List<UUID> uuids = Collections.emptyList();
+        Pageable pageable = Pageable.ofSize(1);
+        Page<UUID> uuids = PageableExecutionUtils.getPage(
+                Collections.emptyList(),
+                pageable,
+                () -> 0
+        );
         List<ActorModel> data = Collections.emptyList();
         ActorDTO[] returnData = {};
 
-        when(repository.findAll(Mockito.<Specification<ActorModel>>any())).thenReturn(data);
+        when(repository.findAllByUuidIn(any(), any(Sort.class))).thenReturn(data);
         when(modelMapper.map(any(), eq(ActorDTO[].class))).thenReturn(returnData);
 
-        List<ActorDTO> res = service.findAll(new HashMap<>(), uuids);
+        List<ActorDTO> res = service.findAll(uuids);
 
         assertTrue(res.isEmpty());
-        verify(repository, times(1)).findAll(Mockito.<Specification<ActorModel>>any());
+        verify(repository, times(1)).findAllByUuidIn(any(), any(Sort.class));
         verify(modelMapper, times(1)).map(any(), eq(ActorDTO[].class));
     }
 

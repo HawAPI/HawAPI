@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -45,6 +46,9 @@ class ActorIntegrationTest extends DatabaseContainerInitializer {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private CacheManager cacheManager;
+
     @BeforeEach
     void setUp() {
         actorDTO = new ActorDTO();
@@ -62,8 +66,8 @@ class ActorIntegrationTest extends DatabaseContainerInitializer {
         actorDTO.setCreatedAt(LocalDateTime.now());
         actorDTO.setUpdatedAt(LocalDateTime.now());
 
-        ActorModel characterModel = mapper.map(actorDTO, ActorModel.class);
-        repository.save(characterModel);
+        ActorModel actorModel = mapper.map(actorDTO, ActorModel.class);
+        repository.save(actorModel);
     }
 
     @AfterEach
@@ -77,7 +81,7 @@ class ActorIntegrationTest extends DatabaseContainerInitializer {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string("X-Pagination-Page-Index", "1"))
-                .andExpect(header().string("X-Pagination-Page-Size", "10"))
+                .andExpect(header().string("X-Pagination-Page-Size", "1"))
                 .andExpect(header().string("X-Pagination-Page-Total", "1"))
                 .andExpect(header().string("X-Pagination-Item-Total", "1"))
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
@@ -91,7 +95,7 @@ class ActorIntegrationTest extends DatabaseContainerInitializer {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string("X-Pagination-Page-Index", "1"))
-                .andExpect(header().string("X-Pagination-Page-Size", "10"))
+                .andExpect(header().string("X-Pagination-Page-Size", "0"))
                 .andExpect(header().string("X-Pagination-Page-Total", "0"))
                 .andExpect(header().string("X-Pagination-Item-Total", "0"))
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))

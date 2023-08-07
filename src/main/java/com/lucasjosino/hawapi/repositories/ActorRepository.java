@@ -35,6 +35,10 @@ public interface ActorRepository extends BaseJpaRepository<ActorModel, UUID> {
 
     @Override
     @EntityGraph(attributePaths = {"socials"})
+    List<ActorModel> findAllByUuidIn(Iterable<UUID> ys, Sort sort);
+
+    @Override
+    @EntityGraph(attributePaths = {"socials"})
     List<ActorModel> findAll(Specification<ActorModel> spec);
 
     @Override

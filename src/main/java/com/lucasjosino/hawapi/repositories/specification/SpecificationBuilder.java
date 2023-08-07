@@ -11,7 +11,10 @@ import org.springframework.data.jpa.domain.Specification;
 import javax.persistence.criteria.*;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * SpecificationBuilder provides functionality for convert all Filters (extended from {@link BaseFilter}) into a
@@ -35,8 +38,6 @@ public class SpecificationBuilder<T extends BaseModel> implements Specification<
 
     private Class<? extends BaseFilter> fClass;
 
-    private List<UUID> uuids;
-
     public SpecificationBuilder() {}
 
     /**
@@ -44,18 +45,12 @@ public class SpecificationBuilder<T extends BaseModel> implements Specification<
      *
      * @param params All filters
      * @param fClass The filter class
-     * @param uuids  All uuids to be filtered
      * @return The specification builder with defined params
      * @since 1.0.0
      */
-    public <S extends BaseFilter> SpecificationBuilder<T> with(
-            Map<String, String> params,
-            Class<S> fClass,
-            List<UUID> uuids
-    ) {
+    public <S extends BaseFilter> SpecificationBuilder<T> with(Map<String, String> params, Class<S> fClass) {
         this.params = params;
         this.fClass = fClass;
-        this.uuids = uuids;
         return this;
     }
 
@@ -149,20 +144,6 @@ public class SpecificationBuilder<T extends BaseModel> implements Specification<
             throw new InternalServerErrorException(message, exception);
         }
 
-        // Hibernate will block the usage of pagination (page and size) when using join.
-        //
-        // To avoid this, first select all ids(uuids) using the 'filter' pageable(page, size, sort) and then
-        // add a 'where in (...)' filter.
-        //
-        // Ref¹: https://github.com/HawAPI/HawAPI/issues/46
-        // Ref²: https://stackoverflow.com/a/62782899
-        CriteriaBuilder.In<UUID> uuidsIn = builder.in(root.get("uuid"));
-        uuids.forEach(uuidsIn::value);
-
-        log.debug("Items count: {}", uuids.size());
-        predicates.add(uuidsIn);
-
-        params.clear();
         return builder.and(predicates.toArray(new Predicate[0]));
     }
 

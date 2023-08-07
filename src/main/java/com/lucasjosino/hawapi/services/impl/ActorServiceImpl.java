@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -50,7 +49,8 @@ public class ActorServiceImpl implements ActorService {
 
     @Autowired
     public ActorServiceImpl(
-            Random random, ActorRepository repository,
+            Random random,
+            ActorRepository repository,
             ServiceUtils utils,
             OpenAPIProperty config,
             ModelMapper modelMapper,
@@ -65,25 +65,16 @@ public class ActorServiceImpl implements ActorService {
     }
 
     /**
-     * Method that the count of all actor
+     * Method that get all actor uuids with filters and {@link Pageable}
      *
-     * @return The count of all actors
-     * @since 1.0.0
-     */
-    public long getCount() {
-        return repository.count();
-    }
-
-    /**
-     * Method that get all actor uuids filtering with {@link Pageable}
-     *
+     * @param filters  An {@link Map} with all filter params. Can be empty
      * @param pageable An {@link Page} with pageable params. Can be null
      * @return A {@link Page} of {@link UUID} or empty
      * @since 1.0.0
      */
-    public Page<UUID> findAllUUIDs(Pageable pageable, long count) {
-        List<UUID> res = repository.findAllUUIDs(pageable);
-        return PageableExecutionUtils.getPage(res, pageable, () -> count);
+    @Override
+    public Page<UUID> findAllUUIDs(Map<String, String> filters, Pageable pageable) {
+        return repository.findAllUUIDs(spec.with(filters, ActorFilter.class), pageable);
     }
 
     /**
@@ -92,8 +83,9 @@ public class ActorServiceImpl implements ActorService {
      * @see ActorController#findAll(Map, Pageable)
      * @since 1.0.0
      */
-    public List<ActorDTO> findAll(Map<String, String> filters, List<UUID> uuids) {
-        List<ActorModel> res = repository.findAll(spec.with(filters, ActorFilter.class, uuids));
+    @Override
+    public List<ActorDTO> findAll(Page<UUID> uuids) {
+        List<ActorModel> res = repository.findAllByUuidIn(uuids.getContent(), uuids.getSort());
         return Arrays.asList(modelMapper.map(res, ActorDTO[].class));
     }
 
@@ -103,6 +95,7 @@ public class ActorServiceImpl implements ActorService {
      * @see ActorController#findAllSocials(UUID)
      * @since 1.0.0
      */
+    @Override
     public List<ActorSocialDTO> findAllSocials(UUID uuid) {
         existsByIdOrThrow(uuid);
 
@@ -116,6 +109,7 @@ public class ActorServiceImpl implements ActorService {
      * @see ActorController#findRandom(String)
      * @since 1.0.0
      */
+    @Override
     public ActorDTO findRandom(String language) {
         long count = utils.getCountOrThrow(repository.count());
         int index = random.nextInt((int) count);
@@ -132,6 +126,7 @@ public class ActorServiceImpl implements ActorService {
      * @see ActorController#findRandomSocial(UUID)
      * @since 1.0.0
      */
+    @Override
     public ActorSocialDTO findRandomSocial(UUID uuid) {
         existsByIdOrThrow(uuid);
 
@@ -150,6 +145,7 @@ public class ActorServiceImpl implements ActorService {
      * @see ActorController#findBy(UUID, String)
      * @since 1.0.0
      */
+    @Override
     public ActorDTO findBy(UUID uuid, String language) {
         ActorModel res = repository.findById(uuid).orElseThrow(ItemNotFoundException::new);
         return modelMapper.map(res, ActorDTO.class);
@@ -161,6 +157,7 @@ public class ActorServiceImpl implements ActorService {
      * @see ActorController#findSocialBy(UUID, String)
      * @since 1.0.0
      */
+    @Override
     public ActorSocialDTO findSocialBy(UUID uuid, String name) {
         ActorSocialModel res = socialRepository.findByActorUuidAndSocial(uuid, name)
                 .orElseThrow(ItemNotFoundException::new);
@@ -173,6 +170,7 @@ public class ActorServiceImpl implements ActorService {
      * @see ActorController#save(ActorDTO)
      * @since 1.0.0
      */
+    @Override
     public ActorDTO save(ActorDTO dto) {
         UUID uuid = UUID.randomUUID();
         dto.setUuid(uuid);
@@ -194,6 +192,7 @@ public class ActorServiceImpl implements ActorService {
      * @see ActorController#saveSocial(UUID, ActorSocialDTO)
      * @since 1.0.0
      */
+    @Override
     public ActorSocialDTO saveSocial(UUID uuid, ActorSocialDTO dto) {
         if (!repository.existsById(uuid)) {
             throw new ItemNotFoundException("Item '" + uuid + "' doesn't exist!");
@@ -213,6 +212,7 @@ public class ActorServiceImpl implements ActorService {
      * @see ActorController#patch(UUID, ActorDTO)
      * @since 1.0.0
      */
+    @Override
     public void patch(UUID uuid, ActorDTO patch) throws IOException {
         ActorModel dbRes = repository.findById(uuid).orElseThrow(ItemNotFoundException::new);
 
@@ -229,6 +229,7 @@ public class ActorServiceImpl implements ActorService {
      * @see ActorController#patchSocial(UUID, String, ActorSocialDTO)
      * @since 1.0.0
      */
+    @Override
     public void patchSocial(UUID uuid, String name, ActorSocialDTO patch) throws IOException {
         ActorSocialModel dbRes = socialRepository.findByActorUuidAndSocial(uuid, name)
                 .orElseThrow(ItemNotFoundException::new);
@@ -246,6 +247,7 @@ public class ActorServiceImpl implements ActorService {
      * @see ActorController#delete(UUID)
      * @since 1.0.0
      */
+    @Override
     public void deleteById(UUID uuid) {
         if (!repository.existsById(uuid)) throw new ItemNotFoundException();
 
@@ -258,6 +260,7 @@ public class ActorServiceImpl implements ActorService {
      * @see ActorController#deleteSocial(UUID, String)
      * @since 1.0.0
      */
+    @Override
     public void deleteSocial(UUID uuid, String name) {
         if (!socialRepository.existsByActorUuidAndSocial(uuid, name)) throw new ItemNotFoundException();
 

@@ -21,6 +21,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -110,64 +111,50 @@ class SeasonServiceImplTest {
     }
 
     @Test
-    void shouldReturnAllSeasonUUIDs() {
-        List<UUID> uuids = Collections.singletonList(UUID.randomUUID());
-
-        when(repository.findAllUUIDs(any(Pageable.class))).thenReturn(uuids);
-
-        Pageable pageable = Pageable.ofSize(1);
-        Page<UUID> res = service.findAllUUIDs(pageable, uuids.size());
-
-        assertFalse(res.isEmpty());
-        assertEquals(uuids, res.getContent());
-        assertEquals(pageable.getPageSize(), res.getTotalElements());
-        verify(repository, times(1)).findAllUUIDs(any(Pageable.class));
-    }
-
-    @Test
-    void whenNoUUIDIsFoundShouldReturnEmptyListOnReturnAllSeasonUUIDs() {
-        List<UUID> uuids = Collections.emptyList();
-
-        when(repository.findAllUUIDs(any(Pageable.class))).thenReturn(uuids);
-
-        Pageable pageable = Pageable.ofSize(1);
-        Page<UUID> res = service.findAllUUIDs(pageable, 0);
-
-        assertTrue(res.isEmpty());
-        verify(repository, times(1)).findAllUUIDs(any(Pageable.class));
-    }
-
-    @Test
     void shouldReturnAllSeasons() {
-        List<UUID> uuids = Collections.singletonList(seasonModel.getUuid());
+        Pageable pageable = Pageable.ofSize(1);
+        Page<UUID> uuids = PageableExecutionUtils.getPage(
+                Collections.singletonList(seasonModel.getUuid()),
+                pageable,
+                () -> 1
+        );
         List<SeasonModel> data = Collections.singletonList(seasonModel);
         SeasonDTO[] returnData = {seasonDTO};
 
-        when(repository.findAll(Mockito.<Specification<SeasonModel>>any())).thenReturn(data);
+        when(repository.findAllByTranslationLanguageAndUuidIn(anyString(), any(), any(Sort.class)))
+                .thenReturn(data);
         when(modelMapper.map(any(), any())).thenReturn(returnData);
 
-        List<SeasonDTO> res = service.findAll(new HashMap<>(), uuids);
+        List<SeasonDTO> res = service.findAll("en-US", uuids);
 
         assertFalse(res.isEmpty());
         assertEquals(1, res.size());
         assertEquals(seasonDTO, res.get(0));
-        verify(repository, times(1)).findAll(Mockito.<Specification<SeasonModel>>any());
+        verify(repository, times(1))
+                .findAllByTranslationLanguageAndUuidIn(anyString(), any(), any(Sort.class));
         verify(modelMapper, times(1)).map(any(), any());
     }
 
     @Test
     void whenNoUUIDIsFoundShouldReturnEmptyListOnReturnAllSeasons() {
-        List<UUID> uuids = Collections.emptyList();
+        Pageable pageable = Pageable.ofSize(1);
+        Page<UUID> uuids = PageableExecutionUtils.getPage(
+                Collections.emptyList(),
+                pageable,
+                () -> 0
+        );
         List<SeasonModel> data = Collections.emptyList();
         SeasonDTO[] returnData = {};
 
-        when(repository.findAll(Mockito.<Specification<SeasonModel>>any())).thenReturn(data);
+        when(repository.findAllByTranslationLanguageAndUuidIn(anyString(), any(), any(Sort.class)))
+                .thenReturn(data);
         when(modelMapper.map(any(), eq(SeasonDTO[].class))).thenReturn(returnData);
 
-        List<SeasonDTO> res = service.findAll(new HashMap<>(), uuids);
+        List<SeasonDTO> res = service.findAll("en-US", uuids);
 
         assertTrue(res.isEmpty());
-        verify(repository, times(1)).findAll(Mockito.<Specification<SeasonModel>>any());
+        verify(repository, times(1))
+                .findAllByTranslationLanguageAndUuidIn(anyString(), any(), any(Sort.class));
         verify(modelMapper, times(1)).map(any(), eq(SeasonDTO[].class));
     }
 
