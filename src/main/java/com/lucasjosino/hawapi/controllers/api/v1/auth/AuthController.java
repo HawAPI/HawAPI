@@ -35,7 +35,7 @@ public class AuthController implements BaseAuthControllerInterface {
 
     private final AuthServiceImpl service;
 
-    @Value("${com.lucasjosino.hawapi.registration.enable}")
+    @Value("${com.lucasjosino.hawapi.enable-registration}")
     private boolean registrationIsEnable;
 
     public AuthController(AuthServiceImpl service) {
