@@ -53,15 +53,15 @@ via JSON and allows developers to create **desktop**, **web** and **mobile** app
 
 ## Internationalization Support
 
-| Scope       | en-US | pt-BR |
-|:------------|:-----:|:-----:|
-| Actors      |  --   |  --   |
-| Characters  |  --   |  --   |
-| Episodes    |  Yes  |  Yes  |
-| Games       |  Yes  |  Yes  |
-| Locations   |  Yes  |  Yes  |
-| Seasons     |  Yes  |  Yes  |
-| Soundtracks |  --   |  --   |
+| Scope       | en-US | pt-BR | fr-FR | es-ES |
+|:------------|:-----:|:-----:|:-----:|:-----:|
+| Actors      |  --   |  --   |  --   |  --   |
+| Characters  |  --   |  --   |  --   |  --   |
+| Episodes    |  Yes  |  Yes  | Soon  | Soon  |
+| Games       |  Yes  |  Yes  | Soon  | Soon  |
+| Locations   |  Yes  |  Yes  | Soon  | Soon  |
+| Seasons     |  Yes  |  Yes  | Soon  | Soon  |
+| Soundtracks |  --   |  --   |  --   |  --   |
 
 ## Contributing
 
