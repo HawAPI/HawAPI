@@ -1,5 +1,6 @@
 package com.lucasjosino.hawapi.filters;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lucasjosino.hawapi.controllers.api.v1.SeasonController;
 import com.lucasjosino.hawapi.filters.base.BaseTranslationFilter;
 import com.lucasjosino.hawapi.models.SeasonModel;
@@ -37,6 +38,12 @@ public class SeasonFilter extends BaseTranslationFilter {
     private Integer budget;
 
     private String[] genres;
+
+    @JsonProperty("next_season")
+    private String nextSeason;
+
+    @JsonProperty("prev_season")
+    private String prevSeason;
 
     public String getTitle() {
         return title;
@@ -92,5 +99,21 @@ public class SeasonFilter extends BaseTranslationFilter {
 
     public void setGenres(String[] genres) {
         this.genres = genres;
+    }
+
+    public String getNextSeason() {
+        return nextSeason;
+    }
+
+    public void setNextSeason(String nextSeason) {
+        this.nextSeason = nextSeason;
+    }
+
+    public String getPrevSeason() {
+        return prevSeason;
+    }
+
+    public void setPrevSeason(String prevSeason) {
+        this.prevSeason = prevSeason;
     }
 }
