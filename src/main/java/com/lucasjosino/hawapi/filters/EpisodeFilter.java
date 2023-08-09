@@ -32,6 +32,14 @@ public class EpisodeFilter extends BaseTranslationFilter {
     @JsonProperty("episode_num")
     private Byte episodeNum;
 
+    @JsonProperty("next_episode")
+    private String nextEpisode;
+
+    @JsonProperty("prev_episode")
+    private String prevEpisode;
+
+    private String season;
+
     public String getTitle() {
         return title;
     }
@@ -62,5 +70,29 @@ public class EpisodeFilter extends BaseTranslationFilter {
 
     public void setEpisodeNum(Byte episodeNum) {
         this.episodeNum = episodeNum;
+    }
+
+    public String getNextEpisode() {
+        return nextEpisode;
+    }
+
+    public void setNextEpisode(String nextEpisode) {
+        this.nextEpisode = nextEpisode;
+    }
+
+    public String getPrevEpisode() {
+        return prevEpisode;
+    }
+
+    public void setPrevEpisode(String prevEpisode) {
+        this.prevEpisode = prevEpisode;
+    }
+
+    public String getSeason() {
+        return season;
+    }
+
+    public void setSeason(String season) {
+        this.season = season;
     }
 }

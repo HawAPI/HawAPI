@@ -30,13 +30,24 @@ public class GameFilter extends BaseTranslationFilter {
     @JsonProperty("release_date")
     private LocalDate releaseDate;
 
-    private transient String[] platforms;
+    private Integer playtime;
 
-    private transient String[] genres;
+    @JsonProperty("age_rating")
+    private String ageRating;
 
-    private transient String[] publishers;
+    private String[] platforms;
 
-    private transient String[] developers;
+    private String[] stores;
+
+    private String[] modes;
+
+    private String[] genres;
+
+    private String[] publishers;
+
+    private String[] developers;
+
+    private String[] tags;
 
     public String getName() {
         return name;
@@ -54,12 +65,44 @@ public class GameFilter extends BaseTranslationFilter {
         this.releaseDate = releaseDate;
     }
 
+    public Integer getPlaytime() {
+        return playtime;
+    }
+
+    public void setPlaytime(Integer playtime) {
+        this.playtime = playtime;
+    }
+
+    public String getAgeRating() {
+        return ageRating;
+    }
+
+    public void setAgeRating(String ageRating) {
+        this.ageRating = ageRating;
+    }
+
     public String[] getPlatforms() {
         return platforms;
     }
 
     public void setPlatforms(String[] platforms) {
         this.platforms = platforms;
+    }
+
+    public String[] getStores() {
+        return stores;
+    }
+
+    public void setStores(String[] stores) {
+        this.stores = stores;
+    }
+
+    public String[] getModes() {
+        return modes;
+    }
+
+    public void setModes(String[] modes) {
+        this.modes = modes;
     }
 
     public String[] getGenres() {
@@ -84,5 +127,13 @@ public class GameFilter extends BaseTranslationFilter {
 
     public void setDevelopers(String[] developers) {
         this.developers = developers;
+    }
+
+    public String[] getTags() {
+        return tags;
+    }
+
+    public void setTags(String[] tags) {
+        this.tags = tags;
     }
 }

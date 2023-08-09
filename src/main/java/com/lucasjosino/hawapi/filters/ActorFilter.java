@@ -43,6 +43,8 @@ public class ActorFilter extends BaseFilter {
 
     private String[] nicknames;
 
+    private String character;
+
     public String getFirstName() {
         return firstName;
     }
@@ -97,5 +99,13 @@ public class ActorFilter extends BaseFilter {
 
     public void setNicknames(String[] nicknames) {
         this.nicknames = nicknames;
+    }
+
+    public String getCharacter() {
+        return character;
+    }
+
+    public void setCharacter(String character) {
+        this.character = character;
     }
 }
