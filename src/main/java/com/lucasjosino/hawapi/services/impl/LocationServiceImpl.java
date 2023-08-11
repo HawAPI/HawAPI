@@ -62,7 +62,7 @@ public class LocationServiceImpl implements LocationService {
         this.repository = repository;
         this.modelMapper = modelMapper;
         this.translationRepository = translationRepository;
-        this.basePath = config.getApiBaseUrl() + "/places";
+        this.basePath = config.getApiBaseUrl() + "/locations";
     }
 
     /**
