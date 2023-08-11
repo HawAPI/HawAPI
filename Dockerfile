@@ -16,4 +16,4 @@ WORKDIR /app
 COPY target/hawapi-*.jar hawapi.jar
 
 EXPOSE 8080:8080
-ENTRYPOINT ["java","-jar","hawapi.jar", "-Dspring.profiles.active=prod"]
+CMD ["java","-jar","hawapi.jar", "-Dspring.profiles.active=prod"]
