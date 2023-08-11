@@ -1,4 +1,4 @@
-FROM amazoncorretto:8
+FROM amazoncorretto:8-alpine-jdk
 
 LABEL org.opencontainers.image.title="HawAPI"
 LABEL org.opencontainers.image.licenses="MIT"
