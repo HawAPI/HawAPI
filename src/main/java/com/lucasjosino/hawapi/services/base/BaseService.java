@@ -24,7 +24,7 @@ import java.util.UUID;
  */
 public interface BaseService<D extends BaseDTO> {
 
-    @Cacheable(value = "findAll")
+    @Cacheable(value = "findAll", key = "{ #root.targetClass, #root.methodName, #p0, #p1 }")
     Page<UUID> findAllUUIDs(Map<String, String> filters, Pageable pageable);
 
     @Cacheable(value = "findAll", key = "{ #root.targetClass, #root.methodName, #p0.getPageable() }")
