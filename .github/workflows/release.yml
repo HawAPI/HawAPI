@@ -62,4 +62,4 @@ jobs:
       # Release
 
       - name: Deploy to Koyeb
-        run: koyeb service redeploy hawapi/hawapi
+        run: koyeb service redeploy project/hawapi
