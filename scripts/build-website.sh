@@ -82,9 +82,9 @@ if ! [ -d ".hawapi/website" ]; then
     if ! [ -d ".downloads/" ]; then
         echo "${cyan}[$0] ${green}Directory '.downloads/' not found!"
         mkdir -p .downloads/
-        wget ${website_zip} -q --show-progress -P .downloads/
+        wget ${website_zip} -O "./.downloads/${website_repository}-main.zip" -q --show-progress
         echo "${cyan}[$0] Downloading '${org_name}/${website_repository}' from Github..."
-        wget ${docs_zip} -q --show-progress -P .downloads/
+        wget ${docs_zip} -O "./.downloads/${docs_repository}-main.zip" -q --show-progress
         echo "${cyan}[$0] Downloading '${org_name}/${docs_repository}' from Github..."
     fi
 
