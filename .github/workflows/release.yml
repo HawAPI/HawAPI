@@ -3,7 +3,7 @@ name: "Build, Publish and Release"
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - 'v[0-9].[0-9]+.[0-9]'
 
 env:
   GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
