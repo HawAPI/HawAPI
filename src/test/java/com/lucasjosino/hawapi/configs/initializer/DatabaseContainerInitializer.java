@@ -24,8 +24,7 @@ abstract public class DatabaseContainerInitializer {
     @SuppressWarnings("resource")
     private static final PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(DB_NAME_AND_VERSION)
             .withCopyFileToContainer(MountableFile.forClasspathResource(SCHEMA_LOCATION), DB_ENTRY_POINT)
-            .withExposedPorts(5432)
-            .withReuse(true);
+            .withExposedPorts(5432);
 
     static {
         postgreSQLContainer.start();
