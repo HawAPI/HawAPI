@@ -92,7 +92,8 @@ public class OverviewController implements BaseOverviewControllerInterface {
     public ResponseEntity<OverviewDTO> findOverview(String language) {
         language = defaultIfEmpty(language, responseUtils.getDefaultLanguage());
 
-        return ResponseEntity.ok(overviewService.findOverviewBy(language));
+        HttpHeaders headers = responseUtils.getHeaders(language);
+        return ResponseEntity.ok().headers(headers).body(overviewService.findOverviewBy(language));
     }
 
     /**
