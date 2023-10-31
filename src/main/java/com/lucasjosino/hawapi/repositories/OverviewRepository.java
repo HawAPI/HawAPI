@@ -1,6 +1,7 @@
 package com.lucasjosino.hawapi.repositories;
 
 import com.lucasjosino.hawapi.models.OverviewModel;
+import com.lucasjosino.hawapi.models.dto.OverviewDTO;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -41,4 +42,24 @@ public interface OverviewRepository extends JpaRepository<OverviewModel, UUID> {
      */
     @Query(value = "SELECT CAST(uuid AS VARCHAR) FROM overviews LIMIT 1", nativeQuery = true)
     Optional<String> findUUID();
+
+    /**
+     * Method to get the item count from all repositories
+     * <p>
+     * OBS: Native Query
+     *
+     * @return A {@link OverviewDTO.DataCountProjection} with a count of all repositories
+     * @since 1.2.0
+     */
+    @Query(value = "SELECT " +
+            "(SELECT count(*) from actors) as actors, " +
+            "(SELECT count(*) from characters) as characters, " +
+            "(SELECT count(*) from episodes) as episodes, " +
+            "(SELECT count(*) from games) as games, " +
+            "(SELECT count(*) from locations) as locations, " +
+            "(SELECT count(*) from seasons) as seasons, " +
+            "(SELECT count(*) from soundtracks) as soundtracks",
+            nativeQuery = true
+    )
+    OverviewDTO.DataCountProjection getAllCounts();
 }
