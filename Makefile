@@ -46,12 +46,12 @@ compile: clean ## Compile the spring application
 	@./mvnw compile
 
 build: clean ## Build website, test and package the spring application
-	@./scripts/build-website.sh --clean-before
+	@./scripts/get-website.sh --clean-before
 	@./mvnw javadoc:javadoc
 	@./mvnw package --file pom.xml
 
 build-wot: clean ## Build website without test and package the spring application
-	@./scripts/build-website.sh --clean-before
+	@./scripts/get-website.sh --clean-before
 	@./mvnw javadoc:javadoc
 	@./mvnw package --file pom.xml -Dmaven.test.skip=true -DskipTests
 
@@ -64,7 +64,7 @@ clean: ## Clear the spring application
 ## Website
 
 website-build: ## Build the website
-	@./scripts/build-website.sh --clean-before
+	@./scripts/get-website.sh --clean-before
 
 website-clean: ## Remove '.hawapi/' and 'resources/static/'
 	@./scripts/clean-website.sh --clean-hawapi --clean-static

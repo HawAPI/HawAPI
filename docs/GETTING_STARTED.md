@@ -215,19 +215,19 @@ To use the values on a production mode set these arguments before running the ja
 - Command
 
 ```
-./scripts/build-website.sh --clean-before
+./scripts/get-website.sh --clean-before
 ```
 
 - Makefile
 
 ```
-make build-website
+make get-website
 ```
 
 > To see all options
 >
 >```
->./scripts/build-website.sh --help
+>./scripts/get-website.sh --help
 >```
 
 ### Application
@@ -406,11 +406,11 @@ Targets:
 #### Build Website
 
 ```
-./scripts/build-website.sh --help
+./scripts/get-website.sh --help
 ```
 
 ```
-Usage: ./scripts/build-website.sh [option...]
+Usage: ./scripts/get-website.sh [option...]
 
    -B, --clean-before           Remove '.hawapi/' directory before building the website
    -H, --clean-hawapi           Remove '.hawapi/' directory
