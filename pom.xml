@@ -213,6 +213,7 @@
                     <nonFilteredFileExtensions>
                         <nonFilteredFileExtension>woff2</nonFilteredFileExtension>
                         <nonFilteredFileExtension>ttf</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>gz</nonFilteredFileExtension>
                     </nonFilteredFileExtensions>
                 </configuration>
             </plugin>
