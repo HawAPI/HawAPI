@@ -16,7 +16,9 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up latest git tag
-        run: echo "TAG=$(git describe --tags)" >> $GITHUB_ENV
+        run: |
+          TAG=${{ github.event.release.tag_name }}
+          echo "VERSION=${TAG#v}" >> $GITHUB_ENV
 
       - name: Set up container name
         run: echo "CONTAINER_NAME=${REPOSITORY,,}" >> $GITHUB_ENV
@@ -40,7 +42,7 @@ jobs:
       - name: Docker build
         run: |
           docker build -t ghcr.io/${{ env.CONTAINER_NAME }}:latest .
-          docker build -t ghcr.io/${{ env.CONTAINER_NAME }}:${{ env.TAG }} .
+          docker build -t ghcr.io/${{ env.CONTAINER_NAME }}:${{ env.VERSION }} .
 
       # Publish
 
@@ -50,7 +52,7 @@ jobs:
       - name: GitHub (GHCR) push
         run: |
           docker push ghcr.io/${{ env.CONTAINER_NAME }}:latest
-          docker push ghcr.io/${{ env.CONTAINER_NAME }}:${{ env.TAG }}
+          docker push ghcr.io/${{ env.CONTAINER_NAME }}:${{ env.VERSION }}
 
       - name: Install and configure the Koyeb CLI
         uses: koyeb-community/install-koyeb-cli@v2
