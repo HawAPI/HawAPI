@@ -31,7 +31,6 @@
 │       ├── init
 │       └── migration
 ├── docs
-├── logs
 ├── scripts
 └── src
     ├── main
@@ -39,8 +38,6 @@
     │   │   └── com
     │   │       └── lucasjosino
     │   │           └── hawapi
-    │   │               ├── cache
-    │   │               │   └── generator
     │   │               ├── configs
     │   │               │   └── security
     │   │               ├── controllers
@@ -71,6 +68,7 @@
     │   │               ├── repositories
     │   │               │   ├── auth
     │   │               │   ├── base
+    │   │               │   │   └── impl
     │   │               │   ├── specification
     │   │               │   └── translation
     │   │               ├── resolvers
@@ -115,9 +113,6 @@
 - Terminal (with bash) for [Scripts](../scripts)
 - Docker for [Database](../docker/docker-compose.yml)
 - Java 8 (1.8) for [Application](../src/main/java/com/lucasjosino/hawapi/HawAPIApplication.java)
-- Npm/Yarn
-    - [Astro (v2.X.X)](https://astro.build/) for [website](https://github.com/HawAPI/website) generation
-    - [Retype (v3.X.X)](https://retype.com/) for [docs](https://github.com/HawAPI/docs) generation
 
 The HawAPI project build **WILL NOT** run when:
 
@@ -180,7 +175,7 @@ git clone https://github.com/HawAPI/HawAPI.git
 
 > **Warning** \
 > The application will not run if the database is not active. \
-> Check out the [#Docker](#docker) section before.
+> Check out the [#Docker](#docker) section before continue.
 
 #### Dev/Test Profiles
 
@@ -249,7 +244,7 @@ make run
 - Command
 
 ```
-curl localhost:8080/api/ping
+curl http://localhost:8080/api/ping
 ```
 
 The result should be:
@@ -283,7 +278,7 @@ By default, two RSA keys (public/private) are located at:
 - /src/main/resources/keys/publicRSAKey.pem
 
 > **Warning** \
-> Don't se this keys on production mode. **See below**
+> Don't use this keys on production mode. **See below**
 
 #### Prod (Production) Profile
 
