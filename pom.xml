@@ -16,7 +16,7 @@
     <name>HawAPI</name>
     <description>A Free and Open Source API for Stranger Things.</description>
     <url>https://hawapi.theproject.id/</url>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
     <inceptionYear>2023</inceptionYear>
 
     <properties>
