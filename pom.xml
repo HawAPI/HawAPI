@@ -15,9 +15,9 @@
 
     <name>HawAPI</name>
     <description>A Free and Open Source API for Stranger Things.</description>
-    <url>https://hawapi.theproject.id</url>
+    <url>https://hawapi.theproject.id/</url>
     <version>1.1.0</version>
-    <inceptionYear>2022</inceptionYear>
+    <inceptionYear>2023</inceptionYear>
 
     <properties>
         <java.version>1.8</java.version>
@@ -25,7 +25,7 @@
 
     <licenses>
         <license>
-            <name>BSD 3-Clause "New" or "Revised" License</name>
+            <name>MIT License</name>
             <url>https://github.com/HawAPI/HawAPI/blob/main/LICENSE</url>
         </license>
     </licenses>
