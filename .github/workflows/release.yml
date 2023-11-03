@@ -25,12 +25,6 @@ jobs:
           distribution: 'corretto'
           cache: 'maven'
 
-      - name: Set up yarn (Node 18)
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: 'yarn'
-
       # Build
 
       ## Build website, docs, javadoc and the project (Without tests)
