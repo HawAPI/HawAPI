@@ -77,7 +77,12 @@ public class OverviewServiceImpl implements OverviewService {
      */
     public OverviewDTO findOverviewBy(String language) {
         OverviewModel res = repository.findByTranslationLanguage(language).orElseThrow(ItemNotFoundException::new);
-        return modelMapper.map(res, OverviewDTO.class);
+
+        OverviewDTO dto = modelMapper.map(res, OverviewDTO.class);
+        OverviewDTO.DataCountProjection dataCount = repository.getAllCounts();
+        dto.setDataCount(modelMapper.map(dataCount, OverviewDTO.DataCount.class));
+
+        return dto;
     }
 
     /**

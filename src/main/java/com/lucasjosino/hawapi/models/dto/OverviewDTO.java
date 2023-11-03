@@ -1,10 +1,13 @@
 package com.lucasjosino.hawapi.models.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lucasjosino.hawapi.models.base.BaseDTO;
+import com.lucasjosino.hawapi.repositories.OverviewRepository;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.List;
 
 public class OverviewDTO extends BaseDTO {
@@ -25,6 +28,9 @@ public class OverviewDTO extends BaseDTO {
 
     @Size(max = 10, message = "Field 'creators' cannot exceed 10 items")
     private List<String> creators;
+
+    @JsonProperty("data_count")
+    private DataCount dataCount;
 
     public String getTitle() {
         return title;
@@ -66,6 +72,14 @@ public class OverviewDTO extends BaseDTO {
         this.creators = creators;
     }
 
+    public DataCount getDataCount() {
+        return dataCount;
+    }
+
+    public void setDataCount(DataCount dataCount) {
+        this.dataCount = dataCount;
+    }
+
     @Override
     public String toString() {
         return "OverviewDTO{" +
@@ -74,6 +88,104 @@ public class OverviewDTO extends BaseDTO {
                 ", language='" + language + '\'' +
                 ", languages=" + languages +
                 ", creators=" + creators +
+                ", count=" + dataCount +
                 '}';
+    }
+
+    /**
+     * Data count interface projection. JDBC alias for {@link DataCount}
+     *
+     * @see DataCount
+     * @see OverviewRepository#getAllCounts()
+     * @since 1.2.0
+     */
+    public interface DataCountProjection extends Serializable {
+
+        Long getActors();
+
+        Long getCharacters();
+
+        Long getEpisodes();
+
+        Long getGames();
+
+        Long getLocations();
+
+        Long getSeasons();
+
+        Long getSoundtracks();
+    }
+
+    public static class DataCount implements Serializable {
+
+        private Long actors;
+
+        private Long characters;
+
+        private Long episodes;
+
+        private Long games;
+
+        private Long locations;
+
+        private Long seasons;
+
+        private Long soundtracks;
+
+        public Long getActors() {
+            return actors;
+        }
+
+        public void setActors(Long actors) {
+            this.actors = actors;
+        }
+
+        public Long getCharacters() {
+            return characters;
+        }
+
+        public void setCharacters(Long characters) {
+            this.characters = characters;
+        }
+
+        public Long getEpisodes() {
+            return episodes;
+        }
+
+        public void setEpisodes(Long episodes) {
+            this.episodes = episodes;
+        }
+
+        public Long getGames() {
+            return games;
+        }
+
+        public void setGames(Long games) {
+            this.games = games;
+        }
+
+        public Long getLocations() {
+            return locations;
+        }
+
+        public void setLocations(Long locations) {
+            this.locations = locations;
+        }
+
+        public Long getSeasons() {
+            return seasons;
+        }
+
+        public void setSeasons(Long seasons) {
+            this.seasons = seasons;
+        }
+
+        public Long getSoundtracks() {
+            return soundtracks;
+        }
+
+        public void setSoundtracks(Long soundtracks) {
+            this.soundtracks = soundtracks;
+        }
     }
 }

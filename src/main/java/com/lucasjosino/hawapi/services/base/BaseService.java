@@ -32,7 +32,7 @@ public interface BaseService<D extends BaseDTO> {
 
     D findRandom(String language);
 
-    @Cacheable(value = "findBy", key = "#uuid")
+    @Cacheable(value = "findBy", key = "{ #p0, #p1 }")
     D findBy(UUID uuid, String language);
 
     @Transactional
