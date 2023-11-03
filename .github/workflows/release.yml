@@ -16,9 +16,9 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up latest git tag
-        run: |
-          TAG=${{ github.event.release.tag_name }}
-          echo "VERSION=${TAG#v}" >> $GITHUB_ENV
+        run: echo "VERSION=${TAG#v}" >> $GITHUB_ENV
+        env:
+          TAG: '${{ github.event.release.tag_name }}'
 
       - name: Set up container name
         run: echo "CONTAINER_NAME=${REPOSITORY,,}" >> $GITHUB_ENV
