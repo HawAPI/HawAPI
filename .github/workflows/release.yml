@@ -18,7 +18,7 @@ jobs:
       - name: Set up latest git tag
         run: echo "VERSION=${TAG#v}" >> $GITHUB_ENV
         env:
-          TAG: '${{ github.event.release.tag_name }}'
+          TAG: '$(git describe --tags)'
 
       - name: Set up container name
         run: echo "CONTAINER_NAME=${REPOSITORY,,}" >> $GITHUB_ENV
